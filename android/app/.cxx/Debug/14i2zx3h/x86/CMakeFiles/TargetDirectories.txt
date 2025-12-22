@@ -1,0 +1,2 @@
+D:/heamodialysis/heamodialysis/heamodialysis/android/app/.cxx/Debug/14i2zx3h/x86/CMakeFiles/edit_cache.dir
+D:/heamodialysis/heamodialysis/heamodialysis/android/app/.cxx/Debug/14i2zx3h/x86/CMakeFiles/rebuild_cache.dir
