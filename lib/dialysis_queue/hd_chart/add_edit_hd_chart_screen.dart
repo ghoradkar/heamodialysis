@@ -287,7 +287,7 @@ class _AddEditHdChartScreenState extends State<AddEditHdChartScreen> {
       ),
       body: hasInternet
           ? hdChartController.isLoading
-              ?  Center(child: buildShimmerLoader())
+              ? Center(child: buildShimmerLoader())
               : GetBuilder<HdChartController>(builder: (controller) {
                   return SingleChildScrollView(
                     child: Column(
@@ -309,47 +309,47 @@ class _AddEditHdChartScreenState extends State<AddEditHdChartScreen> {
                                 newRegistrationController.viewPatientModel,
                           ).paddingSymmetric(vertical: 10.h),
                         ),
+                        // Padding(
+                        //   padding: EdgeInsets.only(
+                        //       left: 10.w, right: 10.w, top: 0, bottom: 6.h),
+                        //   child: Container(
+                        //     decoration: BoxDecoration(
+                        //         color: Colors.white70,
+                        //         border: Border.all(color: AppColor.borderColor),
+                        //         borderRadius: BorderRadius.circular(12)),
+                        //     child: Row(
+                        //       children: [
+                        //         Expanded(
+                        //             child: CustomTextField(
+                        //           maxLines: 1,
+                        //           isReadOnly: false,
+                        //           keyBoardType: TextInputType.text,
+                        //           labelText: 'Bolus Dose',
+                        //           hintText: 'Enter',
+                        //           isRequired: false,
+                        //           txtController: hdChartController.bolusDose,
+                        //           fillColor: Colors.white,
+                        //           fontSize: 16.sp,
+                        //         )),
+                        //         Expanded(
+                        //             child: CustomTextField(
+                        //           maxLines: 1,
+                        //           isReadOnly: false,
+                        //           keyBoardType: TextInputType.text,
+                        //           labelText: 'Infusion Dose',
+                        //           hintText: 'Enter',
+                        //           isRequired: false,
+                        //           txtController: hdChartController.infusionDose,
+                        //           fillColor: Colors.white,
+                        //           fontSize: 16.sp,
+                        //         )),
+                        //       ],
+                        //     ),
+                        //   ),
+                        // ),
                         Padding(
                           padding: EdgeInsets.only(
-                              left: 10.w, right: 10.w, top: 0, bottom: 6.h),
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: Colors.white70,
-                                border: Border.all(color: AppColor.borderColor),
-                                borderRadius: BorderRadius.circular(12)),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                    child: CustomTextField(
-                                  maxLines: 1,
-                                  isReadOnly: false,
-                                  keyBoardType: TextInputType.text,
-                                  labelText: 'Bolus Dose',
-                                  hintText: 'Enter',
-                                  isRequired: false,
-                                  txtController: hdChartController.bolusDose,
-                                  fillColor: Colors.white,
-                                  fontSize: 16.sp,
-                                )),
-                                Expanded(
-                                    child: CustomTextField(
-                                  maxLines: 1,
-                                  isReadOnly: false,
-                                  keyBoardType: TextInputType.text,
-                                  labelText: 'Infusion Dose',
-                                  hintText: 'Enter',
-                                  isRequired: false,
-                                  txtController: hdChartController.infusionDose,
-                                  fillColor: Colors.white,
-                                  fontSize: 16.sp,
-                                )),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                              left: 10.w, right: 10.w, top: 0, bottom: 6.h),
+                              left: 7.w, right: 7.w, top: 0, bottom: 6.h),
                           child: DialysisSummaryTable(
                             rows: hdChartController.demoRows,
                             thickDividersAfter: const {3, 4, 5, 6},
@@ -476,6 +476,7 @@ class _AddEditHdChartScreenState extends State<AddEditHdChartScreen> {
                                       .saveFirstTableData(firstTableData);
                                   await hdChartController
                                       .saveSecondTableData(hdChart);
+                                  hdChartController.clearAllFields();
                                   hdChartController.isSaving = false;
 
                                   hdChartController.bolusDose.text =
@@ -531,6 +532,15 @@ class _AddEditHdChartScreenState extends State<AddEditHdChartScreen> {
                                           : '';
 
                                   hdChartController.update();
+                                  Get.defaultDialog(
+                                    title: "Success",
+                                    middleText: "Data Saved Successfully!",
+                                    textConfirm: "OK",
+                                    onConfirm: () {
+                                      Get.back(); // popup close
+                                      Get.back(); // screen back (single navigation)
+                                    },
+                                  );
                                 },
                           child: Container(
                               padding: EdgeInsets.symmetric(vertical: 8.h),
@@ -552,7 +562,8 @@ class _AddEditHdChartScreenState extends State<AddEditHdChartScreen> {
                                   ? SizedBox(
                                       height: 20.h,
                                       width: 20.w,
-                                      child: buildShimmerLoader()
+                                      child: const CircularProgressIndicator(
+                                          color: Colors.white, strokeWidth: 2),
                                     )
                                   : Row(
                                       mainAxisAlignment:
@@ -701,12 +712,13 @@ class HDCardDataState extends State<HDCardData> {
     remarkCtrl.dispose();
     super.dispose();
   }
+
   String _asStr(int? v) => v?.toString() ?? '';
   int? _toInt(String s) => s.trim().isEmpty ? null : int.tryParse(s);
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 10, right: 10, top: 0, bottom: 6),
+      padding: const EdgeInsets.only(left: 1, right: 1, top: 0, bottom: 6),
       child: Container(
         decoration: BoxDecoration(
             color: Colors.white70,
@@ -715,8 +727,10 @@ class HDCardDataState extends State<HDCardData> {
         child: Column(
           children: [
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(
+                SizedBox(
+                  width: 140,
                   child: CustomDateField(
                     // if CustomDateField supports controller:
                     selectedDate: timeCtrl,
@@ -736,13 +750,14 @@ class HDCardDataState extends State<HDCardData> {
                 ),
                 Expanded(
                   child: DoubleTextField(
-                    labelText: 'Blood Pressure\n(mmHg)',
+                    labelText: 'BP(mmHg)',
                     hintText1: 'Bottom',
                     hintText2: 'Top',
                     isRequired: false,
                     keyBoardType: TextInputType.number,
                     txtController1: bpH,
                     txtController2: bpL,
+
                     // if DoubleTextField supports controllers, pass them.
                     // Otherwise keep your onChange and set model values there.
                     onChange1: (v) {
@@ -1370,7 +1385,7 @@ class DialysisSummaryTable extends StatelessWidget {
             // Header
             Container(
               color: const Color(0xFF257BAB),
-              padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 8.w),
+              padding: EdgeInsets.symmetric(vertical: 9.h, horizontal: 8.w),
               child: const Row(
                 children: [
                   HeaderCell(text: 'Pre-dialysis'),
@@ -1390,12 +1405,14 @@ class DialysisSummaryTable extends StatelessWidget {
                   Container(
                     color: Colors.white,
                     padding:
-                        EdgeInsets.symmetric(vertical: 8.h, horizontal: 8.w),
+                        EdgeInsets.symmetric(vertical: 3.h, horizontal: 3.w),
                     child: Row(
                       children: [
-                        PillCell(cell: r.pre, leftMost: true),
-                        PillCell(cell: r.post),
-                        PillCell(cell: r.safety, rightMost: true),
+                        PillCell(cell: r.pre, leftMost: true, showTitle: true),
+                        PillCell(
+                            cell: r.post, showTitle: !r.post.showTextField),
+                        PillCell(
+                            cell: r.safety, rightMost: true, showTitle: false),
                       ],
                     ),
                   ),
@@ -1440,12 +1457,14 @@ class PillCell extends StatelessWidget {
   final DialysisCell cell;
   final bool leftMost;
   final bool rightMost;
+  final bool showTitle;
 
   const PillCell({
     super.key,
     required this.cell,
     this.leftMost = false,
     this.rightMost = false,
+    this.showTitle = true,
   });
 
   @override
@@ -1453,12 +1472,12 @@ class PillCell extends StatelessWidget {
     return Expanded(
       child: Container(
         margin: EdgeInsets.only(
-          left: leftMost ? 0 : 6,
-          right: rightMost ? 0 : 6,
+          left: leftMost ? 0 : 2,
+          right: rightMost ? 0 : 2,
         ),
-        padding: EdgeInsets.symmetric(vertical: 6.h),
+        padding: EdgeInsets.symmetric(vertical: 0.h),
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+          padding: EdgeInsets.only(left: 2.w, right: 2),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(_pillRadius),
@@ -1468,15 +1487,23 @@ class PillCell extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // title
-              Text(
-                cell.title,
-                style: TextStyle(
-                  color: AppColor.textGrey,
-                  fontSize: 10.sp,
-                  fontWeight: FontWeight.w500,
+              if (showTitle &&
+                  !cell.showTextField &&
+                  cell.value != null &&
+                  cell.value!.isNotEmpty)
+                Text(
+                  cell.title,
+                  style: TextStyle(
+                    color: AppColor.textGrey,
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-              ),
-              SizedBox(height: 6.h),
+              if (showTitle &&
+                  !cell.showTextField &&
+                  cell.value != null &&
+                  cell.value!.isNotEmpty)
+                SizedBox(height: 2.h),
 
               // value or input
               _CellValue(cell: cell),
@@ -1539,8 +1566,8 @@ class _CellValue extends StatelessWidget {
                     : Colors.grey[600],
               ),
               decoration: baseDecoration.copyWith(
-               // hintText: cell.title,
-              //  FIX: Show controller text value
+                hintText: cell.title,
+                //  FIX: Show controller text value
                 labelText: (cell.controller?.text.isEmpty ?? true)
                     ? null
                     : cell.controller?.text,
@@ -1553,14 +1580,13 @@ class _CellValue extends StatelessWidget {
               inputFormatters: cell.inputFormatters,
               onChanged: cell.onChanged,
               style: TextStyle(
-
                 fontSize: 10.sp,
                 fontWeight: FontWeight.w600,
               ),
               decoration: baseDecoration.copyWith(
                 // hintText: cell.title,
-                hintStyle:const TextStyle(color: Colors.grey),
-              //  labelText: cell.value?.isNotEmpty ?? false ? cell.value : null,
+                hintStyle: const TextStyle(color: Colors.grey),
+                //  labelText: cell.value?.isNotEmpty ?? false ? cell.value : null,
               ),
             );
 
@@ -1574,7 +1600,7 @@ class _CellValue extends StatelessWidget {
     return Text(
       cell.value ?? '',
       style: TextStyle(
-        color: Colors.black,
+        color: const Color(0xFF484848),
         fontSize: 10.sp,
         fontWeight: FontWeight.w400,
       ),

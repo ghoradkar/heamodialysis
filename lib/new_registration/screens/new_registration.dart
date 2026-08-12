@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:collection/collection.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -29,6 +32,7 @@ import 'package:heamodialysis/widgets/custom_text.dart';
 import 'package:heamodialysis/widgets/custom_textfield.dart';
 import 'package:intl/intl.dart';
 
+import '../../utils/status_update_screen.dart';
 import '../../widgets/custom_shimmer_loader.dart';
 
 class NewRegistration extends StatefulWidget {
@@ -50,10 +54,15 @@ class NewRegistration extends StatefulWidget {
 
 class _NewRegistrationState extends State<NewRegistration>
     with SingleTickerProviderStateMixin {
+  final Connectivity _connectivity = Connectivity();
+  bool _isNetworkAvailable = true;
+  StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
+
   late TabController tabController;
   final NewRegistrationController newRegistrationController =
       Get.put(NewRegistrationController());
   bool hasInternet = true;
+  bool _isInitializing = true;
 
   var userData;
 
@@ -62,8 +71,14 @@ class _NewRegistrationState extends State<NewRegistration>
 
   @override
   void initState() {
+    super.initState();
+
     // initPermission();
     // initPlatformState();
+    _initConnectivity();
+    _connectivitySubscription = _connectivity.onConnectivityChanged.listen(
+      _updateConnectionStatus,
+    );
     newRegistrationController.patientProfilePhoto = null;
     newRegistrationController.image = null;
     newRegistrationController.abhaNoController.text = "";
@@ -121,6 +136,7 @@ class _NewRegistrationState extends State<NewRegistration>
     newRegistrationController.selectedEdu = null;
     newRegistrationController.socEcoStat = '';
     newRegistrationController.selectedReligion = null;
+    newRegistrationController.selectedMonthlyIncome = null;
     newRegistrationController.groupVal = CustomRadioButtons.yes;
     newRegistrationController.items.clear();
     newRegistrationController.relativeDoc = FileDetails(
@@ -136,9 +152,8 @@ class _NewRegistrationState extends State<NewRegistration>
     tabController = TabController(length: 4, vsync: this);
     tabController.addListener(() {
       // setState(() {}); // Update the UI when the tab changes
-      newRegistrationController.refreshUi();
+      // newRegistrationController.refreshUi(); // Removed to prevent flickering during animation
     });
-    super.initState();
   }
 
   Future<void> getUserData() async {
@@ -146,97 +161,166 @@ class _NewRegistrationState extends State<NewRegistration>
     newRegistrationController.refreshUi();
   }
 
+  checkInternetAndLoadData() async {
+    _isInitializing = true;
+    try {
+      List<ConnectivityResult> connectivityResult =
+          await Connectivity().checkConnectivity();
+      // setState(() {
+      hasInternet = (connectivityResult.contains(ConnectivityResult.mobile) ||
+          connectivityResult.contains(ConnectivityResult.wifi));
+      // });
+      newRegistrationController.refreshUi();
+      if (hasInternet) {
+        await getUserData();
+        if (userData != null && userData['unitId'] != null) {
+          final tasks = <Future<dynamic>>[
+            newRegistrationController.checkScrutinyDefinedOrNot(userData['unitId'].toString()),
+            newRegistrationController.getRefferedBy(),
+            newRegistrationController.getIdProofList(),
+            newRegistrationController.getInstituteList(),
+            newRegistrationController.getViralStatueList(),
+            newRegistrationController.getDialysisModeList(),
+            newRegistrationController.getSchemaAdoptedList(),
+            newRegistrationController.getRelationList(),
+            newRegistrationController.getDialysisFreq(),
+            newRegistrationController.getMaritalStatus(),
+            newRegistrationController.getPrefixList(),
+            newRegistrationController.getGenderList(),
+            newRegistrationController.getBloodGroupList(),
+            newRegistrationController.getMonthlyIncome(),
+            newRegistrationController.getDocList(
+                widget.isViewPatient,
+                widget.isEdit,
+                widget.patientData?.patientId ?? 0),
+            newRegistrationController.getEduSocOccuReligDropDown(),
+          ];
+
+          if (widget.isViewPatient == true ||
+              widget.pageTitle == "Edit Patient Details") {
+            tasks.addAll([
+              newRegistrationController.viewPatientData(widget.patientData?.patientId),
+              newRegistrationController.getProfilePhoto(widget.patientData?.patientId),
+              newRegistrationController.getRelativeInfoDoc(widget.patientData?.patientId),
+            ]);
+          }
+
+          final safeTasks = tasks.map((task) => task.catchError((e, stack) {
+            debugPrint("Task failed with error: $e");
+            debugPrint(stack.toString());
+            return null;
+          })).toList();
+
+          await Future.wait(safeTasks);
+
+          if (widget.isViewPatient == true ||
+              widget.pageTitle == "Edit Patient Details") {
+            setValuesToProfile();
+            setValuesDemographicInfo();
+            setValuesHistoryOfDailysis();
+          }
+        }
+      }
+    } catch (e, stacktrace) {
+      debugPrint("Error in checkInternetAndLoadData: $e");
+      debugPrint(stacktrace.toString());
+    } finally {
+      newRegistrationController.isLoading = false;
+      if (mounted) {
+        setState(() {
+          _isInitializing = false;
+        });
+      }
+      newRegistrationController.refreshUi();
+    }
+  }
+
+  Future<void> _initConnectivity() async {
+    final result = await _connectivity.checkConnectivity();
+    _updateConnectionStatus(result);
+  }
+
+  // Update connection status handler
+  void _updateConnectionStatus(List<ConnectivityResult> results) {
+    final isConnected = results.any(
+      (result) =>
+          result == ConnectivityResult.mobile ||
+          result == ConnectivityResult.wifi,
+    );
+
+    setState(() {
+      _isNetworkAvailable = isConnected;
+    });
+  }
+
   @override
   void dispose() {
     tabController.dispose();
+    _connectivitySubscription?.cancel();
     super.dispose();
-  }
-
-  checkInternetAndLoadData() async {
-    List<ConnectivityResult> connectivityResult =
-        await Connectivity().checkConnectivity();
-    // setState(() {
-    hasInternet = (connectivityResult.contains(ConnectivityResult.mobile) ||
-        connectivityResult.contains(ConnectivityResult.wifi));
-    // });
-    newRegistrationController.refreshUi();
-    if (hasInternet) {
-      await getUserData();
-      await newRegistrationController
-          .checkScrutinyDefinedOrNot(userData['unitId'].toString());
-      await newRegistrationController.getRefferedBy();
-      await newRegistrationController.getIdProofList();
-      await newRegistrationController.getInstituteList();
-      await newRegistrationController.getViralStatueList();
-      await newRegistrationController.getDialysisModeList();
-      await newRegistrationController.getSchemaAdoptedList();
-      await newRegistrationController.getRelationList();
-      await newRegistrationController.getDialysisFreq();
-      await newRegistrationController.getMaritalStatus();
-      await newRegistrationController.getPrefixList();
-      await newRegistrationController.getBloodGroupList();
-      await newRegistrationController.getMonthlyIncome();
-
-      await newRegistrationController.getDocList(widget.isViewPatient,
-          widget.isEdit, widget.patientData?.patientId ?? 0);
-      await newRegistrationController.getEduSocOccuReligDropDown();
-      if (widget.isViewPatient == true ||
-          widget.pageTitle == "Edit Patient Details") {
-        await newRegistrationController
-            .viewPatientData(widget.patientData?.patientId);
-        await newRegistrationController
-            .getProfilePhoto(widget.patientData?.patientId);
-
-        await newRegistrationController
-            .getRelativeInfoDoc(widget.patientData?.patientId);
-        setValuesToProfile();
-        setValuesDemographicInfo();
-        setValuesHistoryOfDailysis();
-      }
-    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor:AppColor.primaryBackgroundColor,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            bottomRight: Radius.circular(30),  // adjust as needed
-          ),
-        ),
-        title: CustomText(
-          text: widget.pageTitle,
-          fontSize: 18.0,
-          fontFam: 'Lato',
-          fontWeight: FontWeight.w400,
-          textColor: Colors.white,
-          textAlign: TextAlign.start,
-        ),
-        leading: InkWell(
-            onTap: () {
-              newRegistrationController.abhaNoController.text = "";
-              newRegistrationController.firstNameController.text = "";
-              newRegistrationController.lastNameController.text = "";
-              newRegistrationController.middleNameController.text = "";
-              newRegistrationController.mobileController.text = "";
-              newRegistrationController.emailController.text = "";
-              newRegistrationController.dboController.text = "";
-              newRegistrationController.pincodeController.text = "";
-              Get.back();
-            },
-            child: Image.asset('assets/arrow-left.png',color: Colors.white,)),
-      ),
-      body: GetBuilder<NewRegistrationController>(
-          init: newRegistrationController,
-          builder: (controller) {
-            return hasInternet
-                ? controller.isLoading
-                    ?  Center(child: buildShimmerLoader())
-                    : Column(
-                        children: [
-                          TabBar(
+    return _isNetworkAvailable
+        ? Scaffold(
+            appBar: AppBar(
+              backgroundColor: AppColor.primaryBackgroundColor,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                  bottomRight: Radius.circular(30), // adjust as needed
+                ),
+              ),
+              title: CustomText(
+                text: widget.pageTitle,
+                fontSize: 18.0,
+                fontFam: 'Lato',
+                fontWeight: FontWeight.w400,
+                textColor: Colors.white,
+                textAlign: TextAlign.start,
+              ),
+              leading: InkWell(
+                  onTap: () {
+                    newRegistrationController.abhaNoController.text = "";
+                    newRegistrationController.firstNameController.text = "";
+                    newRegistrationController.lastNameController.text = "";
+                    newRegistrationController.middleNameController.text = "";
+                    newRegistrationController.mobileController.text = "";
+                    newRegistrationController.emailController.text = "";
+                    newRegistrationController.dboController.text = "";
+                    newRegistrationController.pincodeController.text = "";
+                    Get.back();
+                  },
+                  child: Image.asset(
+                    'assets/arrow-left.png',
+                    color: Colors.white,
+                  )),
+            ),
+            body: GetBuilder<NewRegistrationController>(
+                init: newRegistrationController,
+                builder: (controller) {
+                  if (_isInitializing || controller.isLoading) {
+                    return const ViewApplicationShimmer();
+                  }
+                  if (widget.isViewPatient == true &&
+                      controller.viewPatientModel == null) {
+                    return CommonStatusScreen(
+                      title: "No Data Found",
+                      description:
+                          "We are unable to find the data that\nyou are looking for ",
+                      img: "assets/no_Data_Found.png",
+                      buttonText: "Go Back",
+                      onPressed: () {
+                        Get.back();
+                      },
+                    );
+                  }
+                  return Column(
+                    children: [
+                      AnimatedBuilder(
+                        animation: tabController,
+                        builder: (context, child) {
+                          return TabBar(
                             controller: tabController,
                             dividerColor: Colors.transparent,
                             indicatorColor: Colors.transparent,
@@ -253,61 +337,64 @@ class _NewRegistrationState extends State<NewRegistration>
                               buildTab(3, "assets/upload_file.png",
                                   "Upload\nDocument"),
                             ],
-                          ),
-                          Expanded(
-                            child: TabBarView(
-                              controller: tabController,
-                              children: [
-                                PersonalInfoScreen(
-                                  pageTitle: widget.pageTitle,
-                                  isViewPatient: widget.isViewPatient,
-                                  viewPatientModel: newRegistrationController
-                                      .viewPatientModel,
-                                  callB: () {
-                                    tabController.index = 1;
-                                  },
-                                ),
-                                DemographicInfo(
-                                  pageTitle: widget.pageTitle,
-                                  isViewPatient: widget.isViewPatient,
-                                  viewPatientModel: newRegistrationController
-                                      .viewPatientModel,
-                                  callB: () {
-                                    tabController.index = 2;
-                                  },
-                                  idProofListModel: newRegistrationController
-                                          .idProofListModel?.data ??
-                                      [],
-                                  viralStatusList: newRegistrationController
-                                          .viralStatusModel?.data ??
-                                      [],
-                                ),
-                                HistoryOfDialysis(
-                                  pageTitle: widget.pageTitle,
-                                  isViewPatient: widget.isViewPatient,
-                                  viewPatientModel: newRegistrationController
-                                      .viewPatientModel,
-                                  callB: () {
-                                    tabController.index = 3;
-                                  },
-                                ),
-                                UploadDocument(
-                                    pageTitle: widget.pageTitle,
-                                    isViewPatient: widget.isViewPatient,
-                                    viewPatientModel: newRegistrationController
-                                        .viewPatientModel),
-                              ],
+                          );
+                        },
+                      ),
+                      Expanded(
+                        child: TabBarView(
+                          controller: tabController,
+                          children: [
+                            PersonalInfoScreen(
+                              pageTitle: widget.pageTitle,
+                              isViewPatient: widget.isViewPatient,
+                              viewPatientModel:
+                                  newRegistrationController.viewPatientModel,
+                              callB: () {
+                                tabController.index = 1;
+                              },
                             ),
-                          )
-                        ],
-                      ).paddingSymmetric(horizontal: 6)
-                : InternetIssue(
-                    onRetryPressed: () {
-                      checkInternetAndLoadData();
-                    },
-                  );
-          }),
-    );
+                            DemographicInfo(
+                              pageTitle: widget.pageTitle,
+                              isViewPatient: widget.isViewPatient,
+                              viewPatientModel:
+                                  newRegistrationController.viewPatientModel,
+                              callB: () {
+                                tabController.index = 2;
+                              },
+                              idProofListModel: newRegistrationController
+                                      .idProofListModel?.data ??
+                                  [],
+                              viralStatusList: newRegistrationController
+                                      .viralStatusModel?.data ??
+                                  [],
+                            ),
+                            HistoryOfDialysis(
+                              pageTitle: widget.pageTitle,
+                              isViewPatient: widget.isViewPatient,
+                              viewPatientModel:
+                                  newRegistrationController.viewPatientModel,
+                              callB: () {
+                                tabController.index = 3;
+                              },
+                            ),
+                            UploadDocument(
+                                pageTitle: widget.pageTitle,
+                                isViewPatient: widget.isViewPatient,
+                                viewPatientModel:
+                                    newRegistrationController.viewPatientModel),
+                          ],
+                        ),
+                      )
+                    ],
+                  ).paddingSymmetric(horizontal: 6);
+                }),
+          )
+        : InternetIssue(
+            onRetryPressed: () async {
+              final result = await _connectivity.checkConnectivity();
+              _updateConnectionStatus(result);
+            },
+          );
   }
 
   void setValuesToProfile() {
@@ -333,55 +420,53 @@ class _NewRegistrationState extends State<NewRegistration>
               null &&
           newRegistrationController
               .viewPatientModel!.data!.occupation!.isNotEmpty) {
-        newRegistrationController.selectedOccu = newRegistrationController
-            .commomDropdownList?.occupationList
-            .firstWhere((e) =>
-                e.lookupDetId ==
-                int.parse(newRegistrationController
-                    .viewPatientModel!.data!.occupation!))
-            .lookupDetDescEn;
+        final lookupId = int.tryParse(newRegistrationController.viewPatientModel!.data!.occupation!);
+        if (lookupId != null) {
+          final matchedOccu = newRegistrationController
+              .commomDropdownList?.occupationList
+              ?.firstWhereOrNull((e) => e.lookupDetId == lookupId);
+          newRegistrationController.selectedOccu = matchedOccu?.lookupDetDescEn;
+        }
       }
 
       if (newRegistrationController.viewPatientModel?.data?.education != null &&
           newRegistrationController
               .viewPatientModel!.data!.education!.isNotEmpty) {
-        newRegistrationController.selectedEdu = newRegistrationController
-            .commomDropdownList?.educationList
-            .firstWhere((e) =>
-                e.lookupDetId ==
-                int.parse(newRegistrationController
-                    .viewPatientModel!.data!.education!))
-            .lookupDetDescEn;
+        final lookupId = int.tryParse(newRegistrationController.viewPatientModel!.data!.education!);
+        if (lookupId != null) {
+          final matchedEdu = newRegistrationController
+              .commomDropdownList?.educationList
+              ?.firstWhereOrNull((e) => e.lookupDetId == lookupId);
+          newRegistrationController.selectedEdu = matchedEdu?.lookupDetDescEn;
+        }
       }
 
       if (newRegistrationController.viewPatientModel?.data?.religion != null &&
           newRegistrationController
               .viewPatientModel!.data!.religion!.isNotEmpty) {
-        newRegistrationController.selectedReligion = newRegistrationController
-            .commomDropdownList?.religionList
-            .firstWhere((e) =>
-                e.lookupDetId ==
-                int.parse(newRegistrationController
-                    .viewPatientModel!.data!.religion!))
-            .lookupDetDescEn;
+        final lookupId = int.tryParse(newRegistrationController.viewPatientModel!.data!.religion!);
+        if (lookupId != null) {
+          final matchedReligion = newRegistrationController
+              .commomDropdownList?.religionList
+              ?.firstWhereOrNull((e) => e.lookupDetId == lookupId);
+          newRegistrationController.selectedReligion = matchedReligion?.lookupDetDescEn;
+        }
       }
 
       // newRegistrationController.selectedEdu =
       //     newRegistrationController.viewPatientModel?.data?.education ?? '';
-      newRegistrationController.socEcoStat = newRegistrationController
-              .viewPatientModel?.data?.economicStatus ??
-          '';
+      newRegistrationController.socEcoStat =
+          newRegistrationController.viewPatientModel?.data?.economicStatus ??
+              '';
 
       if (newRegistrationController.viewPatientModel?.data?.monthlyIncome !=
           null) {
-        newRegistrationController.selectedMonthlyIncome =
-            newRegistrationController.getMonthyIncomeList?.monthlyIncomeList
-                    .firstWhere((e) =>
-                        e.lookupId ==
-                        newRegistrationController
-                            .viewPatientModel?.data?.monthlyIncome)
-                    .lookupDescEn ??
-                '';
+        final matchedIncome = newRegistrationController.getMonthyIncomeList?.monthlyIncomeList
+            ?.firstWhereOrNull((e) =>
+                e.lookupId ==
+                newRegistrationController
+                    .viewPatientModel?.data?.monthlyIncome);
+        newRegistrationController.selectedMonthlyIncome = matchedIncome?.lookupDescEn ?? '';
       }
 
       if (newRegistrationController.viewPatientModel?.data?.dob != null &&
@@ -537,6 +622,7 @@ class _NewRegistrationState extends State<NewRegistration>
   }
 
   void setValuesDemographicInfo() {
+    if (newRegistrationController.viewPatientModel?.data == null) return;
     SchemaData? schemAdpt = newRegistrationController.schemaAdoptedModel?.data
         ?.firstWhere(
             (e) =>
@@ -738,6 +824,7 @@ class _NewRegistrationState extends State<NewRegistration>
   }
 
   void setValuesHistoryOfDailysis() {
+    if (newRegistrationController.viewPatientModel?.data == null) return;
     if (newRegistrationController
                 .viewPatientModel?.data?.firstTimeDialysisFlag ==
             null ||
@@ -750,20 +837,44 @@ class _NewRegistrationState extends State<NewRegistration>
       newRegistrationController.hospitalName.text = newRegistrationController
               .viewPatientModel?.data?.previoushospitalName ??
           "";
-      DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(
-          newRegistrationController.viewPatientModel?.data?.sstartSessionDate);
 
-      // Format the DateTime to "dd/MM/yy"
-      String formattedDate = DateFormat('dd/MM/yy').format(dateTime);
-      newRegistrationController.dialysisDate.text = formattedDate;
+      final sstart = newRegistrationController.viewPatientModel?.data?.sstartSessionDate;
+      if (sstart != null) {
+        try {
+          int? milliseconds;
+          if (sstart is int) {
+            milliseconds = sstart;
+          } else if (sstart is String) {
+            milliseconds = int.tryParse(sstart);
+          }
+          if (milliseconds != null) {
+            DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(milliseconds);
+            String formattedDate = DateFormat('dd/MM/yy').format(dateTime);
+            newRegistrationController.dialysisDate.text = formattedDate;
+          }
+        } catch (e) {
+          debugPrint("Error parsing sstartSessionDate: $e");
+        }
+      }
 
-      DateTime dateTime1 = DateTime.fromMillisecondsSinceEpoch(
-          newRegistrationController
-              .viewPatientModel?.data?.hospitalsessionDate);
-
-      // Format the DateTime to "dd/MM/yy"
-      String formattedDate1 = DateFormat('dd/MM/yy').format(dateTime1);
-      newRegistrationController.lastDialysisDate.text = formattedDate1;
+      final hsession = newRegistrationController.viewPatientModel?.data?.hospitalsessionDate;
+      if (hsession != null) {
+        try {
+          int? milliseconds;
+          if (hsession is int) {
+            milliseconds = hsession;
+          } else if (hsession is String) {
+            milliseconds = int.tryParse(hsession);
+          }
+          if (milliseconds != null) {
+            DateTime dateTime1 = DateTime.fromMillisecondsSinceEpoch(milliseconds);
+            String formattedDate1 = DateFormat('dd/MM/yy').format(dateTime1);
+            newRegistrationController.lastDialysisDate.text = formattedDate1;
+          }
+        } catch (e) {
+          debugPrint("Error parsing hospitalsessionDate: $e");
+        }
+      }
     }
   }
 

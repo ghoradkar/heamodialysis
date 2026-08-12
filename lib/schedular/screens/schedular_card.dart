@@ -155,7 +155,7 @@ class SchedularCard extends StatelessWidget {
                   fontSize: 13.sp,
                   fontFam: "Lato",
                   fontWeight: FontWeight.normal,
-                  textColor: Colors.grey,
+              textColor:AppColor.textValue,
                   textAlign: TextAlign.start)
               .paddingSymmetric(vertical: 2.h),
         ),

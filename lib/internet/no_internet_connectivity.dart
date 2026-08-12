@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:heamodialysis/utils/color_constants.dart';
 
 class InternetIssue extends StatelessWidget {
   // const InternetIssue({super.key});
 
   final Function onRetryPressed;
 
-  const InternetIssue({super.key, required this.onRetryPressed});
+  const InternetIssue({super.key, required this.onRetryPressed,});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +15,7 @@ class InternetIssue extends StatelessWidget {
     final screenWidth = Get.width;
     return Card(
         elevation: 3.0,
-        margin:  EdgeInsets.only(left: 10.w, right: 10.w, top: 40.h),
+       // margin:  EdgeInsets.only(left: 10.w, right: 10.w, top: 40.h),
         child: GestureDetector(
           onTap: () {},
           child: Container(
@@ -28,33 +27,60 @@ class InternetIssue extends StatelessWidget {
             ),
             child: Padding(
               padding:  EdgeInsets.only(
-                  top: 30.h, bottom: 14.h, left: 14.w, right: 14.w),
+                  top: 30.h, bottom: 14.h, left: 8.w, right: 8.w),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Image.asset(
-                    "assets/internet.png",
+                    "assets/no_internet.png",
                     width: 350.w,
                     height: 300.h,
                   ),
+                   SizedBox(height: 20,),
                    Center(
                       child: Text(
-                        "Oh No! ",
+                        "Oh No",
+                        textAlign: TextAlign.center,
                         style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18.sp),
-                      )),
-                  const Center(
+                          fontFamily: 'Lato',          // font-family
+                          fontSize: 24.sp,             // font-size: 24px
+                          fontWeight: FontWeight.w700, // font-weight: 700 (Bold)
+                          fontStyle: FontStyle.normal, // font-style: Bold ❌ → normal + w700
+                          height: 1.0,                 // line-height: 100%
+                          letterSpacing: 0,            // letter-spacing: 0%
+                          color: Colors.black,
+                        ),
+                      )
+                   ),
+                  SizedBox(height: 40,),
+                   Center(
                       child: Column(
                         children: [
                           Text(
-                            "No Internet found.",
-                            style: TextStyle(color: Colors.black),
+                            "No internet connection found.",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontFamily: 'Lato',          // font-family
+                              fontSize: 19.sp,             // font-size: 24px
+                              fontWeight: FontWeight.w400, // font-weight: 700 (Bold)
+                              fontStyle: FontStyle.normal, // font-style: Bold ❌ → normal + w700
+                              height: 1.2,                 // line-height: 100%
+                              letterSpacing: 0,            // letter-spacing: 0%
+                              color: Colors.grey,
+                            ),
                           ),
                           Text(
                             "Check your connection or try again.",
-                            style: TextStyle(color: Colors.black),
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontFamily: 'Lato',
+                              fontSize: 19.sp,
+                              fontWeight: FontWeight.w400,
+                              fontStyle: FontStyle.normal,
+                              height: 1.2,
+                              letterSpacing: 0,
+                              color: Colors.grey,
+                            ),
                           ),
                         ],
                       )),
@@ -64,47 +90,67 @@ class InternetIssue extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         SizedBox(
-                          width: Get.width / 3.5,
+                          width: Get.width / 2.5,
                           height: Get.height / 20,
-                          child: ElevatedButton(
-                            onPressed: () async {
-                              // onRetryPressed();
-
-                              // Show loader for a few seconds
-                              Get.defaultDialog(
-                                title: "Loading",
-                                content:
-                                const CircularProgressIndicator(),
-                              );
-
-                              // Wait for a few seconds
-                              await Future.delayed(
-                                  const Duration(seconds: 3));
-
-                              // Close the loading dialog
-                              Get.back();
-
-                              // Call the retry function
-                              onRetryPressed();
-                            },
-                            style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                  BorderRadius.circular(20.0),
-                                ),
-                                backgroundColor:
-                                AppColor.secondaryColor,
-                                foregroundColor:
-                                AppColor.secondaryColor),
-                            child:  Text(
-                              "Retry",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16.sp,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              gradient: const LinearGradient(
+                                begin: Alignment.centerLeft,
+                                end: Alignment.centerRight,
+                                colors: [
+                                  Color(0xFF27A9E3), // start
+                                  Color(0xFF07B259), // end
+                                ],
                               ),
+                              borderRadius: BorderRadius.circular(11),
                             ),
+                            child: ElevatedButton(
+                              onPressed: () async {
+                                // onRetryPressed();
+
+                                // Show loader for a few seconds
+                                Get.defaultDialog(
+                                  title: "Loading",
+                                  content:
+                                  const CircularProgressIndicator(),
+                                );
+
+                                // Wait for a few seconds
+                                await Future.delayed(
+                                    const Duration(seconds: 3));
+
+                                // Close the loading dialog
+                                Get.back();
+
+                                // Call the retry function
+                                onRetryPressed();
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.transparent,
+                                shadowColor: Colors.transparent,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(11),
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(Icons.arrow_forward, color: Colors.white),
+                                  SizedBox(width: 14.w), // 👈 yaha spacing control
+                                  Text(
+                                    "Retry",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+
                           ),
-                        ),
+                        )
                       ],
                     ),
                   )

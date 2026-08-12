@@ -45,4 +45,13 @@ class SearchedData {
     return map;
   }
 
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is SearchedData &&
+          runtimeType == other.runtimeType &&
+          lookupDetId == other.lookupDetId;
+
+  @override
+  int get hashCode => lookupDetId.hashCode;
 }

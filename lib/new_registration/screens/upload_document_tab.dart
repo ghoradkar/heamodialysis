@@ -18,6 +18,9 @@ import 'package:heamodialysis/widgets/custom_textfield.dart';
 import 'package:heamodialysis/widgets/image_viewer.dart';
 import 'package:intl/intl.dart';
 
+import '../../widgets/custom_shimmer_loader.dart';
+import '../../widgets/custom_expandable.dart';
+
 class UploadDocument extends StatefulWidget {
   final bool isViewPatient;
   final ViewPatientModel? viewPatientModel;
@@ -25,9 +28,9 @@ class UploadDocument extends StatefulWidget {
 
   const UploadDocument(
       {super.key,
-      required this.isViewPatient,
-      this.viewPatientModel,
-      this.pageTitle});
+        required this.isViewPatient,
+        this.viewPatientModel,
+        this.pageTitle});
 
   @override
   State<UploadDocument> createState() => UploadDocumentState();
@@ -36,7 +39,7 @@ class UploadDocument extends StatefulWidget {
 class UploadDocumentState extends State<UploadDocument>
     with AutomaticKeepAliveClientMixin {
   final NewRegistrationController newRegistrationController =
-      Get.find<NewRegistrationController>();
+  Get.find<NewRegistrationController>();
 
   var userData;
 
@@ -46,12 +49,22 @@ class UploadDocumentState extends State<UploadDocument>
   void initState() {
     getUserData();
     checkInternetAndLoadData();
+    //loadDocuments();
     super.initState();
+  }
+
+  Future<void> loadDocuments() async {
+    await newRegistrationController.getDocList(
+
+      widget.isViewPatient,
+      widget.pageTitle == 'Edit Patient Details',
+      widget.viewPatientModel?.data?.patientId,
+    );
   }
 
   checkInternetAndLoadData() async {
     List<ConnectivityResult> connectivityResult =
-        await Connectivity().checkConnectivity();
+    await Connectivity().checkConnectivity();
 
     hasInternet = (connectivityResult.contains(ConnectivityResult.mobile) ||
         connectivityResult.contains(ConnectivityResult.wifi));
@@ -72,386 +85,578 @@ class UploadDocumentState extends State<UploadDocument>
         builder: (controller) {
           return hasInternet
               ? controller.isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: 20.h,
-                          ),
-                          Theme(
-                              data: ThemeData()
-                                  .copyWith(dividerColor: Colors.transparent),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    color: AppColor.darkBlue,
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: ExpansionTile(
-                                  maintainState: true,
-                                  iconColor: Colors.white,
-                                  collapsedIconColor: Colors.white,
-                                  title: Row(children: [
-                                    Image.asset('assets/file-text.png'),
-                                    SizedBox(width: 12.w),
-                                    Text(
-                                      "Upload Document",
-                                      style: TextStyle(
-                                          fontSize: 14.sp,
-                                          color: Colors.white,
-                                          fontFamily: 'Lato'),
-                                    ),
-                                  ]),
-                                  children: <Widget>[
-                                    Container(
-                                      padding: EdgeInsets.symmetric(
-                                          vertical: 8.h, horizontal: 8.w),
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(10),
+              ? const Center(child: PatientListShimmer())
+              : SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 20.h,
+                ),
+                CustomExpandableContainer(
+                  text: 'Upload Document',
+                  leading: "assets/file-text.png",
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                            vertical: 8.h, horizontal: 8.w),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Column(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 8.w),
+                              decoration: BoxDecoration(
+                                  color: Color(0xFFF8F8F8),
+                                  borderRadius:
+                                  BorderRadius.circular(10),
+                                  border: Border.all(
+                                      color: AppColor.borderColor)),
+                              child: Column(
+                                crossAxisAlignment:
+                                CrossAxisAlignment.stretch,
+                                children: [
+                                  SizedBox(height: 16.h),
+                                  Row(
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: 11.h,
+                                            horizontal: 11.w),
+                                        child: Image.asset(
+                                            'assets/file.png'),
                                       ),
-                                      child: Column(
-                                        children: [
-                                          Container(
-                                            padding: EdgeInsets.symmetric(
-                                                vertical: 8.h, horizontal: 8.w),
-                                            decoration: BoxDecoration(
-                                                color: Colors.grey[50],
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                border: Border.all(
-                                                    color:
-                                                        AppColor.borderColor)),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.stretch,
-                                              children: [
-                                                SizedBox(height: 16.h),
-                                                Row(
-                                                  children: [
-                                                    Padding(
-                                                      padding:
-                                                          EdgeInsets.symmetric(
-                                                              vertical: 16.h,
-                                                              horizontal: 16.w),
-                                                      child: Image.asset(
-                                                          'assets/file.png'),
-                                                    ),
-                                                    Expanded(
-                                                        child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        CustomText(
-                                                          text:
-                                                              'Browse and choose the files you want to upload',
-                                                          fontSize: 12.sp,
-                                                          fontFam: 'Lato',
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                          textColor:
-                                                              Color(0xFF666666),
-                                                          textAlign:
-                                                              TextAlign.start,
-                                                        ),
-                                                        CustomText(
-                                                          text:
-                                                              'Supported Formats : JPEG, PNG, PDF, Word',
-                                                          fontSize: 12.sp,
-                                                          fontFam: 'Lato',
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                          textColor:
-                                                              Color(0xFF666666),
-                                                          textAlign:
-                                                              TextAlign.start,
-                                                        ),
-                                                        SizedBox(height: 2,),
-                                                        CustomText(
-                                                          text:
-                                                              'Max File Size: 10 MB',
-                                                          fontSize: 12.sp,
-                                                          fontFam: 'Lato',
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          textColor:
-                                                              Colors.black,
-                                                          textAlign:
-                                                              TextAlign.start,
-                                                        ),
-                                                      ],
-                                                    ))
-                                                  ],
-                                                ),
-                                                SizedBox(height: 16.h),
-                                              ],
-                                            ),
-                                          ),
-                                           SizedBox(height: 16.h),
-                                          Container(
-                                            padding:  EdgeInsets.symmetric(vertical: 8.h,horizontal: 8.w),
-                                            decoration: BoxDecoration(
-                                                color: Colors.grey[50],
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                border: Border.all(
-                                                    color:
-                                                        AppColor.borderColor)),
-                                            child: SizedBox(
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .height *
-                                                  0.45,
-                                              child: ListView.builder(
-                                                  shrinkWrap: true,
-                                                  primary: false,
-                                                  itemCount:
-                                                      newRegistrationController
-                                                          .items.length,
-                                                  itemBuilder:
-                                                      (context, index) {
-                                                    return CustomUploadButton(
-                                                      isSelected:
-                                                          newRegistrationController
-                                                              .items[index]
-                                                              .isSelected,
-                                                      index: index,
-                                                      title:
-                                                          newRegistrationController
-                                                              .items[index]
-                                                              .name,
-                                                      callB: () {
-                                                        pickFile(
-                                                            newRegistrationController
-                                                                .items[index]);
-                                                      },
-                                                      callDelete: () {
-                                                        newRegistrationController
-                                                            .items[index]
-                                                            .isSelected = false;
-                                                        newRegistrationController
-                                                            .items[index]
-                                                            .file = null;
-                                                        setState(() {});
-                                                      },
-                                                      viewCallBack: () {
-                                                        debugPrint(
-                                                            newRegistrationController
-                                                                .items[index]
-                                                                .file!
-                                                                .path);
-                                                        Get.to(
-                                                            () => CustomViewer(
-                                                                  fileUrl: newRegistrationController
-                                                                      .items[
-                                                                          index]
-                                                                      .file!
-                                                                      .path,
-                                                                ));
-                                                        // }
-                                                      },
-                                                      isReq:
-                                                          newRegistrationController
-                                                              .items[index]
-                                                              .isReq,
-                                                      isViewProfile:
-                                                          widget.isViewPatient,
-                                                      showIndex: true,
-                                                    ).paddingOnly(bottom: 8.h);
-                                                  }),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )),
-                           SizedBox(
-                            height: 40.h,
-                          ),
-                          Visibility(
-                            visible: widget.isViewPatient == false,
-                            child: CustomButton(
-                              primColor: AppColor.primaryBackgroundColor,
-                              secColor: AppColor.secondaryColor,
-                              textColor: Colors.white,
-                              iconColor: Colors.white,
-                              buttonText: 'Save',
-                              path: 'assets/save-next.png',
-                              callB: newRegistrationController.isLoading
-                                  ? null
-                                  : () async {
-                                      // Check if all required documents are uploaded
-                                      bool allRequiredDocsUploaded =
-                                          newRegistrationController.items.any(
-                                              (item) =>
-                                                  item.isReq &&
-                                                  item.file != null);
-
-                                      if (!allRequiredDocsUploaded) {
-                                        CustomMessage.toast(
-                                            "Please upload Required Documents");
-                                        return;
-                                      }
-
-                                      // Validate duplicate mobile number
-                                      controller.mobileNoCheckMsg =
-                                          await controller
-                                              .checkDuplicateMobileNo(controller
-                                                  .mobileController.text);
-
-                                      String createdDate =
-                                          formatDateTimeToCustomString(
-                                              DateTime.now());
-
-                                      // Set patient ID for edit
-                                      if (widget.pageTitle ==
-                                          'Edit Patient Details') {
-                                        newRegistrationController
-                                                .savePatientReqModel.patientId =
-                                            widget.viewPatientModel?.data
-                                                ?.patientId
-                                                ?.toString();
-                                      }
-
-                                      // Collect data from tabs
-                                      profileInfoTabData();
-                                      demographicInfoData();
-                                      historyOfDialysis();
-                                      uploadDocTabData(createdDate);
-
-                                      final isNew = widget.pageTitle ==
-                                          'New Registration';
-                                      final isEditOrView = widget.pageTitle ==
-                                              'Edit Patient Details' ||
-                                          widget.pageTitle ==
-                                              'View Patient Details';
-
-                                      if (isNew) {
-                                        bool isScrutinyReady =
-                                            controller.isServiceDefined ==
-                                                    true &&
-                                                controller.isScrutinyDefined ==
-                                                    true &&
-                                                controller.isQuestionsDefined ==
-                                                    true;
-
-                                        if (!isScrutinyReady) {
-                                          CustomPopup.showSuccessDialog(
-                                            () => Get.back(),
-                                            "Info",
-                                            "Scrutiny is not defined for this institute against patient registration service!!",
-                                          );
-                                          controller.update();
-                                          return;
-                                        }
-
-                                        if (controller.mobileNoCheckMsg ==
-                                            'Mobile number already exists') {
-                                          CustomMessage.toast(
-                                              controller.mobileNoCheckMsg);
-                                          controller.mobileController.clear();
-                                          controller.update();
-                                          return;
-                                        }
-                                      }
-
-                                      // Save data for new or edit
-                                      if (isNew || isEditOrView) {
-                                        newRegistrationController.savePatient(
-                                          widget.pageTitle,
-                                          userData['ui'].toString(),
-                                        );
-                                      }
-
-                                      // bool hasNullFilePath =
-                                      //     (newRegistrationController.items.any(
-                                      //         (obj) =>
-                                      //             obj.isReq &&
-                                      //             obj.file != null));
-                                      // if (hasNullFilePath) {
-                                      //   controller.mobileNoCheckMsg =
-                                      //       await controller
-                                      //           .checkDuplicateMobileNo(
-                                      //               controller
-                                      //                   .mobileController.text);
-                                      //
-                                      //   var creDate =
-                                      //       formatDateTimeToCustomString(
-                                      //           DateTime.now());
-                                      //   if (widget.pageTitle ==
-                                      //       'Edit Patient Details') {
-                                      //     newRegistrationController
-                                      //             .savePatientReqModel
-                                      //             .patientId =
-                                      //         widget.viewPatientModel?.data
-                                      //             ?.patientId
-                                      //             .toString();
-                                      //   }
-                                      //
-                                      //   profileInfoTabData();
-                                      //   demographicInfoData();
-                                      //   historyOfDialysis();
-                                      //   uploadDocTabData(creDate);
-                                      //
-                                      //   if (widget.pageTitle ==
-                                      //       'New Registration') {
-                                      //     if (controller.isServiceDefined ==
-                                      //             true &&
-                                      //         controller.isScrutinyDefined ==
-                                      //             true &&
-                                      //         controller.isQuestionsDefined ==
-                                      //             true) {
-                                      //       if (controller.mobileNoCheckMsg !=
-                                      //           'Mobile number already exists') {
-                                      //         newRegistrationController
-                                      //             .savePatient(
-                                      //                 widget.pageTitle,
-                                      //                 userData['ui']
-                                      //                     .toString());
-                                      //       } else {
-                                      //         CustomMessage.toast(
-                                      //             controller.mobileNoCheckMsg);
-                                      //         controller.mobileController
-                                      //             .clear();
-                                      //         controller.update();
-                                      //       }
-                                      //     } else {
-                                      //       CustomPopup.showSuccessDialog(() {
-                                      //         Get.back();
-                                      //       }, "Info",
-                                      //           "Scrutiny is not define for this institute against patient registration service!!");
-                                      //
-                                      //       controller.update();
-                                      //     }
-                                      //   } else if (widget.pageTitle ==
-                                      //           'Edit Patient Details' ||
-                                      //       widget.pageTitle ==
-                                      //           'View Patient Details') {
-                                      //     newRegistrationController.savePatient(
-                                      //         widget.pageTitle,
-                                      //         userData['ui'].toString());
-                                      //   }
-                                      // } else {
-                                      //   CustomMessage.toast(
-                                      //       "Please upload Required Documents");
-                                      // }
-                                    },
-                              buttonWidth: 140.w,
+                                      Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                            children: [
+                                              CustomText(
+                                                text:
+                                                'Browse and choose the files you want to upload',
+                                                fontSize: 11.sp,
+                                                fontFam: 'Lato',
+                                                fontWeight:
+                                                FontWeight.w400,
+                                                textColor:
+                                                Color(0xFF666666),
+                                                textAlign:
+                                                TextAlign.start,
+                                              ),
+                                              CustomText(
+                                                text:
+                                                'Supported Formats : JPEG, PNG, PDF, Word',
+                                                fontSize: 11.sp,
+                                                fontFam: 'Lato',
+                                                fontWeight:
+                                                FontWeight.w400,
+                                                textColor:
+                                                Color(0xFF666666),
+                                                textAlign:
+                                                TextAlign.start,
+                                              ),
+                                              SizedBox(
+                                                height: 2,
+                                              ),
+                                              CustomText(
+                                                text:
+                                                'Max File Size: 10 MB',
+                                                fontSize: 11.sp,
+                                                fontFam: 'Lato',
+                                                fontWeight:
+                                                FontWeight.w600,
+                                                textColor: Colors.black,
+                                                textAlign:
+                                                TextAlign.start,
+                                              ),
+                                            ],
+                                          ))
+                                    ],
+                                  ),
+                                  SizedBox(height: 16.h),
+                                ],
+                              ),
                             ),
-                          ),
-                           SizedBox(
-                            height: 40.h,
-                          ),
-                        ],
+                            SizedBox(height: 16.h),
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 8.h, horizontal: 8.w),
+                              decoration: BoxDecoration(
+                                  color: Colors.grey[50],
+                                  borderRadius:
+                                  BorderRadius.circular(10),
+                                  border: Border.all(
+                                      color: AppColor.borderColor)),
+                              child: SizedBox(
+                                height: MediaQuery.of(context)
+                                    .size
+                                    .height *
+                                    0.45,
+                                child: ListView.builder(
+                                    shrinkWrap: true,
+                                    primary: false,
+                                    itemCount:
+                                    newRegistrationController
+                                        .items.length,
+                                    itemBuilder: (context, index) {
+                                      final item =
+                                      newRegistrationController
+                                          .items[index];
+                                      print(
+                                        'itemitem : name=${item.name}, '
+                                            'selected=${item.isSelected}, '
+                                            'isReq=${item.isReq}, '
+                                            'file=${item.file?.path}',
+                                      );
+
+                                      return CustomUploadButton(
+                                        isSelected:
+                                        newRegistrationController
+                                            .items[index]
+                                            .isSelected,
+                                        index: index,
+                                        title:
+                                        newRegistrationController
+                                            .items[index].name,
+                                        callB: () {
+                                          pickFile(
+                                              newRegistrationController
+                                                  .items[index]);
+                                        },
+                                        callDelete: () {
+                                          newRegistrationController
+                                              .items[index]
+                                              .isSelected = false;
+                                          newRegistrationController
+                                              .items[index]
+                                              .file = null;
+                                          setState(() {});
+                                        },
+                                        viewCallBack: () {
+                                          debugPrint(
+                                              newRegistrationController
+                                                  .items[index]
+                                                  .file!
+                                                  .path);
+                                          Get.to(() => CustomViewer(
+                                            fileUrl:
+                                            newRegistrationController
+                                                .items[index]
+                                                .file!
+                                                .path,
+                                          ));
+                                          // }
+                                        },
+                                        isReq:
+                                        newRegistrationController
+                                            .items[index].isReq,
+                                        isViewProfile:
+                                        widget.isViewPatient,
+                                        showIndex: true,
+                                      ).paddingOnly(bottom: 8.h);
+                                    }),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    )
+                    ],
+                  ),
+                ),
+                // Theme(
+                //     data: ThemeData()
+                //         .copyWith(dividerColor: Colors.transparent),
+                //     child: Container(
+                //       decoration: BoxDecoration(
+                //           color: AppColor.darkBlue,
+                //           borderRadius: BorderRadius.circular(10)),
+                //       child: ExpansionTile(
+                //         maintainState: true,
+                //         iconColor: Colors.white,
+                //         collapsedIconColor: Colors.white,
+                //         title: Row(children: [
+                //           Image.asset('assets/file-text.png'),
+                //           SizedBox(width: 12.w),
+                //           Text(
+                //             "Upload Document",
+                //             style: TextStyle(
+                //                 fontSize: 14.sp,
+                //                 color: Colors.white,
+                //                 fontFamily: 'Lato'),
+                //           ),
+                //         ]),
+                //         children: <Widget>[
+                //           Container(
+                //             padding: EdgeInsets.symmetric(
+                //                 vertical: 8.h, horizontal: 8.w),
+                //             decoration: BoxDecoration(
+                //               color: Colors.white,
+                //               borderRadius: BorderRadius.circular(10),
+                //             ),
+                //             child: Column(
+                //               children: [
+                //                 Container(
+                //                   padding: EdgeInsets.symmetric(
+                //                       vertical: 8.h, horizontal: 8.w),
+                //                   decoration: BoxDecoration(
+                //                       color: Colors.grey[50],
+                //                       borderRadius:
+                //                       BorderRadius.circular(10),
+                //                       border: Border.all(
+                //                           color:
+                //                           AppColor.borderColor)),
+                //                   child: Column(
+                //                     crossAxisAlignment:
+                //                     CrossAxisAlignment.stretch,
+                //                     children: [
+                //                       SizedBox(height: 16.h),
+                //                       Row(
+                //                         children: [
+                //                           Padding(
+                //                             padding:
+                //                             EdgeInsets.symmetric(
+                //                                 vertical: 16.h,
+                //                                 horizontal: 16.w),
+                //                             child: Image.asset(
+                //                                 'assets/file.png'),
+                //                           ),
+                //                           Expanded(
+                //                               child: Column(
+                //                                 crossAxisAlignment:
+                //                                 CrossAxisAlignment
+                //                                     .start,
+                //                                 children: [
+                //                                   CustomText(
+                //                                     text:
+                //                                     'Browse and choose the files you want to upload',
+                //                                     fontSize: 12.sp,
+                //                                     fontFam: 'Lato',
+                //                                     fontWeight:
+                //                                     FontWeight.w400,
+                //                                     textColor:
+                //                                     Color(0xFF666666),
+                //                                     textAlign:
+                //                                     TextAlign.start,
+                //                                   ),
+                //                                   CustomText(
+                //                                     text:
+                //                                     'Supported Formats : JPEG, PNG, PDF, Word',
+                //                                     fontSize: 12.sp,
+                //                                     fontFam: 'Lato',
+                //                                     fontWeight:
+                //                                     FontWeight.w400,
+                //                                     textColor:
+                //                                     Color(0xFF666666),
+                //                                     textAlign:
+                //                                     TextAlign.start,
+                //                                   ),
+                //                                   SizedBox(height: 2,),
+                //                                   CustomText(
+                //                                     text:
+                //                                     'Max File Size: 10 MB',
+                //                                     fontSize: 12.sp,
+                //                                     fontFam: 'Lato',
+                //                                     fontWeight:
+                //                                     FontWeight.w600,
+                //                                     textColor:
+                //                                     Colors.black,
+                //                                     textAlign:
+                //                                     TextAlign.start,
+                //                                   ),
+                //                                 ],
+                //                               ))
+                //                         ],
+                //                       ),
+                //                       SizedBox(height: 16.h),
+                //                     ],
+                //                   ),
+                //                 ),
+                //                 SizedBox(height: 16.h),
+                //                 Container(
+                //                   padding:  EdgeInsets.symmetric(vertical: 8.h,horizontal: 8.w),
+                //                   decoration: BoxDecoration(
+                //                       color: Colors.grey[50],
+                //                       borderRadius:
+                //                       BorderRadius.circular(10),
+                //                       border: Border.all(
+                //                           color:
+                //                           AppColor.borderColor)),
+                //                   child: SizedBox(
+                //                     height: MediaQuery.of(context)
+                //                         .size
+                //                         .height *
+                //                         0.45,
+                //                     child: ListView.builder(
+                //                         shrinkWrap: true,
+                //                         primary: false,
+                //                         itemCount:
+                //                         newRegistrationController
+                //                             .items.length,
+                //                         itemBuilder:
+                //                             (context, index) {
+                //                           return CustomUploadButton(
+                //                             isSelected:
+                //                             newRegistrationController
+                //                                 .items[index]
+                //                                 .isSelected,
+                //                             index: index,
+                //                             title:
+                //                             newRegistrationController
+                //                                 .items[index]
+                //                                 .name,
+                //                             callB: () {
+                //                               pickFile(
+                //                                   newRegistrationController
+                //                                       .items[index]);
+                //                             },
+                //                             callDelete: () {
+                //                               newRegistrationController
+                //                                   .items[index]
+                //                                   .isSelected = false;
+                //                               newRegistrationController
+                //                                   .items[index]
+                //                                   .file = null;
+                //                               setState(() {});
+                //                             },
+                //                             viewCallBack: () {
+                //                               debugPrint(
+                //                                   newRegistrationController
+                //                                       .items[index]
+                //                                       .file!
+                //                                       .path);
+                //                               Get.to(
+                //                                       () => CustomViewer(
+                //                                     fileUrl: newRegistrationController
+                //                                         .items[
+                //                                     index]
+                //                                         .file!
+                //                                         .path,
+                //                                   ));
+                //                               // }
+                //                             },
+                //                             isReq:
+                //                             newRegistrationController
+                //                                 .items[index]
+                //                                 .isReq,
+                //                             isViewProfile:
+                //                             widget.isViewPatient,
+                //                             showIndex: true,
+                //                           ).paddingOnly(bottom: 8.h);
+                //                         }),
+                //                   ),
+                //                 ),
+                //               ],
+                //             ),
+                //           ),
+                //         ],
+                //       ),
+                //     )),
+                //
+                SizedBox(
+                  height: 40.h,
+                ),
+                Visibility(
+                  visible: widget.isViewPatient == false,
+                  child: CustomButton(
+                    primColor: AppColor.primaryBackgroundColor,
+                    secColor: AppColor.secondaryColor,
+                    textColor: Colors.white,
+                    iconColor: Colors.white,
+                    buttonText: 'Save',
+                    path: 'assets/save-next.png',
+                    callB: newRegistrationController.isLoading
+                        ? null
+                        : () async {
+                      // Check if all required documents are uploaded
+                      // First validate Personal Info Tab
+                      if (!validatePersonalInfoTab()) {
+                        CustomMessage.toast("Please complete Personal Information first");
+                        return;
+                      }
+
+                      // Validate Demographic Info Tab
+                      if (!validateDemographicInfoTab()) {
+                        CustomMessage.toast("Please complete Demographic Information first");
+                        return;
+                      }
+
+                      // Validate History of Dialysis Tab
+                      if (!validateHistoryOfDialysisTab()) {
+                        CustomMessage.toast("Please complete History of Dialysis first");
+                        return;
+                      }
+                      bool allRequiredDocsUploaded =
+                      newRegistrationController.items.any(
+                              (item) =>
+                          item.isReq &&
+                              item.file != null);
+
+                      if (!allRequiredDocsUploaded) {
+                        CustomMessage.toast(
+                            "Please upload Required Documents");
+                        return;
+                      }
+
+                      // Validate duplicate mobile number
+                      controller.mobileNoCheckMsg =
+                      await controller
+                          .checkDuplicateMobileNo(controller
+                          .mobileController.text);
+
+                      String createdDate =
+                      formatDateTimeToCustomString(
+                          DateTime.now());
+
+                      // Set patient ID for edit
+                      if (widget.pageTitle ==
+                          'Edit Patient Details') {
+                        newRegistrationController
+                            .savePatientReqModel.patientId =
+                            widget.viewPatientModel?.data
+                                ?.patientId
+                                ?.toString();
+                      }
+
+                      // Collect data from tabs
+                      profileInfoTabData();
+                      demographicInfoData();
+                      historyOfDialysis();
+                      uploadDocTabData(createdDate);
+
+                      final isNew = widget.pageTitle ==
+                          'New Registration';
+                      final isEditOrView = widget.pageTitle ==
+                          'Edit Patient Details' ||
+                          widget.pageTitle ==
+                              'View Patient Details';
+
+                      if (isNew) {
+                        bool isScrutinyReady =
+                            controller.isServiceDefined ==
+                                true &&
+                                controller.isScrutinyDefined ==
+                                    true &&
+                                controller.isQuestionsDefined ==
+                                    true;
+
+                        if (!isScrutinyReady) {
+                          CustomPopup.showSuccessDialog(
+                                () => Get.back(),
+                            "Info",
+                            "Scrutiny is not defined for this institute against patient registration service!!",
+                          );
+                          controller.update();
+                          return;
+                        }
+
+                        if (controller.mobileNoCheckMsg ==
+                            'Mobile number already exists') {
+                          CustomMessage.toast(
+                              controller.mobileNoCheckMsg);
+                          controller.mobileController.clear();
+                          controller.update();
+                          return;
+                        }
+                      }
+
+                      // Save data for new or edit
+                      if (isNew || isEditOrView) {
+                        newRegistrationController.savePatient(
+                          widget.pageTitle,
+                          userData['ui'].toString(),
+                        );
+                      }
+
+                      // bool hasNullFilePath =
+                      //     (newRegistrationController.items.any(
+                      //         (obj) =>
+                      //             obj.isReq &&
+                      //             obj.file != null));
+                      // if (hasNullFilePath) {
+                      //   controller.mobileNoCheckMsg =
+                      //       await controller
+                      //           .checkDuplicateMobileNo(
+                      //               controller
+                      //                   .mobileController.text);
+                      //
+                      //   var creDate =
+                      //       formatDateTimeToCustomString(
+                      //           DateTime.now());
+                      //   if (widget.pageTitle ==
+                      //       'Edit Patient Details') {
+                      //     newRegistrationController
+                      //             .savePatientReqModel
+                      //             .patientId =
+                      //         widget.viewPatientModel?.data
+                      //             ?.patientId
+                      //             .toString();
+                      //   }
+                      //
+                      //   profileInfoTabData();
+                      //   demographicInfoData();
+                      //   historyOfDialysis();
+                      //   uploadDocTabData(creDate);
+                      //
+                      //   if (widget.pageTitle ==
+                      //       'New Registration') {
+                      //     if (controller.isServiceDefined ==
+                      //             true &&
+                      //         controller.isScrutinyDefined ==
+                      //             true &&
+                      //         controller.isQuestionsDefined ==
+                      //             true) {
+                      //       if (controller.mobileNoCheckMsg !=
+                      //           'Mobile number already exists') {
+                      //         newRegistrationController
+                      //             .savePatient(
+                      //                 widget.pageTitle,
+                      //                 userData['ui']
+                      //                     .toString());
+                      //       } else {
+                      //         CustomMessage.toast(
+                      //             controller.mobileNoCheckMsg);
+                      //         controller.mobileController
+                      //             .clear();
+                      //         controller.update();
+                      //       }
+                      //     } else {
+                      //       CustomPopup.showSuccessDialog(() {
+                      //         Get.back();
+                      //       }, "Info",
+                      //           "Scrutiny is not define for this institute against patient registration service!!");
+                      //
+                      //       controller.update();
+                      //     }
+                      //   } else if (widget.pageTitle ==
+                      //           'Edit Patient Details' ||
+                      //       widget.pageTitle ==
+                      //           'View Patient Details') {
+                      //     newRegistrationController.savePatient(
+                      //         widget.pageTitle,
+                      //         userData['ui'].toString());
+                      //   }
+                      // } else {
+                      //   CustomMessage.toast(
+                      //       "Please upload Required Documents");
+                      // }
+                    },
+                    buttonWidth: 140.w,
+                  ),
+                ),
+                SizedBox(
+                  height: 100.h,
+                ),
+              ],
+            ),
+          )
               : InternetIssue(
-                  onRetryPressed: () {
-                    checkInternetAndLoadData();
-                  },
-                );
+            onRetryPressed: () {
+              checkInternetAndLoadData();
+            },
+          );
         });
   }
 
@@ -518,32 +723,32 @@ class UploadDocumentState extends State<UploadDocument>
     newRegistrationController.savePatientReqModel.address =
         newRegistrationController.addressController.text;
     newRegistrationController.savePatientReqModel.perAddress =
-        newRegistrationController.perAddressController.text.isNotEmpty
-            ? newRegistrationController.perAddressController.text
-            : newRegistrationController.addressController.text;
+    newRegistrationController.perAddressController.text.isNotEmpty
+        ? newRegistrationController.perAddressController.text
+        : newRegistrationController.addressController.text;
 
     newRegistrationController.savePatientReqModel.percountryId = 1;
 
     newRegistrationController.savePatientReqModel.countryId = 1;
 
     newRegistrationController.savePatientReqModel.occupation =
-        newRegistrationController.selectedOccuObj?.lookupDetId != null
-            ? newRegistrationController.selectedOccuObj!.lookupDetId.toString()
-            : '';
+    newRegistrationController.selectedOccuObj?.lookupDetId != null
+        ? newRegistrationController.selectedOccuObj!.lookupDetId.toString()
+        : '';
     newRegistrationController.savePatientReqModel.education =
-        newRegistrationController.selectedEduObj?.lookupDetId != null
-            ? newRegistrationController.selectedEduObj!.lookupDetId.toString()
-            : '';
+    newRegistrationController.selectedEduObj?.lookupDetId != null
+        ? newRegistrationController.selectedEduObj!.lookupDetId.toString()
+        : '';
     newRegistrationController.savePatientReqModel.monthlyIncome =
         newRegistrationController.selectedMonthlyIncomeObj?.lookupId;
 
     newRegistrationController.savePatientReqModel.economicStatus =
         newRegistrationController.socEcoStat;
     newRegistrationController.savePatientReqModel.religion =
-        newRegistrationController.selectedRelifionObj?.lookupDetId != null
-            ? newRegistrationController.selectedRelifionObj!.lookupDetId
-                .toString()
-            : '';
+    newRegistrationController.selectedRelifionObj?.lookupDetId != null
+        ? newRegistrationController.selectedRelifionObj!.lookupDetId
+        .toString()
+        : '';
 
     if (newRegistrationController.pincodeController.text.isNotEmpty) {
       newRegistrationController.savePatientReqModel.areaCode =
@@ -569,7 +774,7 @@ class UploadDocumentState extends State<UploadDocument>
     newRegistrationController.savePatientReqModel.procedureType =
         newRegistrationController.selectedProcedureType?.lookupDetDescEn;
     newRegistrationController
-            .savePatientReqModel.lookupDetIdHaemodialysisProcedureType =
+        .savePatientReqModel.lookupDetIdHaemodialysisProcedureType =
         newRegistrationController.selectedProcedureType?.lookupDetId;
     newRegistrationController.savePatientReqModel.lookupDetIdDialysisMode =
         newRegistrationController.selectedDialysisModeObj?.lookupDetId;
@@ -592,11 +797,11 @@ class UploadDocumentState extends State<UploadDocument>
       //     int.parse(newRegistrationController.selectedDiaModeFreq!);
 
       newRegistrationController
-              .savePatientReqModel.lookupDetIdDialysisFrequencyInWeek =
+          .savePatientReqModel.lookupDetIdDialysisFrequencyInWeek =
           newRegistrationController.dialysisFreqModel?.dialysisFrequency
               ?.firstWhere((e) =>
-                  e.lookupDescEn ==
-                  newRegistrationController.selectedDiaModeFreq)
+          e.lookupDescEn ==
+              newRegistrationController.selectedDiaModeFreq)
               .lookupId;
 
       newRegistrationController.savePatientReqModel.dialysisFrequencyInWeek =
@@ -613,8 +818,8 @@ class UploadDocumentState extends State<UploadDocument>
         newRegistrationController.identificationNoController.text;
 
     var referredB = newRegistrationController.referredByModel?.data?.firstWhere(
-        (e) =>
-            e.lookupDetDescEn == newRegistrationController.selectedReferredBy,
+            (e) =>
+        e.lookupDetDescEn == newRegistrationController.selectedReferredBy,
         orElse: () => ReferredByData());
     newRegistrationController.savePatientReqModel.lookupDetIdRefByRef =
         referredB?.lookupDetId;
@@ -727,13 +932,13 @@ class UploadDocumentState extends State<UploadDocument>
     newRegistrationController.savePatientReqModel.createdBy = userData['ui'];
     newRegistrationController.savePatientReqModel.createdDateTime = creDate;
     newRegistrationController.savePatientReqModel.updatedBy =
-        userData['updatedBy'];
+    userData['updatedBy'];
     newRegistrationController.savePatientReqModel.updatedDateTime =
-        userData['updatedDate'];
+    userData['updatedDate'];
     newRegistrationController.savePatientReqModel.deletedBy =
-        userData['deletedBy'];
+    userData['deletedBy'];
     newRegistrationController.savePatientReqModel.deletedDateTime =
-        userData['deletedDate'];
+    userData['deletedDate'];
     newRegistrationController.savePatientReqModel.mrnno = "";
     newRegistrationController.savePatientReqModel.unitCount = 1;
     newRegistrationController.savePatientReqModel.transSMS = "Y";
@@ -804,6 +1009,106 @@ class UploadDocumentState extends State<UploadDocument>
   @override
   // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
+
+  bool validatePersonalInfoTab() {
+    final controller = newRegistrationController;
+
+    // Check required Personal Info fields
+    if (controller.prefixVal == null || controller.prefixVal!.isEmpty) {
+      return false;
+    }
+    if (controller.firstNameController.text.isEmpty) {
+      return false;
+    }
+    if (controller.lastNameController.text.isEmpty) {
+      return false;
+    }
+    if (controller.selectedGender == null || controller.selectedGender!.isEmpty) {
+      return false;
+    }
+    if (controller.selectedMaritalVal == null || controller.selectedMaritalVal!.isEmpty) {
+      return false;
+    }
+    if (controller.mobileController.text.isEmpty ||
+        controller.mobileController.text.length != 10) {
+      return false;
+    }
+    if (controller.dboController.text.isEmpty) {
+      return false;
+    }
+    if (controller.addressController.text.isEmpty) {
+      return false;
+    }
+    if (controller.pincodeController.text.isEmpty) {
+      return false;
+    }
+    if (controller.selectedTownVal == null || controller.selectedTownVal!.isEmpty) {
+      return false;
+    }
+    if (controller.selectedTalukaVal == null || controller.selectedTalukaVal!.isEmpty) {
+      return false;
+    }
+    if (controller.selectedDistVal == null || controller.selectedDistVal!.isEmpty) {
+      return false;
+    }
+    if (controller.selectedStateVal == null || controller.selectedStateVal!.isEmpty) {
+      return false;
+    }
+
+    return true;
+  }
+
+  bool validateDemographicInfoTab() {
+    final controller = newRegistrationController;
+
+    // Check required Demographic Info fields
+    if (controller.selectedSchema == null || controller.selectedSchema!.isEmpty) {
+      return false;
+    }
+    if (controller.selectedViralStat == null || controller.selectedViralStat!.isEmpty) {
+      return false;
+    }
+    if (controller.heightFeetController.text.isEmpty) {
+      return false;
+    }
+    if (controller.heightCmController.text.isEmpty) {
+      return false;
+    }
+    if (controller.weightController.text.isEmpty) {
+      return false;
+    }
+    if (controller.nephrologyController.text.isEmpty) {
+      return false;
+    }
+    if (controller.selectedDiaModeFreq == null || controller.selectedDiaModeFreq!.isEmpty) {
+      return false;
+    }
+
+    return true;
+  }
+
+  bool validateHistoryOfDialysisTab() {
+    final controller = newRegistrationController;
+
+    // Check History of Dialysis fields based on selection
+    if (controller.groupVal == CustomRadioButtons.no) {
+      if (controller.dialysisDate.text.isEmpty) {
+        return false;
+      }
+      if (controller.hospitalName.text.isEmpty) {
+        return false;
+      }
+      if (controller.lastDialysisDate.text.isEmpty) {
+        return false;
+      }
+      if (!controller.historyOfDialysis.isSelected ||
+          controller.historyOfDialysis.file == null) {
+        return false;
+      }
+    }
+
+    return true;
+  }
 }
 
 class CustomUploadButton extends StatelessWidget {
@@ -819,15 +1124,15 @@ class CustomUploadButton extends StatelessWidget {
 
   const CustomUploadButton(
       {super.key,
-      required this.title,
-      required this.callB,
-      required this.index,
-      required this.isSelected,
-      required this.callDelete,
-      required this.viewCallBack,
-      required this.isReq,
-      required this.isViewProfile,
-      required this.showIndex});
+        required this.title,
+        required this.callB,
+        required this.index,
+        required this.isSelected,
+        required this.callDelete,
+        required this.viewCallBack,
+        required this.isReq,
+        required this.isViewProfile,
+        required this.showIndex});
 
   @override
   Widget build(BuildContext context) {
@@ -836,21 +1141,21 @@ class CustomUploadButton extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: isSelected
             ? LinearGradient(
-                colors: [
-                  AppColor.primaryBackgroundColor.withValues(alpha: 0.2),
-                  AppColor.secondaryColor.withValues(alpha: 0.2)
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomCenter,
-              )
+          colors: [
+            AppColor.primaryBackgroundColor.withValues(alpha: 0.2),
+            AppColor.secondaryColor.withValues(alpha: 0.2)
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomCenter,
+        )
             : const LinearGradient(
-                colors: [
-                  Colors.white,
-                  Colors.white,
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomCenter,
-              ),
+          colors: [
+            Colors.white,
+            Colors.white,
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomCenter,
+        ),
         borderRadius: BorderRadius.circular(10),
         border: Border.all(color: AppColor.borderColor),
       ),
@@ -894,25 +1199,28 @@ class CustomUploadButton extends StatelessWidget {
                     )),
               ),
               const SizedBox(
-                width: 8,
+                width: 15,
               ),
               isSelected == false
                   ? Visibility(
-                      visible: isViewProfile == false,
-                      child: InkWell(
-                          onTap: () {
-                            callB();
-                          },
-                          child: Image.asset('assets/upload.png')),
-                    )
+                visible: isViewProfile == false,
+                child: InkWell(
+                    onTap: () {
+                      callB();
+                    },
+                    child: Image.asset('assets/upload.png')),
+              )
                   : Visibility(
-                      visible: isViewProfile == false,
-                      child: InkWell(
-                          onTap: () {
-                            callDelete();
-                          },
-                          child: Image.asset('assets/delete-bin.png')),
-                    ),
+                visible: isViewProfile == false,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: InkWell(
+                      onTap: () {
+                        callDelete();
+                      },
+                      child: Image.asset('assets/delete-bin.png')),
+                ),
+              ),
             ],
           ),
         ],
@@ -932,10 +1240,10 @@ class FileDetails {
 
   FileDetails(
       {required this.name,
-      required this.key,
-      required this.isSelected,
-      required this.isReq,
-      this.file,
-      this.ids,
-      this.patientRelativeContactnoId});
+        required this.key,
+        required this.isSelected,
+        required this.isReq,
+        this.file,
+        this.ids,
+        this.patientRelativeContactnoId});
 }

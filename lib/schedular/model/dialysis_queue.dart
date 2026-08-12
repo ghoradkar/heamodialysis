@@ -1,9 +1,11 @@
+import 'dart:async';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dialysis_queue/pre_dialysis/patient_history/tabs/coversheet.dart';
 import 'package:heamodialysis/internet/no_internet_connectivity.dart';
-import 'package:heamodialysis/nephro_desk_patient_list/nephro_controller.dart';
+import 'package:heamodialysis/nephro_desk_patient_list/controller/nephro_controller.dart';
 import 'package:heamodialysis/schedular/model/schedular_consultation_details.dart';
 import 'package:heamodialysis/schedular/model/schedular_post_dialysis.dart';
 import 'package:heamodialysis/schedular/model/schedular_pre_dialysis.dart';
@@ -13,6 +15,8 @@ import 'package:heamodialysis/utils/shared_pref_constants.dart';
 import 'package:heamodialysis/utils/shared_preference.dart';
 import 'package:heamodialysis/widgets/custom_text.dart';
 
+import '../../utils/custom_shimmer_loader.dart';
+import '../../utils/status_update_screen.dart';
 import '../../widgets/custom_shimmer_loader.dart';
 
 class DialysisQueue extends StatefulWidget {
@@ -27,9 +31,14 @@ class DialysisQueue extends StatefulWidget {
 
 class _DialysisQueueState extends State<DialysisQueue>
     with SingleTickerProviderStateMixin {
+  final Connectivity _connectivity = Connectivity();
+  bool _isNetworkAvailable = true;
+  StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
+
   late TabController tabController;
 
   bool hasInternet = true;
+  bool isPageLoading = true;
 
   final SchedularController schedularController =
       Get.put(SchedularController());
@@ -43,6 +52,11 @@ class _DialysisQueueState extends State<DialysisQueue>
     getUserData();
     checkInternetAndLoadData();
 
+    _initConnectivity();
+    _connectivitySubscription = _connectivity.onConnectivityChanged.listen(
+      _updateConnectionStatus,
+    );
+
     tabController = TabController(length: 4, vsync: this);
     tabController.addListener(() {
       // setState(() {}); // Update the UI when the tab changes
@@ -51,8 +65,27 @@ class _DialysisQueueState extends State<DialysisQueue>
     super.initState();
   }
 
+  Future<void> _initConnectivity() async {
+    final result = await _connectivity.checkConnectivity();
+    _updateConnectionStatus(result);
+  }
+
+  // Update connection status handler
+  void _updateConnectionStatus(List<ConnectivityResult> results) {
+    final isConnected = results.any(
+      (result) =>
+          result == ConnectivityResult.mobile ||
+          result == ConnectivityResult.wifi,
+    );
+
+    setState(() {
+      _isNetworkAvailable = isConnected;
+    });
+  }
+
   @override
   void dispose() {
+    _connectivitySubscription?.cancel();
     tabController.dispose();
     super.dispose();
   }
@@ -66,39 +99,60 @@ class _DialysisQueueState extends State<DialysisQueue>
     // });
     schedularController.refreshUi();
     if (hasInternet) {
-      await schedularController.getConsultation(widget.treatmentId);
-      await schedularController.getPreDialysisSchedular(widget.treatmentId);
-      await schedularController.getPostDialysisSchedular(widget.treatmentId);
-      await schedularController.getPrePostCoversheet(
-          widget.patientId.toString(),
-          userData['unitId'].toString(),
-          widget.treatmentId!,
-          userData['ui']);
+      if (mounted) {
+        setState(() {
+          isPageLoading = true;
+        });
+      }
+      try {
+        await schedularController.getConsultation(widget.treatmentId);
+        await schedularController.getPreDialysisSchedular(widget.treatmentId);
+        await schedularController.getPostDialysisSchedular(widget.treatmentId);
+        await schedularController.getPrePostCoversheet(
+            widget.patientId.toString(),
+            userData['unitId'].toString(),
+            widget.treatmentId!,
+            userData['ui']);
 
-      await schedularController.getPrescriptionDet(
-          widget.treatmentId.toString(),
-          userData['unitId'].toString(),
-          widget.patientId.toString(),
-          userData['ui'].toString());
+        await schedularController.getPrescriptionDet(
+            widget.treatmentId.toString(),
+            userData['unitId'].toString(),
+            widget.patientId.toString(),
+            userData['ui'].toString());
 
-      await schedularController.getLabInvest(widget.patientId.toString());
+        await schedularController.getLabInvest(widget.patientId.toString());
 
-      await schedularController.getDietDetails(widget.treatmentId.toString());
+        await schedularController.getDietDetails(widget.treatmentId.toString());
 
-      await nephroController.getCoverSheetNephro(widget.patientId.toString(),
-          widget.treatmentId.toString(), userData['unitId'].toString());
+        await nephroController.getCoverSheetNephro(widget.patientId.toString(),
+            widget.treatmentId.toString(), userData['unitId'].toString());
 
-      await nephroController.getClinicalHistoryList(
-          widget.patientId.toString(), widget.treatmentId.toString());
-      await schedularController.getUploadedDocList(widget.patientId.toString(),
-          widget.treatmentId.toString(), userData['unitId'].toString());
-      await schedularController.getInstructions(
-          widget.treatmentId.toString(), widget.patientId.toString());
+        await nephroController.getClinicalHistoryList(
+            widget.patientId.toString(), widget.treatmentId.toString());
+        await schedularController.getUploadedDocList(
+            widget.patientId.toString(),
+            widget.treatmentId.toString(),
+            userData['unitId'].toString());
+        await schedularController.getInstructions(
+            widget.treatmentId.toString(), widget.patientId.toString());
 
-      await nephroController.getClinicaConditionProvisionalList(
-          widget.treatmentId.toString());
-
-
+        await nephroController
+            .getClinicaConditionProvisionalList(widget.treatmentId.toString());
+      } catch (e) {
+        debugPrint(e.toString());
+      } finally {
+        if (mounted) {
+          setState(() {
+            isPageLoading = false;
+          });
+        }
+      }
+    } else {
+      if (mounted) {
+        setState(() {
+          isPageLoading = false;
+        });
+      }
     }
   }
 
@@ -109,86 +163,102 @@ class _DialysisQueueState extends State<DialysisQueue>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const CustomText(
-          text: 'Patient History',
-          fontSize: 18.0,
-          fontFam: 'Lato',
-          fontWeight: FontWeight.w400,
-          textColor: Colors.black,
-          textAlign: TextAlign.start,
-        ),
-        leading: InkWell(
-            onTap: () {
-              Get.back();
-            },
-            child: Image.asset('assets/arrow-left.png')),
-      ),
-      body: GetBuilder<SchedularController>(builder: (controller) {
-        return hasInternet
-            ? controller.isLoading
-                ?  Center(child: buildShimmerLoader())
-                : Column(
-                    children: [
-                      TabBar(
-                        controller: tabController,
-                        dividerColor: Colors.transparent,
-                        indicatorColor: Colors.transparent,
-                        padding: EdgeInsets.zero,
-                        indicatorPadding: EdgeInsets.zero,
-                        labelPadding: EdgeInsets.zero,
-                        tabs: [
-                          buildTab(0, "Consultation\nDetails"),
-                          buildTab(1, "Patient\nCoversheet"),
-                          buildTab(2, "Pre\nDialysis"),
-                          buildTab(3, "Post\nDialysis"),
-                        ],
-                      ),
-                      Expanded(
-                        child: TabBarView(
-                          controller: tabController,
-                          children: [
-                            SchedularConsultationDetails(
-                              consultationModel:
-                                  schedularController.consultationModel,
-                              // callB: () {
-                              //   tabController.index = 1;
-                              // },
-                            ),
-                            Coversheet(
-                              patientId: widget.patientId,
-                              treatmentId: widget.treatmentId,
-                              // callB: () {
-                              //   tabController.index = 2;
-                              // },
-                              // idProofListModel: newRegistrationController
-                              //     .idProofListModel?.data ??
-                              //     [],
-                              // viralStatusList: newRegistrationController
-                              //     .viralStatusModel?.data ??
-                              //     [],
-                            ),
-                            SchedularPreDialysisTab(
-                              schedularPreDialysisHistory: schedularController
-                                  .schedularPreDialysisHistory,
-                            ),
-                            SchedularPostDialysis(
-                              postDialysisSchedular:
-                                  schedularController.postDialysisSchedular,
-                            ),
-                          ],
-                        ),
-                      )
+    return _isNetworkAvailable
+        ? Scaffold(
+            appBar: AppBar(
+              title: const CustomText(
+                text: 'Patient History',
+                fontSize: 18.0,
+                fontFam: 'Lato',
+                fontWeight: FontWeight.w400,
+                textColor: Colors.black,
+                textAlign: TextAlign.start,
+              ),
+              leading: InkWell(
+                  onTap: () {
+                    Get.back();
+                  },
+                  child: Image.asset('assets/arrow-left.png')),
+            ),
+            body: GetBuilder<SchedularController>(builder: (controller) {
+              if (isPageLoading) {
+                return const Center(child: DialysisQueueShimmer());
+              }
+              if (controller.consultationModel == null &&
+                  (controller.schedularPreDialysisHistory == null ||
+                      controller.postDialysisSchedular == null)) {
+                return CommonStatusScreen(
+                  title: "No Data Found",
+                  description:
+                      "We are unable to find the data you are looking for.",
+                  img: "assets/no_Data_Found.png",
+                  buttonText: "Go Back",
+                  onPressed: () {
+                    Get.back();
+                  },
+                );
+              }
+              return Column(
+                children: [
+                  TabBar(
+                    controller: tabController,
+                    dividerColor: Colors.transparent,
+                    indicatorColor: Colors.transparent,
+                    padding: EdgeInsets.zero,
+                    indicatorPadding: EdgeInsets.zero,
+                    labelPadding: EdgeInsets.zero,
+                    tabs: [
+                      buildTab(0, "Consultation\nDetails"),
+                      buildTab(1, "Patient\nCoversheet"),
+                      buildTab(2, "Pre\nDialysis"),
+                      buildTab(3, "Post\nDialysis"),
                     ],
-                  ).paddingSymmetric(horizontal: 6)
-            : InternetIssue(
-                onRetryPressed: () {
-                  checkInternetAndLoadData();
-                },
-              );
-      }),
-    );
+                  ),
+                  Expanded(
+                    child: TabBarView(
+                      controller: tabController,
+                      children: [
+                        SchedularConsultationDetails(
+                          consultationModel:
+                              schedularController.consultationModel,
+                          // callB: () {
+                          //   tabController.index = 1;
+                          // },
+                        ),
+                        Coversheet(
+                          patientId: widget.patientId,
+                          treatmentId: widget.treatmentId,
+                          // callB: () {
+                          //   tabController.index = 2;
+                          // },
+                          // idProofListModel: newRegistrationController
+                          //     .idProofListModel?.data ??
+                          //     [],
+                          // viralStatusList: newRegistrationController
+                          //     .viralStatusModel?.data ??
+                          //     [],
+                        ),
+                        SchedularPreDialysisTab(
+                          schedularPreDialysisHistory:
+                              schedularController.schedularPreDialysisHistory,
+                        ),
+                        SchedularPostDialysis(
+                          postDialysisSchedular:
+                              schedularController.postDialysisSchedular,
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ).paddingSymmetric(horizontal: 6);
+            }),
+          )
+        : InternetIssue(
+            onRetryPressed: () async {
+              final result = await _connectivity.checkConnectivity();
+              _updateConnectionStatus(result);
+            },
+          );
   }
 
   Widget buildTab(int index, String text) {

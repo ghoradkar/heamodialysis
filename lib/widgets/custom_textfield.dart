@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:get/get_utils/src/extensions/widget_extensions.dart';
 import 'package:heamodialysis/dialysis_queue/post_dialysis/model/common_dropdown_post_dialysis_model.dart';
 import 'package:heamodialysis/nephro_desk_patient_list/model/route_list_model.dart';
@@ -49,7 +52,7 @@ class CustomTableTextField extends StatelessWidget {
           filled: true,
           hintText: hintText,
           hintStyle: const TextStyle(
-              fontSize: 12.0,
+              fontSize: 14.0,
               color: Color(0xff999999),
               fontFamily: "Lato",
               fontWeight: FontWeight.normal),
@@ -65,7 +68,6 @@ class CustomTableTextField extends StatelessWidget {
               color: AppColor.borderColor,
             ),
           ),
-
         ),
         validator: (value) {
           return null;
@@ -80,6 +82,7 @@ class CustomTextField extends StatefulWidget {
   final String? identification;
   final String? errorM;
   final String hintText;
+  final TextStyle? labelStyle;
   final String? initialValue;
   final bool isRequired;
   final bool isReadOnly;
@@ -111,6 +114,7 @@ class CustomTextField extends StatefulWidget {
     this.txtController,
     this.errorM,
     required this.fontSize,
+    this.labelStyle,
   });
 
   @override
@@ -218,8 +222,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 CustomText(
                     text: widget.labelText,
                     fontSize: 14,
-                    fontWeight: FontWeight.normal,
-                    textColor: Colors.black,
+                    fontWeight: FontWeight.w400,
+                    textColor: const Color(0xFF515151),
                     textAlign: TextAlign.start),
                 if (widget.isRequired)
                   // Text(
@@ -277,15 +281,15 @@ class _CustomTextFieldState extends State<CustomTextField> {
               // ✅ Add this errorBorder property
               errorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),
-                borderSide: BorderSide(
-                  color: Colors.red, // Red border on all sides
+                borderSide: const BorderSide(
+                  color: Colors.red,
                   width: 1.0,
                 ),
               ),
               focusedErrorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),
-                borderSide: BorderSide(
-                  color: Colors.red, // Red border when focused with error
+                borderSide: const BorderSide(
+                  color: Colors.red,
                   width: 1.0,
                 ),
               ),
@@ -295,7 +299,6 @@ class _CustomTextFieldState extends State<CustomTextField> {
                   color: AppColor.borderColor,
                 ),
               ),
-
             ),
             validator: (value) {
               // Existing validations
@@ -493,23 +496,16 @@ class CustomTextFieldTempState extends State<CustomTextFieldTemp> {
                 CustomText(
                     text: widget.labelText,
                     fontSize: 14,
-                    fontWeight: FontWeight.normal,
-                    textColor: Colors.black,
+                    fontWeight: FontWeight.w400,
+                    textColor: const Color(0xFF515151),
                     textAlign: TextAlign.start),
 
                 if (widget.isRequired)
-                  // Text(
-                  //   ' *',
-                  //   style: TextStyle(
-                  //     color: AppColor.red,
-                  //     fontSize: 16,
-                  //   ),
-                  // ),
-                  const CustomText(
+                  CustomText(
                       text: "*",
                       fontSize: 16,
                       fontWeight: FontWeight.normal,
-                      textColor: Colors.red,
+                      textColor: AppColor.red,
                       textAlign: TextAlign.start),
               ],
             ),
@@ -665,28 +661,28 @@ class DoubleTextField extends StatelessWidget {
     }
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+      padding: const EdgeInsets.fromLTRB(2, 0, 11, 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(0, 8, 8, 8),
+            padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
             child: Row(
               children: [
                 // Text(labelText, style: const TextStyle(fontSize: 16)),
                 CustomText(
                     text: labelText,
                     fontSize: 14,
-                    fontWeight: FontWeight.normal,
-                    textColor: Colors.black,
+                    fontWeight: FontWeight.w400,
+                    textColor: const Color(0xFF515151),
                     textAlign: TextAlign.start),
 
                 if (isRequired)
-                  const CustomText(
+                  CustomText(
                       text: "*",
                       fontSize: 16,
                       fontWeight: FontWeight.normal,
-                      textColor: Colors.red,
+                      textColor: AppColor.red,
                       textAlign: TextAlign.start),
 
                 // Text(
@@ -701,8 +697,8 @@ class DoubleTextField extends StatelessWidget {
           ),
           Row(
             children: [
-              SizedBox(
-                width: 60,
+              Expanded(
+                flex: 5,
                 child: TextFormField(
                   initialValue: txtControllerInitial1,
                   onChanged: (value) {
@@ -716,9 +712,12 @@ class DoubleTextField extends StatelessWidget {
                   decoration: InputDecoration(
                     fillColor: fillColor,
                     filled: true,
+                    isDense: true,
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 10.w, vertical: 12.h),
                     hintText: hintText1,
                     hintStyle: const TextStyle(
-                        fontSize: 16.0,
+                        fontSize: 14.0,
                         color: Color(0xff999999),
                         fontFamily: "Lato",
                         fontWeight: FontWeight.normal),
@@ -761,10 +760,10 @@ class DoubleTextField extends StatelessWidget {
                 ),
               ),
               const SizedBox(
-                width: 10,
+                width: 5,
               ),
-              SizedBox(
-                width: 60,
+              Expanded(
+                flex: 4,
                 child: TextFormField(
                   initialValue: txtControllerInitial2,
                   onChanged: (value) {
@@ -778,9 +777,12 @@ class DoubleTextField extends StatelessWidget {
                   decoration: InputDecoration(
                     fillColor: fillColor,
                     filled: true,
+                    isDense: true,
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 10.w, vertical: 12.h),
                     hintText: hintText2,
                     hintStyle: const TextStyle(
-                        fontSize: 16.0,
+                        fontSize: 14.0,
                         color: Color(0xff999999),
                         fontFamily: "Lato",
                         fontWeight: FontWeight.normal),
@@ -830,7 +832,7 @@ class DoubleTextField extends StatelessWidget {
   }
 }
 
-enum CustomRadioButtons{yes,no,sendBack}
+enum CustomRadioButtons { yes, no, sendBack }
 
 class CustomRadioField extends StatelessWidget {
   final String text;
@@ -876,12 +878,12 @@ class CustomRadioField extends StatelessWidget {
             ' *',
             style: TextStyle(
               color: AppColor.red,
-              fontSize: 16,
+              fontSize: 15,
             ),
           ),
         if (text.isNotEmpty)
           const SizedBox(
-            width: 30,
+            width: 20,
           ),
         Row(
           mainAxisSize: MainAxisSize.min,
@@ -896,7 +898,7 @@ class CustomRadioField extends StatelessWidget {
             ),
             CustomText(
               text: firstRadioText,
-              fontSize: 14.0,
+              fontSize: 13.0,
               fontFam: 'Lato',
               fontWeight: FontWeight.normal,
               textColor: Colors.black,
@@ -904,7 +906,7 @@ class CustomRadioField extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(width: 30),
+        const SizedBox(width: 15),
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -918,7 +920,7 @@ class CustomRadioField extends StatelessWidget {
             ),
             CustomText(
               text: secondRadioText,
-              fontSize: 14.0,
+              fontSize: 13.0,
               fontFam: 'Lato',
               fontWeight: FontWeight.normal,
               textColor: Colors.black,
@@ -931,27 +933,27 @@ class CustomRadioField extends StatelessWidget {
 
         // Third Radio Button
         if (thirdRadioText != null && showThirdOption)
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Radio(
-              activeColor: AppColor.secondaryColor,
-              value: CustomRadioButtons.sendBack,
-              groupValue: groupVal,
-              onChanged: (CustomRadioButtons? value) {
-                radioCallB3!(value);
-              },
-            ),
-            CustomText(
-              text: thirdRadioText!,
-              fontSize: 14.0,
-              fontFam: 'Lato',
-              fontWeight: FontWeight.normal,
-              textColor: Colors.black,
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Radio(
+                activeColor: AppColor.secondaryColor,
+                value: CustomRadioButtons.sendBack,
+                groupValue: groupVal,
+                onChanged: (CustomRadioButtons? value) {
+                  radioCallB3!(value);
+                },
+              ),
+              CustomText(
+                text: thirdRadioText!,
+                fontSize: 14.0,
+                fontFam: 'Lato',
+                fontWeight: FontWeight.normal,
+                textColor: Colors.black,
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
       ],
     );
   }
@@ -1039,62 +1041,77 @@ class MyCustomDropdown extends StatelessWidget {
     bool allNotNull = items.every((element) => element != null);
     List<String> dummy = ['select'];
     return Padding(
-      padding: EdgeInsets.fromLTRB(8.w, 0, 8.h, 8.h),
+      padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.fromLTRB(8.w, 0, 8.h, 8.h),
+            padding: const EdgeInsets.fromLTRB(0, 8, 8, 8),
             child: Row(
               children: [
                 CustomText(
                     text: labelText,
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.normal,
-                    textColor: Colors.black,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                    textColor: const Color(0xFF515151),
                     textAlign: TextAlign.start),
                 if (isRequired)
                   CustomText(
                       text: "*",
-                      fontSize: 14.sp,
+                      fontSize: 16,
                       fontWeight: FontWeight.normal,
-                      textColor: Colors.red,
+                      textColor: AppColor.red,
                       textAlign: TextAlign.start),
               ],
             ),
           ),
-          DropdownButtonFormField(
+          DropdownButtonFormField2(
             isExpanded: true,
-            icon: Icon(
-              Icons.keyboard_arrow_down_outlined,
-              color: AppColor.primaryBackgroundColor,
+            iconStyleData: IconStyleData(
+              icon: Icon(
+                Icons.keyboard_arrow_down_outlined,
+                color: AppColor.primaryBackgroundColor,
+              ),
             ),
+            dropdownStyleData: DropdownStyleData(
+              maxHeight: 250,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.white,
+              ),
+              offset: const Offset(0, -4),
+            ),
+            style: const TextStyle(
+                fontSize: 16,
+                color: Colors.black,
+                fontFamily: "Lato",
+                fontWeight: FontWeight.normal),
+            hint: CustomText(
+                text: hint,
+                fontSize: 14,
+                fontWeight: FontWeight.normal,
+                textColor: const Color(0xff999999),
+                textAlign: TextAlign.start),
             decoration: InputDecoration(
-              hintText: hint,
               filled: true,
               fillColor: filledColor,
-              hintStyle: TextStyle(
-                  fontSize: 12.0.sp,
-                  color: const Color(0xff999999),
-                  fontFamily: "Lato",
-                  fontWeight: FontWeight.normal),
+              contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 10),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),
                 borderSide: BorderSide(
                   color: AppColor.borderColor,
                 ),
               ),
-              // ✅ Add this errorBorder property for red border on validation error
               errorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),
-                borderSide: BorderSide(
+                borderSide: const BorderSide(
                   color: Colors.red, // Red border on all sides
                   width: 1.0,
                 ),
               ),
               focusedErrorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),
-                borderSide: BorderSide(
+                borderSide: const BorderSide(
                   color: Colors.red, // Red border when focused with error
                   width: 1.0,
                 ),
@@ -1106,15 +1123,14 @@ class MyCustomDropdown extends StatelessWidget {
                 ),
               ),
             ),
-            initialValue: selectedItem,
+            value: selectedItem,
             items: allNotNull
                 ? items
                     .map((item) => DropdownMenuItem(
                           value: item,
-                          // child: Text(item),
                           child: CustomText(
                             text: item ?? '',
-                            fontSize: 12.sp,
+                            fontSize: 16,
                             fontWeight: FontWeight.normal,
                             textColor: Colors.black,
                             textAlign: TextAlign.start,
@@ -1126,12 +1142,11 @@ class MyCustomDropdown extends StatelessWidget {
                           value: items,
                           child: CustomText(
                             text: items,
-                            fontSize: 12.sp,
+                            fontSize: 16,
                             fontWeight: FontWeight.normal,
                             textColor: Colors.black,
                             textAlign: TextAlign.start,
                           ).paddingOnly(top: 4.h, bottom: 4.h),
-                          // child: Text(items).paddingOnly(top: 4, bottom: 4),
                         ))
                     .toList(),
             onChanged: isViewProfile == true
@@ -1193,44 +1208,55 @@ class MyCustomDropdownObject extends StatelessWidget {
                 //   labelText,
                 //   style: const TextStyle(fontSize: 16),
                 // ),
-                CustomText(
-                    text: labelText,
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.normal,
-                    textColor: Colors.black,
-                    textAlign: TextAlign.start),
+                Flexible(
+                  child: CustomText(
+                      text: labelText,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      textColor: const Color(0xFF515151),
+                      textAlign: TextAlign.start),
+                ),
                 if (isRequired)
-                  // Text(
-                  //   ' *',
-                  //   style: TextStyle(
-                  //     color: AppColor.red,
-                  //     fontSize: 16,
-                  //   ),
-                  // ),
                   CustomText(
                       text: "*",
-                      fontSize: 12.sp,
+                      fontSize: 16,
                       fontWeight: FontWeight.normal,
-                      textColor: Colors.red,
+                      textColor: AppColor.red,
                       textAlign: TextAlign.start)
               ],
             ),
           ),
-          DropdownButtonFormField(
+          DropdownButtonFormField2(
             isExpanded: true,
-            icon: Icon(
-              Icons.keyboard_arrow_down_outlined,
-              color: AppColor.primaryBackgroundColor,
+            iconStyleData: IconStyleData(
+              icon: Icon(
+                Icons.keyboard_arrow_down_outlined,
+                color: AppColor.primaryBackgroundColor,
+              ),
             ),
+            dropdownStyleData: DropdownStyleData(
+              maxHeight: 250,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.white,
+              ),
+              offset: const Offset(0, -4),
+            ),
+            style: const TextStyle(
+                fontSize: 16,
+                color: Colors.black,
+                fontFamily: "Lato",
+                fontWeight: FontWeight.normal),
+            hint: CustomText(
+                text: hint,
+                fontSize: 14,
+                fontWeight: FontWeight.normal,
+                textColor: const Color(0xff999999),
+                textAlign: TextAlign.start),
             decoration: InputDecoration(
-              hintText: hint,
               filled: true,
               fillColor: filledColor,
-              hintStyle: TextStyle(
-                  fontSize: 12.sp,
-                  color: const Color(0xff999999),
-                  fontFamily: "Lato",
-                  fontWeight: FontWeight.normal),
+              contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 10),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),
                 borderSide: BorderSide(
@@ -1247,7 +1273,7 @@ class MyCustomDropdownObject extends StatelessWidget {
               ),
               focusedErrorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),
-                borderSide: BorderSide(
+                borderSide: const BorderSide(
                   color: Colors.red, // Red border when focused with error
                   width: 1.0,
                 ),
@@ -1260,15 +1286,14 @@ class MyCustomDropdownObject extends StatelessWidget {
                 ),
               ),
             ),
-            initialValue: selectedItem,
+            value: selectedItem,
             items: allNotNull
                 ? items
                     .map((item) => DropdownMenuItem(
                           value: item,
-                          // child: Text(item.routename!),
                           child: CustomText(
                               text: item.routename!,
-                              fontSize: 12.sp,
+                              fontSize: 16,
                               fontWeight: FontWeight.normal,
                               textColor: Colors.black,
                               textAlign: TextAlign.start),
@@ -1277,10 +1302,9 @@ class MyCustomDropdownObject extends StatelessWidget {
                 : dummy
                     .map((items) => DropdownMenuItem(
                           value: items,
-                          // child: Text(items),
                           child: CustomText(
                               text: items,
-                              fontSize: 12.sp,
+                              fontSize: 16,
                               fontWeight: FontWeight.normal,
                               textColor: Colors.black,
                               textAlign: TextAlign.start),
@@ -1333,10 +1357,10 @@ class SearchableDropDown extends StatelessWidget {
             alignment: Alignment.centerLeft,
             child: CustomText(
                 text: hintText,
-                fontSize: 12.sp,
-                fontWeight: FontWeight.normal,
-                textColor: Colors.black,
-                textAlign: TextAlign.left),
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                textColor: const Color(0xFF515151),
+                textAlign: TextAlign.start),
           ),
         ),
         Padding(
@@ -1401,43 +1425,42 @@ class CustomDateField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(8.w, 0, 8.h, 8.h),
+      padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.fromLTRB(0, 8.h, 8.w, 8.h),
+            padding: const EdgeInsets.fromLTRB(0, 8, 8, 8),
             child: Row(
               children: [
                 CustomText(
                     text: labelText,
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.normal,
-                    textColor: Colors.black,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                    textColor: const Color(0xFF515151),
                     textAlign: TextAlign.start),
                 if (isRequired)
-                  Text(
-                    ' *',
-                    style: TextStyle(
-                      color: AppColor.red,
-                      fontSize: 16.sp,
-                    ),
-                  ),
+                  CustomText(
+                      text: "*",
+                      fontSize: 16,
+                      fontWeight: FontWeight.normal,
+                      textColor: AppColor.red,
+                      textAlign: TextAlign.start),
               ],
             ),
           ),
           TextFormField(
             initialValue: initialValue,
             readOnly: true,
-            style: TextStyle(fontSize: 12.sp, fontFamily: "Lato"),
+            style: const TextStyle(fontSize: 16, fontFamily: "Lato"),
             controller: selectedDate,
             decoration: InputDecoration(
               fillColor: filledColor,
               filled: true,
               hintText: hint,
-              hintStyle: TextStyle(
-                  fontSize: 12.0.sp,
-                  color: const Color(0xff999999),
+              hintStyle: const TextStyle(
+                  fontSize: 14.0,
+                  color: Color(0xff999999),
                   fontFamily: "Lato",
                   fontWeight: FontWeight.normal),
               suffixIcon: dontDhowPrefix
@@ -1521,45 +1544,43 @@ class CustomDOBField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(8.w, 0, 8.w, 8.h),
+      padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.fromLTRB(0, 8.h, 8.w, 8.h),
+            padding: const EdgeInsets.fromLTRB(0, 8, 8, 8),
             child: Row(
               children: [
                 CustomText(
                     text: labelText,
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.normal,
-                    textColor: Colors.black,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                    textColor: const Color(0xFF515151),
                     textAlign: TextAlign.start),
                 if (isRequired)
-                  Text(
-                    ' *',
-                    style: TextStyle(
-                      color: AppColor.red,
-                      fontSize: 12.sp,
-                    ),
-                  ),
+                  CustomText(
+                      text: "*",
+                      fontSize: 16,
+                      fontWeight: FontWeight.normal,
+                      textColor: AppColor.red,
+                      textAlign: TextAlign.start),
               ],
             ),
           ),
-
           TextFormField(
             initialValue: initialValue,
             readOnly: false,
             // Allow manual input
-            style: TextStyle(fontSize: 12.sp, fontFamily: "Lato"),
+            style: const TextStyle(fontSize: 16, fontFamily: "Lato"),
             controller: selectedDate,
             decoration: InputDecoration(
               fillColor: filledColor,
               filled: true,
               hintText: hint,
-              hintStyle: TextStyle(
-                  fontSize: 12.sp,
-                  color: const Color(0xff999999),
+              hintStyle: const TextStyle(
+                  fontSize: 14.0,
+                  color: Color(0xff999999),
                   fontFamily: "Lato",
                   fontWeight: FontWeight.normal),
               suffixIcon: dontDhowPrefix
@@ -1640,99 +1661,137 @@ class CustomDocUploadField extends StatelessWidget {
   final TextEditingController selectedDate;
   final Color filledColor;
 
-  const CustomDocUploadField(
-      {super.key,
-      required this.labelText,
-      required this.hint,
-      required this.isRequired,
-      required this.callB,
-      required this.selectedDate,
-      required this.filledColor});
+  const CustomDocUploadField({
+    super.key,
+    required this.labelText,
+    required this.hint,
+    required this.isRequired,
+    required this.callB,
+    required this.selectedDate,
+    required this.filledColor,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final bool hasFile = selectedDate.text.isNotEmpty;
+
     return Padding(
-      padding: EdgeInsets.fromLTRB(8.w, 0, 8.h, 8.h),
+      padding: EdgeInsets.fromLTRB(8.w, 8.h, 8.w, 8.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: EdgeInsets.fromLTRB(0, 8.h, 8.w, 8.h),
-            child: Row(
-              children: [
+          /// Label
+          Row(
+            children: [
+              CustomText(
+                text: labelText,
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                textColor: const Color(0xFF515151),
+                textAlign: TextAlign.start,
+              ),
+              if (isRequired)
                 CustomText(
-                    text: labelText,
-                    fontSize: 12.sp,
+                    text: "*",
+                    fontSize: 16,
                     fontWeight: FontWeight.normal,
-                    textColor: Colors.black,
+                    textColor: AppColor.red,
                     textAlign: TextAlign.start),
-                if (isRequired)
-                  Text(
-                    ' *',
-                    style: TextStyle(
-                      color: AppColor.red,
-                      fontSize: 12.sp,
-                    ),
-                  ),
-              ],
-            ),
+            ],
           ),
-          TextFormField(
-            readOnly: true,
-            controller: selectedDate,
-            decoration: InputDecoration(
-              fillColor: filledColor,
-              filled: true,
-              hintText: hint,
-              hintStyle: TextStyle(
-                  fontSize: 12.0.sp,
-                  color: const Color(0xff999999),
-                  fontFamily: "Lato",
-                  fontWeight: FontWeight.normal),
-              suffix: Image.asset(
-                'assets/upload.png',
-                color: AppColor.primaryBackgroundColor,
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10.0),
-                borderSide: BorderSide(
-                  color: AppColor.borderColor,
-                ),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10.0),
-                borderSide: BorderSide(
-                  color: AppColor.borderColor,
-                ),
-              ),
-              // Error state borders - ALL FOUR SIDES RED
-              errorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10.0),
-                borderSide: const BorderSide(
-                  color: Colors.red, // Red border on all sides
-                  width: 1.0,
-                ),
-              ),
-              focusedErrorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10.0),
-                borderSide: const BorderSide(
-                  color: Colors.red, // Red border when focused with error
-                  width: 1.0,
-                ),
-              ),
-            ),
+
+          SizedBox(height: 8.h),
+
+          /// Upload Container
+          InkWell(
             onTap: () {
-              callB();
+              callB(); // pickFile function
             },
-            validator: isRequired
-                ? (value) {
-                    if (value == null || value.isEmpty) {
-                      return "$labelText is required";
-                    }
-                    return null;
-                  }
-                : null,
+            child: Container(
+              height: 130,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: const Color(0xffF2F2F2),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: Colors.grey.shade400,
+                ),
+              ),
+              child: Center(
+                child: hasFile
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.file(
+                          File(selectedDate.text),
+                          height: 120,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                        ),
+                      )
+                    : Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'assets/upload.png',
+                            height: 36,
+                            color: AppColor.primaryBackgroundColor,
+                          ),
+                          SizedBox(height: 10.h),
+                          RichText(
+                            textAlign: TextAlign.center,
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: hint,
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                    color: Colors.black,
+                                    fontFamily: "Lato",
+                                  ),
+                                ),
+                                if (isRequired)
+                                  TextSpan(
+                                    text: " *",
+                                    style: TextStyle(
+                                      fontSize: 14.sp,
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+              ),
+            ),
           ),
+
+          /// Selected file name (optional below image)
+          if (hasFile)
+            Padding(
+              padding: EdgeInsets.only(top: 6.h),
+              child: Text(
+                selectedDate.text.split('/').last, // just file name
+                style: TextStyle(
+                  fontSize: 12.sp,
+                  color: Colors.grey,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+
+          /// Error text
+          if (!hasFile && isRequired)
+            Padding(
+              padding: EdgeInsets.only(top: 4.h),
+              child: Text(
+                "$labelText is required",
+                style: TextStyle(
+                  color: Colors.red,
+                  fontSize: 11.sp,
+                ),
+              ),
+            ),
         ],
       ),
     );
@@ -1826,7 +1885,7 @@ class CustomButton extends StatelessWidget {
         callB!();
       },
       child: Container(
-          padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 4.w),
+          padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 4.w),
           alignment: Alignment.center,
           width: buttonWidth,
           decoration: BoxDecoration(

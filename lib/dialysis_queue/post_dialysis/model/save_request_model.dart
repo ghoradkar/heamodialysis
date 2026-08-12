@@ -78,6 +78,7 @@ class SaveRequestModel {
   String? bloodTransDate;
   String? postDialysisInfusion;
   String? dialysisDuration;
+  double? cbv;
 
   SaveRequestModel({
     this.postDialysisInfusionId,
@@ -159,6 +160,7 @@ class SaveRequestModel {
     this.bloodTransDate,
     this.postDialysisInfusion,
     this.dialysisDuration,
+    this.cbv,
   });
 
   factory SaveRequestModel.fromJson(Map<String, dynamic> json) {
@@ -242,6 +244,7 @@ class SaveRequestModel {
       bloodTransDate: json['bloodTransDate'],
       postDialysisInfusion: json['postDialysisInfusion'],
       dialysisDuration: json['dialysisDuration'],
+      cbv: (json['cbv'] as num?)?.toDouble(),
     );
   }
 
@@ -326,6 +329,7 @@ class SaveRequestModel {
     map['bloodTransDate'] = bloodTransDate;
     map['postDialysisInfusion'] = postDialysisInfusion;
     map['dialysisDuration'] = dialysisDuration;
+    map['cbv'] = cbv;
     return map;
   }
 }

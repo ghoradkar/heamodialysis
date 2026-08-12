@@ -60,7 +60,6 @@ class RoDesinfectionDetailsController extends GetxController {
 
   List<RoDisinfectionDoc> roDisinfecDocList = [];
 
-
   getInstituteList() async {
     isLoading = true;
     update();
@@ -100,8 +99,7 @@ class RoDesinfectionDetailsController extends GetxController {
   getMachineList(unitId) async {
     isLoading = true;
 
-    final uri =
-        Uri.parse(ApiConstants.baseUrl + ApiNames.getMachineNameList);
+    final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getMachineNameList);
     var body = {"unitId": unitId};
     String jsonbody = json.encode(body);
     Map<String, String> headers = {
@@ -243,7 +241,6 @@ class RoDesinfectionDetailsController extends GetxController {
       request.fields.addAll({'data': body});
       request.fields.addAll({'documentNames': docNameString});
       request.fields.addAll({'docId': docIdString});
-
       // Add headers
       request.headers.addAll({
         'Content-Type': 'multipart/form-data',
@@ -258,9 +255,23 @@ class RoDesinfectionDetailsController extends GetxController {
         }
       }
 
+      debugPrint("====== API HIT: SAVE RO DISINFECTION DETAILS ======");
+      debugPrint("URL: ${uri.toString()}");
+      debugPrint("BODY FIELDS: ${request.fields}");
+      debugPrint("FILES COUNT: ${request.files.length}");
+      for (var f in request.files) {
+        debugPrint("FILE FIELD: ${f.field}, FILENAME: ${f.filename}");
+      }
+      debugPrint("====================================================");
+
       // Send the request using the custom IOClient
       http.StreamedResponse response = await ioClient.send(request);
       final finalResp = await http.Response.fromStream(response);
+
+      debugPrint("====== API RESPONSE ======");
+      debugPrint("STATUS CODE: ${finalResp.statusCode}");
+      debugPrint("RESPONSE BODY: ${finalResp.body}");
+      debugPrint("==========================");
 
       if (finalResp.statusCode == 200) {
         var data = jsonDecode(finalResp.body); // Use the response body here
@@ -443,8 +454,7 @@ class RoDesinfectionDetailsController extends GetxController {
   getDisinfecUsed() async {
     isLoading = true;
 
-    final uri =
-        Uri.parse(ApiConstants.baseUrl + ApiNames.getDisinfectionDet);
+    final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getDisinfectionDet);
 
     // String jsonbody = json.encode(body);
     Map<String, String> headers = {
@@ -516,9 +526,9 @@ class RoDesinfectionDetailsController extends GetxController {
 
   getRoMaintenanceDetAndSearchList(unitId, machineName) async {
     isLoading = true;
-update();
-    final uri = Uri.parse(
-        ApiConstants.baseUrl + ApiNames.getallROMachineDisBySearch);
+    update();
+    final uri =
+        Uri.parse(ApiConstants.baseUrl + ApiNames.getallROMachineDisBySearch);
     var body = {"unitId": unitId, "input": machineName};
     String jsonbody = json.encode(body);
     Map<String, String> headers = {

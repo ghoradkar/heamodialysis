@@ -22,6 +22,7 @@ import 'package:heamodialysis/new_registration/model/monthly_income_model.dart';
 import 'package:heamodialysis/new_registration/model/patient_profile_photo.dart';
 import 'package:heamodialysis/new_registration/model/pincode/pincode_adress_model.dart';
 import 'package:heamodialysis/new_registration/model/prefix/predix_list.dart';
+import 'package:heamodialysis/new_registration/model/gender/gender_list.dart';
 import 'package:heamodialysis/new_registration/model/refferedBy/referred_by_model.dart';
 import 'package:heamodialysis/new_registration/model/relation/relation_data.dart';
 import 'package:heamodialysis/new_registration/model/relation/relation_model.dart';
@@ -61,6 +62,7 @@ class NewRegistrationController extends GetxController {
   SchemaAdoptedModel? schemaAdoptedModel;
   InstituteList? instituteList;
   PredixList? predixList;
+  GenderList? genderList;
   ViralStatusModel? viralStatusModel;
   StateModel? stateModel;
   DivisionModel? divisionModel;
@@ -100,35 +102,7 @@ class NewRegistrationController extends GetxController {
       ids: null,
       patientRelativeContactnoId: null);
 
-  List<FileDetails> items = [
-    // FileDetails(
-    //     name: 'HHH Test Report',
-    //     key: 'hhhTest',
-    //     isSelected: false,
-    //     isReq: true),
-    // FileDetails(
-    //     name: 'Consent Form',
-    //     key: 'consetForm',
-    //     isSelected: false,
-    //     isReq: false),
-    // FileDetails(
-    //     name: 'Blood Test Document',
-    //     key: 'bloodTest',
-    //     isSelected: false,
-    //     isReq: false),
-    // FileDetails(
-    //     name: 'Dialysis Frequency',
-    //     key: 'dailysisFrequency',
-    //     isSelected: false,
-    //     isReq: true),
-    // FileDetails(
-    //     name: 'Viral Status Load',
-    //     key: 'viralStatusLoad',
-    //     isSelected: false,
-    //     isReq: true),
-  ];
-
-  // FileDetails? uploadedFile;
+  List<FileDetails> items = [];
 
   SavePatientReqModel savePatientReqModel = SavePatientReqModel();
   TextEditingController abhaNoController = TextEditingController();
@@ -137,10 +111,8 @@ class NewRegistrationController extends GetxController {
   TextEditingController middleNameController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
 
-  // TextEditingController socEcoStat = TextEditingController();
   String? socEcoStat;
 
-  // TextEditingController religionController = TextEditingController();
   TextEditingController mobileController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController addressController = TextEditingController();
@@ -150,7 +122,6 @@ class NewRegistrationController extends GetxController {
   TextEditingController identificationNoController = TextEditingController();
   TextEditingController mjpjayEnrollNoController = TextEditingController();
 
-  // TextEditingController nationalityController = TextEditingController();
   TextEditingController heightFeetController = TextEditingController();
   TextEditingController heightCmController = TextEditingController();
   TextEditingController weightController = TextEditingController();
@@ -310,10 +281,6 @@ class NewRegistrationController extends GetxController {
     var encoder = const JsonEncoder.withIndent('  ');
     var jsonString = encoder.convert(json);
 
-    // Insert newline after opening curly bracket
-    // jsonString = jsonString.replaceFirst('{', '{\n');
-
-    // Add newline after each field
     jsonString = jsonString.replaceAllMapped(RegExp(r',\n\s*'), (match) {
       return ',\n';
     });
@@ -321,8 +288,105 @@ class NewRegistrationController extends GetxController {
     return jsonString;
   }
 
+  void clearAllFields() {
+    debugPrint("🔴 Clearing all registration fields...");
+    abhaNoController.clear();
+    abhaAddressController.clear();
+    firstNameController.clear();
+    middleNameController.clear();
+    lastNameController.clear();
+    mobileController.clear();
+    emailController.clear();
+    addressController.clear();
+    perAddressController.clear();
+    pincodeController.clear();
+    perPincodeController.clear();
+    identificationNoController.clear();
+    mjpjayEnrollNoController.clear();
+    heightFeetController.clear();
+    heightCmController.clear();
+    weightController.clear();
+    reffContactNoController.clear();
+    refByNameController.clear();
+    nephrologyController.clear();
+    nephrologyContactNoController.clear();
+    relativeNameController.clear();
+    contactNoController.clear();
+    dboController.clear();
+    hospitalName.clear();
+    dialysisDate.clear();
+    lastDialysisDate.clear();
+
+    socEcoStat = null;
+    selectedMonthlyIncome = null;
+    selectedMonthlyIncomeObj = null;
+    selectedEdu = null;
+    selectedEduObj = null;
+    selectedOccu = null;
+    selectedOccuObj = null;
+    selectedReligion = null;
+    selectedRelifionObj = null;
+    prefixVal = null;
+    selectedGender = null;
+    selectedMaritalVal = null;
+    selectedMarriedObj = null;
+    selectedDate = null;
+    formattedDateDBO = null;
+    image = null;
+    selectedSchema = null;
+    selectedSchemeObj = null;
+    selectedViralStat = null;
+    selectedProcedureType = null;
+    selectedDialysisMode = null;
+    selectedDialysisModeObj = null;
+    selectedIdProof = null;
+    selectedIdProfObj = null;
+    selectedReferredBy = null;
+    selectedDiaModeFreq = null;
+    selectedRelationObj = null;
+    selectedBloodObj = null;
+    selectedBlood = null;
+    selectedRelation = null;
+    selectedTownVal = null;
+    selectedTownObj = null;
+    selectedTalukaVal = null;
+    selectedTalukaObject = null;
+    selectedDistVal = null;
+    selectedDistObj = null;
+    selectedDivVal = null;
+    selectedDivisionObj = null;
+    selectedStateVal = null;
+    selectedStateObj = null;
+    selectedCountryVal = 'India';
+    selectedPerCountry = 'India';
+
+    userProfilePhoto.isSelected = false;
+    userProfilePhoto.file = null;
+    historyOfDialysis.isSelected = false;
+    historyOfDialysis.file = null;
+    relativeDoc.isSelected = false;
+    relativeDoc.file = null;
+    relativeDoc.ids = null;
+    relativeDoc.patientRelativeContactnoId = null;
+
+    for (var item in items) {
+      item.isSelected = false;
+      item.file = null;
+    }
+
+    years = 0;
+    months = 0;
+    days = 0;
+    isChecked = false;
+    isLoading = false;
+    groupVal = CustomRadioButtons.yes;
+    
+    update();
+  }
+
   Future<bool> getPatientHistory(patientId) async {
     isLoading = true;
+    update();
 
     final uri = Uri.parse(
         "${ApiConstants.baseUrl}${ApiNames.getStageByPatientId}?patientId=$patientId");
@@ -331,61 +395,49 @@ class NewRegistrationController extends GetxController {
       "Content-Type": "application/json",
     };
 
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.post(uri, headers: headers, body: null);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
-      isLoading = false;
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      regisPatientHistory = RegisPatientHistory.fromJson(data);
-      update();
-
-      return true;
-    } else if (response.statusCode == 401) {
-      isLoading = false;
-      update();
-
-      return false;
-    } else {
+    try {
+      final response = await ioClient.post(uri, headers: headers, body: null);
+      if (response.statusCode == 200) {
+        isLoading = false;
+        final data = json.decode(response.body);
+        regisPatientHistory = RegisPatientHistory.fromJson(data);
+        update();
+        return true;
+      } else if (response.statusCode == 401) {
+        isLoading = false;
+        update();
+        return false;
+      } else {
+        isLoading = false;
+        update();
+        throw Exception('Failed getting getPatientHistory');
+      }
+    } catch (e) {
       isLoading = false;
       update();
-
-      throw Exception('Failed getting getPatientHistory');
+      rethrow;
     }
   }
 
   getEduSocOccuReligDropDown() async {
     isLoading = true;
     update();
-    // final uri =
-    //     Uri.parse(ApiConstants.baseUrl4 + ApiConstants.getCentralDashboarCount);
 
     final uri =
         Uri.parse("${ApiConstants.baseUrl}${ApiNames.getNewDropdownList}");
 
-    // String jsonbody = json.encode(body);
     Map<String, String> headers = {
       "Content-Type": "application/json",
     };
 
-    debugPrint(uri.path);
-
     final response = await ioClient.post(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
     if (response.statusCode == 200) {
       isLoading = false;
       commomDropdownList =
           CommomDropdownList.fromJson(jsonDecode(response.body));
     } else {
       isLoading = false;
-      debugPrint('Failed getting deleteDiagnosticIns');
+      debugPrint('Failed getting dropdowns');
     }
     update();
   }
@@ -399,7 +451,6 @@ class NewRegistrationController extends GetxController {
     Uri uri = Uri.parse(
         "${ApiConstants.baseUrl}${ApiNames.savePatientDocuments}?files");
 
-    // Create a multipart request
     var request = http.MultipartRequest('POST', uri);
 
     List<String?> selectedDocIds = items
@@ -409,10 +460,8 @@ class NewRegistrationController extends GetxController {
         .map((e) => e.ids)
         .toList();
 
-// Convert to comma-separated string, ignoring null ids
     String docIdString = selectedDocIds.whereType<String>().join(',');
 
-    // Add fields
     request.fields.addAll({
       'documentChecklistId': docIdString,
       'patientId': patientId ?? "",
@@ -430,24 +479,18 @@ class NewRegistrationController extends GetxController {
           ));
         }
       }
-      // Send request
       http.StreamedResponse response = await ioClient.send(request);
 
       if (response.statusCode == 200) {
-        isLoading = false;
-        update();
-        debugPrint(await response.stream.bytesToString());
+        debugPrint('Documents uploaded successfully');
       } else {
-        isLoading = false;
-        update();
-
         debugPrint('Error: ${response.reasonPhrase}');
       }
     } catch (e) {
+      debugPrint('Exception occurred: $e');
+    } finally {
       isLoading = false;
       update();
-
-      debugPrint('Exception occurred: $e');
     }
   }
 
@@ -461,16 +504,15 @@ class NewRegistrationController extends GetxController {
 
       Uri uri =
           Uri.parse(ApiConstants.baseUrl + ApiNames.savePatientRegDetails);
-
       var request = http.MultipartRequest('POST', uri);
       var formattedJson = prettyPrintJson(savePatientReqModel.toJson());
       request.fields.addAll({'data': formattedJson});
-
+      
       request.headers.addAll({
         'Content-Type': 'multipart/form-data',
       });
 
-      if (userProfilePhoto.isSelected) {
+      if (userProfilePhoto.isSelected && userProfilePhoto.file != null) {
         request.files.add(await http.MultipartFile.fromPath(
           userProfilePhoto.key,
           userProfilePhoto.file!.path,
@@ -503,49 +545,34 @@ class NewRegistrationController extends GetxController {
         final responseData = jsonDecode(finalResp.body);
         int patientId = responseData['patid'];
 
-        // Upload documents safely
-        try {
-          await uploadDocuments(
-            patientId.toString(),
-            userId,
-            savePatientReqModel.unitId.toString(),
-          );
-          isLoading = false;
-          update();
-        } catch (e) {
-          isLoading = false;
-          update();
+        await uploadDocuments(
+          patientId.toString(),
+          userId,
+          savePatientReqModel.unitId.toString(),
+        );
 
-          debugPrint('uploadDocuments failed: $e');
-        }
-
-        // Get patient report safely
-        try {
-          await getPatientReport(patientId.toString(), userId);
-        } catch (e) {
-          debugPrint('getPatientReport failed: $e');
-        }
-
-        isLoading = false;
-        update();
-        // Continue with success UI
+        await getPatientReport(patientId.toString(), userId);
+        
         if (pageTitle == "Edit Patient Details") {
           CustomMessage.toast('Updated Successfully');
-
           CustomPopup.showSuccessDialog(() {
+            clearAllFields();
             Get.off(const RegisteredPatientList());
           }, "Updated Successfully", "Please Note Patient Id $patientId");
         } else {
           CustomPopup.showSuccessDialog(() {
             CustomPopup.showConfirmationDialog(() {
+              clearAllFields();
               Get.off(const RegisteredPatientList());
             }, () {
+              clearAllFields();
               Get.off(const RegisteredPatientList());
             }, () async {
+              clearAllFields();
               Get.off(const RegisteredPatientList());
-
-              final result = await OpenFile.open(patientReportFile?.path);
-              debugPrint('📂 Open result: ${result.message}');
+              if (patientReportFile != null && patientReportFile!.existsSync()) {
+                await OpenFile.open(patientReportFile?.path);
+              }
             }, "Print Report?", '', "assets/success-popup.png");
           }, "Registration Completed\nSuccessfully",
               "Please Note Patient Id $patientId");
@@ -555,10 +582,10 @@ class NewRegistrationController extends GetxController {
       }
     } catch (error) {
       debugPrint(error.toString());
+    } finally {
+      isLoading = false;
+      update();
     }
-
-    isLoading = false;
-    update();
   }
 
   checkDuplicateMobileNo(String mobNo) async {
@@ -567,27 +594,26 @@ class NewRegistrationController extends GetxController {
     final uri = Uri.parse(
         "${ApiConstants.baseUrl}${ApiNames.checkMobileNo}?mobile=$mobNo");
 
-    // String jsonbody = json.encode(body);
     Map<String, String> headers = {
       "Content-Type": "application/json",
     };
 
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.post(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
+    try {
+      final response = await ioClient.post(uri, headers: headers);
+      if (response.statusCode == 200) {
+        isLoading = false;
+        update();
+        final data = json.decode(response.body);
+        return mobileNoCheckMsg = data['message'];
+      } else {
+        isLoading = false;
+        update();
+        throw Exception('Failed getting checkDuplicateMobileNo');
+      }
+    } catch (e) {
       isLoading = false;
       update();
-      final data = json.decode(response.body);
-      return mobileNoCheckMsg = data['message'];
-    } else {
-      isLoading = false;
-      update();
-      throw Exception('Failed getting checkDuplicateMobileNo');
+      rethrow;
     }
   }
 
@@ -599,14 +625,9 @@ class NewRegistrationController extends GetxController {
       final uri = Uri.parse(
         '${ApiConstants.ip + ApiNames.generateAckReport}?patientId=$patientId&userId=$userId',
       );
-
       final request = http.Request('GET', uri);
       final response = await request.send();
-      debugPrint(uri.path);
       if (response.statusCode == 200) {
-        isLoading = false;
-        update();
-
         final bytes = await response.stream.toBytes();
         final fileName =
             'patient_report_${DateTime.now().millisecondsSinceEpoch}.pdf';
@@ -614,23 +635,16 @@ class NewRegistrationController extends GetxController {
         final dir = await getExternalStorageDirectory();
         patientReportFile = File('${dir!.path}/$fileName');
         await patientReportFile?.writeAsBytes(bytes);
-
         debugPrint('📄 Patient report saved: ${patientReportFile?.path}');
       } else {
-        isLoading = false;
-
         debugPrint('❌ Download failed: ${response.reasonPhrase}');
       }
     } catch (e) {
-      isLoading = false;
-
-      CustomMessage.toast('Download failed:');
-
       debugPrint('❌ Exception: $e');
+    } finally {
+      isLoading = false;
+      update();
     }
-
-    isLoading = false;
-    update();
   }
 
   checkScrutinyDefinedOrNot(String unitId) async {
@@ -646,8 +660,6 @@ class NewRegistrationController extends GetxController {
       final response = await request.send();
 
       if (response.statusCode == 200) {
-        isLoading = false;
-        update();
         var data = await response.stream.bytesToString();
         scrutinyResponse = ScrutinyResponse.fromJson(jsonDecode(data));
         if (scrutinyResponse?.status == '1' &&
@@ -660,106 +672,83 @@ class NewRegistrationController extends GetxController {
               scrutinyResponse?.details?.isQuestionsDefineOrNot == 'true';
         }
       } else {
-        isLoading = false;
-        update();
-
         debugPrint('${response.reasonPhrase}');
       }
     } catch (e) {
+      debugPrint('❌ Exception: $e');
+    } finally {
       isLoading = false;
       update();
-
-      debugPrint('❌ Exception: $e');
     }
-
-    isLoading = false;
-    update();
   }
 
   Future<bool> getIdProofList() async {
     isLoading = true;
+    update();
 
     final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getIdProofList);
 
-    // String jsonbody = json.encode(body);
     Map<String, String> headers = {
       "Content-Type": "application/json",
     };
 
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
+    try {
+      final response = await ioClient.get(uri, headers: headers);
+      if (response.statusCode == 200) {
+        isLoading = false;
+        final data = json.decode(response.body);
+        idProofListModel = IdProofListModel.fromJson(data);
+        update();
+        return true;
+      } else {
+        isLoading = false;
+        update();
+        return false;
+      }
+    } catch (e) {
       isLoading = false;
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      idProofListModel = IdProofListModel.fromJson(data);
-
       update();
-      return true;
-    } else if (response.statusCode == 401) {
-      isLoading = false;
-
-      update();
-
       return false;
-    } else {
-      isLoading = false;
-
-      throw Exception('Failed getting id proof');
     }
   }
 
   getDocumentList(patientId) async {
     isLoading = true;
+    update();
 
     final uri = Uri.parse(
         '${ApiConstants.oldBaseUrl}${ApiNames.getDocumentList}?patientId=$patientId');
 
-    // String jsonbody = json.encode(body);
     Map<String, String> headers = {
       "Content-Type": "application/json",
     };
 
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
-      isLoading = false;
-      //getDeviceDetails
-      var data = json.decode(response.body);
-      if (data is Map && data['status'] == 'Success') {
-        viewDocument = ViewDocument.fromJson(data);
-
-        ///To
-        tempFilePaths.clear();
-        if (viewDocument?.obj != null) {
-          if (viewDocument!.obj!.isNotEmpty) {
+    try {
+      final response = await ioClient.get(uri, headers: headers);
+      if (response.statusCode == 200) {
+        isLoading = false;
+        var data = json.decode(response.body);
+        if (data is Map && data['status'] == 'Success') {
+          viewDocument = ViewDocument.fromJson(data);
+          tempFilePaths.clear();
+          if (viewDocument?.obj != null && viewDocument!.obj!.isNotEmpty) {
             await downloadAndSaveFilesTemporarily(viewDocument?.obj ?? []);
           }
+          update();
+          return true;
         }
-
-        return true;
+      } else {
+        isLoading = false;
+        update();
       }
-    } else {
+    } catch (e) {
       isLoading = false;
-      debugPrint('Failed view document');
-      // throw Exception('Failed view document');
+      update();
     }
-    update();
   }
 
   Future<void> downloadAndSaveFilesTemporarily(List<dynamic> urls) async {
     try {
-      // Step 1: Get the temporary directory
       Directory directory = await getTemporaryDirectory();
 
       for (int i = 0; i < urls.length; i++) {
@@ -768,19 +757,12 @@ class NewRegistrationController extends GetxController {
         String filePath = '${directory.path}/$fileName';
         File file = File(filePath);
 
-        // Step 2: Download each file from the list of URLs
         var response =
             await http.get(Uri.parse(ApiConstants.imageBaseUrl + url));
 
-        // Step 3: Check if the request was successful
         if (response.statusCode == 200) {
-          // Step 4: Save the file locally in the temporary directory
           await file.writeAsBytes(response.bodyBytes);
-          tempFilePaths.add(filePath); //
-          debugPrint('File downloaded and saved temporarily: $filePath');
-        } else {
-          debugPrint(
-              'Failed to download file: $url, Status Code: ${response.statusCode}');
+          tempFilePaths.add(filePath);
         }
       }
     } catch (e) {
@@ -790,79 +772,69 @@ class NewRegistrationController extends GetxController {
 
   getDocList(isViewPatient, isEdit, int? patientId) async {
     isLoading = true;
+    update();
 
     final uri = Uri.parse(ApiConstants.oldBaseUrl + ApiNames.getDocCheckLIst);
 
-    // String jsonbody = json.encode(body);
     Map<String, String> headers = {
       "Content-Type": "application/json",
     };
 
-    debugPrint(uri.path);
-    // print(body);
+    try {
+      final response = await ioClient.get(uri, headers: headers);
+      items.clear();
 
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-    items.clear();
+      historyOfDialysis = FileDetails(
+          name: 'Upload Document',
+          key: 'previousHospitalDocument',
+          isSelected: false,
+          isReq: false);
 
-    historyOfDialysis = FileDetails(
-        name: 'Upload Document',
-        key: 'previousHospitalDocument',
-        isSelected: false,
-        isReq: false);
+      relativeDoc = FileDetails(
+          name: 'Document', key: 'relativeDoc', isSelected: false, isReq: false);
 
-    relativeDoc = FileDetails(
-        name: 'Document', key: 'relativeDoc', isSelected: false, isReq: false);
+      if (response.statusCode == 200) {
+        await getDocumentList(patientId);
+        final data = json.decode(response.body);
+        docUploadListModel = DocUploadListModel.fromJson(data);
 
-    if (response.statusCode == 200) {
-      isLoading = false;
+        if (isViewPatient) {
+          for (int i = 0; i < docUploadListModel!.data!.length; i++) {
+            List<dynamic>? obj = viewDocument?.obj?.firstWhereOrNull(
+                (e) => e[1] == docUploadListModel!.data?[i].docId);
 
-      await getDocumentList(patientId);
-
-      final data = json.decode(response.body);
-      docUploadListModel = DocUploadListModel.fromJson(data);
-
-      if (isViewPatient) {
-        //view
-        for (int i = 0; i < docUploadListModel!.data!.length; i++) {
-          List<dynamic>? obj = viewDocument!.obj?.firstWhereOrNull(
-              (e) => e[1] == docUploadListModel!.data?[i].docId);
-
-          items.add(FileDetails(
-            name: docUploadListModel!.data![i].docDescdetEn ?? '',
-            key: "files",
-            ids: obj?[1].toString(),
-            // key: assignKey(docUploadListModel!.data![i].docDescdetEn) ?? '',
-            isSelected: obj != null ? true : false,
-            isReq:
-                docUploadListModel!.data![i].requiredFlag == "Y" ? true : false,
-            file: obj == null ? null : File(ApiConstants.imageBaseUrl + obj[0]),
-          ));
-
-          for (int i = 0; i < viewDocument!.obj!.length; i++) {
-            if (viewDocument!.obj![i][0]
-                .contains("Previous_Hospital_Document")) {
-              historyOfDialysis.file =
-                  File(ApiConstants.imageBaseUrl + viewDocument!.obj![i][0]);
-              historyOfDialysis.isSelected = true;
-              break;
+            items.add(FileDetails(
+              name: docUploadListModel!.data![i].docDescdetEn ?? '',
+              key: "files",
+              ids: obj?[1].toString(),
+              isSelected: obj != null ? true : false,
+              isReq: docUploadListModel!.data![i].requiredFlag == "Y" ? true : false,
+              file: obj == null ? null : File(ApiConstants.imageBaseUrl + obj[0]),
+            ));
+          }
+          
+          if (viewDocument?.obj != null) {
+            for (int i = 0; i < viewDocument!.obj!.length; i++) {
+              if (viewDocument!.obj![i][0].contains("Previous_Hospital_Document")) {
+                historyOfDialysis.file = File(ApiConstants.imageBaseUrl + viewDocument!.obj![i][0]);
+                historyOfDialysis.isSelected = true;
+                break;
+              }
             }
           }
-        }
-      } else {
-        //edit
-        if (viewDocument?.obj != null) {
-          if (viewDocument!.obj!.isNotEmpty) {
+        } else {
+          if (viewDocument?.obj != null && viewDocument!.obj!.isNotEmpty) {
             for (int i = 0; i < docUploadListModel!.data!.length; i++) {
               List<dynamic>? obj = viewDocument!.obj?.firstWhereOrNull(
                   (e) => e[1] == docUploadListModel!.data?[i].docId);
-              for (int j = 0; j < tempFilePaths.length; j++) {
-                String tempFileN = tempFilePaths[j].split('/').last;
-                String? fileFromApi = obj?[0].split('/').last;
-                bool isMatch = tempFileN == fileFromApi;
-                if (isMatch) {
-                  obj?[0] = tempFilePaths[j];
+              
+              if (obj != null) {
+                for (int j = 0; j < tempFilePaths.length; j++) {
+                  String tempFileN = tempFilePaths[j].split('/').last;
+                  String? fileFromApi = obj[0].split('/').last;
+                  if (tempFileN == fileFromApi) {
+                    obj[0] = tempFilePaths[j];
+                  }
                 }
               }
 
@@ -870,157 +842,88 @@ class NewRegistrationController extends GetxController {
                 name: docUploadListModel!.data![i].docDescdetEn ?? '',
                 key: "files",
                 ids: docUploadListModel!.data![i].docId.toString(),
-                // key: assignKey(docUploadListModel!.data![i].docDescdetEn) ?? '',
                 isSelected: obj != null ? true : false,
-                isReq: docUploadListModel!.data![i].requiredFlag == "Y"
-                    ? true
-                    : false,
+                isReq: docUploadListModel!.data![i].requiredFlag == "Y" ? true : false,
                 file: obj == null ? null : File(obj[0]),
-                // : File(ApiConstants.imageBaseUrl + obj[0]),
               ));
             }
 
             for (int i = 0; i < viewDocument!.obj!.length; i++) {
-              if (viewDocument!.obj![i][0]
-                  .contains("Previous_Hospital_Document")) {
-                historyOfDialysis.file =
-                    File(ApiConstants.imageBaseUrl + viewDocument!.obj![i][0]);
+              if (viewDocument!.obj![i][0].contains("Previous_Hospital_Document")) {
+                historyOfDialysis.file = File(ApiConstants.imageBaseUrl + viewDocument!.obj![i][0]);
                 historyOfDialysis.isSelected = true;
                 break;
               }
             }
           } else {
-            // if user doc not available
             for (int i = 0; i < docUploadListModel!.data!.length; i++) {
               items.add(FileDetails(
                 name: docUploadListModel!.data![i].docDescdetEn ?? '',
                 key: "files",
-                // key: assignKey(docUploadListModel!.data![i].docDescdetEn) ?? '',
                 ids: docUploadListModel!.data![i].docId.toString(),
                 isSelected: false,
-                isReq: docUploadListModel!.data![i].requiredFlag == "Y"
-                    ? true
-                    : false,
+                isReq: docUploadListModel!.data![i].requiredFlag == "Y" ? true : false,
                 file: null,
               ));
             }
           }
-        } else {
-          // new registration
-          for (int i = 0; i < docUploadListModel!.data!.length; i++) {
-            items.add(FileDetails(
-              name: docUploadListModel!.data![i].docDescdetEn ?? '',
-              key: "files",
-              // key: assignKey(docUploadListModel!.data![i].docDescdetEn) ?? '',
-              ids: docUploadListModel!.data![i].docId.toString(),
-              isSelected: false,
-              isReq: docUploadListModel!.data![i].requiredFlag == "Y"
-                  ? true
-                  : false,
-              file: null,
-            ));
-          }
         }
       }
-
-      update();
-      return true;
-    } else {
+    } catch (e) {
+      debugPrint('Error in getDocList: $e');
+    } finally {
       isLoading = false;
       update();
-
-      // throw Exception('Failed getting doc list');
     }
   }
 
-  // assignKey(key) {
-  //   if (key == "HHH") {
-  //     return "hhhTest";
-  //   } else if (key == "Consent form") {
-  //     return "consetForm";
-  //   } else if (key == "Blood Test Document") {
-  //     return "bloodTestDoucment";
-  //   } else if (key == "Dialysis Frequency") {
-  //     return "dailysisFrequency";
-  //   } else if (key == "Viral Load Status") {
-  //     return "viralStatusLoad";
-  //   }
-  // }
-
   Future<bool> getAddressDataFromPinCode(pincode) async {
-    // isLoading = true;
-
     final uri = Uri.parse(
         '${ApiConstants.baseUrl}${ApiNames.getPincodeData}?pinCode=$pincode');
 
-    // String jsonbody = json.encode(body);
     Map<String, String> headers = {
       "Content-Type": "application/json",
     };
 
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
-      // isLoading = false;
-
-      final data = json.decode(response.body);
-      pincodeAdressModel = PincodeAdressModel.fromJson(data);
-
-      // update();
-      return true;
-    } else if (response.statusCode == 401) {
-      // isLoading = false;
-      //
-      // update();
-
+    try {
+      final response = await ioClient.get(uri, headers: headers);
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        pincodeAdressModel = PincodeAdressModel.fromJson(data);
+        return true;
+      }
       return false;
-    } else {
-      // isLoading = false;
-      debugPrint("Failed getting town");
+    } catch (e) {
       return false;
     }
   }
 
   Future<bool> getSchemaAdoptedList() async {
     isLoading = true;
+    update();
 
     final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getSchemaAdoptedList);
 
-    // String jsonbody = json.encode(body);
     Map<String, String> headers = {
       "Content-Type": "application/json",
     };
 
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
+    try {
+      final response = await ioClient.get(uri, headers: headers);
+      if (response.statusCode == 200) {
+        isLoading = false;
+        final data = json.decode(response.body);
+        schemaAdoptedModel = SchemaAdoptedModel.fromJson(data);
+        update();
+        return true;
+      }
       isLoading = false;
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      schemaAdoptedModel = SchemaAdoptedModel.fromJson(data);
-
       update();
-      return true;
-    } else if (response.statusCode == 401) {
-      isLoading = false;
-
-      update();
-
       return false;
-    } else {
+    } catch (e) {
       isLoading = false;
-
-      throw Exception('Failed getSchemaAdoptedList');
+      update();
+      return false;
     }
   }
 
@@ -1030,147 +933,140 @@ class NewRegistrationController extends GetxController {
 
     final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getInstituteList);
 
-    // String jsonbody = json.encode(body);
     Map<String, String> headers = {
       "Content-Type": "application/json",
     };
 
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
+    try {
+      final response = await ioClient.get(uri, headers: headers);
+      if (response.statusCode == 200) {
+        isLoading = false;
+        final data = json.decode(response.body);
+        instituteList = InstituteList.fromJson(data);
+        update();
+        return instituteList;
+      }
       isLoading = false;
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      instituteList = InstituteList.fromJson(data);
-
-      return instituteList;
-    } else if (response.statusCode == 401) {
+      update();
+    } catch (e) {
       isLoading = false;
-    } else {
-      isLoading = false;
-
-      throw Exception('Failed getting InstituteList');
+      update();
     }
-
-    update();
   }
 
   Future<bool> getPrefixList() async {
     isLoading = true;
+    update();
 
     final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getPrefixList);
 
-    // String jsonbody = json.encode(body);
     Map<String, String> headers = {
       "Content-Type": "application/json",
     };
 
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
+    try {
+      final response = await ioClient.get(uri, headers: headers);
+      if (response.statusCode == 200) {
+        isLoading = false;
+        final data = json.decode(response.body);
+        predixList = PredixList.fromJson(data);
+        update();
+        return true;
+      }
       isLoading = false;
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      predixList = PredixList.fromJson(data);
-
       update();
-      return true;
-    } else if (response.statusCode == 401) {
-      isLoading = false;
-
-      update();
-
       return false;
-    } else {
+    } catch (e) {
       isLoading = false;
+      update();
+      return false;
+    }
+  }
 
-      throw Exception('Failed getting getPrefixList');
+  Future<bool> getGenderList() async {
+    isLoading = true;
+    update();
+
+    final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getGenderList);
+
+    Map<String, String> headers = {
+      "Content-Type": "application/json",
+    };
+
+    try {
+      final response = await ioClient.get(uri, headers: headers);
+      if (response.statusCode == 200) {
+        isLoading = false;
+        final data = json.decode(response.body);
+        genderList = GenderList.fromJson(data);
+        update();
+        return true;
+      }
+      isLoading = false;
+      update();
+      return false;
+    } catch (e) {
+      isLoading = false;
+      update();
+      return false;
     }
   }
 
   Future<bool> getViralStatueList() async {
     isLoading = true;
+    update();
 
     final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getViralStatus);
 
-    // String jsonbody = json.encode(body);
     Map<String, String> headers = {
       "Content-Type": "application/json",
     };
 
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
+    try {
+      final response = await ioClient.get(uri, headers: headers);
+      if (response.statusCode == 200) {
+        isLoading = false;
+        final data = json.decode(response.body);
+        viralStatusModel = ViralStatusModel.fromJson(data);
+        update();
+        return true;
+      }
       isLoading = false;
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      viralStatusModel = ViralStatusModel.fromJson(data);
-
       update();
-      return true;
-    } else if (response.statusCode == 401) {
-      isLoading = false;
-
-      update();
-
       return false;
-    } else {
+    } catch (e) {
       isLoading = false;
-
-      throw Exception('Failed getting getViralStatueList');
+      update();
+      return false;
     }
   }
 
   Future<bool> getDialysisModeList() async {
     isLoading = true;
+    update();
 
     final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getDialysisList);
 
-    // String jsonbody = json.encode(body);
     Map<String, String> headers = {
       "Content-Type": "application/json",
     };
 
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
+    try {
+      final response = await ioClient.get(uri, headers: headers);
+      if (response.statusCode == 200) {
+        isLoading = false;
+        final data = json.decode(response.body);
+        dialysisMode = DialysisMode.fromJson(data);
+        update();
+        return true;
+      }
       isLoading = false;
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      dialysisMode = DialysisMode.fromJson(data);
-
       update();
-      return true;
-    } else if (response.statusCode == 401) {
-      isLoading = false;
-
-      update();
-
       return false;
-    } else {
+    } catch (e) {
       isLoading = false;
-
-      throw Exception('Failed getting getDialysisModeList');
+      update();
+      return false;
     }
   }
 
@@ -1180,36 +1076,26 @@ class NewRegistrationController extends GetxController {
 
     final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getStateList);
 
-    // String jsonbody = json.encode(body);
     Map<String, String> headers = {
       "Content-Type": "application/json",
     };
 
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
+    try {
+      final response = await ioClient.get(uri, headers: headers);
+      if (response.statusCode == 200) {
+        isLoading = false;
+        final data = json.decode(response.body);
+        stateModel = StateModel.fromJson(data);
+        update();
+        return true;
+      }
       isLoading = false;
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      stateModel = StateModel.fromJson(data);
-
       update();
-      return true;
-    } else if (response.statusCode == 401) {
-      isLoading = false;
-
-      update();
-
       return false;
-    } else {
+    } catch (e) {
       isLoading = false;
-
-      throw Exception('Failed getting getViralStatueList');
+      update();
+      return false;
     }
   }
 
@@ -1219,36 +1105,26 @@ class NewRegistrationController extends GetxController {
 
     final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getDivisionList);
 
-    // String jsonbody = json.encode(body);
     Map<String, String> headers = {
       "Content-Type": "application/json",
     };
 
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
+    try {
+      final response = await ioClient.get(uri, headers: headers);
+      if (response.statusCode == 200) {
+        isLoading = false;
+        final data = json.decode(response.body);
+        divisionModel = DivisionModel.fromJson(data);
+        update();
+        return true;
+      }
       isLoading = false;
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      divisionModel = DivisionModel.fromJson(data);
-
       update();
-      return true;
-    } else if (response.statusCode == 401) {
-      isLoading = false;
-
-      update();
-
       return false;
-    } else {
+    } catch (e) {
       isLoading = false;
-
-      throw Exception('Failed getting getViralStatueList');
+      update();
+      return false;
     }
   }
 
@@ -1258,35 +1134,26 @@ class NewRegistrationController extends GetxController {
 
     final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getDistrictList);
 
-    // String jsonbody = json.encode(body);
     Map<String, String> headers = {
       "Content-Type": "application/json",
     };
 
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
+    try {
+      final response = await ioClient.get(uri, headers: headers);
+      if (response.statusCode == 200) {
+        isLoading = false;
+        final data = json.decode(response.body);
+        districtModel = DistrictModel.fromJson(data);
+        update();
+        return true;
+      }
       isLoading = false;
-
-      final data = json.decode(response.body);
-      districtModel = DistrictModel.fromJson(data);
-
       update();
-      return true;
-    } else if (response.statusCode == 401) {
-      isLoading = false;
-
-      update();
-
       return false;
-    } else {
+    } catch (e) {
       isLoading = false;
-
-      throw Exception('Failed getting getViralStatueList');
+      update();
+      return false;
     }
   }
 
@@ -1296,36 +1163,26 @@ class NewRegistrationController extends GetxController {
 
     final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getTalukaList);
 
-    // String jsonbody = json.encode(body);
     Map<String, String> headers = {
       "Content-Type": "application/json",
     };
 
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
+    try {
+      final response = await ioClient.get(uri, headers: headers);
+      if (response.statusCode == 200) {
+        isLoading = false;
+        final data = json.decode(response.body);
+        talukaModel = TalukaModel.fromJson(data);
+        update();
+        return true;
+      }
       isLoading = false;
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      talukaModel = TalukaModel.fromJson(data);
-
       update();
-      return true;
-    } else if (response.statusCode == 401) {
-      isLoading = false;
-
-      update();
-
       return false;
-    } else {
+    } catch (e) {
       isLoading = false;
-
-      throw Exception('Failed getting getViralStatueList');
+      update();
+      return false;
     }
   }
 
@@ -1335,42 +1192,32 @@ class NewRegistrationController extends GetxController {
 
     final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getTownList);
 
-    // String jsonbody = json.encode(body);
     Map<String, String> headers = {
       "Content-Type": "application/json",
     };
 
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
+    try {
+      final response = await ioClient.get(uri, headers: headers);
+      if (response.statusCode == 200) {
+        isLoading = false;
+        final data = json.decode(response.body);
+        townModel = TownModel.fromJson(data);
+        update();
+        return true;
+      }
       isLoading = false;
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      townModel = TownModel.fromJson(data);
-
       update();
-      return true;
-    } else if (response.statusCode == 401) {
-      isLoading = false;
-
-      update();
-
       return false;
-    } else {
+    } catch (e) {
       isLoading = false;
-
-      throw Exception('Failed getting getViralStatueList');
+      update();
+      return false;
     }
   }
 
   Future<bool> getMonthlyIncome() async {
     isLoading = true;
-    update(); // Notify UI about loading state
+    update();
 
     final uri = Uri.parse("${ApiConstants.ip}${ApiNames.getAllDropDownList}");
 
@@ -1378,15 +1225,9 @@ class NewRegistrationController extends GetxController {
       "Content-Type": "application/json",
     };
 
-    debugPrint("API URL: $uri");
-
     try {
       final response = await ioClient.get(uri, headers: headers);
-      debugPrint("Status Code: ${response.statusCode}");
-
-      // Ensure proper UTF-8 decoding
       final decodedBody = utf8.decode(response.bodyBytes);
-      debugPrint("Response Body: $decodedBody");
 
       if (response.statusCode == 200) {
         final data = json.decode(decodedBody);
@@ -1395,10 +1236,11 @@ class NewRegistrationController extends GetxController {
         update();
         return true;
       } else {
-        throw Exception('Failed to fetch Monthly Income');
+        isLoading = false;
+        update();
+        return false;
       }
     } catch (e) {
-      debugPrint("Error in getMonthlyIncome: $e");
       isLoading = false;
       update();
       return false;
@@ -1410,7 +1252,6 @@ class NewRegistrationController extends GetxController {
     String? occupationText,
     String? monthlyIncomeText,
   }) {
-    // Check for null or "Select" values
     if (educationText == null ||
         occupationText == null ||
         monthlyIncomeText == null) {
@@ -1421,90 +1262,41 @@ class NewRegistrationController extends GetxController {
     int educationInt = 0;
     int occupationInt = 0;
 
-    // Monthly Income
     switch (monthlyIncomeText) {
-      case "₹1,59,586 and above":
-        monthlyInt = 12;
-        break;
-      case "₹79,756 – ₹1,59,585":
-        monthlyInt = 10;
-        break;
-      case "₹59,795 – ₹79,755":
-        monthlyInt = 6;
-        break;
-      case "₹39,830 – ₹59,794":
-        monthlyInt = 4;
-        break;
-      case "₹23,870 – ₹39,829":
-        monthlyInt = 3;
-        break;
-      case "₹7989 – ₹23,869":
-        monthlyInt = 2;
-        break;
-      default:
-        monthlyInt = 1;
+      case "₹1,59,586 and above": monthlyInt = 12; break;
+      case "₹79,756 – ₹1,59,585": monthlyInt = 10; break;
+      case "₹59,795 – ₹79,755": monthlyInt = 6; break;
+      case "₹39,830 – ₹59,794": monthlyInt = 4; break;
+      case "₹23,870 – ₹39,829": monthlyInt = 3; break;
+      case "₹7989 – ₹23,869": monthlyInt = 2; break;
+      default: monthlyInt = 1;
     }
 
-    // Education
     switch (educationText) {
-      case "Profession or Honours Degree":
-        educationInt = 7;
-        break;
-      case "Graduate":
-        educationInt = 6;
-        break;
-      case "Intermediate or Diploma":
-        educationInt = 5;
-        break;
-      case "High School Certificate":
-        educationInt = 4;
-        break;
-      case "Middle School Certificate":
-        educationInt = 3;
-        break;
-      case "Primary School Certificate":
-        educationInt = 2;
-        break;
-      default:
-        educationInt = 1;
+      case "Profession or Honours Degree": educationInt = 7; break;
+      case "Graduate": educationInt = 6; break;
+      case "Intermediate or Diploma": educationInt = 5; break;
+      case "High School Certificate": educationInt = 4; break;
+      case "Middle School Certificate": educationInt = 3; break;
+      case "Primary School Certificate": educationInt = 2; break;
+      default: educationInt = 1;
     }
 
-    // Occupation
     switch (occupationText) {
-      case "Legislators, Senior Officials, Managers":
-        occupationInt = 10;
-        break;
-      case "Professionals":
-        occupationInt = 9;
-        break;
-      case "Technicians, Associate Professionals":
-        occupationInt = 8;
-        break;
-      case "Skilled Workers, Shop Owners":
-        occupationInt = 6;
-        break;
-      case "Skilled Agricultural, Fishery Workers":
-        occupationInt = 5;
-        break;
-      case "Craft, Trade-related Workers":
-        occupationInt = 4;
-        break;
-      case "Plant, Machine Operators":
-        occupationInt = 3;
-        break;
-      case "Elementary Occupations":
-        occupationInt = 2;
-        break;
-      case "Unemployed":
-        occupationInt = 1;
-        break;
-      default:
-        occupationInt = 7;
+      case "Legislators, Senior Officials, Managers": occupationInt = 10; break;
+      case "Professionals": occupationInt = 9; break;
+      case "Technicians, Associate Professionals": occupationInt = 8; break;
+      case "Skilled Workers, Shop Owners": occupationInt = 6; break;
+      case "Skilled Agricultural, Fishery Workers": occupationInt = 5; break;
+      case "Craft, Trade-related Workers": occupationInt = 4; break;
+      case "Plant, Machine Operators": occupationInt = 3; break;
+      case "Elementary Occupations": occupationInt = 2; break;
+      case "Unemployed": occupationInt = 1; break;
+      default: occupationInt = 7;
     }
 
     final totalScore = monthlyInt + educationInt + occupationInt;
 
-    // Socioeconomic status
     if (totalScore >= 26 && totalScore <= 29) return "Upper (I)";
     if (totalScore >= 16 && totalScore <= 25) return "Upper Middle (II)";
     if (totalScore >= 11 && totalScore <= 15) return "Lower Middle (III)";
@@ -1512,228 +1304,96 @@ class NewRegistrationController extends GetxController {
     return "Lower (V)";
   }
 
-  // String? getEconomicStatus({
-  //   String? educationText,
-  //   String? occupationText,
-  //   String? monthlyIncomeText,
-  // }) {
-  //   int monthlyInt = 0;
-  //   int educationInt = 0;
-  //   int occupationInt = 0;
-  //
-  //   if (educationText == null ||
-  //       occupationText == null ||
-  //       monthlyIncomeText == null) {
-  //     return '';
-  //   }
-  //
-  //   // Monthly Income
-  //   switch (monthlyIncomeText) {
-  //     case "₹1,59,586 and above":
-  //       monthlyInt = 12;
-  //       break;
-  //     case "₹79,756 – ₹1,59,585":
-  //       monthlyInt = 10;
-  //       break;
-  //     case "₹59,795 – ₹79,755":
-  //       monthlyInt = 6;
-  //       break;
-  //     case "₹39,830 – ₹59,794":
-  //       monthlyInt = 4;
-  //       break;
-  //     case "₹23,870 – ₹39,829":
-  //       monthlyInt = 3;
-  //       break;
-  //     case "₹7989 – ₹23,869":
-  //       monthlyInt = 2;
-  //       break;
-  //     default:
-  //       monthlyInt = 1;
-  //   }
-  //
-  //   // Education
-  //   switch (educationText) {
-  //     case "Profession or Honours Degree":
-  //       educationInt = 7;
-  //       break;
-  //     case "Graduate":
-  //       educationInt = 6;
-  //       break;
-  //     case "Intermediate or Diploma":
-  //       educationInt = 5;
-  //       break;
-  //     case "High School Certificate":
-  //       educationInt = 4;
-  //       break;
-  //     case "Middle School Certificate":
-  //       educationInt = 3;
-  //       break;
-  //     case "Primary School Certificate":
-  //       educationInt = 2;
-  //       break;
-  //     default:
-  //       educationInt = 1;
-  //   }
-  //
-  //   // Occupation
-  //   switch (occupationText) {
-  //     case "Legislators, Senior Officials, Managers":
-  //       occupationInt = 10;
-  //       break;
-  //     case "Professionals":
-  //       occupationInt = 9;
-  //       break;
-  //     case "Technicians, Associate Professionals":
-  //       occupationInt = 8;
-  //       break;
-  //     case "Skilled Workers, Shop Owners":
-  //       occupationInt = 6;
-  //       break;
-  //     case "Skilled Agricultural, Fishery Workers":
-  //       occupationInt = 5;
-  //       break;
-  //     case "Craft, Trade-related Workers":
-  //       occupationInt = 4;
-  //       break;
-  //     case "Plant, Machine Operators":
-  //       occupationInt = 3;
-  //       break;
-  //     case "Elementary Occupations":
-  //       occupationInt = 2;
-  //       break;
-  //     case "Unemployed":
-  //       occupationInt = 1;
-  //       break;
-  //     default:
-  //       occupationInt = 7;
-  //   }
-  //
-  //   final totalScore = monthlyInt + educationInt + occupationInt;
-  //
-  //   // Socioeconomic status
-  //   if (totalScore >= 26 && totalScore <= 29) return "Upper (I)";
-  //   if (totalScore >= 16 && totalScore <= 25) return "Upper Middle (II)";
-  //   if (totalScore >= 11 && totalScore <= 15) return "Lower Middle (III)";
-  //   if (totalScore >= 5 && totalScore <= 10) return "Upper Lower (IV)";
-  //   return "Lower (V)";
-  // }
-
   Future<bool> getDialysisFreq() async {
     isLoading = true;
+    update();
 
     final uri = Uri.parse(ApiConstants.ip + ApiNames.getAllDropDownList);
 
-    // String jsonbody = json.encode(body);
     Map<String, String> headers = {
       "Content-Type": "application/json",
     };
 
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
+    try {
+      final response = await ioClient.get(uri, headers: headers);
+      if (response.statusCode == 200) {
+        isLoading = false;
+        final data = json.decode(response.body);
+        dialysisFreqModel = DialysisFreqModel.fromJson(data);
+        update();
+        return true;
+      }
       isLoading = false;
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      dialysisFreqModel = DialysisFreqModel.fromJson(data);
-
       update();
-      return true;
-    } else if (response.statusCode == 401) {
-      isLoading = false;
-
-      update();
-
       return false;
-    } else {
+    } catch (e) {
       isLoading = false;
-
-      throw Exception('Failed getting getViralStatueList');
+      update();
+      return false;
     }
   }
 
   Future<bool> getRelationList() async {
     isLoading = true;
+    update();
 
     final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getRelation);
 
-    // String jsonbody = json.encode(body);
     Map<String, String> headers = {
       "Content-Type": "application/json",
     };
 
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
+    try {
+      final response = await ioClient.get(uri, headers: headers);
+      if (response.statusCode == 200) {
+        isLoading = false;
+        final data = json.decode(response.body);
+        relationModel = RelationModel.fromJson(data);
+        update();
+        return true;
+      }
       isLoading = false;
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      relationModel = RelationModel.fromJson(data);
-
       update();
-      return true;
-    } else if (response.statusCode == 401) {
-      isLoading = false;
-
-      update();
-
       return false;
-    } else {
+    } catch (e) {
       isLoading = false;
-
-      throw Exception('Failed getting getViralStatueList');
+      update();
+      return false;
     }
   }
 
   Future<bool> getRefferedBy() async {
     isLoading = true;
+    update();
 
     final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getRefferedBy);
 
-    // String jsonbody = json.encode(body);
     Map<String, String> headers = {
       "Content-Type": "application/json",
     };
 
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
+    try {
+      final response = await ioClient.get(uri, headers: headers);
+      if (response.statusCode == 200) {
+        isLoading = false;
+        final data = json.decode(response.body);
+        referredByModel = ReferredByModel.fromJson(data);
+        update();
+        return true;
+      }
       isLoading = false;
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      referredByModel = ReferredByModel.fromJson(data);
-
       update();
-      return true;
-    } else if (response.statusCode == 401) {
-      isLoading = false;
-
-      update();
-
       return false;
-    } else {
+    } catch (e) {
       isLoading = false;
-
-      throw Exception('Failed getting getViralStatueList');
+      update();
+      return false;
     }
   }
 
   getProfilePhoto(patientId) async {
     isLoading = true;
+    update();
 
     var headers = {
       'Content-Type': 'application/json',
@@ -1743,24 +1403,23 @@ class NewRegistrationController extends GetxController {
     request.body = json.encode({"patientId": patientId});
     request.headers.addAll(headers);
 
-    http.StreamedResponse response = await ioClient.send(request);
-
-    if (response.statusCode == 200) {
+    try {
+      http.StreamedResponse response = await ioClient.send(request);
+      if (response.statusCode == 200) {
+        final data = json.decode(await response.stream.bytesToString());
+        patientProfilePhoto = PatientProfilePhoto.fromJson(data);
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
       isLoading = false;
-
-      final data = json.decode(await response.stream.bytesToString());
-      patientProfilePhoto = PatientProfilePhoto.fromJson(data);
-      // debugPrint(patientProfilePhoto?.data?.first.filePath);
-    } else {
-      isLoading = false;
-
-      debugPrint(response.reasonPhrase);
+      update();
     }
-    update();
   }
 
   getRelativeInfoDoc(patientId) async {
     isLoading = true;
+    update();
 
     var headers = {
       'Content-Type': 'application/json',
@@ -1771,74 +1430,64 @@ class NewRegistrationController extends GetxController {
             '${ApiConstants.baseUrl}${ApiNames.viewRelativeDoc}?patientId=$patientId'));
     request.headers.addAll(headers);
 
-    http.StreamedResponse response = await ioClient.send(request);
+    try {
+      http.StreamedResponse response = await ioClient.send(request);
 
-    if (response.statusCode == 200) {
-      isLoading = false;
+      if (response.statusCode == 200) {
+        List<dynamic> data = json.decode(await response.stream.bytesToString());
+        relativeDocList =
+            data.map((json) => RelativeInfoDoc.fromJson(json)).toList();
 
-      List<dynamic> data = json.decode(await response.stream.bytesToString());
-      relativeDocList =
-          data.map((json) => RelativeInfoDoc.fromJson(json)).toList();
+        if (relativeDocList.isNotEmpty) {
+          relativedocInfo = relativeDocList.length == 1
+              ? relativeDocList.first
+              : relativeDocList.last;
 
-      if (relativeDocList.isNotEmpty) {
-        relativedocInfo = relativeDocList.length == 1
-            ? relativeDocList.first
-            : relativeDocList.last;
-
-        relativeDoc.ids = relativedocInfo?.realtiveId.toString();
-        if (relativedocInfo?.docpath != null) {
-          relativeDoc.isSelected = true;
-          relativeDoc.file = relativedocInfo!.docpath != null
-              ? File(ApiConstants.imageBaseUrl + relativedocInfo!.docpath!)
-              : null;
-          relativeDoc.patientRelativeContactnoId = relativedocInfo?.realtionId;
-        } else {
-          relativeDoc.isSelected = false;
-          relativeDoc.file = null;
+          relativeDoc.ids = relativedocInfo?.realtiveId.toString();
+          if (relativedocInfo?.docpath != null) {
+            relativeDoc.isSelected = true;
+            relativeDoc.file = File(ApiConstants.imageBaseUrl + relativedocInfo!.docpath!);
+            relativeDoc.patientRelativeContactnoId = relativedocInfo?.realtionId;
+          } else {
+            relativeDoc.isSelected = false;
+            relativeDoc.file = null;
+          }
         }
       }
-    } else {
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
       isLoading = false;
-      debugPrint(response.reasonPhrase);
+      update();
     }
-    update();
   }
 
   Future<bool> getMaritalStatus() async {
     isLoading = true;
+    update();
 
     final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getMaritalStatus);
 
-    // String jsonbody = json.encode(body);
     Map<String, String> headers = {
       "Content-Type": "application/json",
     };
 
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
+    try {
+      final response = await ioClient.get(uri, headers: headers);
+      if (response.statusCode == 200) {
+        isLoading = false;
+        final data = json.decode(response.body);
+        maritalStatusModel = MaritalStatusModel.fromJson(data);
+        update();
+        return true;
+      }
       isLoading = false;
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      maritalStatusModel = MaritalStatusModel.fromJson(data);
-
       update();
-      return true;
-    } else if (response.statusCode == 401) {
-      isLoading = false;
-
-      update();
-
       return false;
-    } else {
+    } catch (e) {
       isLoading = false;
-
-      throw Exception('Failed getting getViralStatueList');
+      update();
+      return false;
     }
   }
 
@@ -1848,68 +1497,53 @@ class NewRegistrationController extends GetxController {
     final uri = Uri.parse(
         '${ApiConstants.oldBaseUrl}${ApiNames.viewPatientDetails}?patientId=$patientId');
 
-    // String jsonbody = json.encode(body);
     Map<String, String> headers = {
       "Content-Type": "application/json",
     };
 
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
-      isLoading = false;
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      viewPatientModel = ViewPatientModel.fromJson(data);
-
-      update();
-    } else {
+    try {
+      final response = await ioClient.get(uri, headers: headers);
+      if (response.statusCode == 200) {
+        isLoading = false;
+        final data = json.decode(response.body);
+        viewPatientModel = ViewPatientModel.fromJson(data);
+        update();
+      } else {
+        isLoading = false;
+        update();
+      }
+    } catch (e) {
       isLoading = false;
       update();
-
-      // throw Exception('Failed getting viewPatientData');
     }
   }
 
   Future<bool> getBloodGroupList() async {
     isLoading = true;
+    update();
 
     final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getBloodGroup);
 
-    // String jsonbody = json.encode(body);
     Map<String, String> headers = {
       "Content-Type": "application/json",
     };
 
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
+    try {
+      final response = await ioClient.get(uri, headers: headers);
+      if (response.statusCode == 200) {
+        isLoading = false;
+        final data = json.decode(response.body);
+        bloodGroupModel = BloodGroupModel.fromJson(data);
+        update();
+        return true;
+      }
       isLoading = false;
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      bloodGroupModel = BloodGroupModel.fromJson(data);
-
       update();
-      return true;
-    } else if (response.statusCode == 401) {
-      isLoading = false;
-
-      update();
-
       return false;
-    } else {
+    } catch (e) {
       isLoading = false;
-
-      throw Exception('Failed getting getViralStatueList');
+      update();
+      return false;
     }
   }
 

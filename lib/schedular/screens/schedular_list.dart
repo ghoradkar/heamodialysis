@@ -1,9 +1,11 @@
+import 'dart:async';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:heamodialysis/book_appointment/book_appointment.dart';
-import 'package:heamodialysis/dashboard/technician/institutewise_dashboard_screen.dart';
+import 'package:heamodialysis/book_appointment/screen/book_appointment.dart';
+import 'package:heamodialysis/dashboard/screen/technician/institutewise_dashboard_screen.dart';
 import 'package:heamodialysis/internet/no_internet_connectivity.dart';
 import 'package:heamodialysis/new_registration/controller/new_registration_controller.dart';
 import 'package:heamodialysis/registered_patient_list/model/already_regidtered_patient/patient_data.dart';
@@ -24,6 +26,7 @@ import 'package:heamodialysis/widgets/custom_textfield.dart';
 import 'package:heamodialysis/widgets/date_picker.dart';
 import 'package:intl/intl.dart';
 
+import '../../utils/status_update_screen.dart';
 import '../../widgets/custom_shimmer_loader.dart';
 
 class SchedularListScreen extends StatefulWidget {
@@ -34,6 +37,10 @@ class SchedularListScreen extends StatefulWidget {
 }
 
 class _SchedularListScreenState extends State<SchedularListScreen> {
+  final Connectivity _connectivity = Connectivity();
+  bool _isNetworkAvailable = true;
+  StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
+
   final SchedularController schedularController =
       Get.put(SchedularController());
 
@@ -75,6 +82,12 @@ class _SchedularListScreenState extends State<SchedularListScreen> {
   void initState() {
     getUserData();
     checkInternetAndLoadData();
+    _initConnectivity();
+    _connectivitySubscription = _connectivity.onConnectivityChanged.listen(
+      _updateConnectionStatus,
+    );
+
+
     super.initState();
   }
 
@@ -123,9 +136,33 @@ class _SchedularListScreenState extends State<SchedularListScreen> {
     debugPrint(userData['ui'].toString());
   }
 
+  Future<void> _initConnectivity() async {
+    final result = await _connectivity.checkConnectivity();
+    _updateConnectionStatus(result);
+  }
+
+  // Update connection status handler
+  void _updateConnectionStatus(List<ConnectivityResult> results) {
+    final isConnected = results.any(
+          (result) =>
+      result == ConnectivityResult.mobile ||
+          result == ConnectivityResult.wifi,
+    );
+
+    setState(() {
+      _isNetworkAvailable = isConnected;
+    });
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubscription?.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return _isNetworkAvailable ? Scaffold(
 
       appBar: AppBar(
         title:  CustomText(
@@ -502,13 +539,31 @@ class _SchedularListScreenState extends State<SchedularListScreen> {
           ),
         ],
       ),
-      body: GetBuilder<SchedularController>(
+      body:
+      GetBuilder<SchedularController>(
           init: schedularController,
           builder: (controller) {
-            return hasInternet
-                ? controller.isLoading
-                ?  Center(child: buildShimmerLoader())
-                    : ListView.builder(
+            if (controller.isLoading) {
+              return Center(child: RegisteredPatientsShimmer());
+            }
+
+            final schedularList =
+                controller.schedularPatientList?.data ?? [];
+
+            if (schedularList.isEmpty) {
+              return CommonStatusScreen(
+                title: "No Data Found",
+                description:
+                "We are unable to find the data that\nyou are looking for ",
+                img: "assets/no_Data_Found.png",
+                buttonText: "Go Back",
+                onPressed: () {
+                  Get.back();
+                },
+              );
+            }
+
+            return  ListView.builder(
                       // shrinkWrap: true,
                       itemCount:
                       controller.schedularPatientList?.data?.length ?? 0,
@@ -619,13 +674,14 @@ class _SchedularListScreenState extends State<SchedularListScreen> {
                           callB5: () {},
                         );
                       },
-                    )
-                : InternetIssue(
-                    onRetryPressed: () {
-                      checkInternetAndLoadData();
-                    },
-                  );
+                    );
           }),
+
+    ) : InternetIssue(
+      onRetryPressed: () async {
+        final result = await _connectivity.checkConnectivity();
+        _updateConnectionStatus(result);
+      },
     );
   }
 

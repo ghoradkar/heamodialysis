@@ -1,7 +1,9 @@
+import 'dart:async';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:heamodialysis/dashboard/technician/institutewise_dashboard_screen.dart';
+import 'package:heamodialysis/dashboard/screen/technician/institutewise_dashboard_screen.dart';
 import 'package:heamodialysis/internet/no_internet_connectivity.dart';
 import 'package:heamodialysis/ro_maintenance/daily_ro_log_sheet/controller/daily_ro_logsheet_controller.dart';
 import 'package:heamodialysis/ro_maintenance/daily_ro_log_sheet/model/daily_ro_logsheet_model.dart';
@@ -14,6 +16,8 @@ import 'package:heamodialysis/widgets/custom_textfield.dart';
 import 'package:heamodialysis/widgets/date_picker.dart';
 import 'package:intl/intl.dart';
 
+import '../../../utils/status_update_screen.dart';
+import '../../../widgets/custom_card.dart';
 import '../../../widgets/custom_shimmer_loader.dart';
 
 class DailyRoLogSheetScreen extends StatefulWidget {
@@ -24,6 +28,10 @@ class DailyRoLogSheetScreen extends StatefulWidget {
 }
 
 class _DailyRoLogSheetScreenState extends State<DailyRoLogSheetScreen> {
+  final Connectivity _connectivity = Connectivity();
+  bool _isNetworkAvailable = true;
+  StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
+
   final DailyRoLogSheetController dailyRoLogSheetController =
       Get.put(DailyRoLogSheetController());
 
@@ -35,6 +43,10 @@ class _DailyRoLogSheetScreenState extends State<DailyRoLogSheetScreen> {
   void initState() {
     getUserData();
     checkInternetAndLoadData();
+    _initConnectivity();
+    _connectivitySubscription = _connectivity.onConnectivityChanged.listen(
+      _updateConnectionStatus,
+    );
     super.initState();
   }
 
@@ -62,9 +74,34 @@ class _DailyRoLogSheetScreenState extends State<DailyRoLogSheetScreen> {
     userData = await SharedPref().read(const SharedPrefConstant().kUserData);
   }
 
+  Future<void> _initConnectivity() async {
+    final result = await _connectivity.checkConnectivity();
+    _updateConnectionStatus(result);
+  }
+
+  // Update connection status handler
+  void _updateConnectionStatus(List<ConnectivityResult> results) {
+    final isConnected = results.any(
+          (result) =>
+      result == ConnectivityResult.mobile ||
+          result == ConnectivityResult.wifi,
+    );
+
+    setState(() {
+      _isNetworkAvailable = isConnected;
+    });
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubscription?.cancel();
+    super.dispose();
+  }
+
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return _isNetworkAvailable ? Scaffold(
       appBar: AppBar(
         title: const CustomText(
           text: 'Daily RO Log Sheet',
@@ -223,10 +260,23 @@ class _DailyRoLogSheetScreenState extends State<DailyRoLogSheetScreen> {
         ],
       ),
       body: GetBuilder<DailyRoLogSheetController>(builder: (controller) {
-        return hasInternet
-            ? controller.isLoading
-            ?  Center(child: buildShimmerLoader())
-                : DailyRoLogSheetCardList(
+        if (controller.isLoading) {
+          return Center(child: DailyRoLogSheetShimmer());
+        }
+        // ✅ Agar API se data empty hai
+        if (controller.roMaintenanceDetailsModel == null ||
+            controller.roMaintenanceDetailsModel!.isEmpty) {
+          return CommonStatusScreen(
+            title: "No Data Found",
+            description: "We are unable to find the data that\nyou are looking for",
+            img: "assets/no_Data_Found.png",
+            buttonText: "Go Back",
+            onPressed: () {
+              Get.back();
+            },
+          );
+        }
+        return DailyRoLogSheetCardList(
                     roList: controller.roMaintenanceDetailsModel ?? [],
                     cardItemDetailsList: cardItemDetailsList,
                     path1: "assets/edit.png",
@@ -237,13 +287,14 @@ class _DailyRoLogSheetScreenState extends State<DailyRoLogSheetScreen> {
                             isEdit: true,
                           ));
                     },
-                  )
-            : InternetIssue(
-                onRetryPressed: () {
-                  checkInternetAndLoadData();
-                },
-              );
+                  );
       }),
+
+    )  : InternetIssue(
+    onRetryPressed: () async {
+    final result = await _connectivity.checkConnectivity();
+    _updateConnectionStatus(result);
+    },
     );
   }
 
@@ -280,7 +331,7 @@ class DailyRoLogSheetCardList extends StatelessWidget {
         itemCount: roList.length,
         itemBuilder: (context, index) {
           return Container(
-            height: 100,
+            // height: 100,
             decoration: BoxDecoration(
               color: const Color(0xffF8F8F8),
               borderRadius: BorderRadius.circular(6),
@@ -294,7 +345,7 @@ class DailyRoLogSheetCardList extends StatelessWidget {
               ],
             ),
             child: Padding(
-              padding: const EdgeInsets.only(left: 11,top: 15),
+              padding: const EdgeInsets.symmetric(horizontal: 11,vertical: 5),
               child: Row(
 
                crossAxisAlignment: CrossAxisAlignment.start,
@@ -304,37 +355,47 @@ class DailyRoLogSheetCardList extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          patientDetailsCard(
-                              cardItemDetailsList[0], roList[index].machineName ?? ''),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              patientDetailsCard(
+                                  cardItemDetailsList[0], roList[index].machineName ?? ''),
+                              patientCardActions(path1!, () {
+                                callB1(index);
+                                // Get.to(() => BookAppointmentScreen(
+                                //     patientData: patientList[index]));
+                              }, null),
+                            ],
+                          ),
                           patientDetailsCard(
                               cardItemDetailsList[1], roList[index].roPlantDate ?? ''),
                         ],
                       ).paddingSymmetric(vertical: 4, horizontal: 4),
                     ),
                   ),
-                  Container(
-                    width: 50,
-                    decoration: const BoxDecoration(
-                      //color: AppColor.darkBlue,
-                      borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(6),
-                          bottomRight: Radius.circular(6)),
-                    ),
-                    child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        patientCardActions(path1!, () {
-                          callB1(index);
-                          // Get.to(() => BookAppointmentScreen(
-                          //     patientData: patientList[index]));
-                        }, null),
-                        // patientCardActions(path2!, () {
-                        //   callB2(index);
-                        // }, null)
-                        //     .paddingOnly(top: 16),
-                      ],
-                    ),
-                  )
+                  // Container(
+                  //   width: 50,
+                  //   decoration: const BoxDecoration(
+                  //     //color: AppColor.darkBlue,
+                  //     borderRadius: BorderRadius.only(
+                  //         topRight: Radius.circular(6),
+                  //         bottomRight: Radius.circular(6)),
+                  //   ),
+                  //   child: Row(
+                  //   mainAxisAlignment: MainAxisAlignment.center,
+                  //     children: [
+                  //       patientCardActions(path1!, () {
+                  //         callB1(index);
+                  //         // Get.to(() => BookAppointmentScreen(
+                  //         //     patientData: patientList[index]));
+                  //       }, null),
+                  //       // patientCardActions(path2!, () {
+                  //       //   callB2(index);
+                  //       // }, null)
+                  //       //     .paddingOnly(top: 16),
+                  //     ],
+                  //   ),
+                  // )
                 ],
               ),
             ),
@@ -342,30 +403,30 @@ class DailyRoLogSheetCardList extends StatelessWidget {
         });
   }
 
-  Widget patientDetailsCard(String text, String details) {
-    return Row(
-      children: [
-        CustomText(
-                text: "$text :",
-                fontSize: 13,
-                fontFam: "Lato",
-                fontWeight: FontWeight.normal,
-                textColor: Colors.black,
-                textAlign: TextAlign.start)
-            .paddingSymmetric(vertical: 2),
-        Expanded(
-          child: CustomText(
-                  text: details,
-                  fontSize: 13,
-                  fontFam: "Lato",
-                  fontWeight: FontWeight.normal,
-                  textColor: Colors.grey,
-                  textAlign: TextAlign.start)
-              .paddingSymmetric(vertical: 2),
-        ),
-      ],
-    );
-  }
+  // Widget patientDetailsCard(String text, String details) {
+  //   return Row(
+  //     children: [
+  //       CustomText(
+  //               text: "$text :",
+  //               fontSize: 13,
+  //               fontFam: "Lato",
+  //               fontWeight: FontWeight.normal,
+  //               textColor: Colors.black,
+  //               textAlign: TextAlign.start)
+  //           .paddingSymmetric(vertical: 2),
+  //       Expanded(
+  //         child: CustomText(
+  //                 text: details,
+  //                 fontSize: 13,
+  //                 fontFam: "Lato",
+  //                 fontWeight: FontWeight.normal,
+  //                 textColor: Colors.grey,
+  //                 textAlign: TextAlign.start)
+  //             .paddingSymmetric(vertical: 2),
+  //       ),
+  //     ],
+  //   );
+  // }
 
   Widget patientCardActions(String path, Function callB, bool? yes) {
     return InkWell(

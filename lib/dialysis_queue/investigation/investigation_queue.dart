@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -16,6 +18,8 @@ import 'package:heamodialysis/widgets/custom_textfield.dart';
 import 'package:heamodialysis/widgets/date_picker.dart';
 import 'package:intl/intl.dart';
 
+import '../../utils/status_update_screen.dart';
+import '../../widgets/custom_card.dart';
 import '../../widgets/custom_shimmer_loader.dart';
 
 class InvestigationQueue extends StatefulWidget {
@@ -26,6 +30,10 @@ class InvestigationQueue extends StatefulWidget {
 }
 
 class _InvestigationQueueState extends State<InvestigationQueue> {
+  final Connectivity _connectivity = Connectivity();
+  bool _isNetworkAvailable = true;
+  StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
+
   final InvestigationController investController =
       Get.put(InvestigationController());
   bool hasInternet = true;
@@ -50,6 +58,10 @@ class _InvestigationQueueState extends State<InvestigationQueue> {
   void initState() {
     getUserData();
     checkInternetAndLoadData();
+    _initConnectivity();
+    _connectivitySubscription = _connectivity.onConnectivityChanged.listen(
+      _updateConnectionStatus,
+    );
     super.initState();
   }
 
@@ -109,10 +121,32 @@ class _InvestigationQueueState extends State<InvestigationQueue> {
     userData = await SharedPref().read(const SharedPrefConstant().kUserData);
     // debugPrint(userData);
   }
+  Future<void> _initConnectivity() async {
+    final result = await _connectivity.checkConnectivity();
+    _updateConnectionStatus(result);
+  }
+
+  // Update connection status handler
+  void _updateConnectionStatus(List<ConnectivityResult> results) {
+    final isConnected = results.any(
+          (result) =>
+      result == ConnectivityResult.mobile ||
+          result == ConnectivityResult.wifi,
+    );
+
+    setState(() {
+      _isNetworkAvailable = isConnected;
+    });
+  }
 
   @override
+  void dispose() {
+    _connectivitySubscription?.cancel();
+    super.dispose();
+  }
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return _isNetworkAvailable ? Scaffold(
       appBar: AppBar(
         title: const CustomText(
           text: "Investigation Queue",
@@ -307,10 +341,27 @@ class _InvestigationQueueState extends State<InvestigationQueue> {
       body: GetBuilder<InvestigationController>(
           // init: investController,
           builder: (controller) {
-        return hasInternet
-            ? controller.isLoading
-                ?  Center(child: buildShimmerLoader())
-                : InvestigationCard(
+            if (controller.isLoading) {
+              return Center(child: SessionEndPatientsShimmer());
+            }
+
+            if (controller.filteredList == null ||
+                controller.filteredList!.isEmpty) {
+              return CommonStatusScreen(
+                title: "No Data Found",
+                description: "We are unable to find the data that\nyou are looking for ",
+                img: "assets/no_Data_Found.png",
+                buttonText: "Go Back",
+                onPressed: () {
+                  Get.back();
+                },
+                // secondButtonText: "Refresh",
+                // secondOnPressed: () {
+                //   checkInternetAndLoadData();
+                // },
+              );
+            }
+            return InvestigationCard(
                     patientList: controller.filteredList ?? [],
                     cardItemDetailsList: cardItemDetailsList,
                     path1: "assets/sample_collection.png",
@@ -346,13 +397,13 @@ class _InvestigationQueueState extends State<InvestigationQueue> {
                       thirdNav(controller.filteredList?[index]);
                       // }
                     },
-                  )
-            : InternetIssue(
-                onRetryPressed: () {
-                  checkInternetAndLoadData();
-                },
-              );
+                  );
       }),
+    ) : InternetIssue(
+    onRetryPressed: () async {
+    final result = await _connectivity.checkConnectivity();
+    _updateConnectionStatus(result);
+    },
     );
   }
 
@@ -791,11 +842,10 @@ class InvestigationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-        shrinkWrap: true,
         itemCount: patientList.length,
         itemBuilder: (context, index) {
           return Container(
-            height: 300, // ✅ Increased height for bottom status
+
             decoration: BoxDecoration(
               color: const Color(0xffF8F8F8),
               borderRadius: BorderRadius.circular(6),
@@ -810,12 +860,15 @@ class InvestigationCard extends StatelessWidget {
             ),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  // ✅ Main content section
-                  Expanded(
-                    child: Padding(
+              child: Padding(
+                padding: const EdgeInsets.only(  left: 6, top: 2, bottom: 2, right: 4),
+                child: Column(
+                  // crossAxisAlignment: CrossAxisAlignment.stretch,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // ✅ Main content section
+                    Padding(
                       padding: const EdgeInsets.only(
                           left: 6, top: 2, bottom: 2, right: 4),
                       child: Column(
@@ -828,8 +881,8 @@ class InvestigationCard extends StatelessWidget {
                                 child: patientDetailsCard(
                                     cardItemDetailsList[0],
                                     patientList[index].patientId.toString(),
-                                    false, // ❌ Status removed from here
-                                    null),
+                                  showStatus:false,
+                                  status:null),
                               ),
                               patientCardActions(path1!, () {
                                 if (patientList[index].testStatus != "Y") {
@@ -852,22 +905,22 @@ class InvestigationCard extends StatelessWidget {
                               patientList[index].patName != null
                                   ? formatDate(patientList[index].patName!)
                                   : "",
-                              false,
-                              null),
+                            showStatus: false,
+                             status:null),
                           patientDetailsCard(cardItemDetailsList[2],
-                              patientList[index].age.toString(), false, null),
+                              patientList[index].age.toString(),showStatus: false,status: null),
                           patientDetailsCard(cardItemDetailsList[3],
-                              patientList[index].mobile ?? '', false, null),
+                              patientList[index].mobile ?? '',showStatus:false,status:null),
                           patientDetailsCard(
                               cardItemDetailsList[4],
                               extractStringUpToParenthesis(
                                   "${patientList[index].gender}"),
-                              false,
-                              null),
+                             showStatus:false,
+                             status:null),
                           patientDetailsCard(cardItemDetailsList[5],
-                              "${patientList[index].packageName}", false, null),
+                              "${patientList[index].packageName}",showStatus:false,status:null),
                           patientDetailsCard(cardItemDetailsList[6],
-                              "${patientList[index].barcodeNo}", false, null),
+                              "${patientList[index].barcodeNo}",showStatus:false,status:null),
                           patientDetailsCard(
                               cardItemDetailsList[7],
                               patientList[index]
@@ -875,50 +928,54 @@ class InvestigationCard extends StatelessWidget {
                                       ?.split(" ")
                                       .first ??
                                   '',
-                              false,
-                              null),
+                             showStatus: false,
+                             status: null),
                           patientDetailsCard(
                               cardItemDetailsList[8],
                               patientList[index].sampleCollectedBytechTime ?? '',
-                              false,
-                              null),
+                             showStatus: true,statusColor: patientList[index].testStatus == "Y"
+                              ? AppColor.secondaryColor
+                              : AppColor.inProcess,
+                             status:  patientList[index].testStatus == "Y"
+                                 ? "Test Confirmation Done"
+                                 : "Test Confirmation Pending",),
                         ],
                       ),
                     ),
-                  ),
-                  // ✅ Status section at bottom RIGHT side (as per image)
-                  Container(
-                    padding:
-                        const EdgeInsets.only(bottom: 18, left: 12, right: 12),
-                    child: Row(
-                      mainAxisAlignment:
-                          MainAxisAlignment.end, // ✅ Align to right
-                      children: [
-                        // Status badge at bottom right
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: patientList[index].testStatus == "Y"
-                                ? AppColor.secondaryColor
-                                : AppColor.inProcess,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Text(
-                            patientList[index].testStatus == "Y"
-                                ? "Test Confirmation Done"
-                                : "Test Confirmation Pending",
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                              fontWeight: FontWeight.normal,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+                    // ✅ Status section at bottom RIGHT side (as per image)
+                    // Container(
+                    //   padding:
+                    //       const EdgeInsets.only(bottom: 18, left: 12, right: 12),
+                    //   child: Row(
+                    //     mainAxisAlignment:
+                    //         MainAxisAlignment.end, // ✅ Align to right
+                    //     children: [
+                    //       // Status badge at bottom right
+                    //       Container(
+                    //         padding: const EdgeInsets.symmetric(
+                    //             horizontal: 12, vertical: 4),
+                    //         decoration: BoxDecoration(
+                    //           color: patientList[index].testStatus == "Y"
+                    //               ? AppColor.secondaryColor
+                    //               : AppColor.inProcess,
+                    //           borderRadius: BorderRadius.circular(20),
+                    //         ),
+                    //         child: Text(
+                    //           patientList[index].testStatus == "Y"
+                    //               ? "Test Confirmation Done"
+                    //               : "Test Confirmation Pending",
+                    //           style: const TextStyle(
+                    //             color: Colors.white,
+                    //             fontSize: 12,
+                    //             fontWeight: FontWeight.normal,
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
+                  ],
+                ),
               ),
             ),
           ).paddingAll(8.0);
@@ -934,47 +991,47 @@ class InvestigationCard extends StatelessWidget {
     }
   }
 
-  Widget patientDetailsCard(
-      String text, String details, bool showStatus, String? status) {
-    return Row(
-      children: [
-        CustomText(
-                text: "$text :",
-                fontSize: 13,
-                fontFam: "Lato",
-                fontWeight: FontWeight.normal,
-                textColor: Colors.black,
-                textAlign: TextAlign.start)
-            .paddingSymmetric(vertical: 2),
-        Expanded(
-          child: CustomText(
-                  text: details,
-                  fontSize: 13,
-                  fontFam: "Lato",
-                  fontWeight: FontWeight.normal,
-                  textColor: Colors.grey,
-                  textAlign: TextAlign.start)
-              .paddingSymmetric(vertical: 2),
-        ),
-        // ❌ Status removed from individual rows - will be shown at bottom
-        if (showStatus && status != null)
-          Container(
-            padding: const EdgeInsets.fromLTRB(4, 2, 4, 2),
-            decoration: BoxDecoration(
-                color: status == "Test Confirmation Done"
-                    ? AppColor.secondaryColor
-                    : AppColor.inProcess,
-                borderRadius: BorderRadius.circular(20)),
-            child: CustomText(
-                text: status,
-                fontSize: 12,
-                fontWeight: FontWeight.normal,
-                textColor: Colors.white,
-                textAlign: TextAlign.center),
-          ).paddingOnly(top: 4, right: 4),
-      ],
-    );
-  }
+  // Widget patientDetailsCard(
+  //     String text, String details, bool showStatus, String? status) {
+  //   return Row(
+  //     children: [
+  //       CustomText(
+  //               text: "$text :",
+  //               fontSize: 13,
+  //               fontFam: "Lato",
+  //               fontWeight: FontWeight.normal,
+  //               textColor: Colors.black,
+  //               textAlign: TextAlign.start)
+  //           .paddingSymmetric(vertical: 2),
+  //       Expanded(
+  //         child: CustomText(
+  //                 text: details,
+  //                 fontSize: 13,
+  //                 fontFam: "Lato",
+  //                 fontWeight: FontWeight.normal,
+  //                 textColor: Colors.grey,
+  //                 textAlign: TextAlign.start)
+  //             .paddingSymmetric(vertical: 2),
+  //       ),
+  //       // ❌ Status removed from individual rows - will be shown at bottom
+  //       if (showStatus && status != null)
+  //         Container(
+  //           padding: const EdgeInsets.fromLTRB(4, 2, 4, 2),
+  //           decoration: BoxDecoration(
+  //               color: status == "Test Confirmation Done"
+  //                   ? AppColor.secondaryColor
+  //                   : AppColor.inProcess,
+  //               borderRadius: BorderRadius.circular(20)),
+  //           child: CustomText(
+  //               text: status,
+  //               fontSize: 12,
+  //               fontWeight: FontWeight.normal,
+  //               textColor: Colors.white,
+  //               textAlign: TextAlign.center),
+  //         ).paddingOnly(top: 4, right: 4),
+  //     ],
+  //   );
+  // }
 
   String extractStringUpToParenthesis(String input) {
     int index = input.indexOf('(');

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:heamodialysis/dialysis_queue/post_dialysis/post_dialysis_screen.dart';
 import 'package:heamodialysis/dialysis_queue/pre_dialysis/pre_dialysis_list/pre_dialysis_screen.dart';
 import '../utils/color_constants.dart';
+import '../widgets/custom_shimmer_loader.dart';
 import '../widgets/custom_text.dart';
 import 'consumable_entry/consumable.dart';
 import 'dialysis_event/dialysis_event_list.dart';
@@ -17,6 +18,21 @@ class DialysisQueueScreen extends StatefulWidget {
 }
 
 class _DialysisQueueScreenState extends State<DialysisQueueScreen> {
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(milliseconds: 500), () {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        }
+        );
+      }
+    }
+    );
+  }
 
   final List<Map<String, dynamic>> options = [
     {"title": "Pre Dialysis", "icon": "assets/preDialysis.png", "color": const Color(0xFFDDF5FF)},
@@ -65,14 +81,17 @@ class _DialysisQueueScreenState extends State<DialysisQueueScreen> {
           child: GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: options.length,
+            itemCount: isLoading ? 6 : options.length,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,
-              mainAxisSpacing: 11,
-              crossAxisSpacing: 11,
-              childAspectRatio: 0.85,
+              mainAxisSpacing: 8,
+              crossAxisSpacing: 8,
+              childAspectRatio: 0.83,
             ),
             itemBuilder: (context, index) {
+              if (isLoading) {
+                return DialysisShimmer();
+              }
               return buildOptionCard(options[index],index);
             },
           ),

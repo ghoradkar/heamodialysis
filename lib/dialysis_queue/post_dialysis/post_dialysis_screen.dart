@@ -1,7 +1,9 @@
+import 'dart:async';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:heamodialysis/dashboard/technician/institutewise_dashboard_screen.dart';
+import 'package:heamodialysis/dashboard/screen/technician/institutewise_dashboard_screen.dart';
 import 'package:heamodialysis/dialysis_queue/post_dialysis/edit_post_dialysis_screen.dart';
 import 'package:heamodialysis/dialysis_queue/post_dialysis/post_dialysis_controller.dart';
 import 'package:heamodialysis/dialysis_queue/pre_dialysis/pre_dialysis_list/pre_dialysis_screen.dart';
@@ -14,6 +16,7 @@ import 'package:heamodialysis/utils/shared_pref_constants.dart';
 import 'package:heamodialysis/utils/shared_preference.dart';
 import 'package:heamodialysis/widgets/custom_text.dart';
 
+import '../../utils/status_update_screen.dart';
 import '../../widgets/custom_shimmer_loader.dart';
 
 class PostDialysisScreen extends StatefulWidget {
@@ -24,6 +27,11 @@ class PostDialysisScreen extends StatefulWidget {
 }
 
 class _PostDialysisScreenState extends State<PostDialysisScreen> {
+  final Connectivity _connectivity = Connectivity();
+  bool _isNetworkAvailable = true;
+  StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
+
+
   final PostDialysisController postDialysisController =
   Get.put(PostDialysisController());
 
@@ -50,6 +58,10 @@ class _PostDialysisScreenState extends State<PostDialysisScreen> {
   void initState() {
     getUserData();
     checkInternetAndLoadData();
+    _initConnectivity();
+    _connectivitySubscription = _connectivity.onConnectivityChanged.listen(
+      _updateConnectionStatus,
+    );
     super.initState();
   }
 
@@ -79,9 +91,33 @@ class _PostDialysisScreenState extends State<PostDialysisScreen> {
     userData = await SharedPref().read(const SharedPrefConstant().kUserData);
   }
 
+  Future<void> _initConnectivity() async {
+    final result = await _connectivity.checkConnectivity();
+    _updateConnectionStatus(result);
+  }
+
+  // Update connection status handler
+  void _updateConnectionStatus(List<ConnectivityResult> results) {
+    final isConnected = results.any(
+          (result) =>
+      result == ConnectivityResult.mobile ||
+          result == ConnectivityResult.wifi,
+    );
+
+    setState(() {
+      _isNetworkAvailable = isConnected;
+    });
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubscription?.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return _isNetworkAvailable ?  Scaffold(
       appBar: AppBar(
         title: const CustomText(
           text: 'Post Dialysis Patient List',
@@ -327,10 +363,26 @@ class _PostDialysisScreenState extends State<PostDialysisScreen> {
       body: GetBuilder<PostDialysisController>(
           init: PostDialysisController(),
           builder: (controller) {
-            return hasInternet
-                ? controller.isLoading
-                ?  Center(child: buildShimmerLoader())
-                : PreDialysisCardList(
+            if (controller.isLoading) {
+              return Center(child: SessionEndPatientsShimmer());
+            }
+            final postDialysisList =
+                controller.postDialysisListModel?.data ?? [];
+            // 3️⃣ No Data Found state
+            if (postDialysisList.isEmpty) {
+              return CommonStatusScreen(
+                title: "No Data Found",
+                description:
+                "We are unable to find the data that\nyou are looking for ",
+                img: "assets/no_Data_Found.png",
+                buttonText: "Go Back",
+                onPressed: () {
+                  Get.back();
+                },
+              );
+            }
+
+            return PreDialysisCardList(
               patientList:
               controller.postDialysisListModel?.data ?? [],
               cardItemDetailsList: cardItemDetailsList,
@@ -362,13 +414,13 @@ class _PostDialysisScreenState extends State<PostDialysisScreen> {
                   callB: () {},
                 ));
               },
-            )
-                : InternetIssue(
-              onRetryPressed: () {
-                checkInternetAndLoadData();
-              },
             );
           }),
+    ) : InternetIssue(
+    onRetryPressed: () async {
+    final result = await _connectivity.checkConnectivity();
+    _updateConnectionStatus(result);
+    },
     );
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/widgets/custom_text.dart';
 
+import '../utils/status_update_screen.dart';
 import 'custom_shimmer_loader.dart';
 
 class RoundedCornerTable extends StatefulWidget {
@@ -42,13 +43,23 @@ class _RoundedCornerTableState extends State<RoundedCornerTable> {
   @override
   Widget build(BuildContext context) {
     return isLoading
-        ?  Center(child: buildShimmerLoader())
+        ? Center(child: buildShimmerLoader())
         : Table(
             defaultColumnWidth: const IntrinsicColumnWidth(),
             children: [
               widget.l1.isNotEmpty
                   ? _buildRoundedTableRow(widget.tableHeader)
                   : TableRow(children: [
+                      // CommonStatusScreen(
+                      //   title: "No Data Found",
+                      //   description:
+                      //       "We are unable to find the data that\nyou are looking for ",
+                      //   img: "assets/no_Data_Found.png",
+                      //   buttonText: "Go Back",
+                      //   onPressed: () {
+                      //     Get.back();
+                      //   },
+                      // ),
                       const CustomText(
                         text: "Data Not available",
                         fontSize: 16,
@@ -102,12 +113,10 @@ class _RoundedCornerTableState extends State<RoundedCornerTable> {
                 ),
               ),
               child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child:
-
-                      CustomText(
+                  padding: const EdgeInsets.symmetric(horizontal: 4.0,vertical: 6),
+                  child: CustomText(
                     text: data[index],
-                    fontSize: 12,
+                    fontSize: 10,
                     textColor: Colors.black,
                     textAlign: TextAlign.center,
                     fontWeight: FontWeight.normal,
@@ -126,7 +135,6 @@ class _RoundedCornerTableState extends State<RoundedCornerTable> {
       children: List.generate(
         widget.tableHeader.length,
         (i) {
-          // debugPrint("Cell Data:  ${widget.l1}  ${widget.l2}  ${widget.l3} ${widget.l4} - Len: ${widget.tableHeader}");
           return TableCell(
             key: UniqueKey(),
             verticalAlignment: TableCellVerticalAlignment.intrinsicHeight,
@@ -139,36 +147,39 @@ class _RoundedCornerTableState extends State<RoundedCornerTable> {
                   border: Border.all(color: const Color(0xFFE0E0E0)),
                 ),
                 child: i == (widget.tableHeader.length - 1)
-                    ? GestureDetector(
-                        onTap: () {
-                          // Trigger the callback with the index
-                          if (widget.onButtonPressed != null) {
-                            widget.onButtonPressed!(index);
-                          }
-                        },
-                        child: widget.lastColumnWidgets?[index] ??
-                            Container(), // Use widget directly
+                    ? Container(
+                        constraints: BoxConstraints(
+                            minWidth: 150), // Minimum width for the button
+                        child: GestureDetector(
+                          onTap: () {
+                            if (widget.onButtonPressed != null) {
+                              widget.onButtonPressed!(index);
+                            }
+                          },
+                          child:
+                              widget.lastColumnWidgets?[index] ?? Container(),
+                        ),
                       )
                     : Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Flexible(
-                              child:
-                                  CustomText(
-                            text: [
-                              widget.l1[index],
-                              widget.l2[index],
-                              if (widget.l3 != null) widget.l3?[index],
-                              if (widget.l4 != null) widget.l4?[index],
-                              if (widget.l5 != null) widget.l5?[index],
-                            ][i]
-                                .toString(),
-                            fontSize: 12,
-                            textColor: Colors.black,
-                            textAlign: TextAlign.center,
-                            fontWeight: FontWeight.normal,
-                            fontFam: 'Lato',
-                          )),
+                            child: CustomText(
+                              text: [
+                                widget.l1[index],
+                                widget.l2[index],
+                                if (widget.l3 != null) widget.l3?[index],
+                                if (widget.l4 != null) widget.l4?[index],
+                                if (widget.l5 != null) widget.l5?[index],
+                              ][i]
+                                  .toString(),
+                              fontSize: 10,
+                              textColor: Colors.black,
+                              textAlign: TextAlign.center,
+                              fontWeight: FontWeight.normal,
+                              fontFam: 'Lato',
+                            ),
+                          ),
                         ],
                       ),
               ),
@@ -176,8 +187,6 @@ class _RoundedCornerTableState extends State<RoundedCornerTable> {
           );
         },
       ),
-      // decoration: BoxDecoration(color: getColor(isPastDate)
-      // ),
     );
   }
 }
@@ -217,7 +226,7 @@ class _PrescriptionTableDataState extends State<PrescriptionTableData> {
   @override
   Widget build(BuildContext context) {
     return isLoading
-        ?  Center(child: buildShimmerLoader())
+        ? Center(child: buildShimmerLoader())
         : Table(
             defaultColumnWidth: const IntrinsicColumnWidth(),
             children: [
@@ -321,37 +330,37 @@ class _PrescriptionTableDataState extends State<PrescriptionTableData> {
                 decoration: BoxDecoration(
                   border: Border.all(color: const Color(0xFFE0E0E0)),
                 ),
-                child:  i == (widget.tableHeader.length - 1)
+                child: i == (widget.tableHeader.length - 1)
                     ? GestureDetector(
-                  onTap: () {
-                    // Trigger the callback with the index
-                    if (widget.onButtonPressed != null) {
-                      widget.onButtonPressed!(index);
-                    }
-                  },
-                  child: widget.lastColumnWidgets?[index] ??
-                      Container(), // Use widget directly
-                )
+                        onTap: () {
+                          // Trigger the callback with the index
+                          if (widget.onButtonPressed != null) {
+                            widget.onButtonPressed!(index);
+                          }
+                        },
+                        child: widget.lastColumnWidgets?[index] ??
+                            Container(), // Use widget directly
+                      )
                     : Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Flexible(
-                        child: CustomText(
-                      text: [
-                        widget.l1[index],
-                        widget.l2[index],
-                        if (widget.l3 != null) widget.l3?[index],
-                        if (widget.l4 != null) widget.l4?[index]
-                      ][i]
-                          .toString(),
-                      fontSize: 12,
-                      textColor: Colors.black,
-                      textAlign: TextAlign.center,
-                      fontWeight: FontWeight.normal,
-                      fontFam: 'Lato',
-                    )),
-                  ],
-                ),
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Flexible(
+                              child: CustomText(
+                            text: [
+                              widget.l1[index],
+                              widget.l2[index],
+                              if (widget.l3 != null) widget.l3?[index],
+                              if (widget.l4 != null) widget.l4?[index]
+                            ][i]
+                                .toString(),
+                            fontSize: 12,
+                            textColor: Colors.black,
+                            textAlign: TextAlign.center,
+                            fontWeight: FontWeight.normal,
+                            fontFam: 'Lato',
+                          )),
+                        ],
+                      ),
               ),
             ),
           );

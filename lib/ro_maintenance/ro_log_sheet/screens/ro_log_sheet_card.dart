@@ -5,6 +5,8 @@ import 'package:heamodialysis/utils/color_constants.dart';
 import 'package:heamodialysis/widgets/custom_text.dart';
 import 'package:intl/intl.dart';
 
+import '../../../widgets/custom_card.dart';
+
 class RoLogSheetCard extends StatelessWidget {
   final RoLogSheetData? roList;
   final List<String> cardItemDetailsList;
@@ -28,8 +30,19 @@ class RoLogSheetCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color(0xffF8F8F8),
+        borderRadius: BorderRadius.circular(6),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.1),
+            spreadRadius: 2,
+            blurRadius: 4,
+            offset: const Offset(0, 0.5),
+          ),
+        ],
+      ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -51,9 +64,9 @@ class RoLogSheetCard extends StatelessWidget {
                         : "-"),
                 CustomText(
                     text: cardItemDetailsList[2],
-                    fontSize: 14,
+                    fontSize: 12,
                     fontFam: "Lato",
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w700,
                     textColor: Colors.black,
                     textAlign: TextAlign.start),
                 Row(
@@ -128,30 +141,30 @@ class RoLogSheetCard extends StatelessWidget {
         .paddingAll(6.0);
   }
 
-  Widget patientDetailsCard(String text, String? details) {
-    return Row(
-      children: [
-        CustomText(
-                text: "$text :",
-                fontSize: 13,
-                fontFam: "Lato",
-                fontWeight: FontWeight.normal,
-                textColor: Colors.black,
-                textAlign: TextAlign.start)
-            .paddingSymmetric(vertical: 2),
-        Expanded(
-          child: CustomText(
-                  text: details ?? "",
-                  fontSize: 13,
-                  fontFam: "Lato",
-                  fontWeight: FontWeight.normal,
-                  textColor: Colors.grey,
-                  textAlign: TextAlign.start)
-              .paddingSymmetric(vertical: 2),
-        ),
-      ],
-    );
-  }
+  // Widget patientDetailsCard(String text, String? details) {
+  //   return Row(
+  //     children: [
+  //       CustomText(
+  //               text: "$text :",
+  //               fontSize: 13,
+  //               fontFam: "Lato",
+  //               fontWeight: FontWeight.normal,
+  //               textColor: Colors.black,
+  //               textAlign: TextAlign.start)
+  //           .paddingSymmetric(vertical: 2),
+  //       Expanded(
+  //         child: CustomText(
+  //                 text: details ?? "",
+  //                 fontSize: 13,
+  //                 fontFam: "Lato",
+  //                 fontWeight: FontWeight.normal,
+  //                 textColor: Colors.grey,
+  //                 textAlign: TextAlign.start)
+  //             .paddingSymmetric(vertical: 2),
+  //       ),
+  //     ],
+  //   );
+  // }
 
   dateConversion(inputDate) {
     DateTime dateTime = DateTime.parse(inputDate);

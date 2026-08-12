@@ -1,9 +1,11 @@
+import 'dart:async';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:heamodialysis/book_appointment/book_appointment.dart';
-import 'package:heamodialysis/dashboard/technician/institutewise_dashboard_screen.dart';
+import 'package:heamodialysis/book_appointment/screen/book_appointment.dart';
+import 'package:heamodialysis/dashboard/screen/technician/institutewise_dashboard_screen.dart';
 import 'package:heamodialysis/internet/no_internet_connectivity.dart';
 import 'package:heamodialysis/new_registration/screens/new_registration.dart';
 import 'package:heamodialysis/registered_patient_list/controller/registration_controller.dart';
@@ -17,6 +19,7 @@ import 'package:heamodialysis/widgets/custom_text.dart';
 import 'package:heamodialysis/widgets/custom_textfield.dart';
 import 'package:heamodialysis/widgets/registered_patient_cardlist.dart';
 
+import '../../utils/status_update_screen.dart';
 import '../../widgets/custom_shimmer_loader.dart';
 
 class RegisteredPatientList extends StatefulWidget {
@@ -27,6 +30,11 @@ class RegisteredPatientList extends StatefulWidget {
 }
 
 class _RegisteredPatientListState extends State<RegisteredPatientList> {
+  final Connectivity _connectivity = Connectivity();
+  bool _isNetworkAvailable = true;
+  StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
+
+
   final RegistrationController dashboardController =
       Get.put(RegistrationController());
   bool hasInternet = true;
@@ -54,38 +62,79 @@ class _RegisteredPatientListState extends State<RegisteredPatientList> {
 
   @override
   void initState() {
-    getUserData();
     checkInternetAndLoadData();
+
+    _initConnectivity();
+    _connectivitySubscription = _connectivity.onConnectivityChanged.listen(
+      _updateConnectionStatus,
+    );
+
     super.initState();
   }
 
   checkInternetAndLoadData() async {
-    List<ConnectivityResult> connectivityResult =
-        await Connectivity().checkConnectivity();
-
-    hasInternet = (connectivityResult.contains(ConnectivityResult.mobile) ||
-        connectivityResult.contains(ConnectivityResult.wifi));
-
+    dashboardController.isLoading = true;
     dashboardController.refreshUi();
-    if (hasInternet) {
-      await dashboardController.searchRegisteredPatient('PNA', '',
-          int.parse(userData['unitId'].toString()), searchByList[0].id);
-      await dashboardController.searchByDropDownList();
-      if (dashboardController.searchByModel?.data != null ||
-          dashboardController.searchByModel!.data!.isNotEmpty) {
-        dropDownValue = dashboardController.searchByModel!.data!.first;
-        dashboardController.refreshUi();
+
+    try {
+      await getUserData();
+
+      List<ConnectivityResult> connectivityResult =
+          await Connectivity().checkConnectivity();
+
+      hasInternet = (connectivityResult.contains(ConnectivityResult.mobile) ||
+          connectivityResult.contains(ConnectivityResult.wifi));
+
+      if (hasInternet && userData != null) {
+        final unitIdStr = userData['unitId']?.toString() ?? '0';
+        final unitId = int.tryParse(unitIdStr) ?? 0;
+
+        await dashboardController.searchRegisteredPatient('PNA', '',
+            unitId, searchByList[0].id);
+        await dashboardController.searchByDropDownList();
+        if (dashboardController.searchByModel?.data?.isNotEmpty ?? false) {
+          dropDownValue = dashboardController.searchByModel!.data!.first;
+        }
       }
+    } catch (e, stacktrace) {
+      debugPrint("Error in checkInternetAndLoadData: $e");
+      debugPrint(stacktrace.toString());
+    } finally {
+      dashboardController.isLoading = false;
+      dashboardController.refreshUi();
     }
   }
 
   Future<void> getUserData() async {
     userData = await SharedPref().read(const SharedPrefConstant().kUserData);
   }
+  Future<void> _initConnectivity() async {
+    final result = await _connectivity.checkConnectivity();
+    _updateConnectionStatus(result);
+  }
+
+  // Update connection status handler
+  void _updateConnectionStatus(List<ConnectivityResult> results) {
+    final isConnected = results.any(
+          (result) =>
+      result == ConnectivityResult.mobile ||
+          result == ConnectivityResult.wifi,
+    );
+
+    setState(() {
+      _isNetworkAvailable = isConnected;
+    });
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubscription?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return _isNetworkAvailable ? Scaffold(
       appBar: AppBar(
         backgroundColor:AppColor.primaryBackgroundColor,
         shape: const RoundedRectangleBorder(
@@ -471,11 +520,13 @@ class _RegisteredPatientListState extends State<RegisteredPatientList> {
                                 alignment: Alignment.centerRight,
                                 child: InkWell(
                                   onTap: () {
+                                    final unitIdStr = userData?['unitId']?.toString() ?? '0';
+                                    final unitId = int.tryParse(unitIdStr) ?? 0;
                                     dashboardController.searchRegisteredPatient(
                                         dropDownValue?.lookupDetValue ?? "",
                                         dashboardController
                                             .valueController.text,
-                                        int.parse(userData['unitId'].toString()),
+                                        unitId,
                                         dropDownValue2?.id ?? "");
                                     Get.back();
                                   },
@@ -533,14 +584,28 @@ class _RegisteredPatientListState extends State<RegisteredPatientList> {
           ),
         ],
       ),
-
-      body: GetBuilder<RegistrationController>(
+      body:
+      GetBuilder<RegistrationController>(
           init: RegistrationController(),
           builder: (controller) {
-            return hasInternet
-                ? controller.isLoading
-                    ?  Center(child: buildShimmerLoader())
-                    : RegisteredPatientCardList(
+            if (controller.isLoading) {
+              return const Center(child: RegisteredPatientsShimmer());
+            }
+            final patientList = controller.alreadyRegisteredPatient?.data ?? [];
+            if (patientList.isEmpty) {
+              return CommonStatusScreen(
+                title: "No Data Found",
+                description:
+                "We are unable to find the data that\nyou are looking for ",
+                img: "assets/no_Data_Found.png",
+                buttonText: "Go Back",
+                onPressed: () {
+                  Get.back();
+                },
+              );
+            }
+
+            return  RegisteredPatientCardList(
                         patientList:
                             controller.alreadyRegisteredPatient?.data ?? [],
                         cardItemDetailsList: cardItemDetailsList,
@@ -596,13 +661,14 @@ class _RegisteredPatientListState extends State<RegisteredPatientList> {
                               ));
                         },
                         callB5: (index) {},
-                      )
-                : InternetIssue(
-                    onRetryPressed: () {
-                      checkInternetAndLoadData();
-                    },
-                  );
+                      );
           }),
+
+    ) : InternetIssue(
+    onRetryPressed: () async {
+    final result = await _connectivity.checkConnectivity();
+    _updateConnectionStatus(result);
+    },
     );
   }
 }

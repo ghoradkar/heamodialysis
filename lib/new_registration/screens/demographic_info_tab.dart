@@ -14,6 +14,8 @@ import 'package:heamodialysis/widgets/custom_text.dart';
 import 'package:heamodialysis/widgets/custom_textfield.dart';
 import 'package:heamodialysis/widgets/image_viewer.dart';
 
+import '../../widgets/custom_expandable.dart';
+
 class DemographicInfo extends StatefulWidget {
   final Function callB;
   final List<IdProofData> idProofListModel;
@@ -124,496 +126,951 @@ class DemographicInfoState extends State<DemographicInfo>
              SizedBox(
               height: 20.h,
             ),
-            Theme(
-                data: ThemeData().copyWith(dividerColor: Colors.transparent),
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: AppColor.darkBlue,
-                      borderRadius: BorderRadius.circular(10)),
-                  child: ExpansionTile(
-                    maintainState: true,
-                    collapsedIconColor: Colors.white,
-                    iconColor: Colors.white,
-                    title: Row(children: [
-                      Image.asset("assets/file-info.png"),
-                       SizedBox(width: 12.w),
-                       Text(
-                        "Patient Information",
-                        style: TextStyle(
-                            fontSize: 14.sp,
-                            color: Colors.white,
-                            fontFamily: 'Lato'),
-                      ),
-                    ]),
-                    children: <Widget>[
-                      Container(
-                        padding:  EdgeInsets.symmetric(vertical: 8.h,horizontal: 8.w),
-                        decoration: BoxDecoration(
-                            color: Colors.grey[50],
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: AppColor.borderColor)),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
+            CustomExpandableContainer(
+              text: 'Patient Information',
+              leading: "assets/file-info.png",
+              child:Column(
+                children: <Widget>[
+                  Container(
+                    padding:  EdgeInsets.symmetric(vertical: 8.h,horizontal: 8.w),
+                    decoration: BoxDecoration(
+                        color: Colors.grey[50],
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: AppColor.borderColor)),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        SizedBox(height: 16.h),
+                        MyCustomDropdown(
+                            isViewProfile: widget.isViewPatient,
+                            selectedItem:
+                            newRegistrationController.selectedSchema,
+                            labelText: 'Scheme Adopted',
+                            items: newRegistrationController
+                                .schemaAdoptedModel?.data
+                                ?.map((e) => e.lookupDetDescEn)
+                                .toList() ??
+                                [],
+                            // items: ['Schema1'],
+                            hint: 'Select',
+                            isRequired: true,
+                            senValue: (value) {
+                              newRegistrationController.selectedSchema =
+                                  value;
+                              newRegistrationController.selectedSchemeObj =
+                                  newRegistrationController
+                                      .schemaAdoptedModel?.data
+                                      ?.firstWhere((e) =>
+                                  e.lookupDetDescEn == value);
+                              newRegistrationController.refreshUi();
+                            },
+                            filledColor: Colors.white),
+                        SizedBox(height: 8.h),
+                        Visibility(
+                          visible: newRegistrationController
+                              .selectedSchema ==
+                              "MJPJAY(Mahatma Jyotirao Phule Jan Arogya Yojana )",
+                          child: CustomTextField(
+                            maxLines: 1,
+                            isReadOnly: widget.isViewPatient ? true : false,
+                            keyBoardType: TextInputType.text,
+                            labelText: 'MJPJAY Enrollment No',
+                            hintText: 'MJPJAY Enrollment No',
+                            isRequired: false,
+                            txtController: newRegistrationController
+                                .mjpjayEnrollNoController,
+                            fillColor: Colors.white,fontSize: 16.sp,
+                          ),
+                        ),
+                        SizedBox(height: 8.h),
+                        MyCustomDropdown(
+                            isViewProfile: widget.isViewPatient,
+                            selectedItem:
+                            newRegistrationController.selectedViralStat,
+                            labelText: 'Viral Marker Status',
+                            items: widget.viralStatusList
+                                .map((e) => e.lookupDetDescEn)
+                                .toList(),
+                            hint: 'Select',
+                            isRequired: true,
+                            senValue: (value) {
+                              newRegistrationController.selectedViralStat =
+                                  value;
+                              newRegistrationController
+                                  .selectedProcedureType =
+                                  widget.viralStatusList.firstWhere(
+                                          (e) => e.lookupDetDescEn == value);
+                              newRegistrationController.refreshUi();
+                            },
+                            filledColor: Colors.white),
+                        SizedBox(height: 8.h),
+                        MyCustomDropdown(
+                            isViewProfile: widget.isViewPatient,
+                            selectedItem: newRegistrationController
+                                .selectedDialysisMode,
+                            labelText: 'Dialysis Mode',
+                            items: newRegistrationController
+                                .dialysisMode?.data
+                                ?.map((e) => e.lookupDetDescEn)
+                                .toList() ??
+                                [],
+                            hint: 'Select',
+                            isRequired: false,
+                            senValue: (value) {
+                              newRegistrationController
+                                  .selectedDialysisMode = value;
+                              newRegistrationController
+                                  .selectedDialysisModeObj =
+                                  newRegistrationController
+                                      .dialysisMode?.data
+                                      ?.firstWhere((e) =>
+                                  e.lookupDetDescEn == value);
+                              newRegistrationController.refreshUi();
+                            },
+                            filledColor: Colors.white),
+                        SizedBox(height: 8.h),
+                        MyCustomDropdown(
+                            isViewProfile: widget.isViewPatient,
+                            selectedItem:
+                            newRegistrationController.selectedIdProof,
+                            labelText: 'Id Proof',
+                            items: widget.idProofListModel
+                                .map((e) => e.lookupDetDescEn)
+                                .toList(),
+                            hint: 'Select',
+                            isRequired: false,
+                            senValue: (value) {
+                              newRegistrationController.selectedIdProof =
+                                  value;
+                              newRegistrationController.selectedIdProfObj =
+                                  widget.idProofListModel.firstWhere(
+                                          (e) => e.lookupDetDescEn == value);
+                              newRegistrationController
+                                  .identificationNoController.text = '';
+                              newRegistrationController.refreshUi();
+                            },
+                            filledColor: Colors.white),
+                        SizedBox(height: 8.h),
+                        CustomTextField(
+
+                          identification:
+                          newRegistrationController.selectedIdProof,
+                          maxLines: 1,
+                          isReadOnly: widget.isViewPatient ? true : false,
+                          keyBoardType:
+                          newRegistrationController.selectedIdProof ==
+                              "Pan Card"
+                              ? TextInputType.text
+                              : TextInputType.number,
+                          labelText: 'Identification Number',
+                          hintText: 'Identification Number',
+                          isRequired: true,
+                          txtController: newRegistrationController
+                              .identificationNoController,
+                          fillColor: Colors.white,fontSize: 16.sp,
+                        ),
+                        SizedBox(height: 8.h),
+                        Row(
                           children: [
-                             SizedBox(height: 16.h),
-                            MyCustomDropdown(
+                            Expanded(
+                              child: MyCustomDropdown(
                                 isViewProfile: widget.isViewPatient,
-                                selectedItem:
-                                    newRegistrationController.selectedSchema,
-                                labelText: 'Scheme Adopted',
-                                items: newRegistrationController
-                                        .schemaAdoptedModel?.data
-                                        ?.map((e) => e.lookupDetDescEn)
-                                        .toList() ??
-                                    [],
-                                // items: ['Schema1'],
+                                selectedItem: newRegistrationController
+                                    .selectedNationa,
+                                labelText: 'Nationality',
+                                items:
+                                newRegistrationController.nationality,
                                 hint: 'Select',
-                                isRequired: true,
                                 senValue: (value) {
-                                  newRegistrationController.selectedSchema =
-                                      value;
-                                  newRegistrationController.selectedSchemeObj =
-                                      newRegistrationController
-                                          .schemaAdoptedModel?.data
-                                          ?.firstWhere((e) =>
-                                              e.lookupDetDescEn == value);
+                                  newRegistrationController
+                                      .selectedNationa = value;
                                   newRegistrationController.refreshUi();
                                 },
-                                filledColor: Colors.white),
-                             SizedBox(height: 8.h),
-                            Visibility(
-                              visible: newRegistrationController
-                                      .selectedSchema ==
-                                  "MJPJAY(Mahatma Jyotirao Phule Jan Arogya Yojana )",
-                              child: CustomTextField(
-                                maxLines: 1,
-                                isReadOnly: widget.isViewPatient ? true : false,
-                                keyBoardType: TextInputType.text,
-                                labelText: 'MJPJAY Enrollment No',
-                                hintText: 'MJPJAY Enrollment No',
+                                filledColor: Colors.white,
                                 isRequired: false,
-                                txtController: newRegistrationController
-                                    .mjpjayEnrollNoController,
-                                fillColor: Colors.white,fontSize: 16.sp,
                               ),
                             ),
-                             SizedBox(height: 8.h),
-                            MyCustomDropdown(
-                                isViewProfile: widget.isViewPatient,
-                                selectedItem:
-                                    newRegistrationController.selectedViralStat,
-                                labelText: 'Viral Marker Status',
-                                items: widget.viralStatusList
-                                    .map((e) => e.lookupDetDescEn)
-                                    .toList(),
-                                hint: 'Select',
-                                isRequired: true,
-                                senValue: (value) {
-                                  newRegistrationController.selectedViralStat =
-                                      value;
-                                  newRegistrationController
-                                          .selectedProcedureType =
-                                      widget.viralStatusList.firstWhere(
-                                          (e) => e.lookupDetDescEn == value);
-                                  newRegistrationController.refreshUi();
-                                },
-                                filledColor: Colors.white),
-                             SizedBox(height: 8.h),
-                            MyCustomDropdown(
-                                isViewProfile: widget.isViewPatient,
-                                selectedItem: newRegistrationController
-                                    .selectedDialysisMode,
-                                labelText: 'Dialysis Mode',
-                                items: newRegistrationController
-                                        .dialysisMode?.data
-                                        ?.map((e) => e.lookupDetDescEn)
-                                        .toList() ??
-                                    [],
-                                hint: 'Select',
-                                isRequired: false,
-                                senValue: (value) {
-                                  newRegistrationController
-                                      .selectedDialysisMode = value;
-                                  newRegistrationController
-                                          .selectedDialysisModeObj =
-                                      newRegistrationController
-                                          .dialysisMode?.data
-                                          ?.firstWhere((e) =>
-                                              e.lookupDetDescEn == value);
-                                  newRegistrationController.refreshUi();
-                                },
-                                filledColor: Colors.white),
-                             SizedBox(height: 8.h),
-                            MyCustomDropdown(
-                                isViewProfile: widget.isViewPatient,
-                                selectedItem:
-                                    newRegistrationController.selectedIdProof,
-                                labelText: 'Id Proof',
-                                items: widget.idProofListModel
-                                    .map((e) => e.lookupDetDescEn)
-                                    .toList(),
-                                hint: 'Select',
-                                isRequired: false,
-                                senValue: (value) {
-                                  newRegistrationController.selectedIdProof =
-                                      value;
-                                  newRegistrationController.selectedIdProfObj =
-                                      widget.idProofListModel.firstWhere(
-                                          (e) => e.lookupDetDescEn == value);
-                                  newRegistrationController
-                                      .identificationNoController.text = '';
-                                  newRegistrationController.refreshUi();
-                                },
-                                filledColor: Colors.white),
-                             SizedBox(height: 8.h),
-                            CustomTextField(
-                              identification:
-                                  newRegistrationController.selectedIdProof,
-                              maxLines: 1,
-                              isReadOnly: widget.isViewPatient ? true : false,
-                              keyBoardType:
-                                  newRegistrationController.selectedIdProof ==
-                                          "Pan Card"
-                                      ? TextInputType.text
-                                      : TextInputType.number,
-                              labelText: 'Identification Number',
-                              hintText: 'Identification Number',
-                              isRequired: false,
-                              txtController: newRegistrationController
-                                  .identificationNoController,
-                              fillColor: Colors.white,fontSize: 16.sp,
-                            ),
-                             SizedBox(height: 8.h),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: MyCustomDropdown(
-                                    isViewProfile: widget.isViewPatient,
-                                    selectedItem: newRegistrationController
-                                        .selectedNationa,
-                                    labelText: 'Nationality',
-                                    items:
-                                        newRegistrationController.nationality,
-                                    hint: 'Select',
-                                    senValue: (value) {
-                                      newRegistrationController
-                                          .selectedNationa = value;
-                                      newRegistrationController.refreshUi();
-                                    },
-                                    filledColor: Colors.white,
-                                    isRequired: false,
-                                  ),
-                                ),
-                                 SizedBox(width: 6.w),
-                                Expanded(
-                                  child: MyCustomDropdown(
-                                      isViewProfile: widget.isViewPatient,
-                                      selectedItem: newRegistrationController
-                                          .selectedBlood,
-                                      labelText: 'Blood Group',
-                                      items: newRegistrationController
-                                              .bloodGroupModel?.data
-                                              ?.map((e) => e.bloodGrouptName)
-                                              .toList() ??
-                                          [],
-                                      hint: 'Select',
-                                      isRequired: false,
-                                      senValue: (value) {
+                            SizedBox(width: 6.w),
+                            Expanded(
+                              child: MyCustomDropdown(
+                                  isViewProfile: widget.isViewPatient,
+                                  selectedItem: newRegistrationController
+                                      .selectedBlood,
+                                  labelText: 'Blood Group',
+                                  items: newRegistrationController
+                                      .bloodGroupModel?.data
+                                      ?.map((e) => e.bloodGrouptName)
+                                      .toList() ??
+                                      [],
+                                  hint: 'Select',
+                                  isRequired: false,
+                                  senValue: (value) {
+                                    newRegistrationController
+                                        .selectedBloodObj =
                                         newRegistrationController
-                                                .selectedBloodObj =
-                                            newRegistrationController
-                                                .bloodGroupModel?.data
-                                                ?.firstWhere((e) =>
-                                                    e.bloodGrouptName == value);
+                                            .bloodGroupModel?.data
+                                            ?.firstWhere((e) =>
+                                        e.bloodGrouptName == value);
+                                    newRegistrationController
+                                        .selectedBlood =
                                         newRegistrationController
-                                                .selectedBlood =
-                                            newRegistrationController
-                                                .selectedBloodObj
-                                                ?.bloodGrouptName;
-                                        newRegistrationController.refreshUi();
-                                      },
-                                      filledColor: Colors.white),
-                                ),
-                              ],
+                                            .selectedBloodObj
+                                            ?.bloodGrouptName;
+                                    newRegistrationController.refreshUi();
+                                  },
+                                  filledColor: Colors.white),
                             ),
-                             SizedBox(height: 8.h),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: CustomTextField(
-                                      maxLines: 1,
-                                      isReadOnly:
-                                          widget.isViewPatient ? true : false,
-                                      keyBoardType: TextInputType.text,
-                                      labelText: 'Height (In Ft.)',
-                                      hintText: 'Enter In Feet and Inches',
-                                      isRequired: true,
-                                      txtController: newRegistrationController
-                                          .heightFeetController,
-                                      fillColor: Colors.white,fontSize: 16.sp,),
-                                ),
-                                 SizedBox(width: 6.w),
-                                Expanded(
-                                  child: CustomTextField(
-                                      maxLines: 1,
-                                      isReadOnly:
-                                          widget.isViewPatient ? true : false,
-                                      keyBoardType:
-                                          const TextInputType.numberWithOptions(
-                                              decimal: true),
-                                      isRequired: true,
-                                      labelText: 'Height (In cm.)',
-                                      hintText: 'Enter',
-                                      txtController: newRegistrationController
-                                          .heightCmController,
-                                      fillColor: Colors.white,fontSize: 16.sp,),
-                                ),
-                              ],
-                            ),
-                             SizedBox(height: 8.h),
-                            CustomTextField(
-                                maxLines: 1,
-                                isReadOnly: widget.isViewPatient ? true : false,
-                                keyBoardType: TextInputType.number,
-                                isRequired: true,
-                                labelText: 'Weight(Kg-Grams)',
-                                hintText: 'Enter',
-                                txtController:
-                                    newRegistrationController.weightController,
-                                fillColor: Colors.white,fontSize: 16.sp,),
-                             SizedBox(height: 8.h),
-                            MyCustomDropdown(
-                                isViewProfile: widget.isViewPatient,
-                                selectedItem: newRegistrationController
-                                    .selectedReferredBy,
-                                labelText: 'Referred By',
-                                items: newRegistrationController
-                                        .referredByModel?.data
-                                        ?.map((e) => e.lookupDetDescEn)
-                                        .toList() ??
-                                    [],
-                                hint: 'Select',
-                                isRequired: false,
-                                senValue: (value) {
-                                  newRegistrationController.selectedReferredBy =
-                                      value;
-                                  newRegistrationController.refreshUi();
-                                },
-                                filledColor: Colors.white),
-                             SizedBox(height: 8.h),
-                            CustomTextField(
-                                maxLines: 1,
-                                isReadOnly: widget.isViewPatient ? true : false,
-                                keyBoardType: TextInputType.name,
-                                labelText: 'Reference By Name',
-                                hintText: 'Enter name',
-                                isRequired: false,
-                                txtController: newRegistrationController
-                                    .refByNameController,
-                                fillColor: Colors.white,fontSize: 16.sp,),
-                             SizedBox(height: 8.h),
-                            CustomTextField(
-                                maxLines: 1,
-                                isReadOnly: widget.isViewPatient ? true : false,
-                                keyBoardType: TextInputType.phone,
-                                labelText: 'Referred Contact Number',
-                                hintText: 'Enter contact number',
-                                isRequired: false,
-                                txtController: newRegistrationController
-                                    .reffContactNoController,
-                                fillColor: Colors.white,fontSize: 16,),
-                             SizedBox(height: 8.h),
-                            CustomTextField(
-                                maxLines: 1,
-                                isReadOnly: widget.isViewPatient ? true : false,
-                                keyBoardType: TextInputType.name,
-                                labelText: 'Nephrologist Name',
-                                hintText: 'Enter name',
-                                isRequired: true,
-                                txtController: newRegistrationController
-                                    .nephrologyController,
-                                fillColor: Colors.white,fontSize: 16.sp,),
-                             SizedBox(height: 8.h),
-                            CustomTextField(
-                                maxLines: 1,
-                                isReadOnly: widget.isViewPatient ? true : false,
-                                keyBoardType: TextInputType.phone,
-                                labelText: 'Nephrologist Contact No',
-                                hintText: 'Enter number',
-                                isRequired: false,
-                                txtController: newRegistrationController
-                                    .nephrologyContactNoController,
-                                fillColor: Colors.white,fontSize: 16.sp,),
-                             SizedBox(height: 8.h),
-                            MyCustomDropdown(
-                                selectedItem: newRegistrationController
-                                    .selectedDiaModeFreq,
-                                isViewProfile: widget.isViewPatient,
-                                labelText: 'Dialysis Frequency in Week',
-
-                                items: newRegistrationController
-                                        .dialysisFreqModel?.dialysisFrequency
-                                        ?.map((e) => e.lookupDescEn)
-                                        .toList() ??
-                                    [],
-                                hint: 'Select',
-                                isRequired: true,
-                                senValue: (value) {
-                                  newRegistrationController
-                                      .selectedDiaModeFreq = value;
-                                },
-                                filledColor: Colors.white),
-                             SizedBox(height: 16.h),
                           ],
                         ),
-                      ),
-                    ],
+                        SizedBox(height: 8.h),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: CustomTextField(
+                                maxLines: 1,
+                                isReadOnly:
+                                widget.isViewPatient ? true : false,
+                                keyBoardType: TextInputType.text,
+                                labelText: 'Height (In Ft.)',
+                                hintText: 'Enter In Feet and Inches',
+                                isRequired: true,
+                                txtController: newRegistrationController
+                                    .heightFeetController,
+                                fillColor: Colors.white,fontSize: 16.sp,),
+                            ),
+                            SizedBox(width: 6.w),
+                            Expanded(
+                              child: CustomTextField(
+                                maxLines: 1,
+                                isReadOnly:
+                                widget.isViewPatient ? true : false,
+                                keyBoardType:
+                                const TextInputType.numberWithOptions(
+                                    decimal: true),
+                                isRequired: true,
+                                labelText: 'Height (In cm.)',
+                                hintText: 'Enter',
+                                txtController: newRegistrationController
+                                    .heightCmController,
+                                fillColor: Colors.white,fontSize: 16.sp,),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 8.h),
+                        CustomTextField(
+                          maxLines: 1,
+                          isReadOnly: widget.isViewPatient ? true : false,
+                          keyBoardType: TextInputType.number,
+                          isRequired: true,
+                          labelText: 'Weight(Kg-Grams)',
+                          hintText: 'Enter',
+                          txtController:
+                          newRegistrationController.weightController,
+                          fillColor: Colors.white,fontSize: 16.sp,),
+                        SizedBox(height: 8.h),
+                        MyCustomDropdown(
+                            isViewProfile: widget.isViewPatient,
+                            selectedItem: newRegistrationController
+                                .selectedReferredBy,
+                            labelText: 'Referred By',
+                            items: newRegistrationController
+                                .referredByModel?.data
+                                ?.map((e) => e.lookupDetDescEn)
+                                .toList() ??
+                                [],
+                            hint: 'Select',
+                            isRequired: false,
+                            senValue: (value) {
+                              newRegistrationController.selectedReferredBy =
+                                  value;
+                              newRegistrationController.refreshUi();
+                            },
+                            filledColor: Colors.white),
+                        SizedBox(height: 8.h),
+                        CustomTextField(
+                          maxLines: 1,
+                          isReadOnly: widget.isViewPatient ? true : false,
+                          keyBoardType: TextInputType.name,
+                          labelText: 'Reference By Name',
+                          hintText: 'Enter name',
+                          isRequired: false,
+                          txtController: newRegistrationController
+                              .refByNameController,
+                          fillColor: Colors.white,fontSize: 16.sp,),
+                        SizedBox(height: 8.h),
+                        CustomTextField(
+                          maxLines: 1,
+                          isReadOnly: widget.isViewPatient ? true : false,
+                          keyBoardType: TextInputType.phone,
+                          labelText: 'Referred Contact Number',
+                          hintText: 'Enter contact number',
+                          isRequired: false,
+                          txtController: newRegistrationController
+                              .reffContactNoController,
+                          fillColor: Colors.white,fontSize: 16,),
+                        SizedBox(height: 8.h),
+                        CustomTextField(
+                          maxLines: 1,
+                          isReadOnly: widget.isViewPatient ? true : false,
+                          keyBoardType: TextInputType.name,
+                          labelText: 'Nephrologist Name',
+                          hintText: 'Enter name',
+                          isRequired: true,
+                          txtController: newRegistrationController
+                              .nephrologyController,
+                          fillColor: Colors.white,fontSize: 16.sp,),
+                        SizedBox(height: 8.h),
+                        CustomTextField(
+                          maxLines: 1,
+                          isReadOnly: widget.isViewPatient ? true : false,
+                          keyBoardType: TextInputType.phone,
+                          labelText: 'Nephrologist Contact No',
+                          hintText: 'Enter number',
+                          isRequired: false,
+                          txtController: newRegistrationController
+                              .nephrologyContactNoController,
+                          fillColor: Colors.white,fontSize: 16.sp,),
+                        SizedBox(height: 8.h),
+                        MyCustomDropdown(
+                            selectedItem: newRegistrationController
+                                .selectedDiaModeFreq,
+                            isViewProfile: widget.isViewPatient,
+                            labelText: 'Dialysis Frequency in Week',
+
+                            items: newRegistrationController
+                                .dialysisFreqModel?.dialysisFrequency
+                                ?.map((e) => e.lookupDescEn)
+                                .toList() ??
+                                [],
+                            hint: 'Select',
+                            isRequired: true,
+                            senValue: (value) {
+                              newRegistrationController
+                                  .selectedDiaModeFreq = value;
+                            },
+                            filledColor: Colors.white),
+                        SizedBox(height: 16.h),
+                      ],
+                    ),
                   ),
-                )),
+                ],
+              ),
+            ),
+            // Theme(
+            //     data: ThemeData().copyWith(dividerColor: Colors.transparent),
+            //     child: Container(
+            //       decoration: BoxDecoration(
+            //           color: AppColor.darkBlue,
+            //           borderRadius: BorderRadius.circular(10)),
+            //       child: ExpansionTile(
+            //         maintainState: true,
+            //         collapsedIconColor: Colors.white,
+            //         iconColor: Colors.white,
+            //         title: Row(children: [
+            //           Image.asset("assets/file-info.png"),
+            //            SizedBox(width: 12.w),
+            //            Text(
+            //             "Patient Information",
+            //             style: TextStyle(
+            //                 fontSize: 14.sp,
+            //                 color: Colors.white,
+            //                 fontFamily: 'Lato'),
+            //           ),
+            //         ]),
+            //         children: <Widget>[
+            //           Container(
+            //             padding:  EdgeInsets.symmetric(vertical: 8.h,horizontal: 8.w),
+            //             decoration: BoxDecoration(
+            //                 color: Colors.grey[50],
+            //                 borderRadius: BorderRadius.circular(10),
+            //                 border: Border.all(color: AppColor.borderColor)),
+            //             child: Column(
+            //               crossAxisAlignment: CrossAxisAlignment.stretch,
+            //               children: [
+            //                  SizedBox(height: 16.h),
+            //                 MyCustomDropdown(
+            //                     isViewProfile: widget.isViewPatient,
+            //                     selectedItem:
+            //                         newRegistrationController.selectedSchema,
+            //                     labelText: 'Scheme Adopted',
+            //                     items: newRegistrationController
+            //                             .schemaAdoptedModel?.data
+            //                             ?.map((e) => e.lookupDetDescEn)
+            //                             .toList() ??
+            //                         [],
+            //                     // items: ['Schema1'],
+            //                     hint: 'Select',
+            //                     isRequired: true,
+            //                     senValue: (value) {
+            //                       newRegistrationController.selectedSchema =
+            //                           value;
+            //                       newRegistrationController.selectedSchemeObj =
+            //                           newRegistrationController
+            //                               .schemaAdoptedModel?.data
+            //                               ?.firstWhere((e) =>
+            //                                   e.lookupDetDescEn == value);
+            //                       newRegistrationController.refreshUi();
+            //                     },
+            //                     filledColor: Colors.white),
+            //                  SizedBox(height: 8.h),
+            //                 Visibility(
+            //                   visible: newRegistrationController
+            //                           .selectedSchema ==
+            //                       "MJPJAY(Mahatma Jyotirao Phule Jan Arogya Yojana )",
+            //                   child: CustomTextField(
+            //                     maxLines: 1,
+            //                     isReadOnly: widget.isViewPatient ? true : false,
+            //                     keyBoardType: TextInputType.text,
+            //                     labelText: 'MJPJAY Enrollment No',
+            //                     hintText: 'MJPJAY Enrollment No',
+            //                     isRequired: false,
+            //                     txtController: newRegistrationController
+            //                         .mjpjayEnrollNoController,
+            //                     fillColor: Colors.white,fontSize: 16.sp,
+            //                   ),
+            //                 ),
+            //                  SizedBox(height: 8.h),
+            //                 MyCustomDropdown(
+            //                     isViewProfile: widget.isViewPatient,
+            //                     selectedItem:
+            //                         newRegistrationController.selectedViralStat,
+            //                     labelText: 'Viral Marker Status',
+            //                     items: widget.viralStatusList
+            //                         .map((e) => e.lookupDetDescEn)
+            //                         .toList(),
+            //                     hint: 'Select',
+            //                     isRequired: true,
+            //                     senValue: (value) {
+            //                       newRegistrationController.selectedViralStat =
+            //                           value;
+            //                       newRegistrationController
+            //                               .selectedProcedureType =
+            //                           widget.viralStatusList.firstWhere(
+            //                               (e) => e.lookupDetDescEn == value);
+            //                       newRegistrationController.refreshUi();
+            //                     },
+            //                     filledColor: Colors.white),
+            //                  SizedBox(height: 8.h),
+            //                 MyCustomDropdown(
+            //                     isViewProfile: widget.isViewPatient,
+            //                     selectedItem: newRegistrationController
+            //                         .selectedDialysisMode,
+            //                     labelText: 'Dialysis Mode',
+            //                     items: newRegistrationController
+            //                             .dialysisMode?.data
+            //                             ?.map((e) => e.lookupDetDescEn)
+            //                             .toList() ??
+            //                         [],
+            //                     hint: 'Select',
+            //                     isRequired: false,
+            //                     senValue: (value) {
+            //                       newRegistrationController
+            //                           .selectedDialysisMode = value;
+            //                       newRegistrationController
+            //                               .selectedDialysisModeObj =
+            //                           newRegistrationController
+            //                               .dialysisMode?.data
+            //                               ?.firstWhere((e) =>
+            //                                   e.lookupDetDescEn == value);
+            //                       newRegistrationController.refreshUi();
+            //                     },
+            //                     filledColor: Colors.white),
+            //                  SizedBox(height: 8.h),
+            //                 MyCustomDropdown(
+            //                     isViewProfile: widget.isViewPatient,
+            //                     selectedItem:
+            //                         newRegistrationController.selectedIdProof,
+            //                     labelText: 'Id Proof',
+            //                     items: widget.idProofListModel
+            //                         .map((e) => e.lookupDetDescEn)
+            //                         .toList(),
+            //                     hint: 'Select',
+            //                     isRequired: false,
+            //                     senValue: (value) {
+            //                       newRegistrationController.selectedIdProof =
+            //                           value;
+            //                       newRegistrationController.selectedIdProfObj =
+            //                           widget.idProofListModel.firstWhere(
+            //                               (e) => e.lookupDetDescEn == value);
+            //                       newRegistrationController
+            //                           .identificationNoController.text = '';
+            //                       newRegistrationController.refreshUi();
+            //                     },
+            //                     filledColor: Colors.white),
+            //                  SizedBox(height: 8.h),
+            //                 CustomTextField(
+            //                   identification:
+            //                       newRegistrationController.selectedIdProof,
+            //                   maxLines: 1,
+            //                   isReadOnly: widget.isViewPatient ? true : false,
+            //                   keyBoardType:
+            //                       newRegistrationController.selectedIdProof ==
+            //                               "Pan Card"
+            //                           ? TextInputType.text
+            //                           : TextInputType.number,
+            //                   labelText: 'Identification Number',
+            //                   hintText: 'Identification Number',
+            //                   isRequired: false,
+            //                   txtController: newRegistrationController
+            //                       .identificationNoController,
+            //                   fillColor: Colors.white,fontSize: 16.sp,
+            //                 ),
+            //                  SizedBox(height: 8.h),
+            //                 Row(
+            //                   children: [
+            //                     Expanded(
+            //                       child: MyCustomDropdown(
+            //                         isViewProfile: widget.isViewPatient,
+            //                         selectedItem: newRegistrationController
+            //                             .selectedNationa,
+            //                         labelText: 'Nationality',
+            //                         items:
+            //                             newRegistrationController.nationality,
+            //                         hint: 'Select',
+            //                         senValue: (value) {
+            //                           newRegistrationController
+            //                               .selectedNationa = value;
+            //                           newRegistrationController.refreshUi();
+            //                         },
+            //                         filledColor: Colors.white,
+            //                         isRequired: false,
+            //                       ),
+            //                     ),
+            //                      SizedBox(width: 6.w),
+            //                     Expanded(
+            //                       child: MyCustomDropdown(
+            //                           isViewProfile: widget.isViewPatient,
+            //                           selectedItem: newRegistrationController
+            //                               .selectedBlood,
+            //                           labelText: 'Blood Group',
+            //                           items: newRegistrationController
+            //                                   .bloodGroupModel?.data
+            //                                   ?.map((e) => e.bloodGrouptName)
+            //                                   .toList() ??
+            //                               [],
+            //                           hint: 'Select',
+            //                           isRequired: false,
+            //                           senValue: (value) {
+            //                             newRegistrationController
+            //                                     .selectedBloodObj =
+            //                                 newRegistrationController
+            //                                     .bloodGroupModel?.data
+            //                                     ?.firstWhere((e) =>
+            //                                         e.bloodGrouptName == value);
+            //                             newRegistrationController
+            //                                     .selectedBlood =
+            //                                 newRegistrationController
+            //                                     .selectedBloodObj
+            //                                     ?.bloodGrouptName;
+            //                             newRegistrationController.refreshUi();
+            //                           },
+            //                           filledColor: Colors.white),
+            //                     ),
+            //                   ],
+            //                 ),
+            //                  SizedBox(height: 8.h),
+            //                 Row(
+            //                   children: [
+            //                     Expanded(
+            //                       child: CustomTextField(
+            //                           maxLines: 1,
+            //                           isReadOnly:
+            //                               widget.isViewPatient ? true : false,
+            //                           keyBoardType: TextInputType.text,
+            //                           labelText: 'Height (In Ft.)',
+            //                           hintText: 'Enter In Feet and Inches',
+            //                           isRequired: true,
+            //                           txtController: newRegistrationController
+            //                               .heightFeetController,
+            //                           fillColor: Colors.white,fontSize: 16.sp,),
+            //                     ),
+            //                      SizedBox(width: 6.w),
+            //                     Expanded(
+            //                       child: CustomTextField(
+            //                           maxLines: 1,
+            //                           isReadOnly:
+            //                               widget.isViewPatient ? true : false,
+            //                           keyBoardType:
+            //                               const TextInputType.numberWithOptions(
+            //                                   decimal: true),
+            //                           isRequired: true,
+            //                           labelText: 'Height (In cm.)',
+            //                           hintText: 'Enter',
+            //                           txtController: newRegistrationController
+            //                               .heightCmController,
+            //                           fillColor: Colors.white,fontSize: 16.sp,),
+            //                     ),
+            //                   ],
+            //                 ),
+            //                  SizedBox(height: 8.h),
+            //                 CustomTextField(
+            //                     maxLines: 1,
+            //                     isReadOnly: widget.isViewPatient ? true : false,
+            //                     keyBoardType: TextInputType.number,
+            //                     isRequired: true,
+            //                     labelText: 'Weight(Kg-Grams)',
+            //                     hintText: 'Enter',
+            //                     txtController:
+            //                         newRegistrationController.weightController,
+            //                     fillColor: Colors.white,fontSize: 16.sp,),
+            //                  SizedBox(height: 8.h),
+            //                 MyCustomDropdown(
+            //                     isViewProfile: widget.isViewPatient,
+            //                     selectedItem: newRegistrationController
+            //                         .selectedReferredBy,
+            //                     labelText: 'Referred By',
+            //                     items: newRegistrationController
+            //                             .referredByModel?.data
+            //                             ?.map((e) => e.lookupDetDescEn)
+            //                             .toList() ??
+            //                         [],
+            //                     hint: 'Select',
+            //                     isRequired: false,
+            //                     senValue: (value) {
+            //                       newRegistrationController.selectedReferredBy =
+            //                           value;
+            //                       newRegistrationController.refreshUi();
+            //                     },
+            //                     filledColor: Colors.white),
+            //                  SizedBox(height: 8.h),
+            //                 CustomTextField(
+            //                     maxLines: 1,
+            //                     isReadOnly: widget.isViewPatient ? true : false,
+            //                     keyBoardType: TextInputType.name,
+            //                     labelText: 'Reference By Name',
+            //                     hintText: 'Enter name',
+            //                     isRequired: false,
+            //                     txtController: newRegistrationController
+            //                         .refByNameController,
+            //                     fillColor: Colors.white,fontSize: 16.sp,),
+            //                  SizedBox(height: 8.h),
+            //                 CustomTextField(
+            //                     maxLines: 1,
+            //                     isReadOnly: widget.isViewPatient ? true : false,
+            //                     keyBoardType: TextInputType.phone,
+            //                     labelText: 'Referred Contact Number',
+            //                     hintText: 'Enter contact number',
+            //                     isRequired: false,
+            //                     txtController: newRegistrationController
+            //                         .reffContactNoController,
+            //                     fillColor: Colors.white,fontSize: 16,),
+            //                  SizedBox(height: 8.h),
+            //                 CustomTextField(
+            //                     maxLines: 1,
+            //                     isReadOnly: widget.isViewPatient ? true : false,
+            //                     keyBoardType: TextInputType.name,
+            //                     labelText: 'Nephrologist Name',
+            //                     hintText: 'Enter name',
+            //                     isRequired: true,
+            //                     txtController: newRegistrationController
+            //                         .nephrologyController,
+            //                     fillColor: Colors.white,fontSize: 16.sp,),
+            //                  SizedBox(height: 8.h),
+            //                 CustomTextField(
+            //                     maxLines: 1,
+            //                     isReadOnly: widget.isViewPatient ? true : false,
+            //                     keyBoardType: TextInputType.phone,
+            //                     labelText: 'Nephrologist Contact No',
+            //                     hintText: 'Enter number',
+            //                     isRequired: false,
+            //                     txtController: newRegistrationController
+            //                         .nephrologyContactNoController,
+            //                     fillColor: Colors.white,fontSize: 16.sp,),
+            //                  SizedBox(height: 8.h),
+            //                 MyCustomDropdown(
+            //                     selectedItem: newRegistrationController
+            //                         .selectedDiaModeFreq,
+            //                     isViewProfile: widget.isViewPatient,
+            //                     labelText: 'Dialysis Frequency in Week',
+            //
+            //                     items: newRegistrationController
+            //                             .dialysisFreqModel?.dialysisFrequency
+            //                             ?.map((e) => e.lookupDescEn)
+            //                             .toList() ??
+            //                         [],
+            //                     hint: 'Select',
+            //                     isRequired: true,
+            //                     senValue: (value) {
+            //                       newRegistrationController
+            //                           .selectedDiaModeFreq = value;
+            //                     },
+            //                     filledColor: Colors.white),
+            //                  SizedBox(height: 16.h),
+            //               ],
+            //             ),
+            //           ),
+            //         ],
+            //       ),
+            //     )),
              SizedBox(
               height: 10.h,
             ),
-            Theme(
-                data: ThemeData().copyWith(dividerColor: Colors.transparent),
-                child: Container(
+            CustomExpandableContainer(
+              text: 'Emergency Relative Info',
+              leading: "assets/relation.png",
+              child:Column(
+                children: <Widget>[
+                  Container(
+                    padding:  EdgeInsets.symmetric(vertical: 8.h,horizontal: 8.w),
                     decoration: BoxDecoration(
-                        color: AppColor.darkBlue,
-                        borderRadius: BorderRadius.circular(10)),
-                    child: ExpansionTile(
-                      maintainState: true,
-                      collapsedIconColor: Colors.white,
-                      iconColor: Colors.white,
-                      title: Row(children: [
-                        Image.asset("assets/relation.png"),
-                         SizedBox(width: 12.w),
-                         Text(
-                          "Emergency Relative Info",
-                          style: TextStyle(
-                              fontSize: 14.sp,
-                              color: Colors.white,
-                              fontFamily: 'Lato'),
-                        ),
-                      ]),
-                      children: <Widget>[
-                        Container(
-                          padding:  EdgeInsets.symmetric(vertical: 8.h,horizontal: 8.w),
-                          decoration: BoxDecoration(
-                              color: Colors.grey[50],
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(color: AppColor.borderColor)),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
+                        color: Colors.grey[50],
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: AppColor.borderColor)),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
 
-                              CustomTextField(
-                                  maxLines: 1,
-                                  isReadOnly:
-                                      widget.isViewPatient ? true : false,
-                                  keyBoardType: TextInputType.name,
-                                  labelText: 'Relative Name',
-                                  hintText: 'Enter name',
-                                  isRequired: false,
-                                  txtController: newRegistrationController
-                                      .relativeNameController,
-                                  fillColor: Colors.white,fontSize: 16.sp,),
-                               SizedBox(height: 8.h),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: MyCustomDropdown(
-                                      isViewProfile: widget.isViewPatient,
-                                      selectedItem: newRegistrationController
-                                          .selectedRelation,
-                                      labelText: 'Relation',
-                                      items: newRegistrationController
-                                              .relationModel?.data
-                                              ?.where((e) =>
-                                                  e.lookupDetDescEn !=
-                                                  'SELF') // Exclude 'Father'
-                                              .map((e) => e.lookupDetDescEn)
-                                              .toList() ??
-                                          [],
-                                      hint: 'Select',
-                                      isRequired: false,
-                                      senValue: (value) {
-                                        newRegistrationController
-                                                .selectedRelationObj =
-                                            newRegistrationController
-                                                .relationModel?.data
-                                                ?.firstWhere((e) =>
-                                                    e.lookupDetDescEn == value);
-                                        newRegistrationController
-                                            .selectedRelation = value;
-                                        newRegistrationController.refreshUi();
-                                      },
-                                      filledColor: Colors.white,
-                                    ),
-                                  ),
-                                   SizedBox(width: 8.w),
-                                  Expanded(
-                                    child: CustomTextField(
-                                        maxLines: 1,
-                                        isReadOnly:
-                                            widget.isViewPatient ? true : false,
-                                        keyBoardType: TextInputType.phone,
-                                        labelText: 'Contact No',
-                                        hintText: 'Enter number',
-                                        isRequired: false,
-                                        txtController: newRegistrationController
-                                            .contactNoController,
-                                        fillColor: Colors.white,fontSize: 16.sp,),
-                                  ),
-                                ],
-                              ),
-                               SizedBox(height: 16.h),
-                            const Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 8.0,vertical: 18),
-                              child: CustomText(text: 'Upload Document', fontSize: 14, fontWeight: FontWeight.w600, textColor: Colors.black, textAlign: TextAlign.start),
-                            ),
-                              const Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 8.0,vertical: 18),
-                              child: CustomText(text: 'Supported Formats : JPEG, PNG, PDF', fontSize: 14, fontWeight: FontWeight.w400, textColor: Colors.grey, textAlign: TextAlign.start),
-                            ),
-                              const Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 8.0,vertical: 2),
-                              child: CustomText(text: 'Max File Size : 10 MB', fontSize: 14, fontWeight: FontWeight.w400, textColor: Colors.grey, textAlign: TextAlign.start),
-                            ),
-                              CustomUploadButton(
-                                isSelected: newRegistrationController
-                                    .relativeDoc.isSelected,
-                                index: 0,
-                                title:
-                                newRegistrationController.relativeDoc.name,
-                                callB: () {
-                                  pickFile(newRegistrationController
-                                      .relativeDoc.key);
-                                },
-                                callDelete: () {
-                                  // newRegistrationController.items[index].isSelected = false;
-                                  newRegistrationController
-                                      .relativeDoc.isSelected = false;
-                                  newRegistrationController.relativeDoc.file =
-                                  null;
-                                  setState(() {});
-                                },
-                                viewCallBack: () {
-                                  Get.to(() => CustomViewer(
-                                    fileUrl: newRegistrationController
-                                        .relativeDoc.file!.path,
-                                  ));
-                                  // }
-                                },
-                                isReq:
-                                newRegistrationController.relativeDoc.isReq,
+                        CustomTextField(
+                          maxLines: 1,
+                          isReadOnly:
+                          widget.isViewPatient ? true : false,
+                          keyBoardType: TextInputType.name,
+                          labelText: 'Relative Name',
+                          hintText: 'Enter name',
+                          isRequired: false,
+                          txtController: newRegistrationController
+                              .relativeNameController,
+                          fillColor: Colors.white,fontSize: 16.sp,),
+                        SizedBox(height: 8.h),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: MyCustomDropdown(
                                 isViewProfile: widget.isViewPatient,
-                                showIndex: false,
-                              ).paddingOnly(bottom: 8.h,left: 5.w,right: 5.w),
-
-                            ],
-                          ),
+                                selectedItem: newRegistrationController
+                                    .selectedRelation,
+                                labelText: 'Relation',
+                                items: newRegistrationController
+                                    .relationModel?.data
+                                    ?.where((e) =>
+                                e.lookupDetDescEn !=
+                                    'SELF') // Exclude 'Father'
+                                    .map((e) => e.lookupDetDescEn)
+                                    .toList() ??
+                                    [],
+                                hint: 'Select',
+                                isRequired: false,
+                                senValue: (value) {
+                                  newRegistrationController
+                                      .selectedRelationObj =
+                                      newRegistrationController
+                                          .relationModel?.data
+                                          ?.firstWhere((e) =>
+                                      e.lookupDetDescEn == value);
+                                  newRegistrationController
+                                      .selectedRelation = value;
+                                  newRegistrationController.refreshUi();
+                                },
+                                filledColor: Colors.white,
+                              ),
+                            ),
+                            SizedBox(width: 8.w),
+                            Expanded(
+                              child: CustomTextField(
+                                maxLines: 1,
+                                isReadOnly:
+                                widget.isViewPatient ? true : false,
+                                keyBoardType: TextInputType.phone,
+                                labelText: 'Contact No',
+                                hintText: 'Enter number',
+                                isRequired: false,
+                                txtController: newRegistrationController
+                                    .contactNoController,
+                                fillColor: Colors.white,fontSize: 16.sp,),
+                            ),
+                          ],
                         ),
+                        SizedBox(height: 16.h),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 8.0,vertical: 18),
+                          child: CustomText(text: 'Upload Document', fontSize: 14, fontWeight: FontWeight.w600, textColor: Colors.black, textAlign: TextAlign.start),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 8.0,vertical: 18),
+                          child: CustomText(text: 'Supported Formats : JPEG, PNG, PDF', fontSize: 14, fontWeight: FontWeight.w400, textColor: Colors.grey, textAlign: TextAlign.start),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 8.0,vertical: 2),
+                          child: CustomText(text: 'Max File Size : 10 MB', fontSize: 14, fontWeight: FontWeight.w400, textColor: Colors.grey, textAlign: TextAlign.start),
+                        ),
+                        CustomUploadButton(
+                          isSelected: newRegistrationController
+                              .relativeDoc.isSelected,
+                          index: 0,
+                          title:
+                          newRegistrationController.relativeDoc.name,
+                          callB: () {
+                            pickFile(newRegistrationController
+                                .relativeDoc.key);
+                          },
+                          callDelete: () {
+                            // newRegistrationController.items[index].isSelected = false;
+                            newRegistrationController
+                                .relativeDoc.isSelected = false;
+                            newRegistrationController.relativeDoc.file =
+                            null;
+                            setState(() {});
+                          },
+                          viewCallBack: () {
+                            Get.to(() => CustomViewer(
+                              fileUrl: newRegistrationController
+                                  .relativeDoc.file!.path,
+                            ));
+                            // }
+                          },
+                          isReq:
+                          newRegistrationController.relativeDoc.isReq,
+                          isViewProfile: widget.isViewPatient,
+                          showIndex: false,
+                        ).paddingOnly(bottom: 8.h,left: 5.w,right: 5.w),
+
                       ],
-                    ))),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // Theme(
+            //     data: ThemeData().copyWith(dividerColor: Colors.transparent),
+            //     child: Container(
+            //         decoration: BoxDecoration(
+            //             color: AppColor.darkBlue,
+            //             borderRadius: BorderRadius.circular(10)),
+            //         child: ExpansionTile(
+            //           maintainState: true,
+            //           collapsedIconColor: Colors.white,
+            //           iconColor: Colors.white,
+            //           title: Row(children: [
+            //             Image.asset("assets/relation.png"),
+            //              SizedBox(width: 12.w),
+            //              Text(
+            //               "Emergency Relative Info",
+            //               style: TextStyle(
+            //                   fontSize: 14.sp,
+            //                   color: Colors.white,
+            //                   fontFamily: 'Lato'),
+            //             ),
+            //           ]),
+            //           children: <Widget>[
+            //             Container(
+            //               padding:  EdgeInsets.symmetric(vertical: 8.h,horizontal: 8.w),
+            //               decoration: BoxDecoration(
+            //                   color: Colors.grey[50],
+            //                   borderRadius: BorderRadius.circular(10),
+            //                   border: Border.all(color: AppColor.borderColor)),
+            //               child: Column(
+            //                 crossAxisAlignment: CrossAxisAlignment.stretch,
+            //                 children: [
+            //
+            //                   CustomTextField(
+            //                       maxLines: 1,
+            //                       isReadOnly:
+            //                           widget.isViewPatient ? true : false,
+            //                       keyBoardType: TextInputType.name,
+            //                       labelText: 'Relative Name',
+            //                       hintText: 'Enter name',
+            //                       isRequired: false,
+            //                       txtController: newRegistrationController
+            //                           .relativeNameController,
+            //                       fillColor: Colors.white,fontSize: 16.sp,),
+            //                    SizedBox(height: 8.h),
+            //                   Row(
+            //                     children: [
+            //                       Expanded(
+            //                         child: MyCustomDropdown(
+            //                           isViewProfile: widget.isViewPatient,
+            //                           selectedItem: newRegistrationController
+            //                               .selectedRelation,
+            //                           labelText: 'Relation',
+            //                           items: newRegistrationController
+            //                                   .relationModel?.data
+            //                                   ?.where((e) =>
+            //                                       e.lookupDetDescEn !=
+            //                                       'SELF') // Exclude 'Father'
+            //                                   .map((e) => e.lookupDetDescEn)
+            //                                   .toList() ??
+            //                               [],
+            //                           hint: 'Select',
+            //                           isRequired: false,
+            //                           senValue: (value) {
+            //                             newRegistrationController
+            //                                     .selectedRelationObj =
+            //                                 newRegistrationController
+            //                                     .relationModel?.data
+            //                                     ?.firstWhere((e) =>
+            //                                         e.lookupDetDescEn == value);
+            //                             newRegistrationController
+            //                                 .selectedRelation = value;
+            //                             newRegistrationController.refreshUi();
+            //                           },
+            //                           filledColor: Colors.white,
+            //                         ),
+            //                       ),
+            //                        SizedBox(width: 8.w),
+            //                       Expanded(
+            //                         child: CustomTextField(
+            //                             maxLines: 1,
+            //                             isReadOnly:
+            //                                 widget.isViewPatient ? true : false,
+            //                             keyBoardType: TextInputType.phone,
+            //                             labelText: 'Contact No',
+            //                             hintText: 'Enter number',
+            //                             isRequired: false,
+            //                             txtController: newRegistrationController
+            //                                 .contactNoController,
+            //                             fillColor: Colors.white,fontSize: 16.sp,),
+            //                       ),
+            //                     ],
+            //                   ),
+            //                    SizedBox(height: 16.h),
+            //                 const Padding(
+            //                   padding: EdgeInsets.symmetric(horizontal: 8.0,vertical: 18),
+            //                   child: CustomText(text: 'Upload Document', fontSize: 14, fontWeight: FontWeight.w600, textColor: Colors.black, textAlign: TextAlign.start),
+            //                 ),
+            //                   const Padding(
+            //                   padding: EdgeInsets.symmetric(horizontal: 8.0,vertical: 18),
+            //                   child: CustomText(text: 'Supported Formats : JPEG, PNG, PDF', fontSize: 14, fontWeight: FontWeight.w400, textColor: Colors.grey, textAlign: TextAlign.start),
+            //                 ),
+            //                   const Padding(
+            //                   padding: EdgeInsets.symmetric(horizontal: 8.0,vertical: 2),
+            //                   child: CustomText(text: 'Max File Size : 10 MB', fontSize: 14, fontWeight: FontWeight.w400, textColor: Colors.grey, textAlign: TextAlign.start),
+            //                 ),
+            //                   CustomUploadButton(
+            //                     isSelected: newRegistrationController
+            //                         .relativeDoc.isSelected,
+            //                     index: 0,
+            //                     title:
+            //                     newRegistrationController.relativeDoc.name,
+            //                     callB: () {
+            //                       pickFile(newRegistrationController
+            //                           .relativeDoc.key);
+            //                     },
+            //                     callDelete: () {
+            //                       // newRegistrationController.items[index].isSelected = false;
+            //                       newRegistrationController
+            //                           .relativeDoc.isSelected = false;
+            //                       newRegistrationController.relativeDoc.file =
+            //                       null;
+            //                       setState(() {});
+            //                     },
+            //                     viewCallBack: () {
+            //                       Get.to(() => CustomViewer(
+            //                         fileUrl: newRegistrationController
+            //                             .relativeDoc.file!.path,
+            //                       ));
+            //                       // }
+            //                     },
+            //                     isReq:
+            //                     newRegistrationController.relativeDoc.isReq,
+            //                     isViewProfile: widget.isViewPatient,
+            //                     showIndex: false,
+            //                   ).paddingOnly(bottom: 8.h,left: 5.w,right: 5.w),
+            //
+            //                 ],
+            //               ),
+            //             ),
+            //           ],
+            //         ))),
              SizedBox(
               height: 40.h,
             ),

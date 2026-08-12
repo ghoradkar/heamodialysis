@@ -4,6 +4,8 @@ import 'package:heamodialysis/utils/color_constants.dart';
 import 'package:heamodialysis/widgets/custom_text.dart';
 import 'package:intl/intl.dart';
 
+import 'custom_card.dart';
+
 class RoMaintenanceCardList extends StatelessWidget {
   final List<dynamic> roList;
   final List<String> cardItemDetailsList;
@@ -163,36 +165,36 @@ class RoMaintenanceCardList extends StatelessWidget {
   //   );
   // }
 
-  Widget patientDetailsCard(String text, String details) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
-      child: RichText(
-        textAlign: TextAlign.start,
-        text: TextSpan(
-          children: [
-            TextSpan(
-              text: "$text : ",
-              style: const TextStyle(
-                fontSize: 16,
-                fontFamily: "Lato",
-                fontWeight: FontWeight.w400,
-                color: Colors.black,
-              ),
-            ),
-            TextSpan(
-              text: details,
-              style: const TextStyle(
-                fontSize: 16,
-                fontFamily: "Lato",
-                fontWeight: FontWeight.w400,
-                color: Colors.grey,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  // Widget patientDetailsCard(String text, String details) {
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(vertical: 2),
+  //     child: RichText(
+  //       textAlign: TextAlign.start,
+  //       text: TextSpan(
+  //         children: [
+  //           TextSpan(
+  //             text: "$text : ",
+  //             style: const TextStyle(
+  //               fontSize: 16,
+  //               fontFamily: "Lato",
+  //               fontWeight: FontWeight.w400,
+  //               color: Colors.black,
+  //             ),
+  //           ),
+  //           TextSpan(
+  //             text: details,
+  //             style: const TextStyle(
+  //               fontSize: 16,
+  //               fontFamily: "Lato",
+  //               fontWeight: FontWeight.w400,
+  //               color: Colors.grey,
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
 
   dateConversion(inputDate) {

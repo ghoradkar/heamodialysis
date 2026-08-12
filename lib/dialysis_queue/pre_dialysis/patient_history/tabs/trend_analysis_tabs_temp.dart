@@ -1,14 +1,19 @@
+import 'dart:async';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dialysis_queue/pre_dialysis/patient_history/tabs/graphical_analysis_temp.dart';
 import 'package:heamodialysis/dialysis_queue/pre_dialysis/patient_history/tabs/tabular_analysis_temp.dart';
 import 'package:heamodialysis/internet/no_internet_connectivity.dart';
 import 'package:heamodialysis/nephro_desk_patient_list/model/cover_sheet_nephro.dart';
+import 'package:heamodialysis/nephro_desk_patient_list/screen/edit_nephro/expandable_card.dart';
 import 'package:heamodialysis/new_registration/controller/new_registration_controller.dart';
 import 'package:heamodialysis/utils/color_constants.dart';
 import 'package:heamodialysis/widgets/custom_text.dart';
 
+import '../../../../nephro_desk_patient_list/controller/nephro_controller.dart';
 import '../../../../widgets/custom_shimmer_loader.dart';
 
 class TrendAnalysisTabsTemp extends StatefulWidget {
@@ -22,6 +27,15 @@ class TrendAnalysisTabsTemp extends StatefulWidget {
 
 class _TrendAnalysisTabsTempState extends State<TrendAnalysisTabsTemp>
     with SingleTickerProviderStateMixin {
+  bool isExpanded = false;
+  final NephroController nephroController = Get.find<NephroController>();
+  final Connectivity _connectivity = Connectivity();
+  bool _isNetworkAvailable = true;
+  StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
+
+
+
+
   late TabController tabController;
 
   final NewRegistrationController newRegistrationController =
@@ -31,7 +45,10 @@ class _TrendAnalysisTabsTempState extends State<TrendAnalysisTabsTemp>
   @override
   void initState() {
     checkInternetAndLoadData();
-
+    _initConnectivity();
+    _connectivitySubscription = _connectivity.onConnectivityChanged.listen(
+      _updateConnectionStatus,
+    );
     tabController = TabController(length: 2, vsync: this);
     tabController.addListener(() {
       // setState(() {}); // Update the UI when the tab changes
@@ -40,9 +57,33 @@ class _TrendAnalysisTabsTempState extends State<TrendAnalysisTabsTemp>
     super.initState();
   }
 
+
+
+  Future<void> _initConnectivity() async {
+    final result = await _connectivity.checkConnectivity();
+    _updateConnectionStatus(result);
+  }
+
+  // Update connection status handler
+  void _updateConnectionStatus(List<ConnectivityResult> results) {
+    final isConnected = results.any(
+          (result) =>
+      result == ConnectivityResult.mobile ||
+          result == ConnectivityResult.wifi,
+    );
+
+    setState(() {
+      _isNetworkAvailable = isConnected;
+    });
+  }
+
+
+
+
   @override
   void dispose() {
     tabController.dispose();
+    _connectivitySubscription?.cancel();
     super.dispose();
   }
 
@@ -59,7 +100,7 @@ class _TrendAnalysisTabsTempState extends State<TrendAnalysisTabsTemp>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return _isNetworkAvailable ?  Scaffold(
       appBar: AppBar(
         title: const CustomText(
           text: 'Trend Analysis',
@@ -78,11 +119,20 @@ class _TrendAnalysisTabsTempState extends State<TrendAnalysisTabsTemp>
       body: GetBuilder<NewRegistrationController>(
           init: NewRegistrationController(),
           builder: (controller) {
-            return hasInternet
-                ? controller.isLoading
-                ?  Center(child: buildShimmerLoader())
-                : Column(
+            if (controller.isLoading) {
+              return Center(child: TrendAnalysisShimmer());
+            }
+            return  Column(
               children: [
+                ExpandableCardDetails(
+                  patientData: nephroController.patientDet?.first,
+                  isExpand: (value) {
+                    isExpanded = value;
+                    setState(() {});
+                  },
+                  isExpanded: isExpanded,
+                  currentStat: nephroController.currentStat,
+                ).paddingSymmetric(vertical: 10.h),
                 TabBar(
                   controller: tabController,
                   dividerColor: Colors.transparent,
@@ -100,29 +150,27 @@ class _TrendAnalysisTabsTempState extends State<TrendAnalysisTabsTemp>
                   child: TabBarView(
                     controller: tabController,
                     children:  [
-
                       TabularAnalysisTemp(temp: widget.temp,),
                       GraphicalAnalysisTemp(temp: widget.temp,),
                     ],
                   ),
                 )
               ],
-            ).paddingSymmetric(horizontal: 6)
-                : InternetIssue(
-              onRetryPressed: () {
-                checkInternetAndLoadData();
-              },
-            );
+            ).paddingSymmetric(horizontal: 6);
           }),
+    )    : InternetIssue(
+      onRetryPressed: () async {
+        final result = await _connectivity.checkConnectivity();
+        _updateConnectionStatus(result);
+      },
     );
   }
-
   Widget buildTab(int index, String text,String path) {
     bool isSelected = tabController.index == index;
     return Container(
       width: 210,
       // height: 50,
-      padding: const EdgeInsets.symmetric(horizontal: 0.8, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 0.8, vertical: 16),
       decoration: BoxDecoration(
         // color: isSelected ? Colors.blue.shade200 : Colors.transparent,
           gradient: isSelected

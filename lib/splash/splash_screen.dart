@@ -2,15 +2,15 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:heamodialysis/dashboard/cluster_dashboard/cluster_district_wise_dash.dart';
-import 'package:heamodialysis/dashboard/cluster_dashboard/cluster_division_dash.dart';
-import 'package:heamodialysis/dashboard/mis/mis_dash.dart';
-import 'package:heamodialysis/dashboard/nephro_first_level/nephro_dashboard.dart';
-import 'package:heamodialysis/dashboard/super_admin/operational_head.dart';
-import 'package:heamodialysis/dashboard/super_admin/super_admin_dash_screen.dart';
-import 'package:heamodialysis/dashboard/technician/institutewise_dashboard_screen.dart';
-import 'package:heamodialysis/login/login_controller.dart';
-import 'package:heamodialysis/login/login_screen.dart';
+import 'package:heamodialysis/dashboard/screen/cluster_dashboard/cluster_district_wise_dash.dart';
+import 'package:heamodialysis/dashboard/screen/cluster_dashboard/cluster_division_dash.dart';
+import 'package:heamodialysis/dashboard/screen/mis/mis_dash.dart';
+import 'package:heamodialysis/dashboard/screen/nephro_first_level/nephro_dashboard.dart';
+import 'package:heamodialysis/dashboard/screen/super_admin/operational_head.dart';
+import 'package:heamodialysis/dashboard/screen/super_admin/super_admin_dash_screen.dart';
+import 'package:heamodialysis/dashboard/screen/technician/institutewise_dashboard_screen.dart';
+import 'package:heamodialysis/login/controller/login_controller.dart';
+import 'package:heamodialysis/login/screen/login_screen.dart';
 import 'package:heamodialysis/utils/session_manager.dart';
 import 'package:heamodialysis/utils/shared_pref_constants.dart';
 import 'package:heamodialysis/utils/shared_preference.dart';
@@ -120,7 +120,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> _fetchUserData() async {
     userData = await SharedPref().read(const SharedPrefConstant().kUserData);
-    userType = userData?['ut'];
+    userType = userData?['user_Type'];
   }
 
   void _navigateToNextScreen() async {

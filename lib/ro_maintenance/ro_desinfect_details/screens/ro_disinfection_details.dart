@@ -1,7 +1,9 @@
+import 'dart:async';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:heamodialysis/dashboard/technician/institutewise_dashboard_screen.dart';
+import 'package:heamodialysis/dashboard/screen/technician/institutewise_dashboard_screen.dart';
 import 'package:heamodialysis/internet/no_internet_connectivity.dart';
 import 'package:heamodialysis/new_registration/model/institute/institute_data.dart';
 import 'package:heamodialysis/ro_maintenance/ro_desinfect_details/controller/ro_desinfection_details_controller.dart';
@@ -12,6 +14,7 @@ import 'package:heamodialysis/utils/shared_preference.dart';
 import 'package:heamodialysis/widgets/custom_text.dart';
 import 'package:heamodialysis/widgets/ro_maintenance_card_list.dart';
 
+import '../../../utils/status_update_screen.dart';
 import '../../../widgets/custom_shimmer_loader.dart';
 
 class RoDisinfectionDetails extends StatefulWidget {
@@ -22,6 +25,11 @@ class RoDisinfectionDetails extends StatefulWidget {
 }
 
 class _RoDisinfectionDetailsState extends State<RoDisinfectionDetails> {
+
+  final Connectivity _connectivity = Connectivity();
+  bool _isNetworkAvailable = true;
+  StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
+
   final RoDesinfectionDetailsController roMaintDetailsController =
       Get.put(RoDesinfectionDetailsController());
 
@@ -42,6 +50,10 @@ class _RoDisinfectionDetailsState extends State<RoDisinfectionDetails> {
   void initState() {
     getUserData();
     checkInternetAndLoadData();
+    _initConnectivity();
+    _connectivitySubscription = _connectivity.onConnectivityChanged.listen(
+      _updateConnectionStatus,
+    );
     super.initState();
   }
 
@@ -71,10 +83,32 @@ class _RoDisinfectionDetailsState extends State<RoDisinfectionDetails> {
   Future<void> getUserData() async {
     userData = await SharedPref().read(const SharedPrefConstant().kUserData);
   }
+  Future<void> _initConnectivity() async {
+    final result = await _connectivity.checkConnectivity();
+    _updateConnectionStatus(result);
+  }
+
+  // Update connection status handler
+  void _updateConnectionStatus(List<ConnectivityResult> results) {
+    final isConnected = results.any(
+          (result) =>
+      result == ConnectivityResult.mobile ||
+          result == ConnectivityResult.wifi,
+    );
+
+    setState(() {
+      _isNetworkAvailable = isConnected;
+    });
+  }
 
   @override
+  void dispose() {
+    _connectivitySubscription?.cancel();
+    super.dispose();
+  }
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return _isNetworkAvailable ? Scaffold(
       appBar: AppBar(
         title: const CustomText(
           text: 'RO Disinfection Details',
@@ -347,12 +381,26 @@ class _RoDisinfectionDetailsState extends State<RoDisinfectionDetails> {
       body: GetBuilder<RoDesinfectionDetailsController>(
           init: RoDesinfectionDetailsController(),
           builder: (controller) {
-            return hasInternet
-                ? controller.isLoading
-                ?  Center(child: buildShimmerLoader())
-                    : RoMaintenanceCardList(
+            if (controller.isLoading) {
+              return Center(child: SessionEndPatientsShimmer());
+            }
+            final roList = controller.roMaintenanceDetailsModel?.data ?? [];
+            if (roList.isEmpty) {
+              return CommonStatusScreen(
+                title: "No Data Found",
+                description: "We are unable to find the data that\nyou are looking for",
+                img: "assets/no_Data_Found.png",
+                buttonText: "Go Back",
+                onPressed: () {
+                  Get.back();
+                },
+
+              );
+            }
+            return  RoMaintenanceCardList(
                         roList:
                             controller.roMaintenanceDetailsModel?.data ?? [],
+
                         cardItemDetailsList: cardItemDetailsList,
                         path1: "assets/edit.png",
                         path2: "assets/delete-bin.png",
@@ -372,13 +420,14 @@ class _RoDisinfectionDetailsState extends State<RoDisinfectionDetails> {
                                   : int.parse(userData['unitId']));
                         },
                         isMachineIssueLog: false,
-                      )
-                : InternetIssue(
-                    onRetryPressed: () {
-                      checkInternetAndLoadData();
-                    },
-                  );
+                      );
+
           }),
+    ) : InternetIssue(
+      onRetryPressed: () async {
+        final result = await _connectivity.checkConnectivity();
+        _updateConnectionStatus(result);
+      },
     );
   }
 }

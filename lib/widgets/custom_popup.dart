@@ -60,13 +60,30 @@ class CustomPopup {
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(color: AppColor.borderColor),
                       color: const Color(0xffF8F8F8)),
-                  child: CustomText(
-                      text: dialogContent,
-                      fontSize: 16,
-                      fontFam: "Lato",
-                      fontWeight: FontWeight.w400,
-                      textColor: Colors.black,
-                      textAlign: TextAlign.center),
+                  child: Column(
+                    children: [
+                      CustomText(
+                          text: dialogContent,
+                          fontSize: 16,
+                          fontFam: "Lato",
+                          fontWeight: FontWeight.w400,
+                          textColor: Colors.black,
+                          textAlign: TextAlign.center),
+                      const SizedBox(height: 12),
+                      CustomButton(
+                        primColor: AppColor.primaryBackgroundColor,
+                        secColor: AppColor.secondaryColor,
+                        buttonText: 'Ok',
+                        path: 'assets/check.png',
+                        callB: () {
+                          callB();
+                        },
+                        buttonWidth: 80,
+                        textColor: Colors.white,
+                        iconColor: Colors.white,
+                      ),
+                    ],
+                  ),
                 ).paddingOnly(top: 8, bottom: 14, left: 10, right: 10)
               ],
             ),
@@ -105,7 +122,6 @@ class CustomPopup {
                       fontWeight: FontWeight.w400,
                       textColor: Colors.black,
                       textAlign: TextAlign.center),
-
                 ],
               ).paddingSymmetric(horizontal: 6, vertical: 8),
               Image.asset(

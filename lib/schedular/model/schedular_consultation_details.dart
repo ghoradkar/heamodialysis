@@ -16,6 +16,7 @@ class SchedularConsultationDetails extends StatefulWidget {
 
 class _SchedularConsultationDetailsState
     extends State<SchedularConsultationDetails> {
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -23,7 +24,7 @@ class _SchedularConsultationDetailsState
           top: 5,
           left: 8,
           right: 8,
-          bottom: MediaQuery.sizeOf(context).height / 1.6),
+          bottom: MediaQuery.sizeOf(context).height / 1.65),
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
           color: Colors.grey[50],
@@ -34,124 +35,125 @@ class _SchedularConsultationDetailsState
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Row(
-
             children: [
+
               const CustomText(
                   text: "Patient ID : ",
-                  fontSize: 14,
+                  fontSize: 12,
                   fontFam: "Lato",
                   fontWeight: FontWeight.w400,
-                  textColor: Colors.black,
-                  textAlign: TextAlign.start),
+                  textColor: Color(0xFF000000),
+                  textAlign: TextAlign.start,
+
+              ),
               CustomText(
                   text: widget.consultationModel?.patientId != null
                       ? widget.consultationModel!.patientId.toString()
                       : "",
-                  fontSize: 14,
+                  fontSize: 12,
                   fontFam: "Lato",
                   fontWeight: FontWeight.w400,
-                  textColor: Colors.grey,
+                  textColor: Color(0Xff484848),
                   textAlign: TextAlign.start),
               const SizedBox(
                 width: 20,
               ),
               const CustomText(
                   text: "Treatment ID : ",
-                  fontSize: 14,
+                  fontSize: 12,
                   fontFam: "Lato",
                   fontWeight: FontWeight.w400,
-                  textColor: Colors.black,
-                  textAlign: TextAlign.start),
-               CustomText(
+                  textColor: Color(0xFF000000),
+                  textAlign: TextAlign.start
+              ),
+              CustomText(
                   text: widget.consultationModel?.treatmentId != null
                       ? widget.consultationModel!.treatmentId.toString()
                       : "",
-                  fontSize: 14,
+                  fontSize: 12,
                   fontFam: "Lato",
                   fontWeight: FontWeight.w400,
-                  textColor: Colors.grey,
+                  textColor: const Color(0xFF484848),
                   textAlign: TextAlign.start),
             ],
           ).paddingSymmetric(vertical: 2),
-           Row(
+          Row(
             children: [
               const CustomText(
                   text: "Institute Name : ",
-                  fontSize: 14,
+                  fontSize: 12,
                   fontFam: "Lato",
                   fontWeight: FontWeight.w400,
-                  textColor: Colors.black,
+                  textColor: Color(0xFF000000),
                   textAlign: TextAlign.start),
-              Expanded(
-                child: CustomText(
-                    text: widget.consultationModel?.instituteName != null
-                        ? widget.consultationModel!.instituteName!
-                        : "",
-                    fontSize: 14,
-                    fontFam: "Lato",
-                    fontWeight: FontWeight.w400,
-                    textColor: Colors.grey,
-                    textAlign: TextAlign.start),
-              ),
+              CustomText(
+                  text: widget.consultationModel?.instituteName != null
+                      ? widget.consultationModel!.instituteName!
+                      : "",
+                  fontSize: 12,
+                  fontFam: "Lato",
+                  fontWeight: FontWeight.w400,
+                  textColor: Color(0xFF484848),
+                  textAlign: TextAlign.start),
             ],
           ).paddingSymmetric(vertical: 2),
-           Row(
+          Row(
             children: [
               const CustomText(
                   text: "Appointment Date : ",
-                  fontSize: 14,
+                  fontSize: 12,
                   fontFam: "Lato",
                   fontWeight: FontWeight.w400,
-                  textColor: Colors.black,
+                  textColor: Color(0xFF000000),
                   textAlign: TextAlign.start),
               CustomText(
-                  text:  widget.consultationModel?.appointmentDateS != null
+                  text: widget.consultationModel?.appointmentDateS != null
                       ? widget.consultationModel!.appointmentDateS!
                       : "",
-                  fontSize: 14,
+                  fontSize: 12,
                   fontFam: "Lato",
                   fontWeight: FontWeight.w400,
-                  textColor: Colors.grey,
+                  textColor: Color(0xFF484848),
                   textAlign: TextAlign.start),
             ],
           ).paddingSymmetric(vertical: 2),
-           Row(
+          Row(
             children: [
               const CustomText(
                   text: "Slot Time : ",
-                  fontSize: 14,
+                  fontSize: 12,
                   fontFam: "Lato",
                   fontWeight: FontWeight.w400,
-                  textColor: Colors.black,
+                  textColor: Color(0xFF000000),
                   textAlign: TextAlign.start),
               CustomText(
                   text: widget.consultationModel?.slotTime != null
                       ? widget.consultationModel!.slotTime!
                       : "",
-                  fontSize: 14,
+                  fontSize: 12,
                   fontFam: "Lato",
                   fontWeight: FontWeight.w400,
-                  textColor: Colors.grey,
+                  textColor: Color(0xFF484848),
                   textAlign: TextAlign.start),
             ],
           ).paddingSymmetric(vertical: 2),
-           Row(
+          Row(
             children: [
               const CustomText(
                   text: "Bed No : ",
-                  fontSize: 14,
+                  fontSize: 12,
                   fontFam: "Lato",
                   fontWeight: FontWeight.w400,
-                  textColor: Colors.black,
+                  textColor: Color(0xFF000000),
                   textAlign: TextAlign.start),
               CustomText(
-                  text:widget.consultationModel?.bedNo != null
+                  text: widget.consultationModel?.bedNo != null
                       ? widget.consultationModel!.bedNo!
                       : "",
-                  fontSize: 14,
+                  fontSize: 12,
                   fontFam: "Lato",
                   fontWeight: FontWeight.w400,
-                  textColor: Colors.grey,
+                  textColor: Color(0xFF484848),
                   textAlign: TextAlign.start),
             ],
           ).paddingSymmetric(vertical: 2),

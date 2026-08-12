@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:heamodialysis/utils/color_constants.dart';
 import 'package:heamodialysis/widgets/custom_text.dart';
 
+import 'custom_card.dart';
+
 class RegisteredPatientCardList extends StatelessWidget {
   final List<dynamic> patientList;
   final List<String> cardItemDetailsList;
@@ -145,30 +147,30 @@ class RegisteredPatientCardList extends StatelessWidget {
         });
   }
 
-  Widget patientDetailsCard(String text, String details) {
-    return Row(
-      children: [
-        CustomText(
-                text: " $text : ",
-                fontSize: 12.sp,
-                fontFam: "Lato",
-                fontWeight: FontWeight.normal,
-                textColor: Colors.black,
-                textAlign: TextAlign.start)
-            .paddingSymmetric(vertical: 2.h),
-        Expanded(
-          child: CustomText(
-                  text: details,
-                  fontSize: 12.sp,
-                  fontFam: "Lato",
-                  fontWeight: FontWeight.normal,
-                  textColor: Colors.grey,
-                  textAlign: TextAlign.start)
-              .paddingSymmetric(vertical: 2.h),
-        ),
-      ],
-    );
-  }
+  // Widget patientDetailsCard(String text, String details) {
+  //   return Row(
+  //     children: [
+  //       CustomText(
+  //               text: " $text : ",
+  //               fontSize: 12.sp,
+  //               fontFam: "Lato",
+  //               fontWeight: FontWeight.normal,
+  //               textColor: Colors.black,
+  //               textAlign: TextAlign.start)
+  //           .paddingSymmetric(vertical: 2.h),
+  //       Expanded(
+  //         child: CustomText(
+  //                 text: details,
+  //                 fontSize: 12.sp,
+  //                 fontFam: "Lato",
+  //                 fontWeight: FontWeight.normal,
+  //                 textColor: Colors.grey,
+  //                 textAlign: TextAlign.start)
+  //             .paddingSymmetric(vertical: 2.h),
+  //       ),
+  //     ],
+  //   );
+  // }
 
   String extractStringUpToParenthesis(String input) {
     int index = input.indexOf('(');

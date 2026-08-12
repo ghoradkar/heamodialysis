@@ -2,7 +2,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:heamodialysis/dashboard/technician/institutewise_dashboard_screen.dart';
+import 'package:heamodialysis/dashboard/screen/technician/institutewise_dashboard_screen.dart';
 import 'package:heamodialysis/dialysis_queue/consumable_entry/consumable_used.dart';
 import 'package:heamodialysis/dialysis_queue/dialysis_event/dialysis_event_controller.dart';
 import 'package:heamodialysis/dialysis_queue/pre_dialysis/pre_dialysis_list/pre_dialysis_controller.dart';
@@ -15,6 +15,7 @@ import 'package:heamodialysis/utils/shared_preference.dart';
 import 'package:heamodialysis/widgets/custom_text.dart';
 
 import '../../registered_patient_list/model/already_regidtered_patient/patient_data.dart';
+import '../../widgets/custom_card.dart';
 import '../../widgets/custom_shimmer_loader.dart';
 
 class ConsumableScreen extends StatefulWidget {
@@ -333,7 +334,7 @@ class _ConsumableScreenState extends State<ConsumableScreen> {
           builder: (controller) {
             return hasInternet
                 ? controller.isLoading
-                    ?  Center(child: buildShimmerLoader())
+                    ?  Center(child: SessionEndPatientsShimmer())
                     : ConsumableCard(
                         patientList:
                             dialysisEventController.dialysisEventList,
@@ -416,134 +417,131 @@ class ConsumableCard extends StatelessWidget {
         shrinkWrap: true,
         itemCount: patientList.length,
         itemBuilder: (context, index) {
-          return Card(
-            elevation: 5,
+          return Container(
+           // elevation: 5,
             // height: 170.h,
-            // decoration: BoxDecoration(
-            //   color: const Color(0xffF8F8F8),
-            //   borderRadius: BorderRadius.circular(6),
-            //   boxShadow: [
-            //     BoxShadow(
-            //       color: Colors.black.withValues(alpha: 0.1),
-            //       spreadRadius: 2,
-            //       blurRadius: 4,
-            //       offset: const Offset(0, 0.5), // changes position of shadow
-            //     ),
-            //   ],
-            // ),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                child: patientDetailsCard(cardItemDetailsList[0],
-                                    patientList[index].patientId.toString()),
+            decoration: BoxDecoration(
+              color: const Color(0xffF8F8F8),
+              borderRadius: BorderRadius.circular(6),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.1),
+                  spreadRadius: 2,
+                  blurRadius: 4,
+                  offset: const Offset(0, 0.5), // changes position of shadow
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: patientDetailsCard(cardItemDetailsList[0],
+                                  patientList[index].patientId.toString()),
+                            ),
+                            patientCardActions(path1!, () {
+                              callB1(index);
+                              // Get.to(() => BookAppointmentScreen(
+                              //     patientData: patientList[index]));
+                            }, null),
+                           const SizedBox(width: 14),
+                            Visibility(
+                              visible: isSecondColumnVisiable,
+                              child:  SizedBox(
+                                width: 12.w,
                               ),
-                              patientCardActions(path1!, () {
-                                callB1(index);
-                                // Get.to(() => BookAppointmentScreen(
-                                //     patientData: patientList[index]));
-                              }, null),
-                             const SizedBox(width: 14),
-                              Visibility(
-                                visible: isSecondColumnVisiable,
-                                child:  SizedBox(
-                                  width: 12.w,
-                                ),
+                            ),
+                            Visibility(
+                              visible: isfromPredialysis == true,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  patientCardActions(path5!, () {
+                                    // Obtain a list of the available cameras on the device.
+                                    callB5(index);
+                                  }, null)
+                                      //.paddingOnly(top: 16.h),
+                                  // Visibility(
+                                  //   visible: isfromPredialysis == false,
+                                  //   child: const SizedBox(
+                                  //     width: 12,
+                                  //   ),
+                                  // ),
+                                  // Visibility(
+                                  //   visible: isfromPredialysis == false,
+                                  //   child: patientCardActions(path5!, () {
+                                  //     callB5(index);
+                                  //   }, true)
+                                  //       .paddingOnly(top: 16),
+                                  // ),
+                                ],
                               ),
-                              Visibility(
-                                visible: isfromPredialysis == true,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    patientCardActions(path5!, () {
-                                      // Obtain a list of the available cameras on the device.
-                                      callB5(index);
-                                    }, null)
-                                        //.paddingOnly(top: 16.h),
-                                    // Visibility(
-                                    //   visible: isfromPredialysis == false,
-                                    //   child: const SizedBox(
-                                    //     width: 12,
-                                    //   ),
-                                    // ),
-                                    // Visibility(
-                                    //   visible: isfromPredialysis == false,
-                                    //   child: patientCardActions(path5!, () {
-                                    //     callB5(index);
-                                    //   }, true)
-                                    //       .paddingOnly(top: 16),
-                                    // ),
-                                  ],
-                                ),
-                              )
+                            )
 
 
-                            ],
-                          ),
-                          patientDetailsCard(
-                              cardItemDetailsList[1],
-                              isfromPredialysis
-                                  ? " ${patientList[index].fName}"
-                                  : " ${patientList[index].fName}"),
-                          patientDetailsCard(cardItemDetailsList[2],
-                              patientList[ index].age.toString()),
-                          patientDetailsCard(
-                              cardItemDetailsList[4],
-                              isfromPredialysis
-                                  ? extractStringUpToParenthesis(
-                                      " ${patientList[index].dialysisSupportType}")
-                                  : extractStringUpToParenthesis(
-                                      " ${patientList[index].haemodialysisProcedureTypeEn}")),
-                          patientDetailsCard(
-                              cardItemDetailsList[5],
-                              isfromPredialysis
-                                  ? " ${patientList[index].procedureType}"
-                                  : " ${patientList[index].patientTypeEn}")
-                        ],
-                      ).paddingOnly(left: 6, top: 2, bottom: 2, right: 4),
-                    ),
+                          ],
+                        ),
+                        patientDetailsCard(
+                            cardItemDetailsList[1],
+                            isfromPredialysis
+                                ? " ${patientList[index].fName}"
+                                : " ${patientList[index].fName}"),
+                        patientDetailsCard(cardItemDetailsList[2],
+                            patientList[ index].age.toString()),
+                        patientDetailsCard(
+                            cardItemDetailsList[4],
+                            isfromPredialysis
+                                ? extractStringUpToParenthesis(
+                                    " ${patientList[index].dialysisSupportType}")
+                                : extractStringUpToParenthesis(
+                                    " ${patientList[index].haemodialysisProcedureTypeEn}")),
+                        patientDetailsCard(
+                            cardItemDetailsList[5],
+                            isfromPredialysis
+                                ? " ${patientList[index].procedureType}"
+                                : " ${patientList[index].patientTypeEn}")
+                      ],
+                    ).paddingOnly(left: 6, top: 2, bottom: 2, right: 4),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ).paddingSymmetric(vertical: 8.h,horizontal: 8.w);
         });
   }
 
-  Widget patientDetailsCard(String text, String details) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        CustomText(
-                text: "$text : ",
-                fontSize: 13.sp,
-                fontFam: "Lato",
-                fontWeight: FontWeight.normal,
-                textColor: Colors.black,
-                textAlign: TextAlign.start)
-            .paddingSymmetric(vertical: 2.h),
-        Expanded(
-          child: CustomText(
-                  text: details,
-                  fontSize: 13.sp,
-                  fontFam: "Lato",
-                  fontWeight: FontWeight.normal,
-                  textColor: Colors.grey,
-                  textAlign: TextAlign.start)
-              .paddingSymmetric(vertical: 2.h),
-        ),
-      ],
-    );
-  }
+  // Widget patientDetailsCard(String text, String details) {
+  //   return Row(
+  //     mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       CustomText(
+  //               text: "$text : ",
+  //               fontSize: 13.sp,
+  //               fontFam: "Lato",
+  //               fontWeight: FontWeight.normal,
+  //               textColor: Colors.black,
+  //               textAlign: TextAlign.start)
+  //           .paddingSymmetric(vertical: 2.h),
+  //       Expanded(
+  //         child: CustomText(
+  //                 text: details,
+  //                 fontSize: 13.sp,
+  //                 fontFam: "Lato",
+  //                 fontWeight: FontWeight.normal,
+  //                 textColor: Colors.grey,
+  //                 textAlign: TextAlign.start)
+  //             .paddingSymmetric(vertical: 2.h),
+  //       ),
+  //     ],
+  //   );
+  // }
 
   String extractStringUpToParenthesis(String input) {
     int index = input.indexOf('(');

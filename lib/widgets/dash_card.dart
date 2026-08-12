@@ -39,32 +39,44 @@ class DashCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double height = cardHeight;
+    if (isVisiableRow == true || isVisiableCol == true) {
+      height = cardHeight < 120.h ? 120.h : cardHeight;
+    } else {
+      height = cardHeight < 108.h ? 108.h : cardHeight;
+    }
+
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 5.w),
       child: Column(
+
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Image.asset(
-                iconPath,
-                width: 24.w,
-                height: 24.w,
-              ),
-              SizedBox(width: 8.w),
-              Expanded(
-                child: CustomText(
-                  text: title ?? "",
-                  fontSize: 13.sp,
-                  fontWeight: FontWeight.w600,
-                  textColor: Colors.black,
-                  textAlign: TextAlign.start,
-                  //overflow: TextOverflow.ellipsis,   // prevents overflow
+          SizedBox(
+            height: 35.h,
+            child: Row(
+               crossAxisAlignment: CrossAxisAlignment.center,
+             //crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Image.asset(
+                  iconPath,
+                  width: 26.w,
+                  height: 26.w,
                 ),
-              ),
-            ],
+                SizedBox(width: 8.w),
+                Flexible(
+                  child: CustomText(
+                    text: title ?? "",
+                    fontSize: 13.sp,
+                    fontWeight: FontWeight.w600,
+                    textColor: Colors.black,
+                    textAlign: TextAlign.start,
+                  ),
+                ),
+              ],
+            ),
           ),
-         const SizedBox(height:10),
+          const SizedBox(height: 10),
+
           InkWell(
             onTap: () {
               if (onInfoClick != null) {
@@ -73,7 +85,7 @@ class DashCard extends StatelessWidget {
             },
             child: Container(
               // width: 180,
-              height: cardHeight,
+              height: height,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
@@ -97,55 +109,56 @@ class DashCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          CustomText(
-                              text: firstCount ?? "",
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.w400,
-                              textColor:AppColor.grey,
-                              textAlign: TextAlign.start),
-                          CustomText(
-                              text: firstCountText ?? "",
-                              fontSize: 11.sp,
-                              fontWeight: FontWeight.w400,
-                              textColor: AppColor.grey,
-                              textAlign: TextAlign.start),
-                        ],
-                      ),
-                      SizedBox(
-                        width: 6.w,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Visibility(
-                            visible: isSecondCount,
-                            child: CustomText(
-                                text: secondCount ?? "",
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            CustomText(
+                                text: firstCount ?? "",
                                 fontSize: 16.sp,
                                 fontWeight: FontWeight.w400,
-                                textColor:  AppColor.grey,
+                                textColor:AppColor.grey,
                                 textAlign: TextAlign.start),
-                          ),
-                          Visibility(
-                            visible: isSecondCount,
-                            child: CustomText(
-                                text: secondCountText ?? "",
+                            CustomText(
+                                text: firstCountText ?? "",
                                 fontSize: 11.sp,
                                 fontWeight: FontWeight.w400,
-                                textColor:  AppColor.grey,
+                                textColor: AppColor.grey,
                                 textAlign: TextAlign.start),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
+                      if (isSecondCount) ...[
+                        SizedBox(
+                          width: 6.w,
+                        ),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              CustomText(
+                                  text: secondCount ?? "",
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.w400,
+                                  textColor:  AppColor.grey,
+                                  textAlign: TextAlign.start),
+                              CustomText(
+                                  text: secondCountText ?? "",
+                                  fontSize: 11.sp,
+                                  fontWeight: FontWeight.w400,
+                                  textColor:  AppColor.grey,
+                                  textAlign: TextAlign.start),
+                            ],
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                   Visibility(

@@ -84,17 +84,16 @@ class _GraphicalAnalysisPulseState extends State<GraphicalAnalysisPulse> {
                         ? [DateTime(2024, 8, 1), DateTime(2024, 8, 2)] // Default fallback dates
                         : dates,
                     preDialysisValue: preDialysisVal.isEmpty
-                        ? [70, 72] // Default fallback weights
+                        ? [88,71, 72] // Default fallback weights
                         : preDialysisVal,
                     postDialysisValue: postDialysisVal.isEmpty
-                        ? [68, 70] // Default fallback weights
+                        ? [68,55, 64] // Default fallback weights
                         : postDialysisVal, analysis: 'Temperature',
                   ),
                 ),
               ],
             ),
           ),
-
           const SizedBox(
             height: 20,
           ),

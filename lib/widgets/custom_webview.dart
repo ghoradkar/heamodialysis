@@ -85,7 +85,9 @@ class _CustomWebviewState extends State<CustomWebview> {
           }
           body {
             font-family: 'Noto Sans Devanagari', Arial, sans-serif;
-            font-size: 18px;
+            font-size: 14px;
+             font-weight: 400;
+             background-color: #f2f2f2; 
             line-height: 1.5;
             padding: 16px;
           }

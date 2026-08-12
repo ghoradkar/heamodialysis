@@ -4,8 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:heamodialysis/splash/splash_screen.dart';
 import 'package:heamodialysis/utils/image_ssl.dart';
-import 'package:media_kit/media_kit.dart';
-import 'package:media_store_plus/media_store_plus.dart';
+// import 'package:media_kit/media_kit.dart';
+// import 'package:media_store_plus/media_store_plus.dart';
 import 'package:device_preview/device_preview.dart';
 
 void main() async {
@@ -13,16 +13,16 @@ void main() async {
   // ApiConstants.configure(Environment.values.firstWhere((e) => e.name == env));
 
   WidgetsFlutterBinding.ensureInitialized();
-  MediaKit.ensureInitialized();
+  // MediaKit.ensureInitialized();
   FlutterError.onError = (details) {
     debugPrint('Flutter Error: ${details.exception}');
     debugPrint('Stack trace: ${details.stack}');
   };
 
-  if (Platform.isAndroid) {
-    MediaKit.ensureInitialized();
-    await MediaStore.ensureInitialized();
-  }
+  // if (Platform.isAndroid) {
+  //   MediaKit.ensureInitialized();
+  //   await MediaStore.ensureInitialized();
+  // }
   HttpOverrides.global = MyHttpOverrides();
 
   runApp(

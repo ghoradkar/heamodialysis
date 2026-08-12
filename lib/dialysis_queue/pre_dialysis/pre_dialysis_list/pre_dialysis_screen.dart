@@ -1,8 +1,10 @@
+import 'dart:async';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:heamodialysis/dashboard/technician/institutewise_dashboard_screen.dart';
+import 'package:heamodialysis/dashboard/screen/technician/institutewise_dashboard_screen.dart';
 import 'package:heamodialysis/dialysis_queue/pre_dialysis/edit_pre_dialysis/edit_pre_dialysis_details.dart';
 import 'package:heamodialysis/dialysis_queue/pre_dialysis/pre_dialysis_list/pre_dialysis_controller.dart';
 import 'package:heamodialysis/internet/no_internet_connectivity.dart';
@@ -14,6 +16,8 @@ import 'package:heamodialysis/utils/shared_pref_constants.dart';
 import 'package:heamodialysis/utils/shared_preference.dart';
 import 'package:heamodialysis/widgets/custom_text.dart';
 
+import '../../../utils/status_update_screen.dart';
+import '../../../widgets/custom_card.dart';
 import '../../../widgets/custom_shimmer_loader.dart';
 
 class PreDialysisScreen extends StatefulWidget {
@@ -24,6 +28,13 @@ class PreDialysisScreen extends StatefulWidget {
 }
 
 class _PreDialysisScreenState extends State<PreDialysisScreen> {
+  final Connectivity _connectivity = Connectivity();
+  bool _isNetworkAvailable = true;
+  StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
+
+
+
+
   final PreDialysisController preDialysisController =
       Get.put(PreDialysisController());
 
@@ -52,6 +63,11 @@ class _PreDialysisScreenState extends State<PreDialysisScreen> {
   void initState() {
     getUserData();
     checkInternetAndLoadData();
+
+    _initConnectivity();
+    _connectivitySubscription = _connectivity.onConnectivityChanged.listen(
+      _updateConnectionStatus,
+    );
     super.initState();
   }
 
@@ -80,9 +96,34 @@ class _PreDialysisScreenState extends State<PreDialysisScreen> {
     userData = await SharedPref().read(const SharedPrefConstant().kUserData);
   }
 
+
+  Future<void> _initConnectivity() async {
+    final result = await _connectivity.checkConnectivity();
+    _updateConnectionStatus(result);
+  }
+
+  // Update connection status handler
+  void _updateConnectionStatus(List<ConnectivityResult> results) {
+    final isConnected = results.any(
+          (result) =>
+      result == ConnectivityResult.mobile ||
+          result == ConnectivityResult.wifi,
+    );
+
+    setState(() {
+      _isNetworkAvailable = isConnected;
+    });
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubscription?.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return _isNetworkAvailable ? Scaffold(
       appBar: AppBar(
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
@@ -334,13 +375,32 @@ class _PreDialysisScreenState extends State<PreDialysisScreen> {
           ),
         ],
       ),
-      body: GetBuilder<PreDialysisController>(
+      body:
+      GetBuilder<PreDialysisController>(
           init: PreDialysisController(),
           builder: (controller) {
-            return hasInternet
-                ? controller.isLoading
-                ?  Center(child: buildShimmerLoader())
-                    : PreDialysisCardList(
+            if (controller.isLoading) {
+              return Center(child: SessionEndPatientsShimmer());
+            }
+            // 2️⃣ Get list safely
+            final preDialysisList =
+                controller.preDialysisListModel?.data ?? [];
+
+            // 3️⃣ No Data Found state
+            if (preDialysisList.isEmpty) {
+              return CommonStatusScreen(
+                title: "No Data Found",
+                description:
+                "We are unable to find the data that\nyou are looking for ",
+                img: "assets/no_Data_Found.png",
+                buttonText: "Go Back",
+                onPressed: () {
+                  Get.back();
+                },
+              );
+            }
+
+            return  PreDialysisCardList(
                         patientList:
                             controller.preDialysisListModel?.data ?? [],
                         cardItemDetailsList: cardItemDetailsList,
@@ -371,13 +431,14 @@ class _PreDialysisScreenState extends State<PreDialysisScreen> {
                                 callB: () {},
                               ));
                         },
-                      )
-                : InternetIssue(
-                    onRetryPressed: () {
-                      checkInternetAndLoadData();
-                    },
-                  );
+                      );
           }),
+    )
+        : InternetIssue(
+      onRetryPressed: () async {
+        final result = await _connectivity.checkConnectivity();
+        _updateConnectionStatus(result);
+      },
     );
   }
 }
@@ -413,8 +474,20 @@ class PreDialysisCardList extends StatelessWidget {
         itemBuilder: (context, index) {
           return Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Card(
-              color: Colors.white,
+            child: Container(
+              decoration: BoxDecoration(
+                color: const Color(0xffF8F8F8),
+                borderRadius: BorderRadius.circular(6),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.1),
+                    spreadRadius: 2,
+                    blurRadius: 4,
+                    offset: const Offset(0, 0.5),
+                  ),
+                ],
+              ),
+
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -530,36 +603,36 @@ class PreDialysisCardList extends StatelessWidget {
   //   );
   // }
 
-  Widget patientDetailsCard(String text, String details) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 2.h),
-      child: RichText(
-        textAlign: TextAlign.start,
-        text: TextSpan(
-          children: [
-            TextSpan(
-              text: "$text : ",
-              style: TextStyle(
-                fontSize: 13.sp,
-                fontFamily: "Lato",
-                fontWeight: FontWeight.w400,
-                color: Colors.black,
-              ),
-            ),
-            TextSpan(
-              text: details,
-              style: TextStyle(
-                fontSize: 13.sp,
-                fontFamily: "Lato",
-                fontWeight: FontWeight.w400,
-                color: Colors.grey,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  // Widget patientDetailsCard(String text, String details) {
+  //   return Padding(
+  //     padding: EdgeInsets.symmetric(vertical: 2.h),
+  //     child: RichText(
+  //       textAlign: TextAlign.start,
+  //       text: TextSpan(
+  //         children: [
+  //           TextSpan(
+  //             text: "$text : ",
+  //             style: TextStyle(
+  //               fontSize: 13.sp,
+  //               fontFamily: "Lato",
+  //               fontWeight: FontWeight.w400,
+  //               color: Colors.black,
+  //             ),
+  //           ),
+  //           TextSpan(
+  //             text: details,
+  //             style: TextStyle(
+  //               fontSize: 13.sp,
+  //               fontFamily: "Lato",
+  //               fontWeight: FontWeight.w400,
+  //               color: Colors.grey,
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
 
   String extractStringUpToParenthesis(String input) {

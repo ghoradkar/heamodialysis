@@ -4,7 +4,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:heamodialysis/book_appointment/book_appointment_controller.dart';
+import 'package:heamodialysis/book_appointment/controller/book_appointment_controller.dart';
 import 'package:heamodialysis/internet/no_internet_connectivity.dart';
 import 'package:heamodialysis/new_registration/controller/new_registration_controller.dart';
 import 'package:heamodialysis/new_registration/model/institute/institute_data.dart';
@@ -130,7 +130,7 @@ class _BookBedScreenState extends State<BookBedScreen> {
           builder: (controller) {
             return hasInternet
                 ? (controller.isLoading)
-                    ?  Center(child: buildShimmerLoader())
+                    ?  const BookBedShimmer()
                     : Padding(
                         padding:  EdgeInsets.symmetric(horizontal: 8.w),
                         child: Column(
@@ -158,7 +158,7 @@ class _BookBedScreenState extends State<BookBedScreen> {
                                   ),
                                    CustomText(
                                     text: 'Beds Allocated',
-                                    fontSize: 14.sp,
+                                    fontSize: 13.sp,
                                     fontFam: 'Lato',
                                     fontWeight: FontWeight.normal,
                                     textColor: Colors.black,
@@ -166,7 +166,7 @@ class _BookBedScreenState extends State<BookBedScreen> {
                                   ),
                                   Padding(
                                     padding:  EdgeInsets.only(
-                                        left: 16.w, right: 8.w),
+                                        left: 11.w, right: 8.w),
                                     child: Container(
                                       width: 12.w,
                                       height: 12.h,
@@ -177,8 +177,8 @@ class _BookBedScreenState extends State<BookBedScreen> {
                                     ),
                                   ),
                                    CustomText(
-                                    text: 'HIV+',
-                                    fontSize: 14.sp,
+                                    text: 'HIV Positive',
+                                    fontSize: 13.sp,
                                     fontFam: 'Lato',
                                     fontWeight: FontWeight.normal,
                                     textColor: Colors.black,
@@ -186,7 +186,7 @@ class _BookBedScreenState extends State<BookBedScreen> {
                                   ),
                                   Padding(
                                     padding:  EdgeInsets.only(
-                                        left: 16.w, right: 8.w),
+                                        left: 11.w, right: 8.w),
                                     child: Container(
                                       width: 12.w,
                                       height: 12.h,
@@ -197,8 +197,8 @@ class _BookBedScreenState extends State<BookBedScreen> {
                                     ),
                                   ),
                                    CustomText(
-                                    text: 'Hepatitis C+',
-                                    fontSize: 14.sp,
+                                    text: 'HCV Positive',
+                                    fontSize: 13.sp,
                                     fontFam: 'Lato',
                                     fontWeight: FontWeight.normal,
                                     textColor: Colors.black,
@@ -226,8 +226,8 @@ class _BookBedScreenState extends State<BookBedScreen> {
                                     ),
                                   ),
                                    CustomText(
-                                    text: 'Hepatitis C+',
-                                    fontSize: 14.sp,
+                                    text: 'HBsAg Positive',
+                                    fontSize: 13.sp,
                                     fontFam: 'Lato',
                                     fontWeight: FontWeight.normal,
                                     textColor: Colors.black,
@@ -235,7 +235,7 @@ class _BookBedScreenState extends State<BookBedScreen> {
                                   ),
                                   Padding(
                                     padding:  EdgeInsets.only(
-                                        left: 16.w, right: 8.w),
+                                        left: 11.w, right: 8.w),
                                     child: Container(
                                       width: 12.w,
                                       height: 12.h,
@@ -246,8 +246,8 @@ class _BookBedScreenState extends State<BookBedScreen> {
                                     ),
                                   ),
                                    CustomText(
-                                    text: 'Negative',
-                                    fontSize: 14.sp,
+                                    text: 'HHH Negative',
+                                    fontSize: 13.sp,
                                     fontFam: 'Lato',
                                     fontWeight: FontWeight.normal,
                                     textColor: Colors.black,

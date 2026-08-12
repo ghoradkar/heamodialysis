@@ -144,6 +144,7 @@ class ApiNames {
   static const String savePostDai = "/savePostDai";
   static const String searchRegisteredPatientApi = "/getAutoSuggetionDetails";
   static const String nephroList = "nephrology/search-nrephro-patientlist";
+  static const String doctorDeskPatientList = "api/mobile/getPreDialysisQueueList";
   static const String savediagonosis = "/savediagonosis";
   static const String saveOPDPrescription = "/saveOPDPrescription";
   static const String getDiagNosisList = "/diagosAutoSuggestion";
@@ -160,6 +161,7 @@ class ApiNames {
   static const String getInstituteList = "/getUnitNameList";
   static const String getUserAccessFlag = "/getUserAccessFlag";
   static const String getPrefixList = "/getallpatienttitles";
+  static const String getGenderList = "/getGenderList";
   static const String getViralStatus = "/getHaemodialysisProcedureTypeList";
   static const String getDialysisList = "/getDialysisModeList";
   static const String eventDataTable = "/eventDataTable";
@@ -186,7 +188,7 @@ class ApiNames {
   static const String capturePhoto = "/capturePhoto";
   static const String viewRelativeDoc = "/viewRelativeDoc";
   static const String getMaritalStatus = "/getMaritalStatus";
-  static const String getBloodGroup = "/getBloodGroup";
+  static const String getBloodGroup =  "/getBloodGroup";
   static const String viewPatientDetails = "/viewPatientDetails";
   static const String getAvailableBedList = "/getAvailableBedList";
   static const String bookBedApi = "/bookBedApi";
@@ -296,5 +298,8 @@ class ApiNames {
   static const String prescriptionReport = "pdfcontroller/prescriptionReport";
   static const String getDropForOPDHistory = "/getDropForOPDHistory";
   static const String getDiseaseDetails = "/getDiseaseDetails";
-
+  static const String getPatientHdChartDocuments = "/getPatientHdChartDocuments";
+  static const String uploadPatientHdChartDocument = "/uploadPatientHdChartDocument";
+  static const String getFeedbackDocuments = "/getFeedbackDocuments";
+  static const String uploadFeedbackDocument = "/uploadFeedbackDocument";
 }

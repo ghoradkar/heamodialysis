@@ -1,7 +1,9 @@
+import 'dart:async';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:heamodialysis/dashboard/technician/institutewise_dashboard_screen.dart';
+import 'package:heamodialysis/dashboard/screen/technician/institutewise_dashboard_screen.dart';
 import 'package:heamodialysis/internet/no_internet_connectivity.dart';
 import 'package:heamodialysis/new_registration/model/institute/institute_data.dart';
 import 'package:heamodialysis/ro_maintenance/ro_log_sheet/controller/ro_log_sheet_controller.dart';
@@ -15,6 +17,7 @@ import 'package:heamodialysis/widgets/custom_textfield.dart';
 import 'package:heamodialysis/widgets/date_picker.dart';
 import 'package:intl/intl.dart';
 
+import '../../../utils/status_update_screen.dart';
 import '../../../widgets/custom_shimmer_loader.dart';
 
 class RoLogSheetList extends StatefulWidget {
@@ -25,6 +28,9 @@ class RoLogSheetList extends StatefulWidget {
 }
 
 class _RoLogSheetListState extends State<RoLogSheetList> {
+  final Connectivity _connectivity = Connectivity();
+  bool _isNetworkAvailable = true;
+  StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
   final RoLogSheetController roMachineIssueLogController =
       Get.put(RoLogSheetController());
   String? pickedTime;
@@ -53,6 +59,10 @@ class _RoLogSheetListState extends State<RoLogSheetList> {
   void initState() {
     getUserData();
     checkInternetAndLoadData();
+    _initConnectivity();
+    _connectivitySubscription = _connectivity.onConnectivityChanged.listen(
+      _updateConnectionStatus,
+    );
     super.initState();
   }
 
@@ -85,10 +95,35 @@ class _RoLogSheetListState extends State<RoLogSheetList> {
     userData = await SharedPref().read(const SharedPrefConstant().kUserData);
   }
 
+  Future<void> _initConnectivity() async {
+    final result = await _connectivity.checkConnectivity();
+    _updateConnectionStatus(result);
+  }
+
+  // Update connection status handler
+  void _updateConnectionStatus(List<ConnectivityResult> results) {
+    final isConnected = results.any(
+          (result) =>
+      result == ConnectivityResult.mobile ||
+          result == ConnectivityResult.wifi,
+    );
+
+    setState(() {
+      _isNetworkAvailable = isConnected;
+    });
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubscription?.cancel();
+    super.dispose();
+  }
+
+
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(
+    return _isNetworkAvailable ? Scaffold(
       appBar: AppBar(
         title: const CustomText(
           text: 'RO Log Sheet',
@@ -369,10 +404,24 @@ class _RoLogSheetListState extends State<RoLogSheetList> {
       body: GetBuilder<RoLogSheetController>(
           init: RoLogSheetController(),
           builder: (controller) {
-            return hasInternet
-                ? controller.isLoading
-                ?  Center(child: buildShimmerLoader())
-                    : ListView.builder(
+            // ✅ If loading, show shimmer
+            if (controller.isLoading) {
+              return const Center(child: SessionEndPatientsShimmer());
+            }
+            if (controller.roLogSheetModel?.data == null ||
+                controller.roLogSheetModel!.data!.isEmpty) {
+              return CommonStatusScreen(
+                title: "No Data Found",
+                description: "We are unable to find the data that\nyou are looking for",
+                img: "assets/no_Data_Found.png",
+                buttonText: "Go Back",
+                onPressed: () {
+                  Get.back();
+                },
+              );
+            }
+
+            return  ListView.builder(
                         shrinkWrap: true,
                         itemCount: controller.roLogSheetModel?.data?.length,
                         itemBuilder: (BuildContext context, int index) {
@@ -399,13 +448,15 @@ class _RoLogSheetListState extends State<RoLogSheetList> {
                             },
                           );
                         },
-                      )
-                : InternetIssue(
-                    onRetryPressed: () {
-                      checkInternetAndLoadData();
-                    },
-                  );
+                      );
+
+
           }),
+    )  : InternetIssue(
+    onRetryPressed: () async {
+    final result = await _connectivity.checkConnectivity();
+    _updateConnectionStatus(result);
+    },
     );
   }
 

@@ -1,15 +1,22 @@
+import 'dart:async';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:heamodialysis/dialysis_queue/pre_dialysis/patient_history/tabs/coversheet.dart';
 import 'package:heamodialysis/dialysis_queue/pre_dialysis/patient_history/tabs/graphical_analysis_weight.dart';
 import 'package:heamodialysis/dialysis_queue/pre_dialysis/patient_history/tabs/tabular_analysis_weight.dart';
 import 'package:heamodialysis/internet/no_internet_connectivity.dart';
 import 'package:heamodialysis/nephro_desk_patient_list/model/cover_sheet_nephro.dart';
+import 'package:heamodialysis/nephro_desk_patient_list/screen/edit_nephro/expandable_card.dart';
 import 'package:heamodialysis/new_registration/controller/new_registration_controller.dart';
 import 'package:heamodialysis/utils/color_constants.dart';
 import 'package:heamodialysis/widgets/custom_text.dart';
 
+import '../../../../nephro_desk_patient_list/controller/nephro_controller.dart';
 import '../../../../widgets/custom_shimmer_loader.dart';
+import '../../../../widgets/custom_tabs_widget.dart';
 
 class TrendAnalysisTabsWeight extends StatefulWidget {
   final List<WeightTrendAnalysisList>? weight;
@@ -22,15 +29,30 @@ class TrendAnalysisTabsWeight extends StatefulWidget {
 
 class _TrendAnalysisTabsWeightState extends State<TrendAnalysisTabsWeight>
     with SingleTickerProviderStateMixin {
+  bool isExpanded = false;
+  final NephroController nephroController = Get.find<NephroController>();
+  final Connectivity _connectivity = Connectivity();
+  bool _isNetworkAvailable = true;
+  StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
+
+
+
+
   late TabController tabController;
 
   final NewRegistrationController newRegistrationController =
   Get.put(NewRegistrationController());
   bool hasInternet = true;
+  final PageController pageController = PageController();
+  int currentPage = 0;
 
   @override
   void initState() {
     checkInternetAndLoadData();
+    _initConnectivity();
+    _connectivitySubscription = _connectivity.onConnectivityChanged.listen(
+      _updateConnectionStatus,
+    );
 
     tabController = TabController(length: 2, vsync: this);
     tabController.addListener(() {
@@ -40,9 +62,33 @@ class _TrendAnalysisTabsWeightState extends State<TrendAnalysisTabsWeight>
     super.initState();
   }
 
+
+
+  Future<void> _initConnectivity() async {
+    final result = await _connectivity.checkConnectivity();
+    _updateConnectionStatus(result);
+  }
+
+  // Update connection status handler
+  void _updateConnectionStatus(List<ConnectivityResult> results) {
+    final isConnected = results.any(
+          (result) =>
+      result == ConnectivityResult.mobile ||
+          result == ConnectivityResult.wifi,
+    );
+
+    setState(() {
+      _isNetworkAvailable = isConnected;
+    });
+  }
+
+
+
+
   @override
   void dispose() {
     tabController.dispose();
+    _connectivitySubscription?.cancel();
     super.dispose();
   }
 
@@ -59,7 +105,7 @@ class _TrendAnalysisTabsWeightState extends State<TrendAnalysisTabsWeight>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return _isNetworkAvailable ?  Scaffold(
       appBar: AppBar(
         title: const CustomText(
           text: 'Trend Analysis',
@@ -78,11 +124,98 @@ class _TrendAnalysisTabsWeightState extends State<TrendAnalysisTabsWeight>
       body: GetBuilder<NewRegistrationController>(
           init: NewRegistrationController(),
           builder: (controller) {
-            return hasInternet
-                ? controller.isLoading
-                ?  Center(child: buildShimmerLoader())
+            return controller.isLoading
+                ? const Center(child: TrendAnalysisShimmer())
                 : Column(
               children: [
+                ExpandableCardDetails(
+                  patientData: nephroController.patientDet?.first,
+                  isExpand: (value) {
+                    isExpanded = value;
+                    setState(() {});
+                  },
+                  isExpanded: isExpanded,
+                  currentStat: nephroController.currentStat,
+                ).paddingSymmetric(vertical: 10.h),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                //   children: [
+                //     // buildButton(currentPage: 1, 0, 'Cover Sheet'),
+                //     buildButton(index: 0, currentPage: currentPage, text: 'Cover Sheet',onTap: () => changeTab(0)),
+                //      buildButton(index: 1, currentPage: currentPage, text: 'Clinical History',onTap: () => changeTab(1)),
+                //      buildButton(index: 2, currentPage: currentPage, text: 'Clinical Condition',onTap: () => changeTab(2)),
+                //      buildButton(index: 3, currentPage: currentPage, text: 'Diagnostic Inv',onTap: () => changeTab(3)),
+                //
+                //   ],
+                // ),
+                // SizedBox(height: 8.h),
+                // // Second row of buttons
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                //   children: [
+                //     // buildButton(currentPage: 1, 0, 'Cover Sheet'),
+                //     buildButton(index: 4, currentPage: currentPage, text: 'Prescription',onTap: () => changeTab(4),),
+                //     buildButton(index: 5, currentPage: currentPage, text: 'Instruction',onTap: () => changeTab(5)),
+                //     buildButton(index: 6, currentPage: currentPage, text: 'Diet',onTap: () => changeTab(6)),
+                //     buildButton(index: 7, currentPage: currentPage, text: 'Upload Document',onTap: () => changeTab(7)),
+                //   ],
+                // ),
+                // Expanded(
+                //   child: PageView(
+                //     controller: pageController,
+                //     onPageChanged: (int pageIndex) {
+                //       setState(() {
+                //         currentPage =
+                //             pageIndex; // Update the current page on swipe
+                //       });
+                //     },
+                //     children: [
+                //       // CoverSheetNephro(
+                //       //   coverSheetNephro: nephroController.coverSheetNephro,
+                //       //   patientData: widget.patientData,
+                //       //   appbarTitle: widget.appBarTitle,
+                //       // ),
+                //       Coversheet(
+                //         patientId: widget.patientData?.patientId,
+                //         treatmentId: widget.patientData?.treatmentId,
+                //       ),
+                //       ClinicalHistory(
+                //         patientData: widget.patientData,
+                //       ),
+                //       ClinicalCondition(
+                //         patientData: widget.patientData,
+                //       ),
+                //       DiagnosticInv(
+                //         packageList: nephroController.packageList,
+                //         onAdd: () {},
+                //         patientData: widget.patientData,
+                //         choosePackageListModel:
+                //         nephroController.choosePackageListModel,
+                //       ),
+                //       // LabInvestigation(choosePackageListModel: nephroController.choosePackageListModel,),
+                //       Prescription(
+                //         patientData: widget.patientData,
+                //       ),
+                //       Instructions(
+                //         patientData: widget.patientData,
+                //       ),
+                //       DietScreen(
+                //         patientData: widget.patientData,
+                //       ),
+                //       UploadDocument(patientData: widget.patientData),
+                //     ],
+                //   ),
+                // ),
+                SizedBox(height: 11.h),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                //   children: [
+                //     _buildButton(4, 'Prescription'),
+                //     _buildButton(5, 'Instruction'),
+                //     _buildButton(6, 'Diet'),
+                //     _buildButton(7, 'Upload Document'),
+                //   ],
+                // ),
                 TabBar(
                   controller: tabController,
                   dividerColor: Colors.transparent,
@@ -91,8 +224,8 @@ class _TrendAnalysisTabsWeightState extends State<TrendAnalysisTabsWeight>
                   indicatorPadding: EdgeInsets.zero,
                   labelPadding: EdgeInsets.zero,
                   tabs: [
-                    buildTab(0, "Tabular","assets/graph.png"),
-                    buildTab(1, "Graph","assets/user_textfield.png"),
+                    buildTab(0, "Tabular","assets/user_textfield.png"),
+                    buildTab(1, "Graph","assets/graph.png"),
 
                   ],
                 ),
@@ -107,14 +240,25 @@ class _TrendAnalysisTabsWeightState extends State<TrendAnalysisTabsWeight>
                   ),
                 )
               ],
-            ).paddingSymmetric(horizontal: 6)
-                : InternetIssue(
-              onRetryPressed: () {
-                checkInternetAndLoadData();
-              },
-            );
+            ).paddingSymmetric(horizontal: 6);
           }),
+
+    ) : InternetIssue(
+      onRetryPressed: () async {
+        final result = await _connectivity.checkConnectivity();
+        _updateConnectionStatus(result);
+      },
     );
+  }
+  void goToPage(int pageIndex) {
+    pageController.animateToPage(
+      pageIndex,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+    setState(() {
+      currentPage = pageIndex;
+    });
   }
 
   Widget buildTab(int index, String text,String path) {
@@ -122,7 +266,7 @@ class _TrendAnalysisTabsWeightState extends State<TrendAnalysisTabsWeight>
     return Container(
       width: 210,
       // height: 50,
-      padding: const EdgeInsets.symmetric(horizontal: 0.8, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 0.8, vertical: 17),
       decoration: BoxDecoration(
         // color: isSelected ? Colors.blue.shade200 : Colors.transparent,
           gradient: isSelected
@@ -149,12 +293,12 @@ class _TrendAnalysisTabsWeightState extends State<TrendAnalysisTabsWeight>
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Image.asset(path,color: isSelected ? Colors.white:Colors.grey,),
-          const SizedBox(width: 4,),
+          const SizedBox(width: 8,),
           CustomText(
             text: text,
             fontSize: 12.0,
             fontFam: 'Lato',
-            fontWeight: FontWeight.normal,
+            fontWeight: FontWeight.w400,
             textColor: isSelected ? Colors.white : const Color(0xff777777),
             textAlign: TextAlign.center,
           )
@@ -174,4 +318,15 @@ class _TrendAnalysisTabsWeightState extends State<TrendAnalysisTabsWeight>
     }
 
   }
+
+  void changeTab(int index) {
+    setState(() {
+      currentPage = index;
+    });
+
+    if (index < tabController.length) {
+      tabController.animateTo(index);
+    }
+  }
+
 }

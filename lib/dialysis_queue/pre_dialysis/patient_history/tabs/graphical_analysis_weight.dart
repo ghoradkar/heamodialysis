@@ -51,7 +51,7 @@ class _GraphicalAnalysisWeightState extends State<GraphicalAnalysisWeight> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const SizedBox(
-                  height: 20,
+                  height: 11,
                 ),
                 const Row(
                   children: [
@@ -73,23 +73,34 @@ class _GraphicalAnalysisWeightState extends State<GraphicalAnalysisWeight> {
                 ).paddingSymmetric(vertical: 2),
 
                 const SizedBox(
-                  height: 15,
+                  height: 11,
                 ),
 
                 // Plotting the graph with the dynamic data
                 SizedBox(
-                  height: 300,
+                  height: 440,
                   child: LineChartWidget(
                     dates: dates.isEmpty
-                        ? [DateTime(2024, 8, 1), DateTime(2024, 8, 2)] // Default fallback dates
+                        ? [
+                      DateTime(2024, 8, 1),
+                      DateTime(2024, 8, 2),
+                      DateTime(2024, 8, 3),
+                      DateTime(2024, 8, 4),
+                    ]
                         : dates,
+
                     preDialysisValue: preDialysisWeights.isEmpty
-                        ? [25,67, 23,40] // Default fallback weights
+                        ? [70, 71,68]
                         : preDialysisWeights,
+
                     postDialysisValue: postDialysisWeights.isEmpty
-                        ? [50,35,50,18] // Default fallback weights
-                        : postDialysisWeights, analysis: 'Weight',
+                        ? [65, 68, 62]
+                        : postDialysisWeights,
+
+                    analysis: 'Weight Value',
+
                   ),
+
                 ),
               ],
             ),

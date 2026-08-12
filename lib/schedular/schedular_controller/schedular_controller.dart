@@ -1,11 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dialysis_queue/pre_dialysis/edit_pre_dialysis/model/dialysis_type_mode.dart';
-import 'package:heamodialysis/nephro_desk_patient_list/edit_nephro/tabs/choose_package.dart';
 import 'package:heamodialysis/nephro_desk_patient_list/model/get_instructions_model.dart';
+import 'package:heamodialysis/nephro_desk_patient_list/screen/edit_nephro/tabs/choose_package.dart';
 import 'package:heamodialysis/new_registration/controller/new_registration_controller.dart';
 import 'package:heamodialysis/new_registration/model/institute/Institute_list.dart';
 import 'package:heamodialysis/new_registration/model/institute/institute_data.dart';
@@ -119,9 +118,9 @@ class SchedularController extends GetxController {
   List<SlotTimeModel> slotTimeList = [];
 
   CheckBoxList? oxygenSupply =
-      CheckBoxList('Enough Oxygen Supply Available At The Bed', false);
+  CheckBoxList('Enough Oxygen Supply Available At The Bed', false);
   CheckBoxList? fuelAvailable =
-      CheckBoxList('Enough Fuel Available for GenSet at the Hospital', false);
+  CheckBoxList('Enough Fuel Available for GenSet at the Hospital', false);
   CheckBoxList? ironSucrose = CheckBoxList('Iron Sucrose', false);
 
   CheckBoxList? eop = CheckBoxList('EPO Administered', false);
@@ -215,7 +214,7 @@ class SchedularController extends GetxController {
   getVisitorEntryData(int patientId, int treatmentId) async {
     isLoading = true;
     final uri = Uri.parse(
-        // ApiConstants.baseUrl + ApiConstants.searchRegisteredPatientApi
+      // ApiConstants.baseUrl + ApiConstants.searchRegisteredPatientApi
         ApiConstants.baseUrl + ApiNames.viewPatientDetailsNew);
 
     final Map<String, dynamic> body = {
@@ -384,7 +383,7 @@ class SchedularController extends GetxController {
     isLoading = true;
 
     final uri =
-        Uri.parse("${ApiConstants.ip}${ApiNames.schedularPreDialysisHistory}");
+    Uri.parse("${ApiConstants.ip}${ApiNames.schedularPreDialysisHistory}");
     var body = {"treatmentId": treatmentId};
     String jsonbody = json.encode(body);
     Map<String, String> headers = {
@@ -416,7 +415,7 @@ class SchedularController extends GetxController {
     isLoading = true;
 
     final uri =
-        Uri.parse("${ApiConstants.ip}${ApiNames.schedularPostDialysisHistory}");
+    Uri.parse("${ApiConstants.ip}${ApiNames.schedularPostDialysisHistory}");
     var body = {"treatmentId": treatmentId};
     String jsonbody = json.encode(body);
     Map<String, String> headers = {
@@ -477,16 +476,16 @@ class SchedularController extends GetxController {
       List<dynamic> data = json.decode(response.body);
 
       List<PatientHistoryUploadDoc> patientHistoryUplodDoc =
-          data.map((item) => PatientHistoryUploadDoc.fromJson(item)).toList();
+      data.map((item) => PatientHistoryUploadDoc.fromJson(item)).toList();
 
       uploadDocCoversheetl1 = List.generate(patientHistoryUplodDoc.length,
-          (index) => (index + 1).toString()); // srNo
+              (index) => (index + 1).toString()); // srNo
       uploadDocCoversheetl2 = patientHistoryUplodDoc
           .map((item) => item.doctorDeskFile ?? '-')
           .toList(); // Particulars
       uploadDocCoversheetl3 = patientHistoryUplodDoc
           .map((item) =>
-              item.createdDate != null ? formatDate(item.createdDate!) : '-')
+      item.createdDate != null ? formatDate(item.createdDate!) : '-')
           .toList(); // Date
 
       uploadDocCoversheetlastColumnWidgets = patientHistoryUplodDoc.map((item) {
@@ -569,15 +568,15 @@ class SchedularController extends GetxController {
 
       var data = json.decode(response.body);
       GetInstructionsModel getInstructionsModel =
-          GetInstructionsModel.fromJson(data);
+      GetInstructionsModel.fromJson(data);
 
       instructionCoversheetl1 = List.generate(
           getInstructionsModel.lstList?.length ?? 0,
-          (index) => (index + 1).toString());
+              (index) => (index + 1).toString());
 
       instructionCoversheetl2 = getInstructionsModel.lstList
-              ?.map((item) => item.reportInstruction ?? '-')
-              .toList() ??
+          ?.map((item) => item.reportInstruction ?? '-')
+          .toList() ??
           [];
       instructionCoversheetl2;
     } else {
@@ -799,7 +798,7 @@ class SchedularController extends GetxController {
       if (coversheetPrescriptionDet?.listOPDPrescriptionDtoSP != null) {
         prescriptionCoversheetl1 = List.generate(
             coversheetPrescriptionDet!.listOPDPrescriptionDtoSP!.length,
-            (index) => (index + 1).toString()); // srNo
+                (index) => (index + 1).toString()); // srNo
         prescriptionCoversheetl2 = coversheetPrescriptionDet!
             .listOPDPrescriptionDtoSP!
             .map((item) => item.drugName!)
@@ -814,17 +813,17 @@ class SchedularController extends GetxController {
             .toList(); //
         prescriptionlastColumnWidgets =
             coversheetPrescriptionDet!.listOPDPrescriptionDtoSP!.map((item) {
-          return CustomButtonWithoutIcon(
-            buttonText: 'Print',
-            callB: () async {
-              await printReport(unitId, patientId, treatmentId, userId);
-            },
-            buttonWidth: 70,
-            primColor: AppColor.primaryBackgroundColor,
-            secColor: AppColor.secondaryColor,
-            textColor: Colors.white,
-          );
-        }).toList();
+              return CustomButtonWithoutIcon(
+                buttonText: 'Print',
+                callB: () async {
+                  await printReport(unitId, patientId, treatmentId, userId);
+                },
+                buttonWidth: 70,
+                primColor: AppColor.primaryBackgroundColor,
+                secColor: AppColor.secondaryColor,
+                textColor: Colors.white,
+              );
+            }).toList();
       }
 
       update();
@@ -985,7 +984,7 @@ class SchedularController extends GetxController {
       if (labInvestigationCoversheet != null &&
           labInvestigationCoversheet!.isNotEmpty) {
         labCoversheetl1 = List.generate(labInvestigationCoversheet!.length,
-            (index) => (index + 1).toString()); // srNo
+                (index) => (index + 1).toString()); // srNo
         labCoversheetl2 =
             labInvestigationCoversheet!.map((item) => item.testNames!).toList();
         labCoversheetl3 = labInvestigationCoversheet!.map((item) {
@@ -998,25 +997,25 @@ class SchedularController extends GetxController {
 
         lablastColumnWidgets = labInvestigationCoversheet!.map((item) {
           return (item.testReportLink != null &&
-                  item.testReportLink!.isNotEmpty)
+              item.testReportLink!.isNotEmpty)
               ? InkWell(
-                  onTap: () {
-                    Get.to(FileViewer(
-                      fileUrl: item.testReportLink!,
-                      patientName: 'View Lab Invest',
-                    ));
-                  },
-                  child: Icon(
-                    Icons.remove_red_eye_outlined,
-                    color: AppColor.primaryBackgroundColor,
-                  ),
-                )
+            onTap: () {
+              Get.to(FileViewer(
+                fileUrl: item.testReportLink!,
+                patientName: 'View Lab Invest',
+              ));
+            },
+            child: Icon(
+              Icons.remove_red_eye_outlined,
+              color: AppColor.primaryBackgroundColor,
+            ),
+          )
               : CustomText(
-                  text: "Processing",
-                  fontSize: 8,
-                  fontWeight: FontWeight.normal,
-                  textColor: AppColor.red,
-                  textAlign: TextAlign.center);
+              text: "Processing",
+              fontSize: 8,
+              fontWeight: FontWeight.normal,
+              textColor: AppColor.red,
+              textAlign: TextAlign.center);
         }).toList();
       } else {
         isLoading = false;
@@ -1052,7 +1051,7 @@ class SchedularController extends GetxController {
       if (dietDetailsCoversheet?.getListOfOPDDietDTO != null) {
         dietCoversheetl1 = List.generate(
             dietDetailsCoversheet!.getListOfOPDDietDTO!.length,
-            (index) => (index + 1).toString()); // srNo
+                (index) => (index + 1).toString()); // srNo
         dietCoversheetl2 = dietDetailsCoversheet!.getListOfOPDDietDTO!
             .map((item) => item.templateName!)
             .toList(); // Particulars
@@ -1115,7 +1114,7 @@ class SchedularController extends GetxController {
 
     String jsonbody = json.encode(body);
     final uri = Uri.parse(ApiConstants.oldBaseUrl + ApiNames.visitPatient);
-
+print("visitpatient : $uri");
     // String jsonbody = json.encode(body);
     Map<String, String> headers = {
       "Content-Type": "application/json",
@@ -1127,6 +1126,7 @@ class SchedularController extends GetxController {
     final response = await ioClient.post(uri, headers: headers, body: jsonbody);
     debugPrint(response.statusCode.toString());
     debugPrint("response.body : ${response.body}");
+    debugPrint("sand request body : ${jsonbody}");
 
     if (response.statusCode == 200) {
       //getDeviceDetails
@@ -1234,7 +1234,7 @@ class SchedularController extends GetxController {
       bool? epo) async {
     try {
       final url =
-          Uri.parse("${ApiConstants.baseUrl}${ApiNames.updateTreatmentData}");
+      Uri.parse("${ApiConstants.baseUrl}${ApiNames.updateTreatmentData}");
 
       final preAuthAppDate = convertDateFormat(preAuthpdate ?? "");
 
@@ -1402,7 +1402,7 @@ class SchedularController extends GetxController {
 
   Future<bool> searchByDropDownList() async {
     final uri =
-        Uri.parse(ApiConstants.baseUrl + ApiNames.searchByDropDownListApi);
+    Uri.parse(ApiConstants.baseUrl + ApiNames.searchByDropDownListApi);
 
     // String jsonbody = json.encode(body);
     Map<String, String> headers = {
@@ -1467,7 +1467,7 @@ class SchedularController extends GetxController {
       String fromD, String toDate, int slotId, int sId) async {
     isLoading = true;
     final uri = Uri.parse(
-        // ApiConstants.oldBaseUrl + ApiConstants.getDailBookings
+      // ApiConstants.oldBaseUrl + ApiConstants.getDailBookings
         ApiConstants.baseUrl + ApiNames.getDailBookings);
 
     final Map<String, dynamic> body = {
@@ -1522,7 +1522,7 @@ class SchedularController extends GetxController {
     //     ApiConstants.baseUrl1 + ApiConstants.getSuggestionList);
 
     final uri = Uri.parse(
-        // ApiConstants.baseUrl + ApiConstants.searchRegisteredPatientApi
+      // ApiConstants.baseUrl + ApiConstants.searchRegisteredPatientApi
         ApiConstants.baseUrl1 + ApiNames.getSuggestionList);
 
     final Map<String, dynamic> body = {
@@ -1580,7 +1580,7 @@ class SchedularController extends GetxController {
   searchRegisteredPatient(String type, String input, unitId, String sId) async {
     isLoading = true;
     final uri =
-        Uri.parse(ApiConstants.baseUrl + ApiNames.searchRegisteredPatientApi);
+    Uri.parse(ApiConstants.baseUrl + ApiNames.searchRegisteredPatientApi);
 
     final Map<String, dynamic> body = {
       "unitId": unitId,
@@ -1635,7 +1635,7 @@ class SchedularController extends GetxController {
       RegistrationController registrationController) async {
     isLoading = true;
     final uri =
-        Uri.parse(ApiConstants.baseUrl + ApiNames.searchRegisteredPatientApi);
+    Uri.parse(ApiConstants.baseUrl + ApiNames.searchRegisteredPatientApi);
 
     final Map<String, dynamic> body = {
       "unitId": unitId,
@@ -1664,7 +1664,7 @@ class SchedularController extends GetxController {
       final data = json.decode(response.body);
       if (data['status'] == 'Success') {
         AlreadyRegisteredPatient patientDet =
-            AlreadyRegisteredPatient.fromJson(data);
+        AlreadyRegisteredPatient.fromJson(data);
 
         await registrationController
             .checkScrutinyApproval(patientDet.data?.first.patientId);
@@ -1825,7 +1825,7 @@ class SchedularController extends GetxController {
     final Map<String, dynamic> queryParams = {"date": date, "pId": pId};
 
     final uri =
-        Uri.parse(ApiConstants.baseUrl + ApiNames.checkDateAppointmentSchedule);
+    Uri.parse(ApiConstants.baseUrl + ApiNames.checkDateAppointmentSchedule);
 
     // String jsonbody = json.encode(body);
     Map<String, String> headers = {
@@ -1992,20 +1992,20 @@ class SchedularController extends GetxController {
           selectedSearchedData = null;
 
           CustomPopup.showSuccessDialog(
-            () => Get.to(const SchedularListScreen()),
+                () => Get.to(const SchedularListScreen()),
             "Schedule Confirmed",
             "Your schedule has been successfully confirmed.",
           );
         } else {
           CustomPopup.showAlertDialog(
-            () => Get.to(const SchedularListScreen()),
-            () => Get.to(const SchedularListScreen()),
+                () => Get.to(const SchedularListScreen()),
+                () => Get.to(const SchedularListScreen()),
             "Add Schedular Failed",
             "",
             'assets/consultation.png',
             false,
             "",
-            () => Get.to(const SchedularListScreen()),
+                () => Get.to(const SchedularListScreen()),
           );
         }
       } else {
@@ -2014,14 +2014,14 @@ class SchedularController extends GetxController {
     } catch (e, st) {
       debugPrint('addSchedular error: $e\n$st');
       CustomPopup.showAlertDialog(
-        () => Get.back(),
-        () => Get.back(),
+            () => Get.back(),
+            () => Get.back(),
         "Add Schedular Failed",
         e.toString(),
         'assets/consultation.png',
         false,
         "",
-        () => Get.back(),
+            () => Get.back(),
       );
     } finally {
       isLoading = false;

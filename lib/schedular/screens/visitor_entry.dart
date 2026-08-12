@@ -6,8 +6,8 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:heamodialysis/capture_photo/capture_photo.dart';
-import 'package:heamodialysis/capture_photo/capture_photo_controller.dart';
+import 'package:heamodialysis/capture_photo/screen/capture_photo.dart';
+import 'package:heamodialysis/capture_photo/controller/capture_photo_controller.dart';
 import 'package:heamodialysis/internet/no_internet_connectivity.dart';
 import 'package:heamodialysis/new_registration/model/schema_adopted/schema_data.dart';
 import 'package:heamodialysis/new_registration/screens/upload_document_tab.dart';
@@ -41,7 +41,7 @@ class VisitorEntry extends StatefulWidget {
 class _VisitorEntryState extends State<VisitorEntry> {
   File? image;
   final CapturePhotoController capturePhotoController =
-      Get.put(CapturePhotoController());
+  Get.put(CapturePhotoController());
 
   String? pickedTime;
 
@@ -50,7 +50,7 @@ class _VisitorEntryState extends State<VisitorEntry> {
 
   bool hasInternet = true;
   final SchedularController schedularController =
-      Get.put(SchedularController());
+  Get.put(SchedularController());
 
   var userData;
 
@@ -80,7 +80,7 @@ class _VisitorEntryState extends State<VisitorEntry> {
 
   checkInternetAndLoadData() async {
     List<ConnectivityResult> connectivityResult =
-        await Connectivity().checkConnectivity();
+    await Connectivity().checkConnectivity();
     // setState(() {
     hasInternet = (connectivityResult.contains(ConnectivityResult.mobile) ||
         connectivityResult.contains(ConnectivityResult.wifi));
@@ -134,15 +134,15 @@ class _VisitorEntryState extends State<VisitorEntry> {
       if (schedularController.visitorEntryData?.packageMasterData != null) {
         schedularController.selectedSchemeObj =
             schedularController.schemaAdoptedModel?.data!.firstWhere(
-                (e) =>
-                    e.lookupDetDescEn ==
+                    (e) =>
+                e.lookupDetDescEn ==
                     "MJPJAY(Mahatma Jyotirao Phule Jan Arogya Yojana )",
                 orElse: () => SchemaData());
       } else {
         schedularController.selectedSchemeObj = schedularController
             .schemaAdoptedModel?.data!
             .firstWhere((e) => e.lookupDetDescEn == "Non MJPJAY",
-                orElse: () => SchemaData());
+            orElse: () => SchemaData());
 
         schedularController.selectedSchemeObj;
       }
@@ -158,7 +158,7 @@ class _VisitorEntryState extends State<VisitorEntry> {
 
       if (schedularController.visitorEntryData?.packageMasterData != null) {
         schedularController.mjpjayPackageMasterId =
-            schedularController.visitorEntryData?.packageMasterData?[0];
+        schedularController.visitorEntryData?.packageMasterData?[0];
         schedularController.enrollNo.text =
             schedularController.visitorEntryData?.packageMasterData?[1] ?? "";
         schedularController.preAuthApprovalDateController.text =
@@ -206,607 +206,607 @@ class _VisitorEntryState extends State<VisitorEntry> {
           builder: (controller) {
             return hasInternet
                 ? controller.isLoading
-                    ?  Center(child: buildShimmerLoader())
-                    : SingleChildScrollView(
-                        child: Form(
-                          key: formKey,
-                          child: Column(
-                            children: [
-                              SizedBox(height: 8.h),
-                              Center(
-                                child: CircleAvatar(
-                                  radius: 50,
-                                  backgroundImage: image == null
-                                      ? const AssetImage(
-                                          "assets/profile-placeholder.png")
-                                      : FileImage(image!),
-                                ),
-                              ),
-                              SizedBox(height: 8.h),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    width: 35.w,
-                                    height: 35.h,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      gradient: LinearGradient(
-                                        colors: [
-                                          AppColor.primaryBackgroundColor,
-                                          AppColor.secondaryColor
-                                        ],
-                                        begin: Alignment.topLeft,
-                                        end: Alignment.bottomCenter,
-                                      ),
-                                    ),
-                                    child: IconButton(
-                                      icon: const Icon(
-                                        Icons.edit,
-                                        size: 15,
-                                        color: Colors.white,
-                                      ),
-                                      onPressed: () {
-                                        _pickImageFromDevice();
-                                      },
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 6.w,
-                                  ),
-                                  Container(
-                                    width: 35.w,
-                                    height: 35.h,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      gradient: LinearGradient(
-                                        colors: [
-                                          AppColor.primaryBackgroundColor,
-                                          AppColor.secondaryColor
-                                        ],
-                                        begin: Alignment.topLeft,
-                                        end: Alignment.bottomCenter,
-                                      ),
-                                    ),
-                                    child: IconButton(
-                                      icon: const Icon(
-                                        Icons.camera_alt_outlined,
-                                        size: 15,
-                                        color: Colors.white,
-                                      ),
-                                      onPressed: () async {
-                                        // final cameras = await availableCameras();
-                                        //
-                                        // final frontCamera = cameras.firstWhere(
-                                        //   (camera) =>
-                                        //       camera.lensDirection ==
-                                        //       CameraLensDirection.front,
-                                        // );
-                                        // Get.to(() => CapturePhoto(
-                                        //       camera: frontCamera,
-                                        //       callBack: () {
-                                        //         pickImageFromCamera();
-                                        //       },
-                                        //     ));
-
-                                        // Get the list of available cameras
-                                        final cameras =
-                                            await availableCameras();
-
-                                        // Optionally select a default camera (e.g., front camera)
-                                        final defaultCamera =
-                                            cameras.firstWhere(
-                                          (camera) =>
-                                              camera.lensDirection ==
-                                              CameraLensDirection.front,
-                                        );
-
-                                        // Navigate to the CapturePhoto screen, passing the list of cameras
-                                        Get.to(() => CapturePhoto(
-                                              cameras: cameras,
-                                              // Pass all available cameras
-                                              camera: defaultCamera,
-                                              // Initial camera (front)
-                                              callBack: () {
-                                                pickImageFromCamera();
-                                              },
-                                            ));
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Container(
-                                decoration: BoxDecoration(
-                                    border:
-                                        Border.all(color: AppColor.borderColor),
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: Column(
-                                  children: [
-                                    SizedBox(
-                                      height: 8.h,
-                                    ),
-                                    CustomDateField(
-                                      labelText: 'Visit Date',
-                                      hint: 'Select',
-                                      isRequired: true,
-                                      callB: () {},
-                                      selectedDate:
-                                          controller.visitDateController,
-                                      filledColor: Colors.white,
-                                      dontDhowPrefix: false,
-                                    ),
-                                    SizedBox(
-                                      height: 8.h,
-                                    ),
-                                    CustomDateField(
-                                      labelText: 'Visit Time',
-                                      hint: 'Select',
-                                      isRequired: true,
-                                      callB: () {
-                                        selectTime(context);
-                                      },
-                                      selectedDate:
-                                          controller.visitTimeController,
-                                      filledColor: Colors.white,
-                                      dontDhowPrefix: false,
-                                    ),
-                                    SizedBox(height: 8.h),
-                                    CustomTextField(
-                                        fontSize: 16.sp,
-                                        maxLines: 1,
-                                        isReadOnly: true,
-                                        keyBoardType: TextInputType.name,
-                                        labelText:
-                                            'Last Dialysis Session Under The Scheme',
-                                        hintText: 'Select',
-                                        isRequired: false,
-                                        txtController:
-                                            controller.lastDiaSession,
-                                        fillColor: Colors.white),
-                                    SizedBox(height: 8.h),
-                                    MyCustomDropdown(
-                                        selectedItem: selectedCurrentDiaSession,
-                                        labelText:
-                                            'Current Dialysis Session Under The Scheme',
-                                        items: controller
-                                                .schemaAdoptedModel?.data
-                                                ?.map((e) => e.lookupDetDescEn)
-                                                .toList() ??
-                                            [],
-                                        hint: 'Select',
-                                        isRequired: false,
-                                        senValue: (value) {
-                                          selectedCurrentDiaSession = value;
-                                          schedularController
-                                                  .selectedSchemeObj =
-                                              controller
-                                                  .schemaAdoptedModel?.data
-                                                  ?.firstWhere((e) =>
-                                                      e.lookupDetDescEn ==
-                                                      value);
-                                          controller.refreshUi();
-                                        },
-                                        filledColor: Colors.white),
-                                    if (schedularController.visitorEntryData
-                                                ?.pendingData?[1] !=
-                                            null &&
-                                        schedularController.visitorEntryData
-                                                ?.pendingData?[0] ==
-                                            null)
-                                      CustomText(
-                                              text:
-                                                  "Pending Session ${schedularController.visitorEntryData?.pendingData?[1] ?? "NA"}",
-                                              fontSize: 14.sp,
-                                              fontWeight: FontWeight.normal,
-                                              textColor: AppColor.red,
-                                              textAlign: TextAlign.start)
-                                          .paddingSymmetric(horizontal: 8),
-                                    SizedBox(height: 8.h),
-                                    if (schedularController.visitorEntryData
-                                                ?.pendingData?[0] !=
-                                            null &&
-                                        schedularController.visitorEntryData
-                                                ?.pendingData?[1] !=
-                                            null)
-                                      CustomText(
-                                              text:
-                                                  "Effective Date ${schedularController.visitorEntryData?.pendingData?[0]} and Pending Session ${schedularController.visitorEntryData?.pendingData?[1]}",
-                                              fontSize: 14.sp,
-                                              fontWeight: FontWeight.normal,
-                                              textColor: AppColor.red,
-                                              textAlign: TextAlign.start)
-                                          .paddingSymmetric(horizontal: 8.w),
-                                    SizedBox(height: 8.h),
-                                    Visibility(
-                                      visible: selectedCurrentDiaSession ==
-                                          'Non MJPJAY',
-                                      child: CustomTextField(
-                                          mazLenght: 500,
-                                          maxLines: 1,
-                                          fontSize: 16.sp,
-                                          isReadOnly: false,
-                                          keyBoardType: TextInputType.text,
-                                          labelText:
-                                              'Reason for not registered on MJPJAY',
-                                          hintText: 'Enter',
-                                          isRequired: true,
-                                          txtController: controller.reason,
-                                          fillColor: Colors.white),
-                                    ),
-                                    SizedBox(height: 8.h),
-                                    CustomTextField(
-                                        maxLines: 1,
-                                        fontSize: 16.sp,
-                                        isReadOnly: true,
-                                        keyBoardType: TextInputType.name,
-                                        labelText: 'ABHA No',
-                                        hintText: 'Select',
-                                        isRequired: false,
-                                        txtController: controller.abhaId,
-                                        fillColor: Colors.white),
-                                    Visibility(
-                                      // visible: selectedCurrentDiaSession ==
-                                      //     "MJPJAY(Mahatma Jyotirao Phule Jan Arogya Yojana)",
-                                      visible: schedularController
-                                              .visitorEntryData
-                                              ?.packageMasterData !=
-                                          null,
-                                      child: Column(
-                                        children: [
-                                          SizedBox(height: 8.h),
-                                          CustomTextField(
-                                              fontSize: 16.sp,
-                                              maxLines: 1,
-                                              isReadOnly: true,
-                                              keyBoardType: TextInputType.name,
-                                              labelText: 'MJPJAY Enrollment Id',
-                                              hintText: 'Enter',
-                                              isRequired: false,
-                                              txtController:
-                                                  controller.enrollNo,
-                                              fillColor: Colors.white),
-                                          SizedBox(height: 8.h),
-                                          CustomDateField(
-                                            labelText: 'Pre Auth Approval Date',
-                                            hint: 'Select',
-                                            isRequired: true,
-                                            callB: () {
-                                              // selectFromDate();
-                                            },
-                                            selectedDate: controller
-                                                .preAuthApprovalDateController,
-                                            filledColor: Colors.white,
-                                            dontDhowPrefix: false,
-                                          ),
-                                          SizedBox(height: 8.h),
-                                          CustomTextField(
-                                              fontSize: 16.sp,
-                                              maxLines: 1,
-                                              isReadOnly: true,
-                                              keyBoardType: TextInputType.text,
-                                              labelText: 'Pre Auth Number',
-                                              hintText: 'Enter',
-                                              isRequired: false,
-                                              txtController:
-                                                  controller.preAuthNumber,
-                                              fillColor: Colors.white),
-                                          SizedBox(height: 8.h),
-                                          CustomTextField(
-                                              fontSize: 16.sp,
-                                              maxLines: 1,
-                                              // mazLenght: 4,
-                                              isReadOnly: true,
-                                              keyBoardType: TextInputType.text,
-                                              labelText: 'MJPJAY Case Number',
-                                              hintText: 'Enter',
-                                              isRequired: false,
-                                              txtController:
-                                                  controller.caseNumber,
-                                              fillColor: Colors.white),
-                                          SizedBox(height: 8.h),
-                                          CustomTextField(
-                                              fontSize: 16.sp,
-                                              maxLines: 1,
-                                              // mazLenght: 4,
-                                              isReadOnly: false,
-                                              keyBoardType: TextInputType.text,
-                                              labelText: 'MJPJAY Claim Number',
-                                              hintText: 'Enter',
-                                              isRequired: false,
-                                              txtController:
-                                                  controller.claimNumber,
-                                              fillColor: Colors.white),
-                                          SizedBox(height: 8.h),
-                                          CustomTextField(
-                                              fontSize: 16.sp,
-                                              maxLines: 1,
-                                              isReadOnly: false,
-                                              // mazLenght: 4,
-                                              keyBoardType:
-                                                  TextInputType.number,
-                                              labelText: 'IP Number',
-                                              hintText: 'Enter',
-                                              isRequired: false,
-                                              txtController:
-                                                  controller.ipNumber,
-                                              fillColor: Colors.white),
-                                          SizedBox(height: 8.h),
-                                          CustomTextField(
-                                              fontSize: 16.sp,
-                                              maxLines: 1,
-                                              isReadOnly: true,
-                                              // mazLenght: 4,
-                                              keyBoardType:
-                                                  TextInputType.number,
-                                              labelText:
-                                                  'Session CountPackage Wise',
-                                              hintText: '',
-                                              isRequired: false,
-                                              txtController:
-                                                  controller.sessionCount,
-                                              fillColor: Colors.white),
-                                          SizedBox(height: 8.h),
-                                        ],
-                                      ),
-                                    ),
-                                    Row(
-                                      children: [
-                                        Checkbox(
-                                          activeColor:
-                                              AppColor.primaryBackgroundColor,
-                                          value: controller
-                                              .oxygenSupply?.isSelected,
-                                          // Boolean value for checkbox state
-                                          onChanged: (bool? newValue) {
-                                            controller.oxygenSupply
-                                                ?.isSelected = newValue;
-                                            setState(() {});
-                                          },
-                                        ),
-                                        Expanded(
-                                          child: RichText(
-                                            text: TextSpan(
-                                              children: [
-                                                TextSpan(
-                                                  text: controller.oxygenSupply
-                                                          ?.checkTitle ??
-                                                      "", // Main text
-                                                  style: TextStyle(
-                                                    fontSize: 16.sp,
-                                                    color: Colors.black,
-                                                  ),
-                                                ),
-                                                TextSpan(
-                                                  text:
-                                                      " *", // Asterisk with red color
-                                                  style: TextStyle(
-                                                    fontSize: 16.sp,
-                                                    color: AppColor.red,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Checkbox(
-                                          activeColor:
-                                              AppColor.primaryBackgroundColor,
-                                          value: controller
-                                              .fuelAvailable?.isSelected,
-                                          // Boolean value for checkbox state
-                                          onChanged: (bool? newValue) {
-                                            controller.fuelAvailable
-                                                ?.isSelected = newValue;
-                                            setState(() {});
-                                          },
-                                        ),
-                                        Expanded(
-                                          child: RichText(
-                                            text: TextSpan(
-                                              children: [
-                                                TextSpan(
-                                                  text: controller.fuelAvailable
-                                                          ?.checkTitle ??
-                                                      "", // Main text
-                                                  style: TextStyle(
-                                                    fontSize: 16.sp,
-                                                    color: Colors.black,
-                                                  ),
-                                                ),
-                                                TextSpan(
-                                                  text:
-                                                      " *", // Asterisk with red color
-                                                  style: TextStyle(
-                                                    fontSize: 16.sp,
-                                                    color: AppColor.red,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Visibility(
-                                      visible: selectedCurrentDiaSession !=
-                                          "MJPJAY(Mahatma Jyotirao Phule Jan Arogya Yojana )",
-                                      child: Row(
-                                        children: [
-                                          Checkbox(
-                                            activeColor:
-                                                AppColor.primaryBackgroundColor,
-                                            value: controller
-                                                .ironSucrose?.isSelected,
-                                            // Boolean value for checkbox state
-                                            onChanged: (bool? newValue) {
-                                              controller.ironSucrose
-                                                  ?.isSelected = newValue;
-                                              setState(() {});
-                                            },
-                                          ),
-                                          Expanded(
-                                            child: RichText(
-                                              text: TextSpan(
-                                                children: [
-                                                  TextSpan(
-                                                    text: controller.ironSucrose
-                                                            ?.checkTitle ??
-                                                        "", // Main text
-                                                    style: TextStyle(
-                                                      fontSize: 16.sp,
-                                                      color: Colors.black,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Visibility(
-                                      visible: selectedCurrentDiaSession !=
-                                          "MJPJAY(Mahatma Jyotirao Phule Jan Arogya Yojana )",
-                                      child: Row(
-                                        children: [
-                                          Checkbox(
-                                            activeColor:
-                                                AppColor.primaryBackgroundColor,
-                                            value: controller.eop?.isSelected,
-                                            // Boolean value for checkbox state
-                                            onChanged: (bool? newValue) {
-                                              controller.eop?.isSelected =
-                                                  newValue;
-                                              setState(() {});
-                                            },
-                                          ),
-                                          Expanded(
-                                            child: RichText(
-                                              text: TextSpan(
-                                                children: [
-                                                  TextSpan(
-                                                    text: controller
-                                                            .eop?.checkTitle ??
-                                                        "", // Main text
-                                                    style: TextStyle(
-                                                      fontSize: 16.sp,
-                                                      color: Colors.black,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Visibility(
-                                      visible: selectedCurrentDiaSession !=
-                                          "MJPJAY(Mahatma Jyotirao Phule Jan Arogya Yojana )",
-                                      child: UploadDocumentVisitorEntry(
-                                        fileData: controller.uploadImage,
-                                        onFilePick: () {
-                                          pickFile(
-                                              controller.uploadImage, false);
-                                        },
-                                        onFileDelete: () {
-                                          controller.uploadImage.isSelected =
-                                              false;
-                                          controller.uploadImage.file = null;
-                                          setState(() {});
-                                        },
-                                        imgNameCallBack: (value) {
-                                          controller.uploadImage.docName =
-                                              value;
-                                        },
-                                        isViewPatient: false,
-                                      ).paddingOnly(top: 4.h, bottom: 12.h),
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        CustomButton(
-                                          primColor:
-                                              AppColor.primaryBackgroundColor,
-                                          secColor: AppColor.secondaryColor,
-                                          textColor: Colors.white,
-                                          iconColor: Colors.white,
-                                          buttonText: 'Save & Next',
-                                          path: 'assets/save-next.png',
-                                          callB: () async {
-                                            DateTime parsedDate =
-                                                DateFormat("dd-MM-yyyy").parse(
-                                                    controller
-                                                        .visitDateController
-                                                        .text);
-
-                                            String visitorDate =
-                                                DateFormat("yyyy-MM-dd")
-                                                    .format(parsedDate);
-
-                                            if (formKey.currentState
-                                                    ?.validate() ??
-                                                false) {
-                                              if (controller.oxygenSupply
-                                                          ?.isSelected ==
-                                                      true &&
-                                                  controller.fuelAvailable
-                                                          ?.isSelected ==
-                                                      true) {
-                                                Get.to(BookBedScreen(
-                                                  patientData:
-                                                      widget.patientData,
-                                                  slot: widget.slot,
-                                                  visitorDate: visitorDate,
-                                                  isIronSelected: controller
-                                                      .ironSucrose?.isSelected,
-                                                  isEpoSelected: controller
-                                                      .eop?.isSelected,
-                                                ));
-                                              } else {
-                                                CustomMessage.toast(
-                                                    "Please select checkbox");
-                                              }
-                                            }
-                                          },
-                                          buttonWidth: 140.w,
-                                        ),
-                                        SizedBox(
-                                          width: 10.w,
-                                        ),
-                                        CustomButton(
-                                          buttonText: 'Cancel',
-                                          path: 'assets/cancel.png',
-                                          callB: () {
-                                            Get.back();
-                                          },
-                                          buttonWidth: 100.w,
-                                          primColor: AppColor.red,
-                                          secColor: AppColor.red,
-                                          textColor: Colors.white,
-                                          iconColor: Colors.white,
-                                        )
-                                      ],
-                                    ).paddingOnly(bottom: 8.h)
-                                  ],
-                                ),
-                              ).paddingSymmetric(
-                                  vertical: 10.h, horizontal: 10.w)
-                            ],
+                ? const VisitorEntryShimmer()
+                : SingleChildScrollView(
+              child: Form(
+                key: formKey,
+                child: Column(
+                  children: [
+                    SizedBox(height: 8.h),
+                    Center(
+                      child: CircleAvatar(
+                        radius: 50,
+                        backgroundImage: image == null
+                            ? const AssetImage(
+                            "assets/profile-placeholder.png")
+                            : FileImage(image!),
+                      ),
+                    ),
+                    SizedBox(height: 8.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: 35.w,
+                          height: 35.h,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            gradient: LinearGradient(
+                              colors: [
+                                AppColor.primaryBackgroundColor,
+                                AppColor.secondaryColor
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomCenter,
+                            ),
+                          ),
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.edit,
+                              size: 15,
+                              color: Colors.white,
+                            ),
+                            onPressed: () {
+                              _pickImageFromDevice();
+                            },
                           ),
                         ),
-                      )
+                        SizedBox(
+                          width: 6.w,
+                        ),
+                        Container(
+                          width: 35.w,
+                          height: 35.h,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            gradient: LinearGradient(
+                              colors: [
+                                AppColor.primaryBackgroundColor,
+                                AppColor.secondaryColor
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomCenter,
+                            ),
+                          ),
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.camera_alt_outlined,
+                              size: 15,
+                              color: Colors.white,
+                            ),
+                            onPressed: () async {
+                              // final cameras = await availableCameras();
+                              //
+                              // final frontCamera = cameras.firstWhere(
+                              //   (camera) =>
+                              //       camera.lensDirection ==
+                              //       CameraLensDirection.front,
+                              // );
+                              // Get.to(() => CapturePhoto(
+                              //       camera: frontCamera,
+                              //       callBack: () {
+                              //         pickImageFromCamera();
+                              //       },
+                              //     ));
+
+                              // Get the list of available cameras
+                              final cameras =
+                              await availableCameras();
+
+                              // Optionally select a default camera (e.g., front camera)
+                              final defaultCamera =
+                              cameras.firstWhere(
+                                    (camera) =>
+                                camera.lensDirection ==
+                                    CameraLensDirection.front,
+                              );
+
+                              // Navigate to the CapturePhoto screen, passing the list of cameras
+                              Get.to(() => CapturePhoto(
+                                cameras: cameras,
+                                // Pass all available cameras
+                                camera: defaultCamera,
+                                // Initial camera (front)
+                                callBack: () {
+                                  pickImageFromCamera();
+                                },
+                              ));
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                          border:
+                          Border.all(color: AppColor.borderColor),
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 8.h,
+                          ),
+                          CustomDateField(
+                            labelText: 'Visit Date',
+                            hint: 'Select',
+                            isRequired: true,
+                            callB: () {},
+                            selectedDate:
+                            controller.visitDateController,
+                            filledColor: Colors.white,
+                            dontDhowPrefix: false,
+                          ),
+                          SizedBox(
+                            height: 8.h,
+                          ),
+                          CustomDateField(
+                            labelText: 'Visit Time',
+                            hint: 'Select',
+                            isRequired: true,
+                            callB: () {
+                              selectTime(context);
+                            },
+                            selectedDate:
+                            controller.visitTimeController,
+                            filledColor: Colors.white,
+                            dontDhowPrefix: false,
+                          ),
+                          SizedBox(height: 8.h),
+                          CustomTextField(
+                              fontSize: 16.sp,
+                              maxLines: 1,
+                              isReadOnly: true,
+                              keyBoardType: TextInputType.name,
+                              labelText:
+                              'Last Dialysis Session Under The Scheme',
+                              hintText: 'Select',
+                              isRequired: false,
+                              txtController:
+                              controller.lastDiaSession,
+                              fillColor: Colors.white),
+                          SizedBox(height: 8.h),
+                          MyCustomDropdown(
+                              selectedItem: selectedCurrentDiaSession,
+                              labelText:
+                              'Current Dialysis Session Under The Scheme',
+                              items: controller
+                                  .schemaAdoptedModel?.data
+                                  ?.map((e) => e.lookupDetDescEn)
+                                  .toList() ??
+                                  [],
+                              hint: 'Select',
+                              isRequired: false,
+                              senValue: (value) {
+                                selectedCurrentDiaSession = value;
+                                schedularController
+                                    .selectedSchemeObj =
+                                    controller
+                                        .schemaAdoptedModel?.data
+                                        ?.firstWhere((e) =>
+                                    e.lookupDetDescEn ==
+                                        value);
+                                controller.refreshUi();
+                              },
+                              filledColor: Colors.white),
+                          if (schedularController.visitorEntryData
+                              ?.pendingData?[1] !=
+                              null &&
+                              schedularController.visitorEntryData
+                                  ?.pendingData?[0] ==
+                                  null)
+                            CustomText(
+                                text:
+                                "Pending Session ${schedularController.visitorEntryData?.pendingData?[1] ?? "NA"}",
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.normal,
+                                textColor: AppColor.red,
+                                textAlign: TextAlign.start)
+                                .paddingSymmetric(horizontal: 8),
+                          SizedBox(height: 8.h),
+                          if (schedularController.visitorEntryData
+                              ?.pendingData?[0] !=
+                              null &&
+                              schedularController.visitorEntryData
+                                  ?.pendingData?[1] !=
+                                  null)
+                            CustomText(
+                                text:
+                                "Effective Date ${schedularController.visitorEntryData?.pendingData?[0]} and Pending Session ${schedularController.visitorEntryData?.pendingData?[1]}",
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.normal,
+                                textColor: AppColor.red,
+                                textAlign: TextAlign.start)
+                                .paddingSymmetric(horizontal: 8.w),
+                          SizedBox(height: 8.h),
+                          Visibility(
+                            visible: selectedCurrentDiaSession ==
+                                'Non MJPJAY',
+                            child: CustomTextField(
+                                mazLenght: 500,
+                                maxLines: 1,
+                                fontSize: 16.sp,
+                                isReadOnly: false,
+                                keyBoardType: TextInputType.text,
+                                labelText:
+                                'Reason for not registered on MJPJAY',
+                                hintText: 'Enter',
+                                isRequired: true,
+                                txtController: controller.reason,
+                                fillColor: Colors.white),
+                          ),
+                          SizedBox(height: 8.h),
+                          CustomTextField(
+                              maxLines: 1,
+                              fontSize: 16.sp,
+                              isReadOnly: true,
+                              keyBoardType: TextInputType.name,
+                              labelText: 'ABHA No',
+                              hintText: 'Select',
+                              isRequired: false,
+                              txtController: controller.abhaId,
+                              fillColor: Colors.white),
+                          // Visibility(
+                          //   // visible: selectedCurrentDiaSession ==
+                          //   //     "MJPJAY(Mahatma Jyotirao Phule Jan Arogya Yojana)",
+                          //   visible: schedularController
+                          //           .visitorEntryData
+                          //           ?.packageMasterData !=
+                          //       null,
+                          //   child: Column(
+                          //     children: [
+                          //       SizedBox(height: 8.h),
+                          //       CustomTextField(
+                          //           fontSize: 16.sp,
+                          //           maxLines: 1,
+                          //           isReadOnly: true,
+                          //           keyBoardType: TextInputType.name,
+                          //           labelText: 'MJPJAY Enrollment Id',
+                          //           hintText: 'Enter',
+                          //           isRequired: false,
+                          //           txtController:
+                          //               controller.enrollNo,
+                          //           fillColor: Colors.white),
+                          //       SizedBox(height: 8.h),
+                          //       CustomDateField(
+                          //         labelText: 'Pre Auth Approval Date',
+                          //         hint: 'Select',
+                          //         isRequired: true,
+                          //         callB: () {
+                          //           // selectFromDate();
+                          //         },
+                          //         selectedDate: controller
+                          //             .preAuthApprovalDateController,
+                          //         filledColor: Colors.white,
+                          //         dontDhowPrefix: false,
+                          //       ),
+                          //       SizedBox(height: 8.h),
+                          //       CustomTextField(
+                          //           fontSize: 16.sp,
+                          //           maxLines: 1,
+                          //           isReadOnly: true,
+                          //           keyBoardType: TextInputType.text,
+                          //           labelText: 'Pre Auth Number',
+                          //           hintText: 'Enter',
+                          //           isRequired: false,
+                          //           txtController:
+                          //               controller.preAuthNumber,
+                          //           fillColor: Colors.white),
+                          //       SizedBox(height: 8.h),
+                          //       CustomTextField(
+                          //           fontSize: 16.sp,
+                          //           maxLines: 1,
+                          //           // mazLenght: 4,
+                          //           isReadOnly: true,
+                          //           keyBoardType: TextInputType.text,
+                          //           labelText: 'MJPJAY Case Number',
+                          //           hintText: 'Enter',
+                          //           isRequired: false,
+                          //           txtController:
+                          //               controller.caseNumber,
+                          //           fillColor: Colors.white),
+                          //       SizedBox(height: 8.h),
+                          //       CustomTextField(
+                          //           fontSize: 16.sp,
+                          //           maxLines: 1,
+                          //           // mazLenght: 4,
+                          //           isReadOnly: false,
+                          //           keyBoardType: TextInputType.text,
+                          //           labelText: 'MJPJAY Claim Number',
+                          //           hintText: 'Enter',
+                          //           isRequired: false,
+                          //           txtController:
+                          //               controller.claimNumber,
+                          //           fillColor: Colors.white),
+                          //       SizedBox(height: 8.h),
+                          //       CustomTextField(
+                          //           fontSize: 16.sp,
+                          //           maxLines: 1,
+                          //           isReadOnly: false,
+                          //           // mazLenght: 4,
+                          //           keyBoardType:
+                          //               TextInputType.number,
+                          //           labelText: 'IP Number',
+                          //           hintText: 'Enter',
+                          //           isRequired: false,
+                          //           txtController:
+                          //               controller.ipNumber,
+                          //           fillColor: Colors.white),
+                          //       SizedBox(height: 8.h),
+                          //       CustomTextField(
+                          //           fontSize: 16.sp,
+                          //           maxLines: 1,
+                          //           isReadOnly: true,
+                          //           // mazLenght: 4,
+                          //           keyBoardType:
+                          //               TextInputType.number,
+                          //           labelText:
+                          //               'Session CountPackage Wise',
+                          //           hintText: '',
+                          //           isRequired: false,
+                          //           txtController:
+                          //               controller.sessionCount,
+                          //           fillColor: Colors.white),
+                          //       SizedBox(height: 8.h),
+                          //     ],
+                          //   ),
+                          // ),
+                          Row(
+                            children: [
+                              Checkbox(
+                                activeColor:
+                                AppColor.primaryBackgroundColor,
+                                value: controller
+                                    .oxygenSupply?.isSelected,
+                                // Boolean value for checkbox state
+                                onChanged: (bool? newValue) {
+                                  controller.oxygenSupply
+                                      ?.isSelected = newValue;
+                                  setState(() {});
+                                },
+                              ),
+                              Expanded(
+                                child: RichText(
+                                  text: TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: controller.oxygenSupply
+                                            ?.checkTitle ??
+                                            "", // Main text
+                                        style: TextStyle(
+                                          fontSize: 16.sp,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text:
+                                        " *", // Asterisk with red color
+                                        style: TextStyle(
+                                          fontSize: 16.sp,
+                                          color: AppColor.red,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Checkbox(
+                                activeColor:
+                                AppColor.primaryBackgroundColor,
+                                value: controller
+                                    .fuelAvailable?.isSelected,
+                                // Boolean value for checkbox state
+                                onChanged: (bool? newValue) {
+                                  controller.fuelAvailable
+                                      ?.isSelected = newValue;
+                                  setState(() {});
+                                },
+                              ),
+                              Expanded(
+                                child: RichText(
+                                  text: TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: controller.fuelAvailable
+                                            ?.checkTitle ??
+                                            "", // Main text
+                                        style: TextStyle(
+                                          fontSize: 16.sp,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text:
+                                        " *", // Asterisk with red color
+                                        style: TextStyle(
+                                          fontSize: 16.sp,
+                                          color: AppColor.red,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Visibility(
+                            visible: selectedCurrentDiaSession !=
+                                "MJPJAY(Mahatma Jyotirao Phule Jan Arogya Yojana )",
+                            child: Row(
+                              children: [
+                                Checkbox(
+                                  activeColor:
+                                  AppColor.primaryBackgroundColor,
+                                  value: controller
+                                      .ironSucrose?.isSelected,
+                                  // Boolean value for checkbox state
+                                  onChanged: (bool? newValue) {
+                                    controller.ironSucrose
+                                        ?.isSelected = newValue;
+                                    setState(() {});
+                                  },
+                                ),
+                                Expanded(
+                                  child: RichText(
+                                    text: TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: controller.ironSucrose
+                                              ?.checkTitle ??
+                                              "", // Main text
+                                          style: TextStyle(
+                                            fontSize: 16.sp,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Visibility(
+                            visible: selectedCurrentDiaSession !=
+                                "MJPJAY(Mahatma Jyotirao Phule Jan Arogya Yojana )",
+                            child: Row(
+                              children: [
+                                Checkbox(
+                                  activeColor:
+                                  AppColor.primaryBackgroundColor,
+                                  value: controller.eop?.isSelected,
+                                  // Boolean value for checkbox state
+                                  onChanged: (bool? newValue) {
+                                    controller.eop?.isSelected =
+                                        newValue;
+                                    setState(() {});
+                                  },
+                                ),
+                                Expanded(
+                                  child: RichText(
+                                    text: TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: controller
+                                              .eop?.checkTitle ??
+                                              "", // Main text
+                                          style: TextStyle(
+                                            fontSize: 16.sp,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Visibility(
+                            visible: selectedCurrentDiaSession !=
+                                "MJPJAY(Mahatma Jyotirao Phule Jan Arogya Yojana )",
+                            child: UploadDocumentVisitorEntry(
+                              fileData: controller.uploadImage,
+                              onFilePick: () {
+                                pickFile(
+                                    controller.uploadImage, false);
+                              },
+                              onFileDelete: () {
+                                controller.uploadImage.isSelected =
+                                false;
+                                controller.uploadImage.file = null;
+                                setState(() {});
+                              },
+                              imgNameCallBack: (value) {
+                                controller.uploadImage.docName =
+                                    value;
+                              },
+                              isViewPatient: false,
+                            ).paddingOnly(top: 4.h, bottom: 12.h),
+                          ),
+                          Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment.center,
+                            children: [
+                              CustomButton(
+                                primColor:
+                                AppColor.primaryBackgroundColor,
+                                secColor: AppColor.secondaryColor,
+                                textColor: Colors.white,
+                                iconColor: Colors.white,
+                                buttonText: 'Save & Next',
+                                path: 'assets/save-next.png',
+                                callB: () async {
+                                  DateTime parsedDate =
+                                  DateFormat("dd-MM-yyyy").parse(
+                                      controller
+                                          .visitDateController
+                                          .text);
+
+                                  String visitorDate =
+                                  DateFormat("yyyy-MM-dd")
+                                      .format(parsedDate);
+
+                                  if (formKey.currentState
+                                      ?.validate() ??
+                                      false) {
+                                    if (controller.oxygenSupply
+                                        ?.isSelected ==
+                                        true &&
+                                        controller.fuelAvailable
+                                            ?.isSelected ==
+                                            true) {
+                                      Get.to(BookBedScreen(
+                                        patientData:
+                                        widget.patientData,
+                                        slot: widget.slot,
+                                        visitorDate: visitorDate,
+                                        isIronSelected: controller
+                                            .ironSucrose?.isSelected,
+                                        isEpoSelected: controller
+                                            .eop?.isSelected,
+                                      ));
+                                    } else {
+                                      CustomMessage.toast(
+                                          "Please select checkbox");
+                                    }
+                                  }
+                                },
+                                buttonWidth: 140.w,
+                              ),
+                              SizedBox(
+                                width: 10.w,
+                              ),
+                              CustomButton(
+                                buttonText: 'Cancel',
+                                path: 'assets/cancel.png',
+                                callB: () {
+                                  Get.back();
+                                },
+                                buttonWidth: 100.w,
+                                primColor: AppColor.red,
+                                secColor: AppColor.red,
+                                textColor: Colors.white,
+                                iconColor: Colors.white,
+                              )
+                            ],
+                          ).paddingOnly(bottom: 8.h)
+                        ],
+                      ),
+                    ).paddingSymmetric(
+                        vertical: 10.h, horizontal: 10.w)
+                  ],
+                ),
+              ),
+            )
                 : InternetIssue(
-                    onRetryPressed: () {
-                      checkInternetAndLoadData();
-                    },
-                  );
+              onRetryPressed: () {
+                checkInternetAndLoadData();
+              },
+            );
           }),
     );
   }
@@ -875,7 +875,7 @@ class _VisitorEntryState extends State<VisitorEntry> {
       DateFormat formatter = DateFormat('dd/MM/yyyy');
       formattedFromDate = formatter.format(selectedFromDate!);
       schedularController.preAuthApprovalDateController.text =
-          formattedFromDate!;
+      formattedFromDate!;
       setState(() {});
       // calculateAge(formattedDateDBO);
       // });
@@ -907,11 +907,11 @@ class UploadDocumentVisitorEntry extends StatelessWidget {
 
   const UploadDocumentVisitorEntry(
       {super.key,
-      required this.fileData,
-      this.imgNameCallBack,
-      required this.onFilePick,
-      required this.onFileDelete,
-      required this.isViewPatient});
+        required this.fileData,
+        this.imgNameCallBack,
+        required this.onFilePick,
+        required this.onFileDelete,
+        required this.isViewPatient});
 
   @override
   Widget build(BuildContext context) {
@@ -959,8 +959,8 @@ class UploadDocumentVisitorEntry extends StatelessWidget {
             },
             viewCallBack: () {
               Get.to(() => CustomViewer(
-                    fileUrl: fileData.file!.path,
-                  ));
+                fileUrl: fileData.file!.path,
+              ));
               // }
             },
             isReq: fileData.isReq,

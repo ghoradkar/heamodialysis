@@ -8,7 +8,7 @@ import 'package:heamodialysis/dialysis_queue/post_dialysis/model/save_request_mo
 import 'package:heamodialysis/dialysis_queue/post_dialysis/model/start_date_and_time.dart';
 import 'package:heamodialysis/dialysis_queue/post_dialysis/model/post_dialysis_list_model.dart';
 import 'package:heamodialysis/dialysis_queue/post_dialysis/post_dialysis_screen.dart';
-import 'package:heamodialysis/nephro_desk_patient_list/edit_nephro/tabs/choose_package.dart';
+import 'package:heamodialysis/nephro_desk_patient_list/screen/edit_nephro/tabs/choose_package.dart';
 import 'package:heamodialysis/registered_patient_list/model/search_patient_dropdown/search_dropdown_list_model.dart';
 import 'package:heamodialysis/utils/api_names.dart';
 import 'package:heamodialysis/utils/api_urls.dart';
@@ -40,6 +40,7 @@ class PostDialysisController extends GetxController {
   TextEditingController doubleTxtController2 = TextEditingController();
   TextEditingController caseNarrationController = TextEditingController();
   TextEditingController rrfUrineController = TextEditingController();
+  TextEditingController cbvController = TextEditingController();
   TextEditingController heparinController = TextEditingController();
   TextEditingController dialyticFlowController = TextEditingController();
   TextEditingController actualFiberController = TextEditingController();
@@ -166,23 +167,21 @@ class PostDialysisController extends GetxController {
       }
     }
 
-
     // if (weight != null &&
     //     finalUfv != null &&
     //     duration != null &&
     //     duration > 0) {
-      double finalUfvInML = finalUfv * 1000;
+    double finalUfvInML = finalUfv * 1000;
 
-      // Correct formula
-      double ufv = finalUfvInML /
-          (duration! * weight);
+    // Correct formula
+    double ufv = finalUfvInML / (duration! * weight);
 
-      if (ufv.isFinite) {
-        urfController.text = ufv.toStringAsFixed(2);
-      } else {
-        // Set to empty string for safety/clarity if calculation fails
-        urfController.text = '';
-      }
+    if (ufv.isFinite) {
+      urfController.text = ufv.toStringAsFixed(2);
+    } else {
+      // Set to empty string for safety/clarity if calculation fails
+      urfController.text = '';
+    }
     // }
   }
 
@@ -300,8 +299,16 @@ class PostDialysisController extends GetxController {
       "Content-Type": "application/json",
     };
 
-    debugPrint(uri.path);
-    debugPrint(jsonbody);
+    debugPrint("Full URL: $uri");
+
+    // Full JSON body — chunked to avoid debugPrint truncation
+    debugPrint("===== API REQUEST BODY START =====");
+    const int chunkSize = 800;
+    for (int i = 0; i < jsonbody.length; i += chunkSize) {
+      debugPrint(jsonbody.substring(i,
+          i + chunkSize > jsonbody.length ? jsonbody.length : i + chunkSize));
+    }
+    debugPrint("===== API REQUEST BODY END =====");
 
     final response = await ioClient.post(uri, headers: headers, body: jsonbody);
     debugPrint(response.statusCode.toString());

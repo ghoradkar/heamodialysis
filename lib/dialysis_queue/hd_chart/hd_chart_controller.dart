@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
-import 'package:get/get.dart' show Get, GetNavigation, GetxController;
+import 'package:get/get.dart' show Get, GetNavigation, GetxController, ExtensionDialog;
 import 'package:heamodialysis/dialysis_queue/hd_chart/add_edit_hd_chart_screen.dart';
 import 'package:heamodialysis/dialysis_queue/hd_chart/hd_chart_list.dart';
 import 'package:heamodialysis/dialysis_queue/hd_chart/model/first_table_data_model.dart';
@@ -61,14 +61,16 @@ class HdChartController extends GetxController {
     update();
     final uri =
         Uri.parse(ApiConstants.baseUrl + ApiNames.savePatientHdChartPrm);
-
+    debugPrint("SECOND TABLE API URL : $uri");
     String jsonbody = json.encode(hdChart);
     Map<String, String> headers = {
       "Content-Type": "application/json",
     };
 
-    debugPrint(uri.path);
-    debugPrint(jsonbody);
+    debugPrint(" SECOND TABLE API URL : ${uri.path}");
+    // debugPrint(jsonbody);
+
+    debugPrint("SECOND TABLEAPI BODY:$jsonbody");
 
     final response = await ioClient.post(uri, headers: headers, body: jsonbody);
     debugPrint(response.statusCode.toString());
@@ -103,8 +105,9 @@ class HdChartController extends GetxController {
       "Content-Type": "application/json",
     };
 
-    debugPrint(uri.path);
-    debugPrint(jsonbody);
+    debugPrint(" FIRST TABLE API URL :${uri.path}");
+    debugPrint(" FIRST TABLE API URL :${uri}");
+    debugPrint("FIRST TABLE API BODY:$jsonbody");
 
     final response = await ioClient.post(uri, headers: headers, body: jsonbody);
     debugPrint(response.statusCode.toString());
@@ -314,4 +317,34 @@ class HdChartController extends GetxController {
       throw Exception('Failed getTableData');
     }
   }
+
+  clearAllFields() {
+    bolusDose.clear();
+    infusionDose.clear();
+    ctrlKtV.clear();
+    airDetLineClampController.clear();
+    alarmLimSet.clear();
+    hepPumpOn.clear();
+    dialysateFlow.clear();
+    dialysateTemp.clear();
+    concentrateNa.clear();
+    conductivity.clear();
+    injection.clear();
+    // Second table input भी empty
+    hdChartCardData.clear();
+    update();
+  }
+
+
+  void showSuccessPopup() {
+    Get.defaultDialog(
+      title: "Success",
+      middleText: "Data Saved Successfully!",
+      textConfirm: "OK",
+      onConfirm: () {
+        Get.back();
+      },
+    );
+  }
+
 }

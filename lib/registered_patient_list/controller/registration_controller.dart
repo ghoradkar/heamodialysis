@@ -65,88 +65,91 @@ class RegistrationController extends GetxController {
 
   checkScrutinyApproval(patientId) async {
     isLoading = true;
-    // final uri =
-    //     Uri.parse(ApiConstants.baseUrl4 + ApiConstants.getCentralDashboarCount);
+    update();
 
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl}${ApiNames.getApprovalStatus}?patientId=$patientId");
+    try {
+      final uri = Uri.parse(
+          "${ApiConstants.baseUrl}${ApiNames.getApprovalStatus}?patientId=$patientId");
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
+      Map<String, String> headers = {
+        "Content-Type": "application/json",
+      };
 
-    debugPrint(uri.path);
+      debugPrint(uri.path);
 
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
+      final response = await ioClient.get(uri, headers: headers);
+      debugPrint(response.statusCode.toString());
+      debugPrint("response.body : ${response.body}");
 
-    if (response.statusCode == 200) {
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        scrutinyType = data['UserType'];
+        approvalStat = data['ApprovalStatus'];
+      } else {
+        throw Exception('Failed getting getAnswers');
+      }
+    } catch (e) {
+      debugPrint("Error in checkScrutinyApproval: $e");
+      rethrow;
+    } finally {
       isLoading = false;
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      scrutinyType = data['UserType'];
-      approvalStat = data['ApprovalStatus'];
       update();
-    } else {
-      isLoading = false;
-      update();
-
-      throw Exception('Failed getting getAnswers');
     }
   }
 
 
   searchRegisteredPatient(String type, String input, unitId, String sId) async {
     isLoading = true;
-    final uri = Uri.parse(
-        ApiConstants.baseUrl + ApiNames.searchRegisteredPatientApi);
-
-
-
-    final Map<String, dynamic> body = {
-      "unitId": unitId,
-      "type": type,
-      "input": input,
-      "category": "",
-      "sId": sId,
-    };
-
-    String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-    debugPrint(body.toString());
-
-    final response = await ioClient.post(uri, headers: headers, body: jsonbody);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
-      isLoading = false;
-      valueController.text = "";
-
-      final data = json.decode(response.body);
-      if (data['status'] == 'Success') {
-        alreadyRegisteredPatient = AlreadyRegisteredPatient.fromJson(data);
-      } else {
-        isLoading = false;
-
-        status = data['status'];
-      }
-    } else if (response.statusCode == 401) {
-      isLoading = false;
-
-      status = "Something went wrong";
-    } else {
-      isLoading = false;
-
-      throw Exception('Failed search');
-    }
     update();
+
+    try {
+      final uri = Uri.parse(
+          ApiConstants.baseUrl + ApiNames.searchRegisteredPatientApi);
+
+      final Map<String, dynamic> body = {
+        "unitId": unitId,
+        "type": type,
+        "input": input,
+        "category": "",
+        "sId": sId,
+      };
+
+      String jsonbody = json.encode(body);
+      Map<String, String> headers = {
+        "Content-Type": "application/json",
+      };
+
+      debugPrint("Url Registration : ${uri.path}");
+      debugPrint("Url Registration : ${uri}");
+      debugPrint(body.toString());
+
+      final response = await ioClient.post(uri, headers: headers, body: jsonbody);
+      debugPrint(response.statusCode.toString());
+      debugPrint("response.body : ${response.body}");
+
+      if (response.statusCode == 200) {
+        valueController.text = "";
+        final data = json.decode(response.body);
+        if (data['status'] == 'Success') {
+          alreadyRegisteredPatient = AlreadyRegisteredPatient.fromJson(data);
+          print("response of registered user : ${alreadyRegisteredPatient!.data!.length}");
+          print("response of registered user : ${data}");
+          print("response of registered user : ${alreadyRegisteredPatient!.data![0].patientId}");
+        } else {
+          status = data['status'];
+        }
+      } else if (response.statusCode == 401) {
+        status = "Something went wrong";
+      } else {
+        throw Exception('Failed search');
+      }
+    } catch (e) {
+      debugPrint("Error in searchRegisteredPatient: $e");
+      rethrow;
+    } finally {
+      isLoading = false;
+      update();
+    }
   }
 
   refreshUi() {

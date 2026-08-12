@@ -92,7 +92,7 @@ class _ImageViewState extends State<ImageView> {
     ).paddingSymmetric(vertical: 10, horizontal: 10)
         : InternetIssue(onRetryPressed: () {
       checkInternetAndLoadData();
-    });
+    }, );
   }
 }
 

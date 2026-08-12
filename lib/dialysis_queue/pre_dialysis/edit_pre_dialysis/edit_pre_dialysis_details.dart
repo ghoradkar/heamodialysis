@@ -43,8 +43,12 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final NewRegistrationController newRegistrationController =
       Get.put(NewRegistrationController());
+  final ExpansionTileController expansionTileController =
+      ExpansionTileController();
+  final ExpansionTileController expansionTileController2 =
+      ExpansionTileController();
 
-  // DateTime? _selectedDate;
+  DateTime? _selectedDate;
 
   String prefixVal = '';
 
@@ -165,16 +169,18 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
             },
             child: Image.asset('assets/arrow-left.png')),
       ),
-      body: GetBuilder<PreDialysisController>(
+      body:
+      GetBuilder<PreDialysisController>(
           init: PreDialysisController(),
           builder: (controller) {
             return hasInternet
                 ? controller.isLoading
-                    ?  Center(child: buildShimmerLoader())
+                    ? const EditPreDialysisDetailsShimmer()
                     : SingleChildScrollView(
                         child: Form(
                           key: formKey,
                           child: Column(
+                            mainAxisSize: MainAxisSize.min,
                             children: [
                               PatientCardDetails(
                                 imagePath: buildProfileImage(),
@@ -184,22 +190,19 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
                                 },
                                 isExpanded: isExpanded,
                                 isFromAddPredialysis: true,
-                                // patientId:
-                                //     widget.preDialysisData.patientId.toString(),
+                                // patientId: widget.preDialysisData.patientId?.toString(),
                                 // patientName:
-                                //     widget.preDialysisData.fName.toString(),
-                                // gender: widget.preDialysisData.gender ?? "",
-                                // refDoc: widget
-                                //         .preDialysisData.referenceDoctorName ??
-                                //     "",
-                                // age: widget.preDialysisData.age.toString(),
-                                refBy: widget.preDialysisData.refByName ?? "",
-                                schemaAdopted:
-                                    widget.preDialysisData.procedureType ?? '',
+                                // '${widget.preDialysisData.fName ?? ''} ${widget.preDialysisData.lName ?? ''}',
+                                // gender: widget.preDialysisData.gender,
+                                // refDoc: widget.preDialysisData.referenceDoctorName,
+                                // age: widget.preDialysisData.age?.toString(),
+                                refBy:
+                                    widget.preDialysisData.refByName.toString(),
+                                schemaAdopted: widget
+                                    .preDialysisData.procedureType
+                                    .toString(),
                                 patientDetails:
                                     newRegistrationController.viewPatientModel,
-                                // patientDetailsModel: postDialysisController
-                                //     .patientDetailsModel?.dataEvent?.first,
                               ).paddingSymmetric(vertical: 10),
                               Theme(
                                   data: ThemeData().copyWith(
@@ -210,6 +213,9 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
                                         borderRadius:
                                             BorderRadius.circular(10)),
                                     child: ExpansionTile(
+                                      controller: expansionTileController,
+                                      // key: const PageStorageKey<String>('pre_dialysis_tile'),
+
                                       maintainState: true,
                                       collapsedIconColor: Colors.white,
                                       iconColor: Colors.white,
@@ -236,814 +242,13 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
                                                 BorderRadius.circular(10),
                                             // border: Border.all(color: Colors.grey)
                                           ),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.stretch,
-                                            children: [
-                                              const SizedBox(height: 16),
-                                              Container(
-                                                decoration: BoxDecoration(
-                                                    color: Colors.grey[50],
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10),
-                                                    border: Border.all(
-                                                        color: AppColor
-                                                            .borderColor)),
-                                                child: Column(
-                                                  children: [
-                                                    Row(
-                                                      children: [
-                                                        Expanded(
-                                                          child:
-                                                              MyCustomDropdown(
-                                                                  selectedItem:
-                                                                      selectedDialysisTypeVal,
-                                                                  labelText:
-                                                                      'Dialysis Type',
-                                                                  items: preDialysisController
-                                                                          .editPredialysisDetailsModel
-                                                                          ?.data
-                                                                          ?.map((e) => e
-                                                                              .lookupDetDescEn)
-                                                                          .toList() ??
-                                                                      [],
-                                                                  hint:
-                                                                      'Select',
-                                                                  isRequired:
-                                                                      true,
-                                                                  senValue:
-                                                                      (value) {
-                                                                    selectedEditPreDialysis = preDialysisController
-                                                                        .editPredialysisDetailsModel
-                                                                        ?.data
-                                                                        ?.firstWhere((e) =>
-                                                                            e.lookupDetDescEn ==
-                                                                            value);
-                                                                    selectedDialysisTypeVal =
-                                                                        selectedEditPreDialysis?.lookupDetDescEn ??
-                                                                            "";
-                                                                    preDialysisController
-                                                                        .refreshUi();
-                                                                  },
-                                                                  filledColor:
-                                                                      Colors
-                                                                          .white),
-                                                        ),
-                                                        const SizedBox(
-                                                            height: 8),
-                                                        Expanded(
-                                                          child:
-                                                              MyCustomDropdown(
-                                                                  selectedItem:
-                                                                      selectedAcessTypeValue,
-                                                                  labelText:
-                                                                      'Access Type',
-                                                                  items: preDialysisController
-                                                                          .accessTypeData
-                                                                          ?.data2
-                                                                          ?.map((e) => e
-                                                                              .lookupDetHierDescEn)
-                                                                          .toList() ??
-                                                                      [],
-                                                                  hint:
-                                                                      'Select',
-                                                                  isRequired:
-                                                                      true,
-                                                                  senValue:
-                                                                      (value) async {
-                                                                    selectedAccessSiteVal =
-                                                                        null;
-                                                                    controller
-                                                                        .update();
-                                                                    selectedAccessType = preDialysisController
-                                                                        .accessTypeData
-                                                                        ?.data2
-                                                                        ?.firstWhere((e) =>
-                                                                            e.lookupDetHierDescEn ==
-                                                                            value);
-                                                                    selectedAcessTypeValue =
-                                                                        selectedAccessType?.lookupDetHierDescEn ??
-                                                                            "";
-                                                                    String
-                                                                        lookupId =
-                                                                        selectedAccessType?.lookupDetHierId.toString() ??
-                                                                            "";
-                                                                    await preDialysisController
-                                                                        .getAccessTypeSite(
-                                                                            lookupId);
-                                                                    preDialysisController
-                                                                        .refreshUi();
-                                                                  },
-                                                                  filledColor:
-                                                                      Colors
-                                                                          .white),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    const SizedBox(height: 8),
-                                                    Row(
-                                                      children: [
-                                                        Expanded(
-                                                          child: Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .fromLTRB(
-                                                                    8, 0, 8, 8),
-                                                            child: Column(
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                Padding(
-                                                                  padding:
-                                                                      const EdgeInsets
-                                                                          .fromLTRB(
-                                                                          0,
-                                                                          8,
-                                                                          8,
-                                                                          8),
-                                                                  child: Row(
-                                                                    children: [
-                                                                      const Text(
-                                                                        "Access Site",
-                                                                        style: TextStyle(
-                                                                            fontSize:
-                                                                                16),
-                                                                      ),
-                                                                      Text(
-                                                                        ' *',
-                                                                        style:
-                                                                            TextStyle(
-                                                                          color:
-                                                                              AppColor.red,
-                                                                          fontSize:
-                                                                              16,
-                                                                        ),
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                                DropdownButtonFormField(
-                                                                  isExpanded:
-                                                                      true,
-                                                                  icon: Icon(
-                                                                    Icons
-                                                                        .keyboard_arrow_down_outlined,
-                                                                    color: AppColor
-                                                                        .primaryBackgroundColor,
-                                                                  ),
-                                                                  decoration:
-                                                                      InputDecoration(
-                                                                    hintText:
-                                                                        "Select",
-                                                                    filled:
-                                                                        true,
-                                                                    fillColor:
-                                                                        Colors
-                                                                            .white,
-                                                                    hintStyle: const TextStyle(
-                                                                        fontSize:
-                                                                            16.0,
-                                                                        color: Color(
-                                                                            0xff999999),
-                                                                        fontFamily:
-                                                                            "Lato",
-                                                                        fontWeight:
-                                                                            FontWeight.normal),
-                                                                    focusedBorder:
-                                                                        OutlineInputBorder(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              10.0),
-                                                                      borderSide:
-                                                                          BorderSide(
-                                                                        color: AppColor
-                                                                            .borderColor,
-                                                                      ),
-                                                                    ),
-                                                                        errorBorder: OutlineInputBorder(
-                                                                          borderRadius: BorderRadius.circular(10.0),
-                                                                          borderSide: BorderSide(
-                                                                            color: Colors.red, // Red border on all sides
-                                                                            width: 1.0,
-                                                                          ),
-                                                                        ),
-                                                                    enabledBorder:
-                                                                        OutlineInputBorder(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              10.0),
-                                                                      borderSide:
-                                                                          BorderSide(
-                                                                        color: AppColor
-                                                                            .borderColor,
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                  initialValue:
-                                                                      selectedAccessSiteVal,
-                                                                  items: preDialysisController
-                                                                      .accessTypeSiteModel
-                                                                      ?.data2
-                                                                      ?.map((item) =>
-                                                                          DropdownMenuItem(
-                                                                            value:
-                                                                                item.lookupDetHierId,
-                                                                            child:
-                                                                                Text(item.lookupDetHierDescEn ?? ""),
-                                                                          ))
-                                                                      .toList(),
-                                                                  onChanged:
-                                                                      (value) {
-                                                                    accessTypeSiteData = preDialysisController
-                                                                        .accessTypeSiteModel
-                                                                        ?.data2
-                                                                        ?.firstWhere((e) =>
-                                                                            e.lookupDetHierId ==
-                                                                            value);
-                                                                    selectedAccessSiteVal =
-                                                                        accessTypeSiteData
-                                                                            ?.lookupDetHierId;
-                                                                    preDialysisController
-                                                                        .refreshUi();
-                                                                  },
-                                                                  validator:
-                                                                      (value) {
-                                                                    if (value ==
-                                                                        null) {
-                                                                      return "Access Type is required";
-                                                                    }
-                                                                    return null;
-                                                                  },
-                                                                )
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        const SizedBox(
-                                                            height: 8),
-                                                        Expanded(
-                                                          child: MyCustomDropdown(
-                                                                  selectedItem:
-                                                                      selectedDialyzerTypeVal,
-                                                                  labelText:
-                                                                      'Dialyzer Type',
-                                                                  items: preDialysisController
-                                                                          .dialyzerTypeModel
-                                                                          ?.data
-                                                                          ?.map((e) => e
-                                                                              .lookupDetDescEn)
-                                                                          .toList() ??
-                                                                      [],
-                                                                  hint:
-                                                                      'Select',
-                                                                  isRequired:
-                                                                      true,
-                                                                  senValue:
-                                                                      (value) async {
-                                                                    dialyzerTypeData = preDialysisController
-                                                                        .dialyzerTypeModel
-                                                                        ?.data
-                                                                        ?.firstWhere((e) =>
-                                                                            e.lookupDetDescEn ==
-                                                                            value);
-                                                                    selectedDialyzerTypeVal =
-                                                                        dialyzerTypeData?.lookupDetDescEn ??
-                                                                            "";
-                                                                    await preDialysisController.getFiberBundle(dialyzerTypeData!
-                                                                        .lookupDetId
-                                                                        .toString());
-                                                                    preDialysisController
-                                                                        .refreshUi();
-                                                                  },
-                                                                  filledColor:
-                                                                      Colors
-                                                                          .white),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    const SizedBox(height: 8),
-                                                    CustomTextField(
-                                                      onChanged: (value) {},
-                                                      maxLines: 1,
-                                                      isReadOnly: true,
-                                                      keyBoardType:
-                                                          TextInputType.name,
-                                                      labelText:
-                                                          'Expected Fiber Bundle Volume',
-                                                      hintText: 'Enter',
-                                                      isRequired: false,
-                                                      txtController:
-                                                          preDialysisController
-                                                              .expectedFiber,
-                                                      fillColor: Colors.white,
-                                                      fontSize: 16,
-                                                    ),
-                                                    const SizedBox(height: 8),
-                                                    CustomRadioField(
-                                                      isRequired: true,
-                                                      radioCallB1: (value) {
-                                                        preDialysisController
-                                                            .groupVal1 = value;
-
-                                                        setState(() {});
-
-                                                        if (int.parse(
-                                                                preDialysisController
-                                                                    .dialyzerReuseNoController
-                                                                    .text) >
-                                                            1) {
-                                                          showAlertDialog(
-                                                              () {
-                                                                //cancel button
-                                                                preDialysisController
-                                                                        .groupVal1 =
-                                                                    CustomRadioButtons
-                                                                        .no;
-                                                                preDialysisController
-                                                                    .update();
-                                                                Get.back();
-                                                              },
-                                                              () {
-                                                                //confirmation button
-                                                                // selectedDialysisTypeVal= null;
-                                                                // selectedAcessTypeValue= null;
-                                                                // selectedAccessSiteVal= null;
-                                                                // selectedDialyzerTypeVal= null;
-                                                                preDialysisController
-                                                                    .dialyzerBarcodeController
-                                                                    .text = "";
-                                                                preDialysisController
-                                                                    .dialyzerReuseNoController
-                                                                    .text = "1";
-                                                                preDialysisController
-                                                                    .dialyzerRemark
-                                                                    .text = '';
-                                                                Get.back();
-                                                              },
-                                                              "Kindly enter discarded remarks before using new dialyser and blood tubing",
-                                                              "assets/info.png",
-                                                              false,
-                                                              () {},
-                                                              preDialysisController
-                                                                  .confirmationRemarkController,
-                                                              (value) {
-                                                                //remark field value
-                                                              });
-                                                        }
-                                                      },
-                                                      radioCallB2: (value) {
-                                                        preDialysisController
-                                                            .groupVal1 = value;
-                                                        setState(() {});
-                                                      },
-                                                      groupVal:
-                                                          preDialysisController
-                                                              .groupVal1,
-                                                      text: "New Dialyzer",
-                                                      firstRadioText: 'Yes',
-                                                      secondRadioText: 'No',
-                                                    ).paddingOnly(left: 8),
-                                                    const SizedBox(height: 8),
-                                                    Row(
-                                                      children: [
-                                                        Expanded(
-                                                          child:
-                                                              CustomTextField(
-                                                            onChanged:
-                                                                (value) {},
-                                                            labelText:
-                                                                'Dialyzer Barcode No',
-                                                            hintText: 'Enter',
-                                                            keyBoardType:
-                                                                TextInputType
-                                                                    .number,
-                                                            txtController:
-                                                                preDialysisController
-                                                                    .dialyzerBarcodeController,
-                                                            fillColor:
-                                                                Colors.white,
-                                                            isReadOnly: preDialysisController
-                                                                        .groupVal1 ==
-                                                                    CustomRadioButtons
-                                                                        .no
-                                                                ? true
-                                                                : false,
-                                                            maxLines: 1,
-                                                            isRequired: true,
-                                                            fontSize: 16,
-                                                          ),
-                                                        ),
-                                                        const SizedBox(
-                                                            height: 8),
-                                                        Expanded(
-                                                          child:
-                                                              CustomTextField(
-                                                            labelText:
-                                                                'Dialyzer Reuse No',
-                                                            hintText: 'Enter',
-                                                            keyBoardType:
-                                                                TextInputType
-                                                                    .number,
-                                                            txtController:
-                                                                preDialysisController
-                                                                    .dialyzerReuseNoController,
-                                                            fillColor:
-                                                                Colors.white,
-                                                            isReadOnly: true,
-                                                            maxLines: 1,
-                                                            isRequired: true,
-                                                            fontSize: 16,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    const SizedBox(height: 8),
-                                                    CustomTextField(
-                                                      onChanged: (value) {},
-                                                      maxLines: 1,
-                                                      isReadOnly: false,
-                                                      keyBoardType:
-                                                          TextInputType.name,
-                                                      labelText:
-                                                          'Dialyzer Remark',
-                                                      hintText: 'Enter',
-                                                      isRequired: false,
-                                                      txtController:
-                                                          preDialysisController
-                                                              .dialyzerRemark,
-                                                      fillColor: Colors.white,
-                                                      fontSize: 16,
-                                                    ),
-                                                    CustomRadioField(
-                                                      isRequired: true,
-                                                      radioCallB1: (value) {
-                                                        preDialysisController
-                                                            .groupVal2 = value;
-                                                        preDialysisController
-                                                            .dialyzerTubeReuseNoController
-                                                            .text = "1";
-                                                        preDialysisController
-                                                            .tubeRemark
-                                                            .text = "";
-                                                        preDialysisController
-                                                            .tubeBarcodeController
-                                                            .text = "";
-
-                                                        setState(() {});
-                                                      },
-                                                      radioCallB2: (value) {
-                                                        if (preDialysisController
-                                                                .groupVal2 ==
-                                                            CustomRadioButtons
-                                                                .yes) {
-                                                        } else {
-                                                          preDialysisController
-                                                                  .groupVal2 =
-                                                              value;
-                                                          setState(() {});
-                                                        }
-                                                      },
-                                                      groupVal:
-                                                          preDialysisController
-                                                              .groupVal2,
-                                                      text: 'New Blood Tubing',
-                                                      firstRadioText: 'Yes',
-                                                      secondRadioText: 'No',
-                                                    ).paddingOnly(
-                                                        left: 8, top: 6),
-                                                    const SizedBox(height: 6),
-                                                    Row(
-                                                      children: [
-                                                        Expanded(
-                                                          child:
-                                                              CustomTextField(
-                                                            onChanged: () {},
-                                                            labelText:
-                                                                'Tube Barcode No',
-                                                            hintText: 'Enter',
-                                                            keyBoardType:
-                                                                TextInputType
-                                                                    .number,
-                                                            txtController:
-                                                                preDialysisController
-                                                                    .tubeBarcodeController,
-                                                            fillColor:
-                                                                Colors.white,
-                                                            isReadOnly: preDialysisController
-                                                                        .groupVal2 ==
-                                                                    CustomRadioButtons
-                                                                        .no
-                                                                ? true
-                                                                : false,
-                                                            maxLines: 1,
-                                                            isRequired: true,
-                                                            fontSize: 16,
-                                                          ),
-                                                        ),
-                                                        const SizedBox(
-                                                            height: 8),
-                                                        Expanded(
-                                                          child:
-                                                              CustomTextField(
-                                                            labelText:
-                                                                'Tube Reuse No',
-                                                            hintText: 'Enter',
-                                                            keyBoardType:
-                                                                TextInputType
-                                                                    .number,
-                                                            txtController:
-                                                                preDialysisController
-                                                                    .dialyzerTubeReuseNoController,
-                                                            fillColor:
-                                                                Colors.white,
-                                                            isReadOnly: true,
-                                                            maxLines: 1,
-                                                            isRequired: true,
-                                                            fontSize: 16,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    const SizedBox(height: 8),
-                                                    CustomTextField(
-                                                      onChanged: (value) {},
-                                                      maxLines: 1,
-                                                      isReadOnly: false,
-                                                      keyBoardType:
-                                                          TextInputType.name,
-                                                      labelText:
-                                                          'Blood Tube Remark',
-                                                      hintText: 'Enter',
-                                                      isRequired: false,
-                                                      txtController:
-                                                          preDialysisController
-                                                              .tubeRemark,
-                                                      fillColor: Colors.white,
-                                                      fontSize: 16,
-                                                    ),
-                                                    const SizedBox(height: 8),
-                                                    Row(
-                                                      children: [
-                                                        Expanded(
-                                                          child:
-                                                              MyCustomDropdown(
-                                                                  labelText:
-                                                                      'Special Dialysis',
-                                                                  items: preDialysisController
-                                                                          .specialDialysisModel
-                                                                          ?.data
-                                                                          ?.map((e) => e
-                                                                              .lookupDetDescEn)
-                                                                          .toList() ??
-                                                                      [],
-                                                                  hint:
-                                                                      'Select',
-                                                                  isRequired:
-                                                                      false,
-                                                                  senValue:
-                                                                      (value) {
-                                                                    specialDialysisData = preDialysisController
-                                                                        .specialDialysisModel
-                                                                        ?.data
-                                                                        ?.firstWhere((e) =>
-                                                                            e.lookupDetDescEn ==
-                                                                            value);
-
-                                                                    preDialysisController
-                                                                        .refreshUi();
-                                                                  },
-                                                                  filledColor:
-                                                                      Colors
-                                                                          .white),
-                                                        ),
-                                                        const SizedBox(
-                                                            height: 8),
-                                                        Expanded(
-                                                          child:
-                                                              CustomTextField(
-                                                            onChanged:
-                                                                (value) async {
-                                                              if ((preDialysisController
-                                                                          .getPreDialysisDetailsModel!
-                                                                          .data![
-                                                                              0]
-                                                                          .tubeResueNo! ==
-                                                                      1) &&
-                                                                  (preDialysisController
-                                                                          .getPreDialysisDetailsModel!
-                                                                          .data![
-                                                                              0]
-                                                                          .dialyserResueNo! ==
-                                                                      1)) {
-                                                                preDialysisController
-                                                                    .weightGainController
-                                                                    .text = "NA";
-                                                                preDialysisController
-                                                                    .refreshUi();
-                                                              } else {
-                                                                await preDialysisController.getInterDialyticWeight(
-                                                                    widget
-                                                                        .preDialysisData
-                                                                        .patientId
-                                                                        .toString(),
-                                                                    widget
-                                                                        .preDialysisData
-                                                                        .treatmentId
-                                                                        .toString());
-
-                                                                var val = double
-                                                                    .parse(
-                                                                        value); // Use double to handle floating-point values
-                                                                // Handle the case where weight might be null
-                                                                var weight =
-                                                                    preDialysisController
-                                                                            .interDialyticWeight
-                                                                            ?.weight ??
-                                                                        0.0;
-                                                                var diff =
-                                                                    weight -
-                                                                        val;
-
-                                                                // Update the controller text with the difference
-
-                                                                preDialysisController
-                                                                        .weightGainController
-                                                                        .text =
-                                                                    diff.toString();
-                                                                preDialysisController
-                                                                    .refreshUi();
-                                                              }
-                                                            },
-                                                            maxLines: 1,
-                                                            isReadOnly: false,
-                                                            keyBoardType:
-                                                                TextInputType
-                                                                    .number,
-                                                            labelText:
-                                                                'Pre Dialysis Weight',
-                                                            hintText: 'Enter',
-                                                            isRequired: true,
-                                                            txtController:
-                                                                preDialysisController
-                                                                    .preDialyWeightController,
-                                                            fillColor:
-                                                                Colors.white,
-                                                            fontSize: 16,
-                                                          ),
-                                                        )
-                                                      ],
-                                                    ),
-                                                    const SizedBox(height: 8),
-                                                    Row(
-                                                      children: [
-                                                        Expanded(
-                                                          child:
-                                                              CustomTextField(
-                                                            onChanged:
-                                                                (value) {},
-                                                            maxLines: 1,
-                                                            isReadOnly: true,
-                                                            keyBoardType:
-                                                                TextInputType
-                                                                    .number,
-                                                            labelText:
-                                                                'Interdialytic Gain',
-                                                            hintText: 'Enter',
-                                                            isRequired: true,
-                                                            txtController:
-                                                                preDialysisController
-                                                                    .weightGainController,
-                                                            fillColor:
-                                                                Colors.white,
-                                                            fontSize: 16,
-                                                          ),
-                                                        ),
-                                                        const SizedBox(
-                                                            height: 8),
-                                                        Expanded(
-                                                          child:
-                                                              CustomTextField(
-                                                            onChanged:
-                                                                (value) {},
-                                                            maxLines: 1,
-                                                            isReadOnly: false,
-                                                            keyBoardType:
-                                                                TextInputType
-                                                                    .number,
-                                                            labelText:
-                                                                'Dry Weight',
-                                                            hintText: 'Enter',
-                                                            isRequired: true,
-                                                            txtController:
-                                                                preDialysisController
-                                                                    .dryWeightController,
-                                                            fillColor:
-                                                                Colors.white,
-                                                            fontSize: 16,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    const SizedBox(height: 8),
-                                                    CustomTextField(
-                                                      onChanged: (value) {},
-                                                      maxLines: 2,
-                                                      isReadOnly: false,
-                                                      keyBoardType:
-                                                          TextInputType.name,
-                                                      labelText:
-                                                          'Pre HD Condition',
-                                                      hintText: 'Enter',
-                                                      isRequired: false,
-                                                      txtController:
-                                                          preDialysisController
-                                                              .preConditionController,
-                                                      fillColor: Colors.white,
-                                                      fontSize: 16,
-                                                    ),
-                                                    const SizedBox(
-                                                      height: 8,
-                                                    ),
-                                                    Align(
-                                                      alignment:
-                                                          Alignment.centerRight,
-                                                      child: CustomButton(
-                                                        primColor: AppColor
-                                                            .primaryBackgroundColor,
-                                                        secColor: AppColor
-                                                            .secondaryColor,
-                                                        textColor: Colors.white,
-                                                        iconColor: Colors.white,
-                                                        buttonText:
-                                                            'View History',
-                                                        path: 'assets/eye.png',
-                                                        callB: () {
-                                                          Get.to(() =>
-                                                              PatientHistoryScreen(
-                                                                preDialysisData:
-                                                                    widget
-                                                                        .preDialysisData,
-                                                                historyList:
-                                                                    preDialysisController
-                                                                            .historyModel
-                                                                            ?.data2 ??
-                                                                        [],
-                                                              ));
-                                                        },
-                                                        buttonWidth: 140,
-                                                      ),
-                                                    ).paddingOnly(right: 4),
-                                                    const SizedBox(height: 12),
-                                                  ],
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  )),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Theme(
-                                  data: ThemeData().copyWith(
-                                      dividerColor: Colors.transparent),
-                                  child: Container(
-                                      decoration: BoxDecoration(
-                                          color: AppColor.darkBlue,
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                      child: ExpansionTile(
-                                        maintainState: true,
-                                        collapsedIconColor: Colors.white,
-                                        iconColor: Colors.white,
-                                        title: Row(children: [
-                                          Image.asset("assets/pulse-line.png"),
-                                          const SizedBox(width: 12),
-                                          const Text(
-                                            "Pre Dialysis Vitals",
-                                            style: TextStyle(
-                                                fontSize: 14.0,
-                                                color: Colors.white,
-                                                fontFamily: 'Lato'),
-                                          ),
-                                        ]),
-                                        children: <Widget>[
-                                          Container(
-                                            padding: const EdgeInsets.all(8),
-                                            decoration: BoxDecoration(
-                                                color: Colors.grey[50],
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                border: Border.all(
-                                                    color:
-                                                        AppColor.borderColor)),
+                                          child: SingleChildScrollView(
                                             child: Column(
+                                              // crossAxisAlignment:
+                                              //     CrossAxisAlignment.stretch,
                                               crossAxisAlignment:
-                                                  CrossAxisAlignment.stretch,
+                                                  CrossAxisAlignment.start,
+                                              mainAxisSize: MainAxisSize.min,
                                               children: [
                                                 const SizedBox(height: 16),
                                                 Container(
@@ -1058,67 +263,664 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
                                                   child: Column(
                                                     children: [
                                                       Row(
-                                                        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                         children: [
-                                                          DoubleTextField(
-                                                            labelText:
-                                                                'Blood Pressure\n(mmHg)',
-                                                            hintText1: 'Bottom',
-                                                            hintText2: 'Top',
-                                                            isRequired: true,
-                                                            keyBoardType:
-                                                                TextInputType
-                                                                    .number,
-                                                            txtController1:
-                                                                preDialysisController
-                                                                    .doubleTxtController1,
-                                                            txtController2:
-                                                                preDialysisController
-                                                                    .doubleTxtController2,
-                                                            fillColor:
-                                                                Colors.white,
-                                                            isReadOnly: false,
-                                                            maxLines: 1,
-                                                            onChange1:
-                                                                (value) {},
-                                                            onChange2:
-                                                                (value) {},
+                                                          // Expanded(
+                                                          //   child:
+                                                          Flexible(
+                                                            fit: FlexFit.loose,
+                                                            child:
+                                                                MyCustomDropdown(
+                                                                    selectedItem:
+                                                                        selectedDialysisTypeVal,
+                                                                    labelText:
+                                                                        'Dialysis Type',
+                                                                    items: preDialysisController
+                                                                            .editPredialysisDetailsModel
+                                                                            ?.data
+                                                                            ?.map((e) => e
+                                                                                .lookupDetDescEn)
+                                                                            .toList() ??
+                                                                        [],
+                                                                    hint:
+                                                                        'Select',
+                                                                    isRequired:
+                                                                        true,
+                                                                    senValue:
+                                                                        (value) {
+                                                                      selectedEditPreDialysis = preDialysisController
+                                                                          .editPredialysisDetailsModel
+                                                                          ?.data
+                                                                          ?.firstWhere((e) =>
+                                                                              e.lookupDetDescEn ==
+                                                                              value);
+                                                                      selectedDialysisTypeVal =
+                                                                          selectedEditPreDialysis?.lookupDetDescEn ??
+                                                                              "";
+                                                                      preDialysisController
+                                                                          .refreshUi();
+                                                                    },
+                                                                    filledColor:
+                                                                        Colors
+                                                                            .white),
                                                           ),
                                                           const SizedBox(
                                                               height: 8),
-                                                          Expanded(
+                                                          // Expanded(
+                                                          //   child:
+                                                          Flexible(
+                                                            fit: FlexFit.loose,
                                                             child:
-                                                                CustomTextField(
-                                                              maxLines: 1,
-                                                              isReadOnly: false,
-                                                              keyBoardType:
-                                                                  TextInputType
-                                                                      .number,
-                                                              labelText:
-                                                                  'Pulse\n(Beats/min)',
-                                                              hintText: 'Enter',
-                                                              isRequired: true,
-                                                              txtController:
-                                                                  preDialysisController
-                                                                      .pulseLevel,
-                                                              fillColor:
-                                                                  Colors.white,
-                                                              fontSize: 16,
-                                                            ),
+                                                                MyCustomDropdown(
+                                                                    selectedItem:
+                                                                        selectedAcessTypeValue,
+                                                                    labelText:
+                                                                        'Access Type',
+                                                                    items: preDialysisController
+                                                                            .accessTypeData
+                                                                            ?.data2
+                                                                            ?.map((e) => e
+                                                                                .lookupDetHierDescEn)
+                                                                            .toList() ??
+                                                                        [],
+                                                                    hint:
+                                                                        'Select',
+                                                                    isRequired:
+                                                                        true,
+                                                                    senValue:
+                                                                        (value) async {
+                                                                      selectedAccessSiteVal =
+                                                                          null;
+                                                                      controller
+                                                                          .update();
+                                                                      selectedAccessType = preDialysisController
+                                                                          .accessTypeData
+                                                                          ?.data2
+                                                                          ?.firstWhere((e) =>
+                                                                              e.lookupDetHierDescEn ==
+                                                                              value);
+                                                                      selectedAcessTypeValue =
+                                                                          selectedAccessType?.lookupDetHierDescEn ??
+                                                                              "";
+                                                                      String
+                                                                          lookupId =
+                                                                          selectedAccessType?.lookupDetHierId.toString() ??
+                                                                              "";
+                                                                      await preDialysisController
+                                                                          .getAccessTypeSite(
+                                                                              lookupId);
+                                                                      preDialysisController
+                                                                          .refreshUi();
+                                                                    },
+                                                                    filledColor:
+                                                                        Colors
+                                                                            .white),
                                                           ),
                                                         ],
                                                       ),
                                                       const SizedBox(height: 8),
                                                       Row(
                                                         children: [
-                                                          Expanded(
+                                                          // Expanded(
+                                                          Flexible(
+                                                            fit: FlexFit.loose,
+                                                            child: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .fromLTRB(
+                                                                      8,
+                                                                      0,
+                                                                      8,
+                                                                      8),
+                                                              child: Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Padding(
+                                                                    padding:
+                                                                        const EdgeInsets
+                                                                            .fromLTRB(
+                                                                            0,
+                                                                            8,
+                                                                            8,
+                                                                            8),
+                                                                    child: Row(
+                                                                      children: [
+                                                                        const Text(
+                                                                          "Access Site",
+                                                                          style:
+                                                                              TextStyle(fontSize: 16),
+                                                                        ),
+                                                                        Text(
+                                                                          ' *',
+                                                                          style:
+                                                                              TextStyle(
+                                                                            color:
+                                                                                AppColor.red,
+                                                                            fontSize:
+                                                                                16,
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                  DropdownButtonFormField(
+                                                                    isExpanded:
+                                                                        true,
+                                                                    icon: Icon(
+                                                                      Icons
+                                                                          .keyboard_arrow_down_outlined,
+                                                                      color: AppColor
+                                                                          .primaryBackgroundColor,
+                                                                    ),
+                                                                    decoration:
+                                                                        InputDecoration(
+                                                                      hintText:
+                                                                          "Select",
+                                                                      filled:
+                                                                          true,
+                                                                      fillColor:
+                                                                          Colors
+                                                                              .white,
+                                                                      hintStyle: const TextStyle(
+                                                                          fontSize:
+                                                                              16.0,
+                                                                          color: Color(
+                                                                              0xff999999),
+                                                                          fontFamily:
+                                                                              "Lato",
+                                                                          fontWeight:
+                                                                              FontWeight.normal),
+                                                                      focusedBorder:
+                                                                          OutlineInputBorder(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(10.0),
+                                                                        borderSide:
+                                                                            BorderSide(
+                                                                          color:
+                                                                              AppColor.borderColor,
+                                                                        ),
+                                                                      ),
+                                                                      errorBorder:
+                                                                          OutlineInputBorder(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(10.0),
+                                                                        borderSide:
+                                                                            BorderSide(
+                                                                          color:
+                                                                              Colors.red, // Red border on all sides
+                                                                          width:
+                                                                              1.0,
+                                                                        ),
+                                                                      ),
+                                                                      enabledBorder:
+                                                                          OutlineInputBorder(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(10.0),
+                                                                        borderSide:
+                                                                            BorderSide(
+                                                                          color:
+                                                                              AppColor.borderColor,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    initialValue:
+                                                                        selectedAccessSiteVal,
+                                                                    items: preDialysisController
+                                                                        .accessTypeSiteModel
+                                                                        ?.data2
+                                                                        ?.map((item) =>
+                                                                            DropdownMenuItem(
+                                                                              value: item.lookupDetHierId,
+                                                                              child: Text(item.lookupDetHierDescEn ?? ""),
+                                                                            ))
+                                                                        .toList(),
+                                                                    onChanged:
+                                                                        (value) {
+                                                                      accessTypeSiteData = preDialysisController
+                                                                          .accessTypeSiteModel
+                                                                          ?.data2
+                                                                          ?.firstWhere((e) =>
+                                                                              e.lookupDetHierId ==
+                                                                              value);
+                                                                      selectedAccessSiteVal =
+                                                                          accessTypeSiteData
+                                                                              ?.lookupDetHierId;
+                                                                      preDialysisController
+                                                                          .refreshUi();
+                                                                    },
+                                                                    validator:
+                                                                        (value) {
+                                                                      if (value ==
+                                                                          null) {
+                                                                        return "Access Type is required";
+                                                                      }
+                                                                      return null;
+                                                                    },
+                                                                  )
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          const SizedBox(
+                                                              height: 8),
+                                                          // Expanded(
+                                                          //   child:
+                                                          Flexible(
+                                                            fit: FlexFit.loose,
                                                             child:
-                                                                CustomTextFieldTemp(
-                                                              onUnitChanged:
-                                                                  (isFahrenheit) {
+                                                                MyCustomDropdown(
+                                                                    selectedItem:
+                                                                        selectedDialyzerTypeVal,
+                                                                    labelText:
+                                                                        'Dialyzer Type',
+                                                                    items: preDialysisController
+                                                                            .dialyzerTypeModel
+                                                                            ?.data
+                                                                            ?.map((e) => e
+                                                                                .lookupDetDescEn)
+                                                                            .toList() ??
+                                                                        [],
+                                                                    hint:
+                                                                        'Select',
+                                                                    isRequired:
+                                                                        true,
+                                                                    senValue:
+                                                                        (value) async {
+                                                                      dialyzerTypeData = preDialysisController
+                                                                          .dialyzerTypeModel
+                                                                          ?.data
+                                                                          ?.firstWhere((e) =>
+                                                                              e.lookupDetDescEn ==
+                                                                              value);
+                                                                      selectedDialyzerTypeVal =
+                                                                          dialyzerTypeData?.lookupDetDescEn ??
+                                                                              "";
+                                                                      await preDialysisController.getFiberBundle(dialyzerTypeData!
+                                                                          .lookupDetId
+                                                                          .toString());
+                                                                      preDialysisController
+                                                                          .refreshUi();
+                                                                    },
+                                                                    filledColor:
+                                                                        Colors
+                                                                            .white),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      const SizedBox(height: 8),
+                                                      CustomTextField(
+                                                        onChanged: (value) {},
+                                                        maxLines: 1,
+                                                        isReadOnly: true,
+                                                        keyBoardType:
+                                                            TextInputType.name,
+                                                        labelText:
+                                                            'Expected Fiber Bundle Volume',
+                                                        hintText: 'Enter',
+                                                        isRequired: false,
+                                                        txtController:
+                                                            preDialysisController
+                                                                .expectedFiber,
+                                                        fillColor: Colors.white,
+                                                        fontSize: 16,
+                                                      ),
+                                                      const SizedBox(height: 8),
+                                                      CustomRadioField(
+                                                        isRequired: true,
+                                                        radioCallB1: (value) {
+                                                          preDialysisController
+                                                                  .groupVal1 =
+                                                              value;
+
+                                                          setState(() {});
+
+                                                          if (int.parse(
+                                                                  preDialysisController
+                                                                      .dialyzerReuseNoController
+                                                                      .text) >
+                                                              1) {
+                                                            showAlertDialog(
+                                                                () {
+                                                                  //cancel button
+                                                                  preDialysisController
+                                                                          .groupVal1 =
+                                                                      CustomRadioButtons
+                                                                          .no;
+                                                                  preDialysisController
+                                                                      .update();
+                                                                  Get.back();
+                                                                },
+                                                                () {
+                                                                  //confirmation button
+                                                                  // selectedDialysisTypeVal= null;
+                                                                  // selectedAcessTypeValue= null;
+                                                                  // selectedAccessSiteVal= null;
+                                                                  // selectedDialyzerTypeVal= null;
+                                                                  preDialysisController
+                                                                      .dialyzerBarcodeController
+                                                                      .text = "";
+                                                                  preDialysisController
+                                                                      .dialyzerReuseNoController
+                                                                      .text = "1";
+                                                                  preDialysisController
+                                                                      .dialyzerRemark
+                                                                      .text = '';
+                                                                  Get.back();
+                                                                },
+                                                                "Kindly enter discarded remarks before using new dialyser and blood tubing",
+                                                                "assets/info.png",
+                                                                false,
+                                                                () {},
                                                                 preDialysisController
-                                                                        .selectedTemp =
-                                                                    isFahrenheit;
+                                                                    .confirmationRemarkController,
+                                                                (value) {
+                                                                  //remark field value
+                                                                });
+                                                          }
+                                                        },
+                                                        radioCallB2: (value) {
+                                                          preDialysisController
+                                                                  .groupVal1 =
+                                                              value;
+                                                          setState(() {});
+                                                        },
+                                                        groupVal:
+                                                            preDialysisController
+                                                                .groupVal1,
+                                                        text: "New Dialyzer",
+                                                        firstRadioText: 'Yes',
+                                                        secondRadioText: 'No',
+                                                      ).paddingOnly(left: 8),
+                                                      const SizedBox(height: 8),
+                                                      Row(
+                                                        children: [
+                                                          // Expanded(
+                                                          //   child:
+                                                          Flexible(
+                                                            fit: FlexFit.loose,
+                                                            child:
+                                                                CustomTextField(
+                                                              onChanged:
+                                                                  (value) {},
+                                                              labelText:
+                                                                  'Dialyzer Barcode No',
+                                                              hintText: 'Enter',
+                                                              keyBoardType:
+                                                                  TextInputType
+                                                                      .number,
+                                                              txtController:
+                                                                  preDialysisController
+                                                                      .dialyzerBarcodeController,
+                                                              fillColor:
+                                                                  Colors.white,
+                                                              isReadOnly: preDialysisController
+                                                                          .groupVal1 ==
+                                                                      CustomRadioButtons
+                                                                          .no
+                                                                  ? true
+                                                                  : false,
+                                                              maxLines: 1,
+                                                              isRequired: true,
+                                                              fontSize: 16,
+                                                            ),
+                                                          ),
+                                                          const SizedBox(
+                                                              height: 8),
+                                                          // Expanded(
+                                                          //   child:
+                                                          Flexible(
+                                                            fit: FlexFit.loose,
+                                                            child:
+                                                                CustomTextField(
+                                                              labelText:
+                                                                  'Dialyzer Reuse No',
+                                                              hintText: 'Enter',
+                                                              keyBoardType:
+                                                                  TextInputType
+                                                                      .number,
+                                                              txtController:
+                                                                  preDialysisController
+                                                                      .dialyzerReuseNoController,
+                                                              fillColor:
+                                                                  Colors.white,
+                                                              isReadOnly: true,
+                                                              maxLines: 1,
+                                                              isRequired: true,
+                                                              fontSize: 16,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      const SizedBox(height: 8),
+                                                      CustomTextField(
+                                                        onChanged: (value) {},
+                                                        maxLines: 1,
+                                                        isReadOnly: false,
+                                                        keyBoardType:
+                                                            TextInputType.name,
+                                                        labelText:
+                                                            'Dialyzer Remark',
+                                                        hintText: 'Enter',
+                                                        isRequired: false,
+                                                        txtController:
+                                                            preDialysisController
+                                                                .dialyzerRemark,
+                                                        fillColor: Colors.white,
+                                                        fontSize: 16,
+                                                      ),
+                                                      CustomRadioField(
+                                                        isRequired: true,
+                                                        radioCallB1: (value) {
+                                                          preDialysisController
+                                                                  .groupVal2 =
+                                                              value;
+                                                          preDialysisController
+                                                              .dialyzerTubeReuseNoController
+                                                              .text = "1";
+                                                          preDialysisController
+                                                              .tubeRemark
+                                                              .text = "";
+                                                          preDialysisController
+                                                              .tubeBarcodeController
+                                                              .text = "";
+
+                                                          setState(() {});
+                                                        },
+                                                        radioCallB2: (value) {
+                                                          if (preDialysisController
+                                                                  .groupVal2 ==
+                                                              CustomRadioButtons
+                                                                  .yes) {
+                                                          } else {
+                                                            preDialysisController
+                                                                    .groupVal2 =
+                                                                value;
+                                                            setState(() {});
+                                                          }
+                                                        },
+                                                        groupVal:
+                                                            preDialysisController
+                                                                .groupVal2,
+                                                        text:
+                                                            'New Blood Tubing',
+                                                        firstRadioText: 'Yes',
+                                                        secondRadioText: 'No',
+                                                      ).paddingOnly(
+                                                          left: 8, top: 6),
+                                                      const SizedBox(height: 6),
+                                                      Row(
+                                                        children: [
+                                                          // Expanded(
+                                                          //   child:
+                                                          Flexible(
+                                                            fit: FlexFit.loose,
+                                                            child:
+                                                                CustomTextField(
+                                                              onChanged: () {},
+                                                              labelText:
+                                                                  'Tube Barcode No',
+                                                              hintText: 'Enter',
+                                                              keyBoardType:
+                                                                  TextInputType
+                                                                      .number,
+                                                              txtController:
+                                                                  preDialysisController
+                                                                      .tubeBarcodeController,
+                                                              fillColor:
+                                                                  Colors.white,
+                                                              isReadOnly: preDialysisController
+                                                                          .groupVal2 ==
+                                                                      CustomRadioButtons
+                                                                          .no
+                                                                  ? true
+                                                                  : false,
+                                                              maxLines: 1,
+                                                              isRequired: true,
+                                                              fontSize: 16,
+                                                            ),
+                                                          ),
+                                                          const SizedBox(
+                                                              height: 8),
+                                                          // Expanded(
+                                                          //   child:
+                                                          Flexible(
+                                                            fit: FlexFit.loose,
+                                                            child:
+                                                                CustomTextField(
+                                                              labelText:
+                                                                  'Tube Reuse No',
+                                                              hintText: 'Enter',
+                                                              keyBoardType:
+                                                                  TextInputType
+                                                                      .number,
+                                                              txtController:
+                                                                  preDialysisController
+                                                                      .dialyzerTubeReuseNoController,
+                                                              fillColor:
+                                                                  Colors.white,
+                                                              isReadOnly: true,
+                                                              maxLines: 1,
+                                                              isRequired: true,
+                                                              fontSize: 16,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      const SizedBox(height: 8),
+                                                      CustomTextField(
+                                                        onChanged: (value) {},
+                                                        maxLines: 1,
+                                                        isReadOnly: false,
+                                                        keyBoardType:
+                                                            TextInputType.name,
+                                                        labelText:
+                                                            'Blood Tube Remark',
+                                                        hintText: 'Enter',
+                                                        isRequired: false,
+                                                        txtController:
+                                                            preDialysisController
+                                                                .tubeRemark,
+                                                        fillColor: Colors.white,
+                                                        fontSize: 16,
+                                                      ),
+                                                      const SizedBox(height: 8),
+                                                      Row(
+                                                        children: [
+                                                          // Expanded(
+                                                          //   child:
+                                                          Flexible(
+                                                            fit: FlexFit.loose,
+                                                            child:
+                                                                MyCustomDropdown(
+                                                                    labelText:
+                                                                        'Special Dialysis',
+                                                                    items: preDialysisController
+                                                                            .specialDialysisModel
+                                                                            ?.data
+                                                                            ?.map((e) => e
+                                                                                .lookupDetDescEn)
+                                                                            .toList() ??
+                                                                        [],
+                                                                    hint:
+                                                                        'Select',
+                                                                    isRequired:
+                                                                        false,
+                                                                    senValue:
+                                                                        (value) {
+                                                                      specialDialysisData = preDialysisController
+                                                                          .specialDialysisModel
+                                                                          ?.data
+                                                                          ?.firstWhere((e) =>
+                                                                              e.lookupDetDescEn ==
+                                                                              value);
+
+                                                                      preDialysisController
+                                                                          .refreshUi();
+                                                                    },
+                                                                    filledColor:
+                                                                        Colors
+                                                                            .white),
+                                                          ),
+                                                          const SizedBox(
+                                                              height: 8),
+                                                          // Expanded(
+                                                          //   child:
+                                                          Flexible(
+                                                            fit: FlexFit.loose,
+                                                            child:
+                                                                CustomTextField(
+                                                              onChanged:
+                                                                  (value) async {
+                                                                if ((preDialysisController
+                                                                            .getPreDialysisDetailsModel!
+                                                                            .data![
+                                                                                0]
+                                                                            .tubeResueNo! ==
+                                                                        1) &&
+                                                                    (preDialysisController
+                                                                            .getPreDialysisDetailsModel!
+                                                                            .data![0]
+                                                                            .dialyserResueNo! ==
+                                                                        1)) {
+                                                                  preDialysisController
+                                                                      .weightGainController
+                                                                      .text = "NA";
+                                                                  preDialysisController
+                                                                      .refreshUi();
+                                                                } else {
+                                                                  await preDialysisController.getInterDialyticWeight(
+                                                                      widget
+                                                                          .preDialysisData
+                                                                          .patientId
+                                                                          .toString(),
+                                                                      widget
+                                                                          .preDialysisData
+                                                                          .treatmentId
+                                                                          .toString());
+
+                                                                  var val = double
+                                                                      .parse(
+                                                                          value); // Use double to handle floating-point values
+                                                                  // Handle the case where weight might be null
+                                                                  var weight =
+                                                                      preDialysisController
+                                                                              .interDialyticWeight
+                                                                              ?.weight ??
+                                                                          0.0;
+                                                                  var diff =
+                                                                      weight -
+                                                                          val;
+
+                                                                  // Update the controller text with the difference
+
+                                                                  preDialysisController
+                                                                          .weightGainController
+                                                                          .text =
+                                                                      diff.toString();
+                                                                  preDialysisController
+                                                                      .refreshUi();
+                                                                }
                                                               },
                                                               maxLines: 1,
                                                               isReadOnly: false,
@@ -1126,12 +928,42 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
                                                                   TextInputType
                                                                       .number,
                                                               labelText:
-                                                                  'Temperature',
+                                                                  'Pre Dialysis Weight',
                                                               hintText: 'Enter',
-                                                              isRequired: false,
+                                                              isRequired: true,
                                                               txtController:
                                                                   preDialysisController
-                                                                      .temperaturController,
+                                                                      .preDialyWeightController,
+                                                              fillColor:
+                                                                  Colors.white,
+                                                              fontSize: 16,
+                                                            ),
+                                                          )
+                                                        ],
+                                                      ),
+                                                      const SizedBox(height: 8),
+                                                      Row(
+                                                        children: [
+                                                          // Expanded(
+                                                          //   child:
+                                                          Flexible(
+                                                            fit: FlexFit.loose,
+                                                            child:
+                                                                CustomTextField(
+                                                              onChanged:
+                                                                  (value) {},
+                                                              maxLines: 1,
+                                                              isReadOnly: true,
+                                                              keyBoardType:
+                                                                  TextInputType
+                                                                      .number,
+                                                              labelText:
+                                                                  'Interdialytic Gain',
+                                                              hintText: 'Enter',
+                                                              isRequired: true,
+                                                              txtController:
+                                                                  preDialysisController
+                                                                      .weightGainController,
                                                               fillColor:
                                                                   Colors.white,
                                                               fontSize: 16,
@@ -1139,7 +971,10 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
                                                           ),
                                                           const SizedBox(
                                                               height: 8),
-                                                          Expanded(
+                                                          // Expanded(
+                                                          //   child:
+                                                          Flexible(
+                                                            fit: FlexFit.loose,
                                                             child:
                                                                 CustomTextField(
                                                               onChanged:
@@ -1150,12 +985,12 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
                                                                   TextInputType
                                                                       .number,
                                                               labelText:
-                                                                  'Oxygen Level (%)',
+                                                                  'Dry Weight',
                                                               hintText: 'Enter',
                                                               isRequired: true,
                                                               txtController:
                                                                   preDialysisController
-                                                                      .oxygenLevel,
+                                                                      .dryWeightController,
                                                               fillColor:
                                                                   Colors.white,
                                                               fontSize: 16,
@@ -1163,34 +998,458 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
                                                           ),
                                                         ],
                                                       ),
-                                                      const SizedBox(
-                                                          height: 10),
+                                                      const SizedBox(height: 8),
                                                       CustomTextField(
                                                         onChanged: (value) {},
-                                                        maxLines: 1,
+                                                        maxLines: 2,
                                                         isReadOnly: false,
                                                         keyBoardType:
-                                                            TextInputType.text,
+                                                            TextInputType.name,
                                                         labelText:
-                                                            'Respiratory Rate(Breaths/min)',
+                                                            'Pre HD Condition',
                                                         hintText: 'Enter',
-                                                        isRequired: true,
+                                                        isRequired: false,
                                                         txtController:
                                                             preDialysisController
-                                                                .respiratoryRate,
+                                                                .preConditionController,
                                                         fillColor: Colors.white,
                                                         fontSize: 16,
                                                       ),
                                                       const SizedBox(
-                                                          height: 16),
+                                                        height: 8,
+                                                      ),
+                                                      Align(
+                                                        alignment: Alignment
+                                                            .centerRight,
+                                                        child: CustomButton(
+                                                          primColor: AppColor
+                                                              .primaryBackgroundColor,
+                                                          secColor: AppColor
+                                                              .secondaryColor,
+                                                          textColor:
+                                                              Colors.white,
+                                                          iconColor:
+                                                              Colors.white,
+                                                          buttonText:
+                                                              'View History',
+                                                          path:
+                                                              'assets/eye.png',
+                                                          callB: () {
+                                                            Get.to(() =>
+                                                                PatientHistoryScreen(
+                                                                  preDialysisData:
+                                                                      widget
+                                                                          .preDialysisData,
+                                                                  historyList:
+                                                                      preDialysisController
+                                                                              .historyModel
+                                                                              ?.data2 ??
+                                                                          [],
+                                                                ));
+                                                          },
+                                                          buttonWidth: 140,
+                                                        ),
+                                                      ).paddingOnly(right: 4),
+                                                      const SizedBox(
+                                                          height: 12),
                                                     ],
                                                   ),
-                                                ),
+                                                )
                                               ],
                                             ),
                                           ),
-                                        ],
-                                      ))),
+                                        )
+                                      ],
+                                    ),
+                                  )),
+
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              // Theme(
+                              //     data: ThemeData().copyWith(
+                              //         dividerColor: Colors.transparent),
+                              //     child:
+                              //     Container(
+                              //
+                              //         decoration: BoxDecoration(
+                              //             color: AppColor.darkBlue,
+                              //             borderRadius:
+                              //                 BorderRadius.circular(10)),
+                              //         child: ExpansionTile(
+                              //          // key: const PageStorageKey<String>('post_dialysis_tile'),
+                              //
+                              //           maintainState: true,
+                              //           collapsedIconColor: Colors.white,
+                              //           iconColor: Colors.white,
+                              //           title: Row(children: [
+                              //             Image.asset("assets/pulse-line.png"),
+                              //             const SizedBox(width: 12),
+                              //             const Text(
+                              //               "Pre Dialysis Vitals",
+                              //               style: TextStyle(
+                              //                   fontSize: 14.0,
+                              //                   color: Colors.white,
+                              //                   fontFamily: 'Lato'),
+                              //             ),
+                              //           ]),
+                              //           children: <Widget>[
+                              //             Container(
+                              //               padding: const EdgeInsets.all(8),
+                              //               decoration: BoxDecoration(
+                              //                 color: Colors.white,
+                              //                 borderRadius:
+                              //                 BorderRadius.circular(10),
+                              //                 // border: Border.all(color: Colors.grey)
+                              //               ),
+                              //               child: SizedBox(
+                              //                 height: 400, // ✅ fixed height
+                              //                 child: SingleChildScrollView(
+                              //                   child:Column(
+                              //                 // crossAxisAlignment:
+                              //                 // CrossAxisAlignment.stretch,
+                              //                 crossAxisAlignment: CrossAxisAlignment.start,
+                              //                 mainAxisSize: MainAxisSize.min,
+                              //                 children: [
+                              //                   const SizedBox(height: 16),
+                              //                   Container(
+                              //                     decoration: BoxDecoration(
+                              //                         color: Colors.grey[50],
+                              //                         borderRadius:
+                              //                         BorderRadius.circular(
+                              //                             10),
+                              //                         border: Border.all(
+                              //                             color: AppColor
+                              //                                 .borderColor)),
+                              //                     child: Column(
+                              //                       children: [
+                              //                         Row(
+                              //                           // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              //                           children: [
+                              //                             DoubleTextField(
+                              //                               labelText:
+                              //                                   'Blood Pressure\n(mmHg)',
+                              //                               hintText1: 'Bottom',
+                              //                               hintText2: 'Top',
+                              //                               isRequired: true,
+                              //                               keyBoardType:
+                              //                                   TextInputType
+                              //                                       .number,
+                              //                               txtController1:
+                              //                                   preDialysisController
+                              //                                       .doubleTxtController1,
+                              //                               txtController2:
+                              //                                   preDialysisController
+                              //                                       .doubleTxtController2,
+                              //                               fillColor:
+                              //                                   Colors.white,
+                              //                               isReadOnly: false,
+                              //                               maxLines: 1,
+                              //                               onChange1:
+                              //                                   (value) {},
+                              //                               onChange2:
+                              //                                   (value) {},
+                              //                             ),
+                              //                             const SizedBox(
+                              //                                 height: 8),
+                              //                             // Expanded(
+                              //                             //   child:
+                              //                             Flexible(
+                              //                               fit: FlexFit.loose,
+                              //                               child: CustomTextField(
+                              //                                 maxLines: 1,
+                              //                                 isReadOnly: false,
+                              //                                 keyBoardType:
+                              //                                     TextInputType
+                              //                                         .number,
+                              //                                 labelText:
+                              //                                     'Pulse\n(Beats/min)',
+                              //                                 hintText: 'Enter',
+                              //                                 isRequired: true,
+                              //                                 txtController:
+                              //                                     preDialysisController
+                              //                                         .pulseLevel,
+                              //                                 fillColor:
+                              //                                     Colors.white,
+                              //                                 fontSize: 16,
+                              //                               ),
+                              //                             ),
+                              //                           ],
+                              //                         ),
+                              //                         const SizedBox(height: 8),
+                              //                         Row(
+                              //                           children: [
+                              //                             // Expanded(
+                              //                             //   child:
+                              //                             Flexible(
+                              //                               fit: FlexFit.loose,
+                              //                               child:
+                              //                                   CustomTextFieldTemp(
+                              //                                 onUnitChanged:
+                              //                                     (isFahrenheit) {
+                              //                                   preDialysisController
+                              //                                           .selectedTemp =
+                              //                                       isFahrenheit;
+                              //                                 },
+                              //                                 maxLines: 1,
+                              //                                 isReadOnly: false,
+                              //                                 keyBoardType:
+                              //                                     TextInputType
+                              //                                         .number,
+                              //                                 labelText:
+                              //                                     'Temperature',
+                              //                                 hintText: 'Enter',
+                              //                                 isRequired: false,
+                              //                                 txtController:
+                              //                                     preDialysisController
+                              //                                         .temperaturController,
+                              //                                 fillColor:
+                              //                                     Colors.white,
+                              //                                 fontSize: 16,
+                              //                               ),
+                              //                             ),
+                              //                             const SizedBox(
+                              //                                 height: 8),
+                              //                             // Expanded(
+                              //                             //   child:
+                              //                             Flexible(
+                              //                               fit: FlexFit.loose,
+                              //                               child: CustomTextField(
+                              //                                 onChanged:
+                              //                                     (value) {},
+                              //                                 maxLines: 1,
+                              //                                 isReadOnly: false,
+                              //                                 keyBoardType:
+                              //                                     TextInputType
+                              //                                         .number,
+                              //                                 labelText:
+                              //                                     'Oxygen Level (%)',
+                              //                                 hintText: 'Enter',
+                              //                                 isRequired: true,
+                              //                                 txtController:
+                              //                                     preDialysisController
+                              //                                         .oxygenLevel,
+                              //                                 fillColor:
+                              //                                     Colors.white,
+                              //                                 fontSize: 16,
+                              //                               ),
+                              //                             ),
+                              //                           ],
+                              //                         ),
+                              //                         const SizedBox(
+                              //                             height: 10),
+                              //                         CustomTextField(
+                              //                           onChanged: (value) {},
+                              //                           maxLines: 1,
+                              //                           isReadOnly: false,
+                              //                           keyBoardType:
+                              //                               TextInputType.text,
+                              //                           labelText:
+                              //                               'Respiratory Rate(Breaths/min)',
+                              //                           hintText: 'Enter',
+                              //                           isRequired: true,
+                              //                           txtController:
+                              //                               preDialysisController
+                              //                                   .respiratoryRate,
+                              //                           fillColor: Colors.white,
+                              //                           fontSize: 16,
+                              //                         ),
+                              //                         const SizedBox(
+                              //                             height: 16),
+                              //                       ],
+                              //                     ),
+                              //                   ),
+                              //                    ],
+                              //               ),
+                              //             ),
+                              //               )) ],
+                              //         )
+                              //     ),),
+                              Theme(
+                                data: ThemeData()
+                                    .copyWith(dividerColor: Colors.transparent),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: AppColor.darkBlue,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: ExpansionTile(
+                                    controller: expansionTileController2,
+                                    maintainState: true,
+                                    collapsedIconColor: Colors.white,
+                                    iconColor: Colors.white,
+                                    title: Row(
+                                      children: [
+                                        Image.asset("assets/pulse-line.png"),
+                                        const SizedBox(width: 12),
+                                        const Text(
+                                          "Pre Dialysis Vitals",
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.white,
+                                            fontFamily: 'Lato',
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.all(12),
+                                        //margin: const EdgeInsets.only(bottom: 2),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey[50],
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                border: Border.all(
+                                                    color:
+                                                        AppColor.borderColor),
+                                              ),
+                                              padding: const EdgeInsets.all(12),
+                                              child: Column(
+                                                children: [
+                                                  /// Row 1
+                                                  Row(
+                                                    children: [
+                                                      Expanded(
+                                                        child: DoubleTextField(
+                                                          labelText:
+                                                              'Blood Pressure\n(mmHg)',
+                                                          hintText1: 'Bottom',
+                                                          hintText2: 'Top',
+                                                          isRequired: true,
+                                                          keyBoardType:
+                                                              TextInputType
+                                                                  .number,
+                                                          txtController1:
+                                                              preDialysisController
+                                                                  .doubleTxtController1,
+                                                          txtController2:
+                                                              preDialysisController
+                                                                  .doubleTxtController2,
+                                                          fillColor:
+                                                              Colors.white,
+                                                          maxLines: 1,
+                                                          onChange1: (_) {},
+                                                          onChange2: (_) {},
+                                                          isReadOnly: false,
+                                                        ),
+                                                      ),
+                                                      const SizedBox(width: 10),
+                                                      Expanded(
+                                                        child: CustomTextField(
+                                                          maxLines: 1,
+                                                          isReadOnly: false,
+                                                          keyBoardType:
+                                                              TextInputType
+                                                                  .number,
+                                                          labelText:
+                                                              'Pulse\n(Beats/min)',
+                                                          hintText: 'Enter',
+                                                          isRequired: true,
+                                                          txtController:
+                                                              preDialysisController
+                                                                  .pulseLevel,
+                                                          fillColor:
+                                                              Colors.white,
+                                                          fontSize: 16,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+
+                                                  const SizedBox(height: 12),
+
+                                                  /// Row 2
+                                                  Row(
+                                                    children: [
+                                                      Expanded(
+                                                        child:
+                                                            CustomTextFieldTemp(
+                                                          onUnitChanged:
+                                                              (isFahrenheit) {
+                                                            preDialysisController
+                                                                    .selectedTemp =
+                                                                isFahrenheit;
+                                                          },
+                                                          maxLines: 1,
+                                                          isReadOnly: false,
+                                                          keyBoardType:
+                                                              TextInputType
+                                                                  .number,
+                                                          labelText:
+                                                              'Temperature',
+                                                          hintText: 'Enter',
+                                                          isRequired: false,
+                                                          txtController:
+                                                              preDialysisController
+                                                                  .temperaturController,
+                                                          fillColor:
+                                                              Colors.white,
+                                                          fontSize: 16,
+                                                        ),
+                                                      ),
+                                                      const SizedBox(width: 10),
+                                                      Expanded(
+                                                        child: CustomTextField(
+                                                          maxLines: 1,
+                                                          isReadOnly: false,
+                                                          keyBoardType:
+                                                              TextInputType
+                                                                  .number,
+                                                          labelText:
+                                                              'Oxygen Level (%)',
+                                                          hintText: 'Enter',
+                                                          isRequired: true,
+                                                          txtController:
+                                                              preDialysisController
+                                                                  .oxygenLevel,
+                                                          fillColor:
+                                                              Colors.white,
+                                                          fontSize: 16,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+
+                                                  const SizedBox(height: 12),
+
+                                                  /// Row 3
+                                                  CustomTextField(
+                                                    maxLines: 1,
+                                                    isReadOnly: false,
+                                                    keyBoardType:
+                                                        TextInputType.text,
+                                                    labelText:
+                                                        'Respiratory Rate (Breaths/min)',
+                                                    hintText: 'Enter',
+                                                    isRequired: true,
+                                                    txtController:
+                                                        preDialysisController
+                                                            .respiratoryRate,
+                                                    fillColor: Colors.white,
+                                                    fontSize: 16,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+
                               const SizedBox(
                                 height: 10,
                               ),
@@ -1215,44 +1474,45 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
                                       textAlign: TextAlign.start,
                                     ),
                                     const SizedBox(height: 8),
-                                    Visibility(
-                                      visible: isFormValid,
-                                      child: Row(
-                                        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Expanded(
-                                            child: CustomDateField(
-                                              labelText: 'Date',
-                                              hint: 'Select',
-                                              isRequired: true,
-                                              callB: () {
-                                                // _selectDate(context);
-                                              },
-                                              selectedDate:
-                                                  preDialysisController
-                                                      .dateController,
-                                              filledColor: Colors.white,
-                                              dontDhowPrefix: false,
-                                            ),
+                                    Row(
+                                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        // Expanded(
+                                        //   child:
+                                        Flexible(
+                                          fit: FlexFit.loose,
+                                          child: CustomDateField(
+                                            labelText: 'Date',
+                                            hint: 'Select',
+                                            isRequired: true,
+                                            callB: () {
+                                              _selectDate(context);
+                                            },
+                                            selectedDate: preDialysisController
+                                                .dateController,
+                                            filledColor: Colors.white,
+                                            dontDhowPrefix: false,
                                           ),
-                                          const SizedBox(height: 8),
-                                          Expanded(
-                                            child: CustomDateField(
-                                              labelText: 'Time',
-                                              hint: 'Select',
-                                              isRequired: true,
-                                              callB: () {
-                                                selectTime(context);
-                                              },
-                                              selectedDate:
-                                                  preDialysisController
-                                                      .timeController,
-                                              filledColor: Colors.white,
-                                              dontDhowPrefix: false,
-                                            ),
+                                        ),
+                                        const SizedBox(width: 8),
+                                        // Expanded(
+                                        //   child:
+                                        Flexible(
+                                          fit: FlexFit.loose,
+                                          child: CustomDateField(
+                                            labelText: 'Time',
+                                            hint: 'Select',
+                                            isRequired: true,
+                                            callB: () {
+                                              selectTime(context);
+                                            },
+                                            selectedDate: preDialysisController
+                                                .timeController,
+                                            filledColor: Colors.white,
+                                            dontDhowPrefix: false,
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
                                     const SizedBox(height: 8),
                                     Align(
@@ -1271,6 +1531,7 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
                                               false) {
                                             // Form is valid, proceed with further actions
                                             isFormValid = true;
+
                                             final String formattedDate =
                                                 DateFormat('yyyy-MM-dd')
                                                     .format(DateTime.now());
@@ -1304,7 +1565,7 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
 
                                             debugPrint('Form is invalid');
                                             CustomMessage.toast(
-                                                "Please fill madetory details");
+                                                "Please fill mandatory details");
                                           }
                                         },
                                         buttonWidth: 100,
@@ -1631,20 +1892,20 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
     return imageUrl;
   }
 
-  // Future<void> _selectDate(BuildContext context) async {
-  //   final DateTime? picked = await DatePickerHelper.selectDate(context);
-  //   if (picked != null && picked != _selectedDate) {
-  //     // setState(() {
-  //     _selectedDate = picked;
-  //     DateFormat formatter = DateFormat('yyyy-MM-dd');
-  //     DateFormat formatter1 = DateFormat('dd-MM-yyyy');
-  //     formattedDateDBO = formatter.format(_selectedDate!);
-  //     var formattedDate = formatter1.format(_selectedDate!);
-  //     preDialysisController.dateController.text = formattedDate;
-  //     preDialysisController.startDialysisDate = formattedDateDBO;
-  //     setState(() {});
-  //   }
-  // }
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await DatePickerHelper.selectDate(context);
+    if (picked != null && picked != _selectedDate) {
+      // setState(() {
+      _selectedDate = picked;
+      DateFormat formatter = DateFormat('yyyy-MM-dd');
+      DateFormat formatter1 = DateFormat('dd-MM-yyyy');
+      formattedDateDBO = formatter.format(_selectedDate!);
+      var formattedDate = formatter1.format(_selectedDate!);
+      preDialysisController.dateController.text = formattedDate;
+      preDialysisController.startDialysisDate = formattedDateDBO;
+      setState(() {});
+    }
+  }
 
   selectTime(context) async {
     pickedTime = await DatePickerHelper.selectTime(context);

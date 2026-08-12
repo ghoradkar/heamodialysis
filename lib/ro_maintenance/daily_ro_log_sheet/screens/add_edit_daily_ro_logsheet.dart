@@ -175,10 +175,12 @@ class _AddEditDailyRoLogSheetState extends State<AddEditDailyRoLogSheet> {
             },
             child: Image.asset('assets/arrow-left.png')),
       ),
-      body: GetBuilder<DailyRoLogSheetController>(builder: (controller) {
+      body:
+
+      GetBuilder<DailyRoLogSheetController>(builder: (controller) {
         return hasInternet
             ? controller.isLoading
-                ?  Center(child: buildShimmerLoader())
+                ?  const Center(child: ROLogSheetShimmer())
                 : SingleChildScrollView(
                     child: Column(
                       children: [
@@ -698,8 +700,8 @@ class _AddEditDailyRoLogSheetState extends State<AddEditDailyRoLogSheet> {
                   checkInternetAndLoadData();
                 },
               );
-      }
-      ),
+      }),
+
     );
   }
   TableRow _tableHeader() {

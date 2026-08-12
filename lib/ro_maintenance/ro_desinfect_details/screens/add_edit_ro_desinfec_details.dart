@@ -38,7 +38,7 @@ class AddRoDesinfectionDetails extends StatefulWidget {
 
 class _AddRoDesinfectionDetailsState extends State<AddRoDesinfectionDetails> {
   final RoDesinfectionDetailsController roMaintDetailsController =
-  Get.put(RoDesinfectionDetailsController());
+      Get.put(RoDesinfectionDetailsController());
 
   DateTime? selectedInspection;
   DateTime? selectedNextInspection;
@@ -69,7 +69,11 @@ class _AddRoDesinfectionDetailsState extends State<AddRoDesinfectionDetails> {
   void addCard() {
     // Create a fresh cardData for the new card
     ROFileDetails newCard = ROFileDetails(
-        name: 'Upload Image', key: 'files', isSelected: false, isReq: false,isView: false);
+        name: 'Upload Image',
+        key: 'files',
+        isSelected: false,
+        isReq: false,
+        isView: false);
 
     // Add the new card to the list
     roMaintDetailsController.uploadImage.add(newCard);
@@ -92,14 +96,14 @@ class _AddRoDesinfectionDetailsState extends State<AddRoDesinfectionDetails> {
 
   checkInternetAndLoadData() async {
     List<ConnectivityResult> connectivityResult =
-    await Connectivity().checkConnectivity();
+        await Connectivity().checkConnectivity();
     // setState(() {
     hasInternet = (connectivityResult.contains(ConnectivityResult.mobile) ||
         connectivityResult.contains(ConnectivityResult.wifi));
     // });
     roMaintDetailsController.update();
     if (hasInternet) {
-     await  getUserData();
+      await getUserData();
 
       await roMaintDetailsController.getInstituteList();
       await roMaintDetailsController
@@ -113,8 +117,8 @@ class _AddRoDesinfectionDetailsState extends State<AddRoDesinfectionDetails> {
     // setState(() {});
     roMaintDetailsController.update();
     if (widget.isEdit == false || widget.isEdit == null) {
-      var ins = roMaintDetailsController.instituteList?.data
-          ?.firstWhere((e) => e.unitId == int.parse(userData['unitId'].toString()));
+      var ins = roMaintDetailsController.instituteList?.data?.firstWhere(
+          (e) => e.unitId == int.parse(userData['unitId'].toString()));
       roMaintDetailsController.initialInsti = ins?.unitName;
       roMaintDetailsController.selectedInsti = ins;
     }
@@ -142,7 +146,7 @@ class _AddRoDesinfectionDetailsState extends State<AddRoDesinfectionDetails> {
       }
 
       desIn = roMaintDetailsController.disinfectTypeModel?.data?.firstWhere(
-              (e) => e.lookupDetDescEn == widget.proLiItem?.lookupDetDescEn);
+          (e) => e.lookupDetDescEn == widget.proLiItem?.lookupDetDescEn);
       if (desIn != null) {
         roMaintDetailsController.initialDisinfect =
             widget.proLiItem?.lookupDetDescEn;
@@ -169,8 +173,6 @@ class _AddRoDesinfectionDetailsState extends State<AddRoDesinfectionDetails> {
 
       roMaintDetailsController.commentController.text =
           widget.proLiItem?.comments ?? "";
-
-
 
       setState(() {});
     }
@@ -204,375 +206,375 @@ class _AddRoDesinfectionDetailsState extends State<AddRoDesinfectionDetails> {
             },
             child: Image.asset('assets/arrow-left.png')),
       ),
-      body: GetBuilder<RoDesinfectionDetailsController>(
+      body:
+      GetBuilder<RoDesinfectionDetailsController>(
           init: RoDesinfectionDetailsController(),
           builder: (controller) {
             return hasInternet
                 ? controller.isLoading
-                ?  Center(child: buildShimmerLoader())
-                : SingleChildScrollView(
-              child: Column(
-                children: [
-                  MyCustomDropdown(
-                    labelText: 'Institute Name',
-                    isViewProfile:
-                    userData['unitId'] == 1
-                        ? false
-                        : true,
-                    items: controller.instituteList?.data
-                        ?.map((e) => e.unitName)
-                        .toList() ??
-                        [],
-                    hint: 'Select',
-                    isRequired: false,
-                    senValue: (value) {
-                      roMaintDetailsController.selectedInsti =
-                          controller.instituteList?.data?.firstWhere(
-                                  (e) => e.unitName == value);
-                      roMaintDetailsController.initialInsti =
-                          roMaintDetailsController
-                              .selectedInsti?.unitName;
-                      controller.update();
-                    },
-                    filledColor: Colors.white,
-                    selectedItem:
-                    roMaintDetailsController.initialInsti,
-                  ),
-                  MyCustomDropdown(
-                    selectedItem:
-                    roMaintDetailsController.initialMachine,
-                    labelText: 'Machine Name',
-                    items: controller.getMachineNameModel?.data
-                        ?.map((e) => e.machineName)
-                        .toList() ??
-                        [],
-                    hint: 'Select',
-                    isRequired: false,
-                    senValue: (value) {
-                      roMaintDetailsController.selectedMachine =
-                          controller.getMachineNameModel?.data
-                              ?.firstWhere(
-                                  (e) => e.machineName == value);
-                      roMaintDetailsController.initialMachine =
-                          roMaintDetailsController
-                              .selectedMachine?.machineName;
-                      controller.update();
-                    },
-                    filledColor: Colors.white,
-                  ),
-                  MyCustomDropdown(
-                    selectedItem:
-                    roMaintDetailsController.initialDisinfect,
-                    labelText: 'Type of Disinfection Used',
-                    items: controller.disinfectTypeModel?.data
-                        ?.map((e) => e.lookupDetDescEn)
-                        .toList() ??
-                        [],
-                    hint: 'Select',
-                    isRequired: false,
-                    senValue: (value) {
-                      roMaintDetailsController.selectedDisinfect =
-                          controller.disinfectTypeModel?.data
-                              ?.firstWhere(
-                                  (e) => e.lookupDetDescEn == value);
-                      roMaintDetailsController.initialDisinfect =
-                          roMaintDetailsController
-                              .selectedDisinfect?.lookupDetDescEn;
-                      controller.update();
-                    },
-                    filledColor: Colors.white,
-                  ),
-                  CustomDateField(
-                    labelText: 'Inspection Date',
-                    hint: 'Select Date',
-                    isRequired: false,
-                    callB: () {
-                      pickInspectionDate(context);
-                    },
-                    selectedDate: roMaintDetailsController
-                        .inspectionDateController,
-                    filledColor: Colors.white,
-                    dontDhowPrefix: false,
-                  ),
-                  CustomDateField(
-                    labelText: 'Next Inspection Date',
-                    hint: 'Select Date',
-                    isRequired: false,
-                    callB: () {
-                      pickNextInspecDate(context);
-                    },
-                    selectedDate: roMaintDetailsController
-                        .nextInspecDateController,
-                    filledColor: Colors.white,
-                    dontDhowPrefix: false,
-                  ),
-                  CustomTextField(
-                    labelText: 'Comments',
-                    hintText: 'Enter Comments',
-                    isRequired: false,
-                    keyBoardType: TextInputType.text,
-                    txtController:
-                    roMaintDetailsController.commentController,
-                    fillColor: Colors.white,
-                    isReadOnly: false,
-                    maxLines: 3,fontSize: 16,
-                  ),
-                  MyCustomDropdown(
-                    selectedItem:
-                    roMaintDetailsController.initialDoneBy,
-                    labelText: 'Done By',
-                    items: controller.doneByModel?.data
-                        ?.map((e) => e.username)
-                        .toList() ??
-                        [],
-                    hint: 'Select',
-                    isRequired: false,
-                    senValue: (value) {
-                      roMaintDetailsController.selectedDoneBy =
-                          controller.doneByModel?.data?.firstWhere(
-                                  (e) => e.username == value);
-                      roMaintDetailsController.initialDoneBy = value;
-                      controller.update();
-                    },
-                    filledColor: Colors.white,
-                  ),
-                  const Align(
-                    alignment: Alignment.centerLeft,
-                    child: CustomText(text: "Image Upload",
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        textColor: Colors.black,
-                        textAlign: TextAlign.start),
-                  ).paddingOnly(left: 10, bottom: 4),
-                  ...roMaintDetailsController.uploadImage
-                      .asMap()
-                      .entries
-                      .map((entry) {
-                    int index = entry.key;
-                    ROFileDetails? cardData = entry.value;
+                    ? const AddRoDesinfectionDetailsShimmer()
+                    : SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            MyCustomDropdown(
+                              labelText: 'Institute Name',
+                              isViewProfile:
+                                  userData != null && userData['unitId'] == 1
+                                      ? false
+                                      : true,
+                              items: controller.instituteList?.data
+                                      ?.map((e) => e.unitName)
+                                      .toList() ??
+                                  [],
+                              hint: 'Select',
+                              isRequired: false,
+                              senValue: (value) {
+                                roMaintDetailsController.selectedInsti =
+                                    controller.instituteList?.data?.firstWhere(
+                                        (e) => e.unitName == value);
+                                roMaintDetailsController.initialInsti =
+                                    roMaintDetailsController
+                                        .selectedInsti?.unitName;
+                                controller.update();
+                              },
+                              filledColor: Colors.white,
+                              selectedItem:
+                                  roMaintDetailsController.initialInsti,
+                            ),
+                            MyCustomDropdown(
+                              selectedItem:
+                                  roMaintDetailsController.initialMachine,
+                              labelText: 'Machine Name',
+                              items: controller.getMachineNameModel?.data
+                                      ?.map((e) => e.machineName)
+                                      .toList() ??
+                                  [],
+                              hint: 'Select',
+                              isRequired: false,
+                              senValue: (value) {
+                                roMaintDetailsController.selectedMachine =
+                                    controller.getMachineNameModel?.data
+                                        ?.firstWhere(
+                                            (e) => e.machineName == value);
+                                roMaintDetailsController.initialMachine =
+                                    roMaintDetailsController
+                                        .selectedMachine?.machineName;
+                                controller.update();
+                              },
+                              filledColor: Colors.white,
+                            ),
+                            MyCustomDropdown(
+                              selectedItem:
+                                  roMaintDetailsController.initialDisinfect,
+                              labelText: 'Type of Disinfection Used',
+                              items: controller.disinfectTypeModel?.data
+                                      ?.map((e) => e.lookupDetDescEn)
+                                      .toList() ??
+                                  [],
+                              hint: 'Select',
+                              isRequired: false,
+                              senValue: (value) {
+                                roMaintDetailsController.selectedDisinfect =
+                                    controller.disinfectTypeModel?.data
+                                        ?.firstWhere(
+                                            (e) => e.lookupDetDescEn == value);
+                                roMaintDetailsController.initialDisinfect =
+                                    roMaintDetailsController
+                                        .selectedDisinfect?.lookupDetDescEn;
+                                controller.update();
+                              },
+                              filledColor: Colors.white,
+                            ),
+                            CustomDateField(
+                              labelText: 'Inspection Date',
+                              hint: 'Select Date',
+                              isRequired: false,
+                              callB: () {
+                                pickInspectionDate(context);
+                              },
+                              selectedDate: roMaintDetailsController
+                                  .inspectionDateController,
+                              filledColor: Colors.white,
+                              dontDhowPrefix: false,
+                            ),
+                            CustomDateField(
+                              labelText: 'Next Inspection Date',
+                              hint: 'Select Date',
+                              isRequired: false,
+                              callB: () {
+                                pickNextInspecDate(context);
+                              },
+                              selectedDate: roMaintDetailsController
+                                  .nextInspecDateController,
+                              filledColor: Colors.white,
+                              dontDhowPrefix: false,
+                            ),
+                            CustomTextField(
+                              labelText: 'Comments',
+                              hintText: 'Enter Comments',
+                              isRequired: false,
+                              keyBoardType: TextInputType.text,
+                              txtController:
+                                  roMaintDetailsController.commentController,
+                              fillColor: Colors.white,
+                              isReadOnly: false,
+                              maxLines: 3,
+                              fontSize: 16,
+                            ),
+                            MyCustomDropdown(
+                              selectedItem:
+                                  roMaintDetailsController.initialDoneBy,
+                              labelText: 'Done By',
+                              items: controller.doneByModel?.data
+                                      ?.map((e) => e.username)
+                                      .toList() ??
+                                  [],
+                              hint: 'Select',
+                              isRequired: false,
+                              senValue: (value) {
+                                roMaintDetailsController.selectedDoneBy =
+                                    controller.doneByModel?.data?.firstWhere(
+                                        (e) => e.username == value);
+                                roMaintDetailsController.initialDoneBy = value;
+                                controller.update();
+                              },
+                              filledColor: Colors.white,
+                            ),
+                            const Align(
+                              alignment: Alignment.centerLeft,
+                              child: CustomText(
+                                  text: "Image Upload",
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  textColor: Colors.black,
+                                  textAlign: TextAlign.start),
+                            ).paddingOnly(left: 10, bottom: 4),
+                            ...roMaintDetailsController.uploadImage
+                                .asMap()
+                                .entries
+                                .map((entry) {
+                              int index = entry.key;
+                              ROFileDetails? cardData = entry.value;
 
-                    return UploadRODisDocument(
-                      fileData: cardData,
-                      onFilePick: () {
-                        pickFile(roMaintDetailsController
-                            .uploadImage[index], false);
-                      },
-                      onFileDelete: () {
-                        roMaintDetailsController
-                            .uploadImage[index]
-                            .isSelected = false;
-                        roMaintDetailsController
-                            .uploadImage[index]
-                            .isView = false;
-                        roMaintDetailsController
-                            .uploadImage[index]
-                            .file = null;
-                        setState(() {});
-                      },
-                      imgNameCallBack: (value) {
-                        roMaintDetailsController
-                            .uploadImage[index]
-                            .docName = value;
-                      },
-                      isViewPatient: false,
-                      addCard: () {
-                        addCard();
-                      },
-                      removeCard: () {
-                        removeCard(index);
-                      },
-                    );
-                  }),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      CustomButton(
-                        isLoading: controller.isLoading,
-                        buttonText: 'Save',
-                        path: 'assets/save-ro-disinfec.png',
-                        callB: controller.isLoading
-                            ? null
-                            : () {
-                          var inspecDate =
-                          DateFormat('yyyy/MM/dd').parse(
-                              roMaintDetailsController
-                                  .inspectionDateController
-                                  .text);
-
-                          if (selectedNextInspection!
-                              .isBefore(inspecDate)) {
-                            CustomMessage.toast(
-                                "Next Inspection Date Should Not Before Inspection Date ");
-                          } else {
-                            if (widget.isEdit == true) {
-                              controller.addRoDisinfectModel
-                                  ?.unitId =
+                              return UploadRODisDocument(
+                                fileData: cardData,
+                                onFilePick: () {
+                                  pickFile(
+                                      roMaintDetailsController
+                                          .uploadImage[index],
+                                      false);
+                                },
+                                onFileDelete: () {
                                   roMaintDetailsController
-                                      .selectedInsti
-                                      ?.unitId ??
-                                      ins?.unitId;
-                              controller.addRoDisinfectModel
-                                  ?.createdBy =
+                                      .uploadImage[index].isSelected = false;
                                   roMaintDetailsController
-                                      .selectedDoneBy
-                                      ?.createdBy ??
-                                      don?.createdBy;
-                              controller.addRoDisinfectModel
-                                  ?.inspectionDate = formattedDate1
-                                  .isEmpty
-                                  ? roMaintDetailsController
-                                  .inspectionDateController
-                                  .text
-                              // sendConvertedDateToAPI(roMaintDetailsController
-                              //         .inspectionDateController
-                              //         .text)
-                                  : formattedDate1;
-                              controller.addRoDisinfectModel
-                                  ?.nextInspectionDate =
-                              formattedDate2.isEmpty
-                                  ? roMaintDetailsController
-                                  .nextInspecDateController
-                                  .text
-                                  : formattedDate2;
-                              controller.addRoDisinfectModel
-                                  ?.doneBy =
+                                      .uploadImage[index].isView = false;
                                   roMaintDetailsController
-                                      .selectedDoneBy
-                                      ?.username ??
-                                      don?.username;
-                              controller.addRoDisinfectModel
-                                  ?.comments =
-                                  controller
-                                      .commentController.text;
-                              controller.addRoDisinfectModel
-                                  ?.lookupDetId =
+                                      .uploadImage[index].file = null;
+                                  setState(() {});
+                                },
+                                imgNameCallBack: (value) {
                                   roMaintDetailsController
-                                      .selectedDisinfect
-                                      ?.lookupDetId ??
-                                      desIn?.lookupDetId;
-                              controller.addRoDisinfectModel
-                                  ?.roMachineMasterId =
-                                  roMaintDetailsController
-                                      .selectedMachine
-                                      ?.roMachineMasterId ??
-                                      mac?.roMachineMasterId;
-                              controller.addRoDisinfectModel
-                                  ?.roDisinfectionDetailsId =
-                                  widget.proLiItem
-                                      ?.roDisinfectionDetailsId;
-                              controller
-                                  .addEditRoDisinfectDetails(
+                                      .uploadImage[index].docName = value;
+                                },
+                                isViewPatient: false,
+                                addCard: () {
+                                  addCard();
+                                },
+                                removeCard: () {
+                                  removeCard(index);
+                                },
                               );
-                            } else {
-                              controller.addRoDisinfectModel
-                                  ?.unitId =
-                                  roMaintDetailsController
-                                      .selectedInsti?.unitId;
-                              controller.addRoDisinfectModel
-                                  ?.createdBy =
-                                  roMaintDetailsController
-                                      .selectedDoneBy
-                                      ?.createdBy;
-                              controller.addRoDisinfectModel
-                                  ?.inspectionDate =
-                                  formattedDate1;
-                              controller.addRoDisinfectModel
-                                  ?.nextInspectionDate =
-                                  formattedDate2;
-                              controller.addRoDisinfectModel
-                                  ?.doneBy =
-                                  roMaintDetailsController
-                                      .selectedDoneBy?.username;
-                              controller.addRoDisinfectModel
-                                  ?.comments =
-                                  controller
-                                      .commentController.text;
-                              controller.addRoDisinfectModel
-                                  ?.lookupDetId =
-                                  roMaintDetailsController
-                                      .selectedDisinfect
-                                      ?.lookupDetId;
-                              controller.addRoDisinfectModel
-                                  ?.roMachineMasterId =
-                                  roMaintDetailsController
-                                      .selectedMachine
-                                      ?.roMachineMasterId;
-                              controller.addRoDisinfectModel
-                                  ?.roDisinfectionDetailsId = 0;
-                              controller
-                                  .addEditRoDisinfectDetails(
-                              );
-                            }
-                          }
-                        },
-                        buttonWidth: 100,
-                        primColor: AppColor.primaryBackgroundColor,
-                        secColor: AppColor.secondaryColor,
-                        textColor: Colors.white,
-                        iconColor: Colors.white,
-                      ),
-                      CustomButton(
-                        buttonText: 'Reset',
-                        path: 'assets/refresh.png',
-                        callB: () {
-                          roMaintDetailsController.selectedInsti =
-                          null;
-                          roMaintDetailsController.initialInsti =
-                          null;
-                          roMaintDetailsController.selectedMachine =
-                          null;
-                          roMaintDetailsController.initialMachine =
-                          null;
-                          roMaintDetailsController.selectedDisinfect =
-                          null;
-                          roMaintDetailsController.initialDisinfect =
-                          null;
-                          roMaintDetailsController.selectedDoneBy =
-                          null;
-                          roMaintDetailsController.initialDoneBy =
-                          null;
-                          roMaintDetailsController.uploadImage.clear();
-                          controller.commentController.text = "";
-                          controller.nextInspecDateController.text =
-                          "";
-                          controller.inspectionDateController.text =
-                          "";
+                            }),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                CustomButton(
+                                  isLoading: controller.isLoading,
+                                  buttonText: 'Save',
+                                  path: 'assets/save-ro-disinfec.png',
+                                  callB: controller.isLoading
+                                      ? null
+                                      : () {
+                                          var inspecDate =
+                                              DateFormat('yyyy/MM/dd').parse(
+                                                  roMaintDetailsController
+                                                      .inspectionDateController
+                                                      .text);
 
-                          // controller.update();
-                          setState(() {});
-                        },
-                        buttonWidth: 100,
-                        primColor: Colors.grey,
-                        secColor: Colors.grey,
-                        textColor: Colors.white,
-                        iconColor: Colors.white,
-                      ),
-                      CustomButton(
-                        buttonText: 'Cancel',
-                        path: 'assets/cancel.png',
-                        callB: () {
-                          Get.back();
-                        },
-                        buttonWidth: 100,
-                        primColor: AppColor.red,
-                        secColor: AppColor.red,
-                        textColor: Colors.white,
-                        iconColor: Colors.white,
-                      ),
-                    ],
-                  ).paddingOnly(top: 20, bottom: 20)
-                ],
-              ),
-            )
+                                          if (selectedNextInspection!
+                                              .isBefore(inspecDate)) {
+                                            CustomMessage.toast(
+                                                "Next Inspection Date Should Not Before Inspection Date ");
+                                          } else {
+                                            if (widget.isEdit == true) {
+                                              controller.addRoDisinfectModel
+                                                      ?.unitId =
+                                                  roMaintDetailsController
+                                                          .selectedInsti
+                                                          ?.unitId ??
+                                                      ins?.unitId;
+                                              controller.addRoDisinfectModel
+                                                      ?.createdBy =
+                                                  roMaintDetailsController
+                                                          .selectedDoneBy
+                                                          ?.createdBy ??
+                                                      don?.createdBy;
+                                              controller.addRoDisinfectModel
+                                                  ?.inspectionDate = formattedDate1
+                                                      .isEmpty
+                                                  ? roMaintDetailsController
+                                                      .inspectionDateController
+                                                      .text
+                                                  // sendConvertedDateToAPI(roMaintDetailsController
+                                                  //         .inspectionDateController
+                                                  //         .text)
+                                                  : formattedDate1;
+                                              controller.addRoDisinfectModel
+                                                      ?.nextInspectionDate =
+                                                  formattedDate2.isEmpty
+                                                      ? roMaintDetailsController
+                                                          .nextInspecDateController
+                                                          .text
+                                                      : formattedDate2;
+                                              controller.addRoDisinfectModel
+                                                      ?.doneBy =
+                                                  roMaintDetailsController
+                                                          .selectedDoneBy
+                                                          ?.username ??
+                                                      don?.username;
+                                              controller.addRoDisinfectModel
+                                                      ?.comments =
+                                                  controller
+                                                      .commentController.text;
+                                              controller.addRoDisinfectModel
+                                                      ?.lookupDetId =
+                                                  roMaintDetailsController
+                                                          .selectedDisinfect
+                                                          ?.lookupDetId ??
+                                                      desIn?.lookupDetId;
+                                              controller.addRoDisinfectModel
+                                                      ?.roMachineMasterId =
+                                                  roMaintDetailsController
+                                                          .selectedMachine
+                                                          ?.roMachineMasterId ??
+                                                      mac?.roMachineMasterId;
+                                              controller.addRoDisinfectModel
+                                                      ?.roDisinfectionDetailsId =
+                                                  widget.proLiItem
+                                                      ?.roDisinfectionDetailsId;
+                                              controller
+                                                  .addEditRoDisinfectDetails();
+                                            } else {
+                                              controller.addRoDisinfectModel
+                                                      ?.unitId =
+                                                  roMaintDetailsController
+                                                      .selectedInsti?.unitId;
+                                              controller.addRoDisinfectModel
+                                                      ?.createdBy =
+                                                  roMaintDetailsController
+                                                      .selectedDoneBy
+                                                      ?.createdBy;
+                                              controller.addRoDisinfectModel
+                                                      ?.inspectionDate =
+                                                  formattedDate1;
+                                              controller.addRoDisinfectModel
+                                                      ?.nextInspectionDate =
+                                                  formattedDate2;
+                                              controller.addRoDisinfectModel
+                                                      ?.doneBy =
+                                                  roMaintDetailsController
+                                                      .selectedDoneBy?.username;
+                                              controller.addRoDisinfectModel
+                                                      ?.comments =
+                                                  controller
+                                                      .commentController.text;
+                                              controller.addRoDisinfectModel
+                                                      ?.lookupDetId =
+                                                  roMaintDetailsController
+                                                      .selectedDisinfect
+                                                      ?.lookupDetId;
+                                              controller.addRoDisinfectModel
+                                                      ?.roMachineMasterId =
+                                                  roMaintDetailsController
+                                                      .selectedMachine
+                                                      ?.roMachineMasterId;
+                                              controller.addRoDisinfectModel
+                                                  ?.roDisinfectionDetailsId = 0;
+                                              controller
+                                                  .addEditRoDisinfectDetails();
+                                            }
+                                          }
+                                        },
+                                  buttonWidth: 100,
+                                  primColor: AppColor.primaryBackgroundColor,
+                                  secColor: AppColor.secondaryColor,
+                                  textColor: Colors.white,
+                                  iconColor: Colors.white,
+                                ),
+                                CustomButton(
+                                  buttonText: 'Reset',
+                                  path: 'assets/refresh.png',
+                                  callB: () {
+                                    roMaintDetailsController.selectedInsti =
+                                        null;
+                                    roMaintDetailsController.initialInsti =
+                                        null;
+                                    roMaintDetailsController.selectedMachine =
+                                        null;
+                                    roMaintDetailsController.initialMachine =
+                                        null;
+                                    roMaintDetailsController.selectedDisinfect =
+                                        null;
+                                    roMaintDetailsController.initialDisinfect =
+                                        null;
+                                    roMaintDetailsController.selectedDoneBy =
+                                        null;
+                                    roMaintDetailsController.initialDoneBy =
+                                        null;
+                                    roMaintDetailsController.uploadImage
+                                        .clear();
+                                    controller.commentController.text = "";
+                                    controller.nextInspecDateController.text =
+                                        "";
+                                    controller.inspectionDateController.text =
+                                        "";
+
+                                    // controller.update();
+                                    setState(() {});
+                                  },
+                                  buttonWidth: 100,
+                                  primColor: Colors.grey,
+                                  secColor: Colors.grey,
+                                  textColor: Colors.white,
+                                  iconColor: Colors.white,
+                                ),
+                                CustomButton(
+                                  buttonText: 'Cancel',
+                                  path: 'assets/cancel.png',
+                                  callB: () {
+                                    Get.back();
+                                  },
+                                  buttonWidth: 100,
+                                  primColor: AppColor.red,
+                                  secColor: AppColor.red,
+                                  textColor: Colors.white,
+                                  iconColor: Colors.white,
+                                ),
+                              ],
+                            ).paddingOnly(top: 20, bottom: 20)
+                          ],
+                        ),
+                      )
                 : InternetIssue(
-              onRetryPressed: () {
-                checkInternetAndLoadData();
-              },
-            );
+                    onRetryPressed: () {
+                      checkInternetAndLoadData();
+                    },
+                  );
           }),
+
     );
   }
-
 
   Future<void> pickFile(ROFileDetails uploadedFile, isEdit) async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -582,10 +584,7 @@ class _AddRoDesinfectionDetailsState extends State<AddRoDesinfectionDetails> {
 
     if (result != null) {
       File file = File(result.files.single.path!);
-      String extension = file.path
-          .split('.')
-          .last
-          .toLowerCase();
+      String extension = file.path.split('.').last.toLowerCase();
       int fileSizeInBytes = await file.length();
       double fileSizeInMB = fileSizeInBytes / (1024 * 1024);
 
@@ -611,14 +610,13 @@ class _AddRoDesinfectionDetailsState extends State<AddRoDesinfectionDetails> {
     }
   }
 
-
   Future<void> pickInspectionDate(BuildContext context) async {
     final DateTime? picked = await DatePickerHelper.selectDate(context);
     if (picked != null && picked != selectedInspection) {
       // setState(() {
       selectedInspection = picked;
-      DateFormat formatter = DateFormat('yyyy/MM/dd');
-      // DateFormat formatter = DateFormat('dd-MM-yyyy');
+      // DateFormat formatter = DateFormat('yyyy/MM/dd');
+      DateFormat formatter = DateFormat('dd/MM/yyyy');
       formattedDate1 = formatter.format(selectedInspection!);
       roMaintDetailsController.inspectionDateController.text = formattedDate1;
 
@@ -632,8 +630,8 @@ class _AddRoDesinfectionDetailsState extends State<AddRoDesinfectionDetails> {
     if (picked != null && picked != selectedNextInspection) {
       // setState(() {
       selectedNextInspection = picked;
-      DateFormat formatter = DateFormat('yyyy/MM/dd');
-      // DateFormat formatter = DateFormat('dd-MM-yyyy');
+      // DateFormat formatter = DateFormat('yyyy/MM/dd');
+      DateFormat formatter = DateFormat('dd/MM/yyyy');
       formattedDate2 = formatter.format(selectedNextInspection!);
       roMaintDetailsController.nextInspecDateController.text = formattedDate2;
 
@@ -668,14 +666,15 @@ class UploadRODisDocument extends StatelessWidget {
   final Function addCard;
   final Function removeCard;
 
-  const UploadRODisDocument({super.key,
-    required this.fileData,
-    this.imgNameCallBack,
-    required this.onFilePick,
-    required this.onFileDelete,
-    required this.isViewPatient,
-    required this.addCard,
-    required this.removeCard});
+  const UploadRODisDocument(
+      {super.key,
+      required this.fileData,
+      this.imgNameCallBack,
+      required this.onFilePick,
+      required this.onFileDelete,
+      required this.isViewPatient,
+      required this.addCard,
+      required this.removeCard});
 
   @override
   Widget build(BuildContext context) {
@@ -708,7 +707,8 @@ class UploadRODisDocument extends StatelessWidget {
               if (imgNameCallBack != null) {
                 imgNameCallBack!(value);
               }
-            },fontSize: 16,
+            },
+            fontSize: 16,
           ),
           const SizedBox(
             height: 6,
@@ -732,8 +732,7 @@ class UploadRODisDocument extends StatelessWidget {
               //  setState(() {});
             },
             viewCallBack: () {
-              Get.to(() =>
-                  CustomViewer(
+              Get.to(() => CustomViewer(
                     fileUrl: fileData.file!.path,
                   ));
               // }
@@ -780,11 +779,13 @@ class ROFileDetails {
   File? file;
   bool? isView;
 
-  ROFileDetails({required this.name,
-    required this.key,
-    required this.isSelected,
-    required this.isReq,
-    this.file,
-    this.ids,
-    this.docName,this.isView});
+  ROFileDetails(
+      {required this.name,
+      required this.key,
+      required this.isSelected,
+      required this.isReq,
+      this.file,
+      this.ids,
+      this.docName,
+      this.isView});
 }

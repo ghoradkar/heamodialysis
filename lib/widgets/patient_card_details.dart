@@ -8,6 +8,8 @@ import 'package:heamodialysis/new_registration/model/view_patient_model.dart';
 import 'package:heamodialysis/utils/color_constants.dart';
 import 'package:heamodialysis/widgets/custom_text.dart';
 
+import 'custom_shimmer_loader.dart';
+
 class PatientCardDetails extends StatefulWidget {
   // final String gender;
   // final String age;
@@ -51,22 +53,16 @@ class _PatientCardDetailsState extends State<PatientCardDetails> {
   }
 
   getData() async {
-    setState(() => isLoading = true);
+    if (mounted) {
+      setState(() => isLoading = true);
+    }
 
-    await newRegistrationController.getSchemaAdoptedList();
-
-    // schemaList = newRegistrationController.schemaAdoptedModel?.data;
-    // if (schemaList != null &&
-    //     widget.patientDetails?.data?.lookupDetIdPatientType != null) {
-    //   schemAdpt = schemaList?.firstWhere(
-    //     (e) =>
-    //         e.lookupDetId ==
-    //         widget.patientDetails?.data?.lookupDetIdPatientType,
-    //     orElse: () => SchemaData(),
-    //   );
-    // }
-
-    setState(() => isLoading = false);
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await newRegistrationController.getSchemaAdoptedList();
+      if (mounted) {
+        setState(() => isLoading = false);
+      }
+    });
   }
 
   @override
@@ -83,8 +79,9 @@ class _PatientCardDetailsState extends State<PatientCardDetails> {
     }
 
     return isLoading
-        ? const CircularProgressIndicator()
+        ? const PatientHistoryShimmer.headerCard()
         : Container(
+      //height: 170,
             padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 8.w),
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
@@ -99,7 +96,6 @@ class _PatientCardDetailsState extends State<PatientCardDetails> {
             child: Column(
               children: [
                 Row(
-
                   children: [
                     (widget.imagePath == null || widget.imagePath == "")
                         ? Container(
@@ -127,7 +123,7 @@ class _PatientCardDetailsState extends State<PatientCardDetails> {
                     ),
                     CustomText(
                       text: 'Patient ID : ',
-                      fontSize: 12.sp,
+                      fontSize: 14.sp,
                       fontFam: 'Lato',
                       fontWeight: FontWeight.w400,
                       textColor: Colors.black,
@@ -136,7 +132,7 @@ class _PatientCardDetailsState extends State<PatientCardDetails> {
                     CustomText(
                       text: widget.patientDetails?.data?.patientId.toString() ??
                           '',
-                      fontSize: 12.sp,
+                      fontSize: 14.sp,
                       fontFam: 'Lato',
                       fontWeight: FontWeight.w400,
                       textColor: Colors.grey,
@@ -155,304 +151,319 @@ class _PatientCardDetailsState extends State<PatientCardDetails> {
                                 ? const Icon(Icons.arrow_circle_up_outlined)
                                 : const Icon(Icons.arrow_circle_down)))
                   ],
-                ).paddingOnly(top: 2.h),
-                Row(
-                  children: [
-                    CustomText(
-                      text: 'Patient Name  : ',
-                      fontSize: 12.sp,
-                      fontFam: 'Lato',
-                      fontWeight: FontWeight.w400,
-                      textColor: Colors.black,
-                      textAlign: TextAlign.start,
-                    ),
-                    CustomText(
-                      text:
-                          "${widget.patientDetails?.data?.fName} ${widget.patientDetails?.data?.lName ?? ''}",
-                      fontSize: 12.sp,
-                      fontFam: 'Lato',
-                      fontWeight: FontWeight.w400,
-                      textColor: Colors.grey,
-                      textAlign: TextAlign.start,
-                    )
-                  ],
-                ).paddingOnly(bottom: 1.h),
-                Visibility(
-                  visible: widget.isFromAddPredialysis != true,
+                ).paddingOnly(top: 0.h),
+                Padding(
+                  padding: const EdgeInsets.only(left: 43.0),
                   child: Row(
-                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Flexible(
-                        flex: 1,
-                        child: Row(
-                          children: [
-                            CustomText(
-                              text: 'Mobile No :',
-                              fontSize: 12.sp,
-                              fontFam: 'Lato',
-                              fontWeight: FontWeight.w400,
-                              textColor: Colors.black,
-                              textAlign: TextAlign.start,
-                            ),
-                            CustomText(
-                              text: widget.patientDetails?.data?.mobile ?? "",
-                              fontSize: 12.sp,
-                              fontFam: 'Lato',
-                              fontWeight: FontWeight.w400,
-                              textColor: Colors.grey,
-                              textAlign: TextAlign.start,
-                            ),
-                          ],
-                        ),
+                      CustomText(
+                        text: 'Patient Name  : ',
+                        fontSize: 14.sp,
+                        fontFam: 'Lato',
+                        fontWeight: FontWeight.w400,
+                        textColor: Colors.black,
+                        textAlign: TextAlign.start,
                       ),
-                      Flexible(
-                        flex: 1,
-                        child: Row(
-                          children: [
-                            CustomText(
-                              text: 'Age :',
-                              fontSize: 12.sp,
-                              fontFam: 'Lato',
-                              fontWeight: FontWeight.w400,
-                              textColor: Colors.black,
-                              textAlign: TextAlign.start,
-                            ),
-                            CustomText(
-                              text:
-                                  widget.patientDetails?.data?.age.toString() ??
-                                      '0',
-                              fontSize: 12.sp,
-                              fontFam: 'Lato',
-                              fontWeight: FontWeight.w400,
-                              textColor: Colors.grey,
-                              textAlign: TextAlign.start,
-                            ),
-                          ],
-                        ),
+                      CustomText(
+                        text:
+                            "${widget.patientDetails?.data?.fName} ${widget.patientDetails?.data?.lName ?? ''}",
+                        fontSize: 14.sp,
+                        fontFam: 'Lato',
+                        fontWeight: FontWeight.w400,
+                        textColor: Colors.grey,
+                        textAlign: TextAlign.start,
                       )
                     ],
-                  ).paddingOnly(top: 2.h, bottom: 1.h),
+                  ).paddingOnly(bottom: 1.h),
                 ),
+                SizedBox(height: 2,),
+                Visibility(
+                  visible: widget.isFromAddPredialysis != true,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 43.0),
+                    child: Row(
+                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+flex: 2,
+                          child: Row(
+                            children: [
+                              CustomText(
+                                text: 'Mobile No :',
+                                fontSize: 14.sp,
+                                fontFam: 'Lato',
+                                fontWeight: FontWeight.w400,
+                                textColor: Colors.black,
+                                textAlign: TextAlign.start,
+                              ),
+                              CustomText(
+                                text: widget.patientDetails?.data?.mobile ?? "",
+                                fontSize: 14.sp,
+                                fontFam: 'Lato',
+                                fontWeight: FontWeight.w400,
+                                textColor: Colors.grey,
+                                textAlign: TextAlign.start,
+                              ),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CustomText(
+                                text: 'Age : ',
+                                fontSize: 12.sp,
+                                fontFam: 'Lato',
+                                fontWeight: FontWeight.w400,
+                                textColor: Colors.black,
+                                textAlign: TextAlign.start,
+                              ),
+                              CustomText(
+                                text:
+                                    widget.patientDetails?.data?.age.toString() ??
+                                        '0',
+                                fontSize: 12.sp,
+                                fontFam: 'Lato',
+                                fontWeight: FontWeight.w400,
+                                textColor: Colors.grey,
+                                textAlign: TextAlign.start,
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ).paddingOnly(top: 2.h, bottom: 1.h),
+                  ),
+                ),
+                SizedBox(height: 2,),
                 Visibility(
                   visible: widget.isFromAddPredialysis == true,
-                  child: Row(
-                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Flexible(
-                        flex: 1,
-                        child:Row(
-                          children: [
-                            Expanded(
-                              child: RichText(
-                                text: TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text: 'Scheme Adopt : ',
-                                      style: TextStyle(
-                                        fontSize: 12.sp,
-                                        fontFamily: 'Lato',
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text: schemAdpt?.lookupDetDescEn ?? '',
-                                      style: TextStyle(
-                                        fontSize: 12.sp,
-                                        fontFamily: 'Lato',
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                maxLines: 2, // 🔑 responsive
-                                overflow: TextOverflow.ellipsis,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 42.0),
+                    child: Row(
+                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Flexible(
+                          flex: 1,
+                          child:Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CustomText(
+                                text: 'Scheme Adopt : ',
+                                fontSize: 14.sp,
+                                fontFam: 'Lato',
+                                fontWeight: FontWeight.w400,
+                                textColor: Colors.black,
+                                textAlign: TextAlign.start,
                               ),
-                            ),
-                          ],
-                        ).paddingOnly(top: 2.h, bottom: 1.h),
-                      ),
-                    ],
-                  ).paddingOnly(top: 2.h, bottom: 1.h),
+                              Flexible(
+                                child: CustomText(
+                                  text: schemAdpt?.lookupDetDescEn ?? '',
+                                  fontSize: 14.sp,
+                                  fontFam: 'Lato',
+                                  fontWeight: FontWeight.w400,
+                                  textColor: Colors.grey,
+                                  textAlign: TextAlign.start,
+                                ),
+                              ),
+                            ],
+                          ),
+
+                        ),
+                      ],
+                    ).paddingOnly(top: 2.h, bottom: 1.h),
+                  ),
                 ),
+                SizedBox(height: 2,),
                 Visibility(
                   visible: widget.isFromAddPredialysis == false ||
                       widget.isFromAddPredialysis == null,
-                  child: Row(
-                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Flexible(
-                        flex: 1,
-                        child: Row(
-                          children: [
-                            CustomText(
-                              text: 'Gender :',
-                              fontSize: 12.sp,
-                              fontFam: 'Lato',
-                              fontWeight: FontWeight.w400,
-                              textColor: Colors.black,
-                              textAlign: TextAlign.start,
-                            ),
-                            CustomText(
-                              text: widget.patientDetails?.data?.gender ?? '',
-                              fontSize: 12.sp,
-                              fontFam: 'Lato',
-                              fontWeight: FontWeight.w400,
-                              textColor: Colors.grey,
-                              textAlign: TextAlign.start,
-                            ),
-                          ],
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 42.0),
+                    child: Row(
+                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Flexible(
+                          flex: 1,
+                          child: Row(
+                            children: [
+                              CustomText(
+                                text: 'Gender : ',
+                                fontSize: 14.sp,
+                                fontFam: 'Lato',
+                                fontWeight: FontWeight.w400,
+                                textColor: Colors.black,
+                                textAlign: TextAlign.start,
+                              ),
+                              CustomText(
+                                text: widget.patientDetails?.data?.gender ?? '',
+                                fontSize: 14.sp,
+                                fontFam: 'Lato',
+                                fontWeight: FontWeight.w400,
+                                textColor: Colors.grey,
+                                textAlign: TextAlign.start,
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      Flexible(
-                        flex: 1,
-                        child: Row(
-                          children: [
-                            CustomText(
-                              text: 'Ref. By :',
-                              fontSize: 12.sp,
-                              fontFam: 'Lato',
-                              fontWeight: FontWeight.w400,
-                              textColor: Colors.black,
-                              textAlign: TextAlign.start,
-                            ),
-                            CustomText(
-                              text: widget.refBy,
-                              fontSize: 12.sp,
-                              fontFam: 'Lato',
-                              fontWeight: FontWeight.w400,
-                              textColor: Colors.grey,
-                              textAlign: TextAlign.start,
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
-                  ).paddingOnly(top: 2.h, bottom: 1.h),
+                        Flexible(
+                          flex: 1,
+                          child: Row(
+                            children: [
+                              CustomText(
+                                text: 'Ref. By : ',
+                                fontSize: 12.sp,
+                                fontFam: 'Lato',
+                                fontWeight: FontWeight.w400,
+                                textColor: Colors.black,
+                                textAlign: TextAlign.start,
+                              ),
+                              CustomText(
+                                text: widget.refBy,
+                                fontSize: 12.sp,
+                                fontFam: 'Lato',
+                                fontWeight: FontWeight.w400,
+                                textColor: Colors.grey,
+                                textAlign: TextAlign.start,
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ).paddingOnly(top: 2.h, bottom: 1.h),
+                  ),
                 ),
+                SizedBox(height: 2,),
                 Visibility(
                   visible: widget.isFromAddPredialysis == true,
-                  child: Row(
-                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Flexible(
-                        flex: 1,
-                        child: Row(
-                          children: [
-                            CustomText(
-                              text: 'Gender :',
-                              fontSize: 12.sp,
-                              fontFam: 'Lato',
-                              fontWeight: FontWeight.w400,
-                              textColor: Colors.black,
-                              textAlign: TextAlign.start,
-                            ),
-                            CustomText(
-                              text: widget.patientDetails?.data?.gender ?? '',
-                              fontSize: 12.sp,
-                              fontFam: 'Lato',
-                              fontWeight: FontWeight.w400,
-                              textColor: Colors.grey,
-                              textAlign: TextAlign.start,
-                            ),
-                          ],
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 43.0),
+                    child: Row(
+                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Flexible(
+                          flex: 1,
+                          child: Row(
+                            children: [
+                              CustomText(
+                                text: 'Gender : ',
+                                fontSize: 12.sp,
+                                fontFam: 'Lato',
+                                fontWeight: FontWeight.w400,
+                                textColor: Colors.black,
+                                textAlign: TextAlign.start,
+                              ),
+                              CustomText(
+                                text: widget.patientDetails?.data?.gender ?? '',
+                                fontSize: 12.sp,
+                                fontFam: 'Lato',
+                                fontWeight: FontWeight.w400,
+                                textColor: Colors.grey,
+                                textAlign: TextAlign.start,
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      Flexible(
-                        flex: 1,
-                        child: Row(
-                          children: [
-                            CustomText(
-                              text: 'Age :',
-                              fontSize: 12.sp,
-                              fontFam: 'Lato',
-                              fontWeight: FontWeight.w400,
-                              textColor: Colors.black,
-                              textAlign: TextAlign.start,
-                            ),
-                            CustomText(
-                              text:
-                                  widget.patientDetails?.data?.age.toString() ??
-                                      '',
-                              fontSize: 12.sp,
-                              fontFam: 'Lato',
-                              fontWeight: FontWeight.w400,
-                              textColor: Colors.grey,
-                              textAlign: TextAlign.start,
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
-                  ).paddingOnly(top: 2.h, bottom: 1.h),
+                        Flexible(
+                          flex: 1,
+                          child: Row(
+                            children: [
+                              CustomText(
+                                text: 'Age : ',
+                                fontSize: 12.sp,
+                                fontFam: 'Lato',
+                                fontWeight: FontWeight.w400,
+                                textColor: Colors.black,
+                                textAlign: TextAlign.start,
+                              ),
+                              CustomText(
+                                text:
+                                    widget.patientDetails?.data?.age.toString() ??
+                                        '',
+                                fontSize: 12.sp,
+                                fontFam: 'Lato',
+                                fontWeight: FontWeight.w400,
+                                textColor: Colors.grey,
+                                textAlign: TextAlign.start,
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ).paddingOnly(top: 2.h, bottom: 1.h),
+                  ),
                 ),
+                SizedBox(height: 2,),
                 Visibility(
                   visible: widget.isExpanded == true,
-                  child: Column(
-                    children: [
-                      Row(
-                        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Flexible(
-                            flex: 1,
-                            child: Row(
-                              children: [
-                                CustomText(
-                                  text: 'Height :',
-                                  fontSize: 12.sp,
-                                  fontFam: 'Lato',
-                                  fontWeight: FontWeight.w400,
-                                  textColor: Colors.black,
-                                  textAlign: TextAlign.start,
-                                ),
-                                CustomText(
-                                  text: widget.patientDetails?.data?.pheight !=
-                                          null
-                                      ? widget.patientDetails?.data?.pheight
-                                              .toString() ??
-                                          ''
-                                      : "0 Kg",
-                                  fontSize: 12.sp,
-                                  fontFam: 'Lato',
-                                  fontWeight: FontWeight.w400,
-                                  textColor: Colors.grey,
-                                  textAlign: TextAlign.start,
-                                ),
-                              ],
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 43.0),
+                    child: Column(
+                      children: [
+                        Row(
+                          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Flexible(
+                              flex: 1,
+                              child: Row(
+                                children: [
+                                  CustomText(
+                                    text: 'Height : ',
+                                    fontSize: 14.sp,
+                                    fontFam: 'Lato',
+                                    fontWeight: FontWeight.w400,
+                                    textColor: Colors.black,
+                                    textAlign: TextAlign.start,
+                                  ),
+                                  CustomText(
+                                    text: widget.patientDetails?.data?.pheight !=
+                                            null
+                                        ? widget.patientDetails?.data?.pheight
+                                                .toString() ??
+                                            ''
+                                        : "0 Kg",
+                                    fontSize: 14.sp,
+                                    fontFam: 'Lato',
+                                    fontWeight: FontWeight.w400,
+                                    textColor: Colors.grey,
+                                    textAlign: TextAlign.start,
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          Flexible(
-                            flex: 1,
-                            child: Row(
-                              children: [
-                                CustomText(
-                                  text: 'Weight :',
-                                  fontSize: 12.sp,
-                                  fontFam: 'Lato',
-                                  fontWeight: FontWeight.w400,
-                                  textColor: Colors.black,
-                                  textAlign: TextAlign.start,
-                                ),
-                                CustomText(
-                                  text: widget.patientDetails?.data?.pweight !=
-                                          null
-                                      ? widget.patientDetails?.data?.pweight
-                                              .toString() ??
-                                          ''
-                                      : "0 Kg",
-                                  fontSize: 12.sp,
-                                  fontFam: 'Lato',
-                                  fontWeight: FontWeight.w400,
-                                  textColor: Colors.grey,
-                                  textAlign: TextAlign.start,
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
-                      ).paddingOnly(top: 2.h, bottom: 1.h),
-                    ],
+                            Flexible(
+                              flex: 1,
+                              child: Row(
+                                children: [
+                                  CustomText(
+                                    text: 'Weight : ',
+                                    fontSize: 14.sp,
+                                    fontFam: 'Lato',
+                                    fontWeight: FontWeight.w400,
+                                    textColor: Colors.black,
+                                    textAlign: TextAlign.start,
+                                  ),
+                                  CustomText(
+                                    text: widget.patientDetails?.data?.pweight !=
+                                            null
+                                        ? widget.patientDetails?.data?.pweight
+                                                .toString() ??
+                                            ''
+                                        : "0 Kg",
+                                    fontSize: 14.sp,
+                                    fontFam: 'Lato',
+                                    fontWeight: FontWeight.w400,
+                                    textColor: Colors.grey,
+                                    textAlign: TextAlign.start,
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ).paddingOnly(top: 2.h, bottom: 1.h),
+                      ],
+                    ),
                   ),
                 )
               ],

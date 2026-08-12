@@ -62,7 +62,7 @@ class _PreDialysisPatientHistoryState extends State<PreDialysisPatientHistory>
     return Scaffold(
       appBar: AppBar(
         title: const CustomText(
-          text: 'Patient History',
+          text: 'Patiente History',
           fontSize: 18.0,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,

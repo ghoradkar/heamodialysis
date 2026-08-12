@@ -1,8 +1,10 @@
+import 'dart:async';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:heamodialysis/dashboard/technician/institutewise_dashboard_screen.dart';
+import 'package:heamodialysis/dashboard/screen/technician/institutewise_dashboard_screen.dart';
 import 'package:heamodialysis/dialysis_queue/dialysis_event/dialysis_event_controller.dart';
 import 'package:heamodialysis/dialysis_queue/dialysis_event/dialysis_event_details.dart';
 import 'package:heamodialysis/dialysis_queue/dialysis_event/model/dialysis_event_list_model.dart';
@@ -14,6 +16,8 @@ import 'package:heamodialysis/utils/shared_preference.dart';
 import 'package:heamodialysis/widgets/custom_text.dart';
 import 'package:heamodialysis/widgets/custom_textfield.dart';
 
+import '../../utils/status_update_screen.dart';
+import '../../widgets/custom_card.dart';
 import '../../widgets/custom_shimmer_loader.dart';
 
 class DialysisEventList extends StatefulWidget {
@@ -24,6 +28,10 @@ class DialysisEventList extends StatefulWidget {
 }
 
 class _DialysisEventListState extends State<DialysisEventList> {
+  final Connectivity _connectivity = Connectivity();
+  bool _isNetworkAvailable = true;
+  StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
+
   final DialysisEventController dialysisEventController =
       Get.put(DialysisEventController());
 
@@ -66,6 +74,10 @@ class _DialysisEventListState extends State<DialysisEventList> {
         dialysisEventController.update();
       }
     });
+    _initConnectivity();
+    _connectivitySubscription = _connectivity.onConnectivityChanged.listen(
+      _updateConnectionStatus,
+    );
   }
 
   checkInternetAndLoadData() async {
@@ -102,12 +114,35 @@ class _DialysisEventListState extends State<DialysisEventList> {
     userData = await SharedPref().read(const SharedPrefConstant().kUserData);
   }
 
+  Future<void> _initConnectivity() async {
+    final result = await _connectivity.checkConnectivity();
+    _updateConnectionStatus(result);
+  }
+
+  // Update connection status handler
+  void _updateConnectionStatus(List<ConnectivityResult> results) {
+    final isConnected = results.any(
+          (result) =>
+      result == ConnectivityResult.mobile ||
+          result == ConnectivityResult.wifi,
+    );
+
+    setState(() {
+      _isNetworkAvailable = isConnected;
+    });
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubscription?.cancel();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return _isNetworkAvailable ? Scaffold(
       appBar: AppBar(
         title: CustomText(
-          text: 'Event Queue Patient List',
+          text: 'Event Queued Patient List',
           fontSize: 16.sp,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,
@@ -328,10 +363,27 @@ class _DialysisEventListState extends State<DialysisEventList> {
       body: GetBuilder<DialysisEventController>(
           init: dialysisEventController,
           builder: (controller) {
-            return hasInternet
-                ? controller.isLoading
-                    ?  Center(child: buildShimmerLoader())
-                    : RegisteredPatientCardList(
+            if (controller.isLoading) {
+              return Center(child: SessionEndPatientsShimmer());
+            }
+            // 2️⃣ Decide list source
+            final List dialysisList =
+            controller.filteredDialysisEventList != null
+                ? controller.filteredDialysisEventList!
+                : controller.dialysisEventList;
+            if (dialysisList.isEmpty) {
+              return CommonStatusScreen(
+                title: "No Data Found",
+                description:
+                "We are unable to find the data that\nyou are looking for ",
+                img: "assets/no_Data_Found.png",
+                buttonText: "Go Back",
+                onPressed: () {
+                  Get.back();
+                },
+              );
+            }
+            return RegisteredPatientCardList(
                         // patientList: controller.dialysisEventList
                         patientList:
                             controller.filteredDialysisEventList != null
@@ -367,13 +419,13 @@ class _DialysisEventListState extends State<DialysisEventList> {
                           //       callB: () {},
                           //     ));
                         },
-                      )
-                : InternetIssue(
-                    onRetryPressed: () {
-                      checkInternetAndLoadData();
-                    },
-                  );
+                      );
           }),
+    ) : InternetIssue(
+      onRetryPressed: () async {
+        final result = await _connectivity.checkConnectivity();
+        _updateConnectionStatus(result);
+      },
     );
   }
 }
@@ -418,7 +470,7 @@ class RegisteredPatientCardList extends StatelessWidget {
         itemCount: patientList.length,
         itemBuilder: (context, index) {
           return Container(
-            height: 170.h,
+          //  height: 170.h,
             decoration: BoxDecoration(
               color: const Color(0xffF8F8F8),
               borderRadius: BorderRadius.circular(6),
@@ -514,7 +566,7 @@ class RegisteredPatientCardList extends StatelessWidget {
           ).paddingSymmetric(vertical: 8.h, horizontal: 8.w);
         });
   }
-
+/*
   Widget patientDetailsCard(String text, String details) {
     return Row(
       children: [
@@ -539,7 +591,7 @@ class RegisteredPatientCardList extends StatelessWidget {
       ],
     );
   }
-
+*/
   String extractStringUpToParenthesis(String input) {
     int index = input.indexOf('(');
     if (index != -1) {

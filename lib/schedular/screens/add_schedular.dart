@@ -103,7 +103,7 @@ class _AddSchedularState extends State<AddSchedular> {
 
   Future<void> getUserData() async {
     userData = await SharedPref().read(const SharedPrefConstant().kUserData);
-    debugPrint(userData['unitId']);
+    debugPrint(userData['unitId']?.toString());
   }
 
   checkInternetAndLoadData() async {
@@ -161,7 +161,7 @@ class _AddSchedularState extends State<AddSchedular> {
             builder: (controller) {
               return hasInternet
                   ? controller.isLoading
-                      ?  Center(child: buildShimmerLoader())
+                      ?  const AddSchedularShimmer()
                       : Column(
                           children: [
                             Theme(

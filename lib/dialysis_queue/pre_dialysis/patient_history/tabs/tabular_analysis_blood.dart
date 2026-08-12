@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/nephro_desk_patient_list/model/cover_sheet_nephro.dart';
+import 'package:heamodialysis/nephro_desk_patient_list/screen/edit_nephro/expandable_card.dart';
 import 'package:heamodialysis/widgets/custom_table.dart';
 import 'package:heamodialysis/widgets/custom_text.dart';
+
+import '../../../../nephro_desk_patient_list/controller/nephro_controller.dart';
 
 class TabularAnalysisBlood extends StatefulWidget {
   final List<BloodPressureTrendAnalysisList>? blooad;
@@ -15,6 +19,9 @@ class TabularAnalysisBlood extends StatefulWidget {
 }
 
 class _TabularAnalysisBloodState extends State<TabularAnalysisBlood> {
+  bool isExpanded = false;
+  final NephroController nephroController = Get.find<NephroController>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,9 +50,17 @@ class _TabularAnalysisBloodState extends State<TabularAnalysisBlood> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const SizedBox(
-                  height: 20,
-                ),
+
+
+        ExpandableCardDetails(
+        patientData: nephroController.patientDet?.first,
+        isExpand: (value) {
+          isExpanded = value;
+          setState(() {});
+        },
+        isExpanded: isExpanded,
+        currentStat: nephroController.currentStat,
+      ).paddingSymmetric(vertical: 10.h),
                 const Row(
                   children: [
                     CustomText(
