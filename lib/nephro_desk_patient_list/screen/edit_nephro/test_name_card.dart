@@ -42,7 +42,7 @@ class TestNameCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // debugPrint(patientList!.toJson().toString());
-    debugPrint("👤 Logged User FU Name => ${userData?['fuNm']}");
+    debugPrint("Logged User FU Name => ${userData?['full_name']}");
     return Container(
       // elevation:7,
       // height: 180,

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
@@ -9,17 +8,16 @@ import 'package:heamodialysis/patient_health_trends/model/dialysis_invest_patien
 import 'package:heamodialysis/patient_health_trends/model/dialysis_vital_patient_list_model.dart';
 import 'package:heamodialysis/patient_health_trends/model/hemoglobin_tracking_model.dart';
 import 'package:heamodialysis/patient_health_trends/model/vital_report_model.dart';
-import 'package:heamodialysis/utils/api_names.dart';
-import 'package:heamodialysis/utils/api_urls.dart';
-import 'package:heamodialysis/utils/network_call.dart';
-import 'package:http/io_client.dart';
+import 'package:heamodialysis/patient_health_trends/repository/patient_health_trends_repository.dart';
+import 'package:heamodialysis/utils/api_client.dart';
 import 'package:intl/intl.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:http/http.dart' as http;
 
 class PatientController extends GetxController {
-  IOClient ioClient = IOClient(ByPassCert().httpClient);
+  final PatientHealthTrendsRepository _repository =
+      PatientHealthTrendsRepository();
+
   final RxBool isLoading = false.obs;
 
   final RxList<DialysisVitalPatientListModel> allPatientsVital =
@@ -82,37 +80,29 @@ class PatientController extends GetxController {
         offset = offsetParam;
       }
 
-      final uri = Uri.parse(
-          "${ApiConstants.baseUrl}${ApiNames.getVitalPatDetails}?unitId=$unitId&limit=$limit&offset=$offset");
-      final resp = await ioClient.get(uri).timeout(const Duration(seconds: 30));
+      final response = await _repository.fetchPatientsVital(
+          unitId: unitId, limit: limit, offset: offset);
 
-      if (resp.statusCode == 200) {
-        final Map body = json.decode(resp.body) as Map<String, dynamic>;
-        final response = PatientListResponse.fromMap(body);
+      totalRecordsVital.value = response.totalRecords;
 
-        totalRecordsVital.value = response.totalRecords;
-
-        if (isRefresh) {
-          allPatientsVital.assignAll(response.data);
-        } else {
-          allPatientsVital.addAll(response.data);
-        }
-
-        displayedPatientsVital.value =
-            List<DialysisVitalPatientListModel>.from(allPatientsVital);
-
-        if (response.data.length < limit ||
-            allPatientsVital.length >= response.totalRecords) {
-          isMoreDataAvailableVital.value = false;
-        } else {
-          isMoreDataAvailableVital.value = true;
-        }
-
-        offset = allPatientsVital.length;
-        lastUnitIdVital = unitId;
+      if (isRefresh) {
+        allPatientsVital.assignAll(response.data);
       } else {
-        debugPrint('server error ${resp.statusCode}');
+        allPatientsVital.addAll(response.data);
       }
+
+      displayedPatientsVital.value =
+          List<DialysisVitalPatientListModel>.from(allPatientsVital);
+
+      if (response.data.length < limit ||
+          allPatientsVital.length >= response.totalRecords) {
+        isMoreDataAvailableVital.value = false;
+      } else {
+        isMoreDataAvailableVital.value = true;
+      }
+
+      offset = allPatientsVital.length;
+      lastUnitIdVital = unitId;
     } catch (e) {
       debugPrint('fetchPatients error: $e');
     } finally {
@@ -129,31 +119,18 @@ class PatientController extends GetxController {
     update();
 
     try {
-      final uri = Uri.parse(
-          "${ApiConstants.baseUrl}${ApiNames.getInvestigationChart}?unitId=$unitId");
-      final resp = await ioClient.get(uri).timeout(const Duration(seconds: 30));
+      allPatientsInvest = await _repository.fetchPatientsInvest(unitId: unitId);
 
-      if (resp.statusCode == 200) {
-        List<dynamic> response = json.decode(resp.body);
-
-        // Convert to model list
-        allPatientsInvest = response
-            .map((json) => DialysisInvestPatientListModel.fromJson(json))
-            .toList();
-
-        final uniquePatients = <int, DialysisInvestPatientListModel>{};
-        if (allPatientsInvest != null) {
-          for (var p in allPatientsInvest!) {
-            uniquePatients[p.patientId ?? 0] = p;
-          }
+      final uniquePatients = <int, DialysisInvestPatientListModel>{};
+      if (allPatientsInvest != null) {
+        for (var p in allPatientsInvest!) {
+          uniquePatients[p.patientId ?? 0] = p;
         }
-
-        // Replace original list with unique ones
-        allPatientsInvest = uniquePatients.values.toList();
-        displayedPatientsInvest = allPatientsInvest;
-      } else {
-        debugPrint('server error ${resp.statusCode}');
       }
+
+      // Replace original list with unique ones
+      allPatientsInvest = uniquePatients.values.toList();
+      displayedPatientsInvest = allPatientsInvest;
     } catch (e) {
       debugPrint('fetchPatients error: $e');
     } finally {
@@ -161,37 +138,6 @@ class PatientController extends GetxController {
       update();
     }
   }
-
-  // Future<void> fetchPatientsInvest({
-  //   required int unitId,
-  // }) async {
-  //   isLoading.value = true;
-  //   update();
-  //
-  //   try {
-  //     final uri = Uri.parse(
-  //         "${ApiConstants.baseUrl}${ApiNames.getInvestigationChart}?unitId=$unitId");
-  //     final resp = await ioClient.get(uri).timeout(const Duration(seconds: 30));
-  //
-  //     if (resp.statusCode == 200) {
-  //       List<dynamic> response = json.decode(resp.body);
-  //
-  //       allPatientsInvest = response
-  //           .map((json) => DialysisInvestPatientListModel.fromJson(json))
-  //           .toList();
-  //
-  //       displayedPatientsInvest = allPatientsInvest;
-  //     } else {
-  //       debugPrint('server error ${resp.statusCode}');
-  //     }
-  //   } catch (e) {
-  //     debugPrint('fetchPatients error: $e');
-  //   } finally {
-  //     isLoading.value = false;
-  //
-  //     update();
-  //   }
-  // }
 
   void localSearchInvest(String query) {
     if (query.isEmpty) {
@@ -216,41 +162,14 @@ class PatientController extends GetxController {
     update();
 
     try {
-      final uri = Uri.parse(
-          "${ApiConstants.baseUrl}${ApiNames.getAllUnitDetails}?unitId=$unitId");
-
-      http.Response resp = await _getWithRetry(uri, retries: 2);
-
-      if (resp.statusCode == 200) {
-        List<dynamic> response = json.decode(resp.body);
-        allPatientsHemoglobin = response
-            .map((json) => HemoglobinTrackingModel.fromJson(json))
-            .toList();
-      } else {
-        debugPrint('Server error ${resp.statusCode}');
-      }
+      allPatientsHemoglobin =
+          await _repository.fetchPatientHemoglobinList(unitId: unitId);
     } catch (e) {
       debugPrint('fetchPatientHemoglobinList error: $e');
     } finally {
       isLoading.value = false;
       update();
     }
-  }
-
-  Future<http.Response> _getWithRetry(Uri uri,
-      {int retries = 1, Duration timeout = const Duration(seconds: 45)}) async {
-    for (int attempt = 0; attempt <= retries; attempt++) {
-      try {
-        final resp = await ioClient.get(uri).timeout(timeout);
-        return resp;
-      } on TimeoutException {
-        if (attempt == retries) rethrow;
-        debugPrint("Retrying... ($attempt/$retries)");
-        await Future.delayed(
-            const Duration(seconds: 2)); // short wait before retry
-      }
-    }
-    throw TimeoutException("Request timed out after $retries retries");
   }
 
   /// Convenience: refresh full list for given unitId
@@ -297,27 +216,13 @@ class PatientController extends GetxController {
   getVitalReportList(unitId, patientId, fromDate, toDate) async {
     isLoading.value = true;
     update();
-    final uri = Uri.parse(
-        '${ApiConstants.baseUrl}${ApiNames.getVitalPatChart}?unitId=$unitId&patientId=$patientId&fromDate=$fromDate&toDate=$toDate');
 
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
+    try {
+      vitalReportModel = await _repository.getVitalReportList(
+          unitId, patientId, fromDate, toDate);
       isLoading.value = false;
-
-      final data = json.decode(response.body);
-      vitalReportModel = VitalReportModel.fromJson(data);
-
       update();
-    } else {
+    } on ApiException {
       isLoading.value = false;
       update();
     }
@@ -328,27 +233,11 @@ class PatientController extends GetxController {
     isLoading.value = true;
     update();
 
-    final uri = Uri.parse(
-        '${ApiConstants.baseUrl}${ApiNames.getInvestigationResultData}?unitId=$unitId&patientId=$patientId&fromDate=$fromDate&toDate=$toDate');
-
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
     try {
-      final response = await ioClient.get(uri, headers: headers);
-      debugPrint("Status: ${response.statusCode}");
-      debugPrint("Response: ${response.body}");
-
-      if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
-        investReportModel = InvestigationChartReportModel.fromJson(data);
-        isLoading.value = false;
-        update();
-      } else {
-        isLoading.value = false;
-        update();
-      }
+      investReportModel = await _repository.getInvestReportList(
+          unitId, patientId, fromDate, toDate);
+      isLoading.value = false;
+      update();
     } catch (e) {
       debugPrint("Error: $e");
       isLoading.value = false;
@@ -475,22 +364,8 @@ class PatientController extends GetxController {
   Future<void> getReport(String fromDate, String toDate, String unitId,
       String patientId, int userId) async {
     try {
-      IOClient ioClient = IOClient(ByPassCert().httpClient);
-
-      var headers = {'Content-Type': 'application/json'};
-      var request = http.Request('POST',
-          Uri.parse('${ApiConstants.ip}${ApiNames.downloadViralChart}'));
-
-      request.body = json.encode({
-        "fromDate": fromDate,
-        "toDate": toDate,
-        "unitId": unitId,
-        "patientId": patientId,
-        "userId": userId
-      });
-      request.headers.addAll(headers);
-
-      http.StreamedResponse response = await ioClient.send(request);
+      final response = await _repository.downloadViralChart(
+          fromDate, toDate, unitId, patientId, userId);
 
       if (response.statusCode == 200) {
         // Get file bytes
@@ -606,22 +481,8 @@ class PatientController extends GetxController {
   Future<void> getReportInvest(String fromDate, String toDate, String unitId,
       String patientId, int userId) async {
     try {
-      IOClient ioClient = IOClient(ByPassCert().httpClient);
-
-      var headers = {'Content-Type': 'application/json'};
-      var request = http.Request('POST',
-          Uri.parse('${ApiConstants.ip}${ApiNames.downloadInvetsChart}'));
-
-      request.body = json.encode({
-        "fromDate": fromDate,
-        "toDate": toDate,
-        "unitId": unitId,
-        "patientId": patientId,
-        "userId": userId
-      });
-      request.headers.addAll(headers);
-
-      http.StreamedResponse response = await ioClient.send(request);
+      final response = await _repository.downloadInvestChart(
+          fromDate, toDate, unitId, patientId, userId);
 
       if (response.statusCode == 200) {
         // Get file bytes

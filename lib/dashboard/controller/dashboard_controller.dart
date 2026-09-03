@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dashboard/widget/dash_info_table_total.dart';
@@ -12,18 +10,20 @@ import 'package:heamodialysis/dashboard/model/mis_count_model.dart';
 import 'package:heamodialysis/dashboard/model/new_count_model.dart';
 import 'package:heamodialysis/dashboard/model/radial_chart_data.dart';
 import 'package:heamodialysis/dashboard/model/total_dialysis_patient_model.dart';
-import 'package:heamodialysis/dashboard/screen/nephro_first_level/model/nephro_dash_count.dart';
+import 'package:heamodialysis/dashboard/model/nephro_dash_count.dart';
 import 'package:heamodialysis/dashboard/screen/super_admin/total_invoice_amount_model.dart';
 import 'package:heamodialysis/new_registration/model/viral_status/viral_data.dart';
 import 'package:heamodialysis/new_registration/model/viral_status/viral_status_model.dart';
+import 'package:heamodialysis/dashboard/repository/dashboard_repository.dart';
+import 'package:heamodialysis/utils/api_client.dart';
 import 'package:heamodialysis/utils/api_names.dart';
 import 'package:heamodialysis/utils/api_urls.dart';
-import 'package:heamodialysis/utils/network_call.dart';
-import 'package:http/io_client.dart';
 import 'package:intl/intl.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 class DashboardController extends GetxController {
+  final DashboardRepository _repository = DashboardRepository();
+
   DashboardCountModel? dashboardCountModel;
   DashboardCountModel? dashboardCountClusterModel;
   NewCountModel? newCountModel;
@@ -73,40 +73,22 @@ class DashboardController extends GetxController {
   bool isTodaysDate = true;
 
   bool isLoading = false;
-  IOClient ioClient = IOClient(ByPassCert().httpClient);
 
   ViralStatusModel? viralStatusModel;
 
   Future<bool> getDashCount(fromDate, toDate, mulselUnitId) async {
     isLoading = true;
     update();
-    // final uri =
-    //     Uri.parse(ApiConstants.baseUrl4 + ApiConstants.getCentralDashboarCount);
 
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl4}${ApiNames.getCentralDashboarCount}?fromDate=$fromDate&currentDate=$toDate&unitId=$mulselUnitId");
-
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("API URL: $uri");
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
+    try {
+      dashboardCountModel = await _repository.fetchAndParse(
+          "${ApiConstants.baseUrl4}${ApiNames.getCentralDashboarCount}?fromDate=$fromDate&currentDate=$toDate&unitId=$mulselUnitId",
+          DashboardCountModel.fromJson);
       isLoading = false;
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      dashboardCountModel = DashboardCountModel.fromJson(data);
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -120,35 +102,19 @@ class DashboardController extends GetxController {
 
   Future<bool> getDashCountClusterDistrictWise(fromDate, toDate, userId) async {
     isLoading = true;
-    // final uri =
-    //     Uri.parse(ApiConstants.baseUrl4 + ApiConstants.getCentralDashboarCount);
 
     String fromD = fromDate;
     String toD = toDate;
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl4}${ApiNames.getCentralDashboarCount}?fromDate=$fromD&currentDate=$toD&unitId=$userId");
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("API URL: $uri");
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
+    try {
+      dashboardCountClusterModel = await _repository.fetchAndParse(
+          "${ApiConstants.baseUrl4}${ApiNames.getCentralDashboarCount}?fromDate=$fromD&currentDate=$toD&unitId=$userId",
+          DashboardCountModel.fromJson);
       isLoading = false;
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      dashboardCountClusterModel = DashboardCountModel.fromJson(data);
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -160,30 +126,15 @@ class DashboardController extends GetxController {
     isLoading = true;
     update();
 
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl4}${ApiNames.getNewDashboardCount}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId");
-
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("API URL: $uri");
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
+    try {
+      newCountModel = await _repository.fetchAndParse(
+          "${ApiConstants.baseUrl4}${ApiNames.getNewDashboardCount}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId",
+          NewCountModel.fromJson);
       isLoading = false;
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      newCountModel = NewCountModel.fromJson(data);
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -195,34 +146,14 @@ class DashboardController extends GetxController {
     isLoading = true;
     update();
 
-    final uri =
-        Uri.parse("${ApiConstants.baseUrl4}${ApiNames.getInvoiceAmountDet}");
-
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
+    try {
+      totalInvoiceAmountModel = await _repository.getTotalInvoiceAmount(
+          "${ApiConstants.baseUrl4}${ApiNames.getInvoiceAmountDet}");
       isLoading = false;
-
-      // Parse response body correctly
-      final List<dynamic> data = json.decode(response.body);
-
-      // Convert list of JSON to list of models
-      totalInvoiceAmountModel = data
-          .map<TotalInvoiceAmountModel>(
-              (json) => TotalInvoiceAmountModel.fromJson(json))
-          .toList();
 
       update();
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
       throw Exception('Failed getting dash count');
@@ -231,29 +162,16 @@ class DashboardController extends GetxController {
 
   Future<bool> getDashMis(fromDate, toDate) async {
     isLoading = true;
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrlMIS}${ApiNames.misCount}?fromDate=$fromDate&toDate=$toDate");
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
+    try {
+      misCount = await _repository.fetchAndParse(
+          "${ApiConstants.baseUrlMIS}${ApiNames.misCount}?fromDate=$fromDate&toDate=$toDate",
+          MisCountModel.fromJson);
       isLoading = false;
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      misCount = MisCountModel.fromJson(data);
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -263,30 +181,16 @@ class DashboardController extends GetxController {
 
   Future<bool> getDashCountNephro(userId, fromDate, toDate, district) async {
     isLoading = true;
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrlNeph}${ApiNames.nephroCount}?fromDate=$fromDate&toDate=$toDate&userId=$userId&distId=$district");
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("API URL: $uri");
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
+    try {
+      nephroCounts = await _repository.fetchAndParse(
+          "${ApiConstants.baseUrlNeph}${ApiNames.nephroCount}?fromDate=$fromDate&toDate=$toDate&userId=$userId&distId=$district",
+          NephroDashCount.fromJson);
       isLoading = false;
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      nephroCounts = NephroDashCount.fromJson(data);
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -303,29 +207,14 @@ class DashboardController extends GetxController {
     }
     isLoading = true;
     update();
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl4}${ApiNames.patientList}?fromDate=$fromDate&toDate=$toDate&unitId=$uId");
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
+    try {
+      dashInfoData = await _repository.getPatientRegTechnician(
+          "${ApiConstants.baseUrl4}${ApiNames.patientList}?fromDate=$fromDate&toDate=$toDate&unitId=$uId");
 
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("API URL-->: $uri");
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-      //getDeviceDetails
-      List<dynamic> data = json.decode(response.body);
-      dashInfoData = data.map((json) => DashInfoData.fromJson(json)).toList();
-
       update();
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -337,31 +226,15 @@ class DashboardController extends GetxController {
     isLoading = true;
     update();
 
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl4}${ApiNames.centralpatientList}?fromDate=$fromDate&toDate=$toDate&callFrom=CEND&unitId=$mulselUnitId");
-
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
-      isLoading = false;
-      //getDeviceDetails
-      List<dynamic> data = json.decode(response.body);
-      dashInfoDataAdmin =
-          data.map((json) => DashInfoData.fromJson(json)).toList();
+    try {
+      dashInfoDataAdmin = await _repository.getPatientRegTechnician(
+          "${ApiConstants.baseUrl4}${ApiNames.centralpatientList}?fromDate=$fromDate&toDate=$toDate&callFrom=CEND&unitId=$mulselUnitId");
 
       update();
 
+      isLoading = false;
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -371,31 +244,16 @@ class DashboardController extends GetxController {
 
   Future<bool> getPatientRegiCluster(fromDate, toDate, userId) async {
     isLoading = true;
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrlCluster}${ApiNames.clusterWiseTotalPatientReg}?fromDate=$fromDate&toDate=$toDate&userId=$userId");
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
+    try {
+      dashInfoDataCluster = await _repository.getPatientRegTechnician(
+          "${ApiConstants.baseUrlCluster}${ApiNames.clusterWiseTotalPatientReg}?fromDate=$fromDate&toDate=$toDate&userId=$userId");
 
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-      //getDeviceDetails
-      List<dynamic> data = json.decode(response.body);
-      dashInfoDataCluster =
-          data.map((json) => DashInfoData.fromJson(json)).toList();
-
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -405,31 +263,16 @@ class DashboardController extends GetxController {
 
   Future<bool> getPatientRegNephro(fromDate, toDate, district) async {
     isLoading = true;
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrlNeph}${ApiNames.nephroPatientUnitWiseCount}?fromDate=$fromDate&toDate=$toDate&distId=$district");
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
+    try {
+      dashInfoDataNephro = await _repository.getPatientRegTechnician(
+          "${ApiConstants.baseUrlNeph}${ApiNames.nephroPatientUnitWiseCount}?fromDate=$fromDate&toDate=$toDate&distId=$district");
 
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-      //getDeviceDetails
-      List<dynamic> data = json.decode(response.body);
-      dashInfoDataNephro =
-          data.map((json) => DashInfoData.fromJson(json)).toList();
-
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -440,31 +283,17 @@ class DashboardController extends GetxController {
   Future<bool> getTotalDialysisPatientSuperAdmin(
       fromDate, toDate, unitId) async {
     isLoading = true;
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl4}${ApiNames.getpatientListByunitId}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId");
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
+    try {
+      totalDialysisPatient = await _repository.fetchAndParse(
+          "${ApiConstants.baseUrl4}${ApiNames.getpatientListByunitId}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId",
+          (data) => (data as List).map((json) => TotalDialysisPatientModel.fromJson(json)).toList());
 
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-      //getDeviceDetails
-      List<dynamic> data = json.decode(response.body);
-      totalDialysisPatient =
-          data.map((json) => TotalDialysisPatientModel.fromJson(json)).toList();
-
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -474,31 +303,17 @@ class DashboardController extends GetxController {
 
   Future<bool> getTotalPatientByIdCluster(fromDate, toDate, unitId) async {
     isLoading = true;
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrlCluster}${ApiNames.getpatientListByunitId}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId");
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
+    try {
+      totalDialysisPatientCluster = await _repository.fetchAndParse(
+          "${ApiConstants.baseUrlCluster}${ApiNames.getpatientListByunitId}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId",
+          (data) => (data as List).map((json) => TotalDialysisPatientModel.fromJson(json)).toList());
 
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-      //getDeviceDetails
-      List<dynamic> data = json.decode(response.body);
-      totalDialysisPatientCluster =
-          data.map((json) => TotalDialysisPatientModel.fromJson(json)).toList();
-
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -508,31 +323,17 @@ class DashboardController extends GetxController {
 
   Future<bool> getEventNephroId(fromDate, toDate, unitId) async {
     isLoading = true;
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl4}${ApiNames.getEventDetailsInstituteWise}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId");
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
+    try {
+      nephroEventId = await _repository.fetchAndParse(
+          "${ApiConstants.baseUrl4}${ApiNames.getEventDetailsInstituteWise}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId",
+          (data) => (data as List).map((json) => EventDetailsId.fromJson(json)).toList());
 
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-      //getDeviceDetails
-      List<dynamic> data = json.decode(response.body);
-      nephroEventId =
-          data.map((json) => EventDetailsId.fromJson(json)).toList();
-
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -542,31 +343,17 @@ class DashboardController extends GetxController {
 
   Future<bool> getPatientByID(fromDate, toDate, unitId) async {
     isLoading = true;
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrlNeph}${ApiNames.nephroPatientByUnitIdCount}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId");
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
+    try {
+      totalPatientByUnit = await _repository.fetchAndParse(
+          "${ApiConstants.baseUrlNeph}${ApiNames.nephroPatientByUnitIdCount}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId",
+          (data) => (data as List).map((json) => TotalDialysisPatientModel.fromJson(json)).toList());
 
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-      //getDeviceDetails
-      List<dynamic> data = json.decode(response.body);
-      totalPatientByUnit =
-          data.map((json) => TotalDialysisPatientModel.fromJson(json)).toList();
-
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -579,31 +366,16 @@ class DashboardController extends GetxController {
     isLoading = true;
     update();
 
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl4}${ApiNames.getMjpDailysisCancelpat}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId&schemeType=$schemeT");
+    try {
+      dialysisCancelId = await _repository.fetchAndParse(
+          "${ApiConstants.baseUrl4}${ApiNames.getMjpDailysisCancelpat}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId&schemeType=$schemeT",
+          (data) => (data as List).map((json) => TotalDialysisPatientModel.fromJson(json)).toList());
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-      //getDeviceDetails
-      List<dynamic> data = json.decode(response.body);
-      dialysisCancelId =
-          data.map((json) => TotalDialysisPatientModel.fromJson(json)).toList();
-
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -616,35 +388,16 @@ class DashboardController extends GetxController {
     isLoading = true;
     update();
 
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl4}${ApiNames.getDiaSessionSchemeWise}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId&schemeType=$schemeT");
+    try {
+      dialysisSessionId = await _repository.fetchAndParse(
+          "${ApiConstants.baseUrl4}${ApiNames.getDiaSessionSchemeWise}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId&schemeType=$schemeT",
+          (data) => (data as List).map((json) => TotalDialysisPatientModel.fromJson(json)).toList());
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(
-        "--------------------- getDialysisSessionIdWise API ---------------------");
-    debugPrint("API URL: ${uri.toString()}");
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint("API STATUS CODE: ${response.statusCode}");
-    debugPrint("API RESPONSE: ${response.body}");
-    debugPrint(
-        "------------------------------------------------------------------");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-      //getDeviceDetails
-      List<dynamic> data = json.decode(response.body);
-      dialysisSessionId =
-          data.map((json) => TotalDialysisPatientModel.fromJson(json)).toList();
-
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -654,31 +407,17 @@ class DashboardController extends GetxController {
 
   Future<bool> getEventForIdSuperAdmin(fromDate, toDate, unitId) async {
     isLoading = true;
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl4}${ApiNames.getEventDetById}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId");
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
+    try {
+      eventDetIdList = await _repository.fetchAndParse(
+          "${ApiConstants.baseUrl4}${ApiNames.getEventDetById}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId",
+          (data) => (data as List).map((json) => EventDetailsId.fromJson(json)).toList());
 
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-      //getDeviceDetails
-      List<dynamic> data = json.decode(response.body);
-      eventDetIdList =
-          data.map((json) => EventDetailsId.fromJson(json)).toList();
-
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -688,31 +427,17 @@ class DashboardController extends GetxController {
 
   Future<bool> getEventForIdCluster(fromDate, toDate, unitId) async {
     isLoading = true;
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrlCluster}${ApiNames.getEventDetById}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId");
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
+    try {
+      eventDetIdListCluster = await _repository.fetchAndParse(
+          "${ApiConstants.baseUrlCluster}${ApiNames.getEventDetById}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId",
+          (data) => (data as List).map((json) => EventDetailsId.fromJson(json)).toList());
 
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-      //getDeviceDetails
-      List<dynamic> data = json.decode(response.body);
-      eventDetIdListCluster =
-          data.map((json) => EventDetailsId.fromJson(json)).toList();
-
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -724,35 +449,16 @@ class DashboardController extends GetxController {
     isLoading = true;
     update();
 
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl4}${ApiNames.getEventDetailsInstituteWise}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId");
+    try {
+      final result = await _repository.getEventForIdTech(
+          "${ApiConstants.baseUrl4}${ApiNames.getEventDetailsInstituteWise}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId");
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
-      if (response.body.isNotEmpty) {
-        isLoading = false;
-
-        if (json.decode(response.body) is List) {
-          //getDeviceDetails
-          List<dynamic> data = json.decode(response.body);
-
-          eventDetIdListTech =
-              data.map((json) => EventDetailsId.fromJson(json)).toList();
-
-          update();
-        }
+      isLoading = false;
+      if (result != null) {
+        eventDetIdListTech = result;
+        update();
       }
-    } else {
+    } on ApiException {
       eventDetIdListTech = null;
       isLoading = false;
       update();
@@ -763,30 +469,16 @@ class DashboardController extends GetxController {
 
   Future<bool> getAbhaIdSuperAdmin(fromDate, toDate, unitId) async {
     isLoading = true;
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl4}${ApiNames.abhaPatientById}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId");
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
+    try {
+      abhaDetIdList = await _repository.getPatientRegTechnician(
+          "${ApiConstants.baseUrl4}${ApiNames.abhaPatientById}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId");
 
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-      //getDeviceDetails
-      List<dynamic> data = json.decode(response.body);
-      abhaDetIdList = data.map((json) => DashInfoData.fromJson(json)).toList();
-
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -796,31 +488,16 @@ class DashboardController extends GetxController {
 
   Future<bool> getAbhaIdSuperCluster(fromDate, toDate, unitId) async {
     isLoading = true;
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrlCluster}${ApiNames.abhaPatientById}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId");
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
+    try {
+      abhaDetIdListCluster = await _repository.getPatientRegTechnician(
+          "${ApiConstants.baseUrlCluster}${ApiNames.abhaPatientById}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId");
 
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-      //getDeviceDetails
-      List<dynamic> data = json.decode(response.body);
-      abhaDetIdListCluster =
-          data.map((json) => DashInfoData.fromJson(json)).toList();
-
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -830,31 +507,17 @@ class DashboardController extends GetxController {
 
   Future<bool> getDiaSessSuperAdmin(fromDate, toDate, unitId) async {
     isLoading = true;
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl4}${ApiNames.getDialysisSessionDataByID}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId&callFrom=CEND&userType=SUPERADMIN");
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
+    try {
+      dialysisPatient = await _repository.fetchAndParse(
+          "${ApiConstants.baseUrl4}${ApiNames.getDialysisSessionDataByID}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId&callFrom=CEND&userType=SUPERADMIN",
+          (data) => (data as List).map((json) => TotalDialysisPatientModel.fromJson(json)).toList());
 
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-      //getDeviceDetails
-      List<dynamic> data = json.decode(response.body);
-      dialysisPatient =
-          data.map((json) => TotalDialysisPatientModel.fromJson(json)).toList();
-
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -864,31 +527,17 @@ class DashboardController extends GetxController {
 
   Future<bool> getDiaSessionIDCluster(fromDate, toDate, unitId) async {
     isLoading = true;
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrlCluster}${ApiNames.getDialysisSessionDataByID}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId");
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
+    try {
+      dialysisSessionByIDCluster = await _repository.fetchAndParse(
+          "${ApiConstants.baseUrlCluster}${ApiNames.getDialysisSessionDataByID}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId",
+          (data) => (data as List).map((json) => TotalDialysisPatientModel.fromJson(json)).toList());
 
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-      //getDeviceDetails
-      List<dynamic> data = json.decode(response.body);
-      dialysisSessionByIDCluster =
-          data.map((json) => TotalDialysisPatientModel.fromJson(json)).toList();
-
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -898,31 +547,17 @@ class DashboardController extends GetxController {
 
   Future<bool> getDiaSessSuperNephro(fromDate, toDate, unitId) async {
     isLoading = true;
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrlNeph}${ApiNames.nephroDialSessionPatDetailsById}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId");
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
+    try {
+      dialysisPatientIDNephro = await _repository.fetchAndParse(
+          "${ApiConstants.baseUrlNeph}${ApiNames.nephroDialSessionPatDetailsById}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId",
+          (data) => (data as List).map((json) => TotalDialysisPatientModel.fromJson(json)).toList());
 
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-      //getDeviceDetails
-      List<dynamic> data = json.decode(response.body);
-      dialysisPatientIDNephro =
-          data.map((json) => TotalDialysisPatientModel.fromJson(json)).toList();
-
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -932,31 +567,17 @@ class DashboardController extends GetxController {
 
   Future<bool> getDiaSessCancelNephro(fromDate, toDate, unitId) async {
     isLoading = true;
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrlNeph}${ApiNames.nephroDialCancelPatDetailsById}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId");
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
+    try {
+      dialysisCancelNephro = await _repository.fetchAndParse(
+          "${ApiConstants.baseUrlNeph}${ApiNames.nephroDialCancelPatDetailsById}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId",
+          (data) => (data as List).map((json) => TotalDialysisPatientModel.fromJson(json)).toList());
 
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-      //getDeviceDetails
-      List<dynamic> data = json.decode(response.body);
-      dialysisCancelNephro =
-          data.map((json) => TotalDialysisPatientModel.fromJson(json)).toList();
-
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -968,31 +589,15 @@ class DashboardController extends GetxController {
     isLoading = true;
     update();
 
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl4}${ApiNames.getUnitInfo}?fromDate=$fromDate&toDate=$toDate&callFrom=CEND&userType=SUPER ADMIN&unitId=$unitId");
+    try {
+      dashInfoFunctionalUnit = await _repository.getPatientRegTechnician(
+          "${ApiConstants.baseUrl4}${ApiNames.getUnitInfo}?fromDate=$fromDate&toDate=$toDate&callFrom=CEND&userType=SUPER ADMIN&unitId=$unitId");
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-      //getDeviceDetails
-      List<dynamic> data = json.decode(response.body);
-      dashInfoFunctionalUnit =
-          data.map((json) => DashInfoData.fromJson(json)).toList();
-
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -1002,31 +607,16 @@ class DashboardController extends GetxController {
 
   Future<bool> getFunctionalUnitListCluster(fromDate, toDate, userId) async {
     isLoading = true;
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl4}${ApiNames.getUnitInfo}?fromDate=$fromDate&toDate=$toDate&callFrom=CEND&userType=SUPER ADMIN&unitId=$userId");
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
+    try {
+      dashInfoFunctionalUnitCluster = await _repository.getPatientRegTechnician(
+          "${ApiConstants.baseUrl4}${ApiNames.getUnitInfo}?fromDate=$fromDate&toDate=$toDate&callFrom=CEND&userType=SUPER ADMIN&unitId=$userId");
 
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-      //getDeviceDetails
-      List<dynamic> data = json.decode(response.body);
-      dashInfoFunctionalUnitCluster =
-          data.map((json) => DashInfoData.fromJson(json)).toList();
-
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -1035,37 +625,18 @@ class DashboardController extends GetxController {
   }
 
   Future<bool> getAbhaPatientTechnician(unitId, fromDate, toDate) async {
-    // String uId;
-
     isLoading = true;
     update();
 
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl4}${ApiNames.abhaPatientList}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId");
+    try {
+      dashInfoDataAdmin = await _repository.getPatientRegTechnician(
+          "${ApiConstants.baseUrl4}${ApiNames.abhaPatientList}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId");
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("API URL: $uri");
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-      //getDeviceDetails
-      List<dynamic> data = json.decode(response.body);
-      dashInfoDataAdmin =
-          data.map((json) => DashInfoData.fromJson(json)).toList();
-
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -1074,34 +645,17 @@ class DashboardController extends GetxController {
   }
 
   Future<bool> getEventNephro(district, fromDate, toDate) async {
-    // String uId;
-
     isLoading = true;
 
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrlNeph}${ApiNames.nephroEventDet}?fromDate=$fromDate&toDate=$toDate&distId=$district");
+    try {
+      nephroEvent = await _repository.getPatientRegTechnician(
+          "${ApiConstants.baseUrlNeph}${ApiNames.nephroEventDet}?fromDate=$fromDate&toDate=$toDate&distId=$district");
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-      //getDeviceDetails
-      List<dynamic> data = json.decode(response.body);
-      nephroEvent = data.map((json) => DashInfoData.fromJson(json)).toList();
-
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -1113,31 +667,15 @@ class DashboardController extends GetxController {
     isLoading = true;
     update();
 
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl4}${ApiNames.centralAbhaPatientList}?fromDate=$fromDate&toDate=$toDate&unitId=$mulselUnitId");
+    try {
+      dashInfoDataAbhaAdmin = await _repository.getPatientRegTechnician(
+          "${ApiConstants.baseUrl4}${ApiNames.centralAbhaPatientList}?fromDate=$fromDate&toDate=$toDate&unitId=$mulselUnitId");
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-      //getDeviceDetails
-      List<dynamic> data = json.decode(response.body);
-      dashInfoDataAbhaAdmin =
-          data.map((json) => DashInfoData.fromJson(json)).toList();
-
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -1147,31 +685,16 @@ class DashboardController extends GetxController {
 
   Future<bool> getAbhaPatientCluster(fromDate, toDate, userId) async {
     isLoading = true;
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl4}${ApiNames.centralAbhaPatientList}?fromDate=$fromDate&toDate=$toDate&unitId=$userId");
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
+    try {
+      dashInfoDataAbhaCluster = await _repository.getPatientRegTechnician(
+          "${ApiConstants.baseUrl4}${ApiNames.centralAbhaPatientList}?fromDate=$fromDate&toDate=$toDate&unitId=$userId");
 
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-      //getDeviceDetails
-      List<dynamic> data = json.decode(response.body);
-      dashInfoDataAbhaCluster =
-          data.map((json) => DashInfoData.fromJson(json)).toList();
-
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -1189,33 +712,15 @@ class DashboardController extends GetxController {
     isLoading = true;
     update();
 
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl4}${ApiNames.getDialSessiondetailsCOunt}?fromDate=$fromDate&toDate=$toDate&unitId=$uId");
+    try {
+      dialysisSession = await _repository.fetchRawJson(
+          "${ApiConstants.baseUrl4}${ApiNames.getDialSessiondetailsCOunt}?fromDate=$fromDate&toDate=$toDate&unitId=$uId");
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(
-        "--------------------- getDialysisSession API ---------------------");
-    debugPrint("API URL: ${uri.toString()}");
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint("API STATUS CODE: ${response.statusCode}");
-    debugPrint("API RESPONSE: ${response.body}");
-    debugPrint(
-        "------------------------------------------------------------------");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-
-      dialysisSession = json.decode(response.body);
-
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -1227,30 +732,16 @@ class DashboardController extends GetxController {
     isLoading = true;
     update();
 
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl4}${ApiNames.centralDilSessionCount}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId&callFrom=CEND");
+    try {
+      dialysisSessionAdmin = await _repository.fetchAndParse(
+          "${ApiConstants.baseUrl4}${ApiNames.centralDilSessionCount}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId&callFrom=CEND",
+          (data) => (data as List).map((json) => DashInfoTotal.fromJson(json)).toList());
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-      List<dynamic> jsonData = jsonDecode(response.body);
-      dialysisSessionAdmin =
-          jsonData.map((json) => DashInfoTotal.fromJson(json)).toList();
-
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -1260,30 +751,17 @@ class DashboardController extends GetxController {
 
   Future<bool> getDialysisSessionCluster(fromDate, toDate, userId) async {
     isLoading = true;
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl4}${ApiNames.centralDilSessionCount}?fromDate=$fromDate&toDate=$toDate&unitId=$userId");
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
+    try {
+      dialysisSessionCluster = await _repository.fetchAndParse(
+          "${ApiConstants.baseUrl4}${ApiNames.centralDilSessionCount}?fromDate=$fromDate&toDate=$toDate&unitId=$userId",
+          (data) => (data as List).map((json) => DashInfoTotal.fromJson(json)).toList());
 
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-      List<dynamic> jsonData = jsonDecode(response.body);
-      dialysisSessionCluster =
-          jsonData.map((json) => DashInfoTotal.fromJson(json)).toList();
-
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -1293,30 +771,17 @@ class DashboardController extends GetxController {
 
   Future<bool> getDialysisSessionNephro(district, fromDate, toDate) async {
     isLoading = true;
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrlNeph}${ApiNames.nephroDialSessionCount}?fromDate=$fromDate&toDate=$toDate&distId=$district");
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
+    try {
+      dialysisSessionNephro = await _repository.fetchAndParse(
+          "${ApiConstants.baseUrlNeph}${ApiNames.nephroDialSessionCount}?fromDate=$fromDate&toDate=$toDate&distId=$district",
+          (data) => (data as List).map((json) => DashInfoTotal.fromJson(json)).toList());
 
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-      List<dynamic> jsonData = jsonDecode(response.body);
-      dialysisSessionNephro =
-          jsonData.map((json) => DashInfoTotal.fromJson(json)).toList();
-
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -1327,30 +792,17 @@ class DashboardController extends GetxController {
   Future<bool> getDialysisSessionCancelNephro(
       district, fromDate, toDate) async {
     isLoading = true;
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrlNeph}${ApiNames.nephroDialCancelCount}?fromDate=$fromDate&toDate=$toDate&distId=$district");
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
+    try {
+      dialysisSessionCancelNephro = await _repository.fetchAndParse(
+          "${ApiConstants.baseUrlNeph}${ApiNames.nephroDialCancelCount}?fromDate=$fromDate&toDate=$toDate&distId=$district",
+          (data) => (data as List).map((json) => DashInfoTotal.fromJson(json)).toList());
 
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-      List<dynamic> jsonData = jsonDecode(response.body);
-      dialysisSessionCancelNephro =
-          jsonData.map((json) => DashInfoTotal.fromJson(json)).toList();
-
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -1362,29 +814,15 @@ class DashboardController extends GetxController {
     isLoading = true;
     update();
 
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl4}${ApiNames.getcancelDialysisDetails}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId");
+    try {
+      dialysisSessionCancelled = await _repository.fetchRawJson(
+          "${ApiConstants.baseUrl4}${ApiNames.getcancelDialysisDetails}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId");
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-
-      dialysisSessionCancelled = json.decode(response.body);
-
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -1397,31 +835,16 @@ class DashboardController extends GetxController {
     isLoading = true;
     update();
 
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl4}${ApiNames.getCancelDialsisDet}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId");
+    try {
+      dialysisSessionCancelledAdmin = await _repository.fetchAndParse(
+          "${ApiConstants.baseUrl4}${ApiNames.getCancelDialsisDet}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId",
+          (data) => (data as List).map((json) => DashInfoTotal.fromJson(json)).toList());
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-
-      List<dynamic> jsonData = jsonDecode(response.body);
-      dialysisSessionCancelledAdmin =
-          jsonData.map((json) => DashInfoTotal.fromJson(json)).toList();
-
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -1432,31 +855,17 @@ class DashboardController extends GetxController {
   Future<bool> getDialysisSessionCancelledCluster(
       fromDate, toDate, userId) async {
     isLoading = true;
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl4}${ApiNames.getCancelDialsisDet}?fromDate=$fromDate&toDate=$toDate&unitId=$userId");
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
+    try {
+      dialysisSessionCancelledCluster = await _repository.fetchAndParse(
+          "${ApiConstants.baseUrl4}${ApiNames.getCancelDialsisDet}?fromDate=$fromDate&toDate=$toDate&unitId=$userId",
+          (data) => (data as List).map((json) => DashInfoTotal.fromJson(json)).toList());
 
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-
-      List<dynamic> jsonData = jsonDecode(response.body);
-      dialysisSessionCancelledCluster =
-          jsonData.map((json) => DashInfoTotal.fromJson(json)).toList();
-
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -1468,31 +877,16 @@ class DashboardController extends GetxController {
     isLoading = true;
     update();
 
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl4}${ApiNames.centralMachineDetailsCount}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId");
+    try {
+      machineCountInfo = await _repository.fetchAndParse(
+          "${ApiConstants.baseUrl4}${ApiNames.centralMachineDetailsCount}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId",
+          (data) => (data as List).map((json) => DashInfoTotal.fromJson(json)).toList());
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-
-      List<dynamic> jsonData = jsonDecode(response.body);
-      machineCountInfo =
-          jsonData.map((json) => DashInfoTotal.fromJson(json)).toList();
-
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -1502,31 +896,17 @@ class DashboardController extends GetxController {
 
   Future<bool> getMachineCountClusterWise(fromDate, toDate, userId) async {
     isLoading = true;
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl4}${ApiNames.centralMachineDetailsCount}?fromDate=$fromDate&toDate=$toDate&unitId=$userId");
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
+    try {
+      machineCountInfoCluster = await _repository.fetchAndParse(
+          "${ApiConstants.baseUrl4}${ApiNames.centralMachineDetailsCount}?fromDate=$fromDate&toDate=$toDate&unitId=$userId",
+          (data) => (data as List).map((json) => DashInfoTotal.fromJson(json)).toList());
 
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-
-      List<dynamic> jsonData = jsonDecode(response.body);
-      machineCountInfoCluster =
-          jsonData.map((json) => DashInfoTotal.fromJson(json)).toList();
-
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -1538,31 +918,16 @@ class DashboardController extends GetxController {
     isLoading = true;
     update();
 
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl4}${ApiNames.centralTicketDetailsCount}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId&callFrom=CEND");
+    try {
+      totalTickets = await _repository.fetchAndParse(
+          "${ApiConstants.baseUrl4}${ApiNames.centralTicketDetailsCount}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId&callFrom=CEND",
+          (data) => (data as List).map((json) => DashInfoSubHeader.fromJson(json)).toList());
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-
-      List<dynamic> jsonData = jsonDecode(response.body);
-      totalTickets =
-          jsonData.map((json) => DashInfoSubHeader.fromJson(json)).toList();
-
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -1572,31 +937,17 @@ class DashboardController extends GetxController {
 
   Future<bool> getTotalTicketsCluster(fromDate, toDate, userId) async {
     isLoading = true;
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl4}${ApiNames.centralTicketDetailsCount}?fromDate=$fromDate&toDate=$toDate&unitId=$userId");
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
+    try {
+      totalTicketsCluster = await _repository.fetchAndParse(
+          "${ApiConstants.baseUrl4}${ApiNames.centralTicketDetailsCount}?fromDate=$fromDate&toDate=$toDate&unitId=$userId",
+          (data) => (data as List).map((json) => DashInfoSubHeader.fromJson(json)).toList());
 
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-
-      List<dynamic> jsonData = jsonDecode(response.body);
-      totalTicketsCluster =
-          jsonData.map((json) => DashInfoSubHeader.fromJson(json)).toList();
-
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -1608,31 +959,16 @@ class DashboardController extends GetxController {
     isLoading = true;
     update();
 
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl4}${ApiNames.getInvoicestatusUnitwise}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId");
+    try {
+      billGenerationDetails = await _repository.fetchAndParse(
+          "${ApiConstants.baseUrl4}${ApiNames.getInvoicestatusUnitwise}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId",
+          (data) => (data as List).map((json) => DashInfoSubHeader.fromJson(json)).toList());
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-
-      List<dynamic> jsonData = jsonDecode(response.body);
-      billGenerationDetails =
-          jsonData.map((json) => DashInfoSubHeader.fromJson(json)).toList();
-
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -1644,30 +980,16 @@ class DashboardController extends GetxController {
     isLoading = true;
     update();
 
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl4}${ApiNames.getTicketDetails}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId");
+    try {
+      ticketTechnician = await _repository.fetchAndParse(
+          "${ApiConstants.baseUrl4}${ApiNames.getTicketDetails}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId",
+          (data) => DashInfoSubHeader.fromJson(data));
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-
-      var jsonData = jsonDecode(response.body);
-      ticketTechnician = DashInfoSubHeader.fromJson(jsonData);
-
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -1679,31 +1001,16 @@ class DashboardController extends GetxController {
     isLoading = true;
     update();
 
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl4}${ApiNames.centralComplaintDetailsCount}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId");
+    try {
+      complaint = await _repository.fetchAndParse(
+          "${ApiConstants.baseUrl4}${ApiNames.centralComplaintDetailsCount}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId",
+          (data) => (data as List).map((json) => DashInfoSubHeader.fromJson(json)).toList());
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-
-      List<dynamic> jsonData = jsonDecode(response.body);
-      complaint =
-          jsonData.map((json) => DashInfoSubHeader.fromJson(json)).toList();
-
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -1713,31 +1020,17 @@ class DashboardController extends GetxController {
 
   Future<bool> getComplaintCluster(fromDate, toDate, userId) async {
     isLoading = true;
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl4}${ApiNames.centralComplaintDetailsCount}?fromDate=$fromDate&toDate=$toDate&unitId=$userId");
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
+    try {
+      complaintCluster = await _repository.fetchAndParse(
+          "${ApiConstants.baseUrl4}${ApiNames.centralComplaintDetailsCount}?fromDate=$fromDate&toDate=$toDate&unitId=$userId",
+          (data) => (data as List).map((json) => DashInfoSubHeader.fromJson(json)).toList());
 
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-
-      List<dynamic> jsonData = jsonDecode(response.body);
-      complaintCluster =
-          jsonData.map((json) => DashInfoSubHeader.fromJson(json)).toList();
-
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -1749,30 +1042,16 @@ class DashboardController extends GetxController {
     isLoading = true;
     update();
 
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl4}${ApiNames.getComplaintDetails}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId");
+    try {
+      complaintTechnician = await _repository.fetchAndParse(
+          "${ApiConstants.baseUrl4}${ApiNames.getComplaintDetails}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId",
+          (data) => DashInfoSubHeader.fromJson(data));
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-
-      var jsonData = jsonDecode(response.body);
-      complaintTechnician = DashInfoSubHeader.fromJson(jsonData);
-
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -1784,30 +1063,16 @@ class DashboardController extends GetxController {
     isLoading = true;
     update();
 
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl4}${ApiNames.gettestDetailsUnitwise}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId");
+    try {
+      final result = await _repository.getTestDet(
+          "${ApiConstants.baseUrl4}${ApiNames.gettestDetailsUnitwise}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId");
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-      if (response.body.isNotEmpty) {
-        List<dynamic> jsonData = jsonDecode(response.body);
-        testDetails =
-            jsonData.map((json) => DashInfoSubHeader.fromJson(json)).toList();
-
+      if (result != null) {
+        testDetails = result;
         update();
       }
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -1817,31 +1082,17 @@ class DashboardController extends GetxController {
 
   Future<bool> getTestDetClusterWise(fromDate, toDate, userId) async {
     isLoading = true;
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl4}${ApiNames.gettestDetailsUnitwise}?fromDate=$fromDate&toDate=$toDate&unitId=$userId");
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
+    try {
+      testDetailsCluster = await _repository.fetchAndParse(
+          "${ApiConstants.baseUrl4}${ApiNames.gettestDetailsUnitwise}?fromDate=$fromDate&toDate=$toDate&unitId=$userId",
+          (data) => (data as List).map((json) => DashInfoSubHeader.fromJson(json)).toList());
 
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-
-      List<dynamic> jsonData = jsonDecode(response.body);
-      testDetailsCluster =
-          jsonData.map((json) => DashInfoSubHeader.fromJson(json)).toList();
-
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -1853,31 +1104,16 @@ class DashboardController extends GetxController {
     isLoading = true;
     update();
 
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl4}${ApiNames.getTestDetails}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId");
-
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
     try {
-      final response = await ioClient.get(uri, headers: headers);
+      final result = await _repository.fetchAndParse(
+          "${ApiConstants.baseUrl4}${ApiNames.getTestDetails}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId",
+          (data) => DashInfoSubHeader.fromJson(data));
 
-      debugPrint("Status code: ${response.statusCode}");
-      debugPrint("Response body: ${response.body}");
+      labtestDetails ??= [];
+      labtestDetails?.add(result);
 
-      if (response.statusCode == 200) {
-        final jsonData = jsonDecode(response.body);
-
-        labtestDetails ??= [];
-
-        labtestDetails?.add(DashInfoSubHeader.fromJson(jsonData));
-
-        debugPrint("Lab test details updated: ${labtestDetails?.length}");
-        update();
-      } else {
-        throw Exception('Failed to fetch test details: ${response.statusCode}');
-      }
+      debugPrint("Lab test details updated: ${labtestDetails?.length}");
+      update();
     } catch (e) {
       debugPrint("Error occurred: $e");
     } finally {
@@ -1963,35 +1199,15 @@ class DashboardController extends GetxController {
     isLoading = true;
     update();
 
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl4}${ApiNames.getEventDetailsCount}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId&callFrom=CEND");
+    try {
+      eventDetAdmin = await _repository.getPatientRegTechnician(
+          "${ApiConstants.baseUrl4}${ApiNames.getEventDetailsCount}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId&callFrom=CEND");
 
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-
-      // Decode response
-      List<dynamic> jsonData = jsonDecode(response.body);
-
-      // Map response to model list
-      // eventDetAdmin =
-      //     jsonData.map((item) => AdminEventDetails.fromJson(item)).toList();
-      eventDetAdmin =
-          jsonData.map((item) => DashInfoData.fromJson(item)).toList();
-
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -2001,35 +1217,16 @@ class DashboardController extends GetxController {
 
   Future<bool> getEventDetailCluster(fromDate, toDate, userId) async {
     isLoading = true;
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl4}${ApiNames.getEventDetailsCount}?fromDate=$fromDate&toDate=$toDate&unitId=$userId");
 
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
+    try {
+      eventDetCluster = await _repository.getPatientRegTechnician(
+          "${ApiConstants.baseUrl4}${ApiNames.getEventDetailsCount}?fromDate=$fromDate&toDate=$toDate&unitId=$userId");
 
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-
-      // Decode response
-      List<dynamic> jsonData = jsonDecode(response.body);
-
-      // Map response to model list
-      // eventDetAdmin =
-      //     jsonData.map((item) => AdminEventDetails.fromJson(item)).toList();
-      eventDetCluster =
-          jsonData.map((item) => DashInfoData.fromJson(item)).toList();
-
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -2041,30 +1238,16 @@ class DashboardController extends GetxController {
     isLoading = true;
     update();
 
-    final uri = Uri.parse(
-        "$baseUrl${ApiNames.getTopInstitute}?fromDate=$fromDate&toDate=$toDate");
+    try {
+      barChartModel = await _repository.fetchAndParse(
+          "$baseUrl${ApiNames.getTopInstitute}?fromDate=$fromDate&toDate=$toDate",
+          (data) => (data as List).map((item) => BarChartModel.fromJson(item)).toList());
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-      //getDeviceDetails
-      List<dynamic> data = json.decode(response.body);
-
-      barChartModel = data.map((item) => BarChartModel.fromJson(item)).toList();
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -2076,29 +1259,14 @@ class DashboardController extends GetxController {
     isLoading = true;
     update();
 
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl4}${ApiNames.getOngoingDialysis}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId");
+    try {
+      onGoingDiaList = await _repository.fetchAndParse(
+          "${ApiConstants.baseUrl4}${ApiNames.getOngoingDialysis}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId",
+          (data) => (data as List).map((item) => BarChartModel.fromJson(item)).toList());
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-      //getDeviceDetails
-      List<dynamic> data = json.decode(response.body);
-
-      onGoingDiaList =
-          data.map((item) => BarChartModel.fromJson(item)).toList();
       update();
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -2110,31 +1278,16 @@ class DashboardController extends GetxController {
     isLoading = true;
     update();
 
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl4}${ApiNames.getTopAbhaInstitute}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId");
+    try {
+      barChartModelAbha = await _repository.fetchAndParse(
+          "${ApiConstants.baseUrl4}${ApiNames.getTopAbhaInstitute}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId",
+          (data) => (data as List).map((item) => BarChartModel.fromJson(item)).toList());
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body ---: ${response.body}");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-      //getDeviceDetails
-      List<dynamic> data = json.decode(response.body);
-
-      barChartModelAbha =
-          data.map((item) => BarChartModel.fromJson(item)).toList();
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -2144,31 +1297,17 @@ class DashboardController extends GetxController {
 
   Future<bool> getChartDataAbhaCluster(fromDate, toDate) async {
     isLoading = true;
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrlCluster}${ApiNames.getTopAbhaInstitute}?fromDate=$fromDate&toDate=$toDate");
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
+    try {
+      barChartModelAbhaCluster = await _repository.fetchAndParse(
+          "${ApiConstants.baseUrlCluster}${ApiNames.getTopAbhaInstitute}?fromDate=$fromDate&toDate=$toDate",
+          (data) => (data as List).map((item) => BarChartModel.fromJson(item)).toList());
 
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-      //getDeviceDetails
-      List<dynamic> data = json.decode(response.body);
-
-      barChartModelAbhaCluster =
-          data.map((item) => BarChartModel.fromJson(item)).toList();
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -2180,26 +1319,12 @@ class DashboardController extends GetxController {
     isLoading = true;
     update();
 
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl4}${ApiNames.getSchemePreformance}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId");
+    try {
+      schemePerfList = await _repository.fetchAndParse(
+          "${ApiConstants.baseUrl4}${ApiNames.getSchemePreformance}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId",
+          (data) => (data as List).map((item) => ChartData.fromJson(item)).toList());
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-      //getDeviceDetails
-      List<dynamic> data = json.decode(response.body);
-
-      schemePerfList = data.map((item) => ChartData.fromJson(item)).toList();
 
       dates = schemePerfList
           .map((entry) => DateFormat("yyyy-MM").parse(entry.month))
@@ -2212,7 +1337,7 @@ class DashboardController extends GetxController {
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -2406,30 +1531,15 @@ class DashboardController extends GetxController {
     isLoading = true;
     update();
 
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl4}${ApiNames.getviralStatusCount}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId");
-
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
+    try {
+      countDescript = await _repository.fetchAndParse(
+          "${ApiConstants.baseUrl4}${ApiNames.getviralStatusCount}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId",
+          NewCountModel.fromJson);
       isLoading = false;
-      //getDeviceDetails
-      final data = json.decode(response.body);
-
-      countDescript = NewCountModel.fromJson(data);
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -2439,30 +1549,16 @@ class DashboardController extends GetxController {
 
   Future<bool> getRadialChartCluster(fromDate, toDate, userId) async {
     isLoading = true;
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrlCluster}${ApiNames.getviralStatusCount}?fromDate=$fromDate&toDate=$toDate&userId=$userId");
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
+    try {
+      countDescriptCluster = await _repository.fetchAndParse(
+          "${ApiConstants.baseUrlCluster}${ApiNames.getviralStatusCount}?fromDate=$fromDate&toDate=$toDate&userId=$userId",
+          NewCountModel.fromJson);
       isLoading = false;
-      //getDeviceDetails
-      final data = json.decode(response.body);
-
-      countDescriptCluster = NewCountModel.fromJson(data);
       update();
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
 
@@ -2474,37 +1570,19 @@ class DashboardController extends GetxController {
     isLoading = true;
     update();
 
-    final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getViralStatus);
+    try {
+      viralStatusModel = await _repository.fetchAndParse(
+          ApiConstants.baseUrl + ApiNames.getViralStatus, ViralStatusModel.fromJson);
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      viralStatusModel = ViralStatusModel.fromJson(data);
-
       update();
       return true;
-    } else if (response.statusCode == 401) {
+    } on ApiException catch (e) {
       isLoading = false;
-
-      update();
-
-      return false;
-    } else {
-      isLoading = false;
-
+      if (e.statusCode == 401) {
+        update();
+        return false;
+      }
       throw Exception('Failed getting getViralStatueList');
     }
   }
@@ -2513,39 +1591,20 @@ class DashboardController extends GetxController {
     isLoading = true;
     update();
 
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl4}${ApiNames.getDashboardShortCode}?userId=$userId");
+    try {
+      deptList = await _repository.fetchAndParse(
+          "${ApiConstants.baseUrl4}${ApiNames.getDashboardShortCode}?userId=$userId",
+          (data) => DashboardShortCodeModel.fromJson(data));
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-      //getDeviceDetails
-
-      final List<dynamic> jsonList = jsonDecode(response.body);
-      deptList = DashboardShortCodeModel.fromJson(jsonList);
-
       update();
       return true;
-    } else if (response.statusCode == 401) {
+    } on ApiException catch (e) {
       isLoading = false;
-
-      update();
-
-      return false;
-    } else {
-      isLoading = false;
-
+      if (e.statusCode == 401) {
+        update();
+        return false;
+      }
       throw Exception('Failed getting getViralStatueList');
     }
   }

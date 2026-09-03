@@ -110,7 +110,7 @@ class _DiagnosticInvState extends State<DiagnosticInv> {
           .getDiagnosticInvList(widget.patientData?.treatmentId);
 
       nephroController.getTestNameList(
-          userData['unitId'].toString(), '2', "", userData['ui'].toString());
+          userData['unitId'].toString(), '2', "", userData['user_ID'].toString());
     }
   }
 
@@ -153,20 +153,6 @@ class _DiagnosticInvState extends State<DiagnosticInv> {
                 return Center(child: buildShimmerLoader());
               }
               final diagnosticList = controller.diagnosticInvestList ?? [];
-              if (diagnosticList.isEmpty) {
-                return
-                    // Text("No Data Found");
-                    CommonStatusScreen(
-                  title: "No Data Found",
-                  description:
-                      "We are unable to find the data that\nyou are looking for ",
-                  img: "assets/no_Data_Found.png",
-                  buttonText: "Go Back",
-                  onPressed: () {
-                    Get.back();
-                  },
-                );
-              }
 
               return Column(
                 children: [
@@ -195,73 +181,90 @@ class _DiagnosticInvState extends State<DiagnosticInv> {
                     ),
                   ).paddingOnly(top: 8, bottom: 2),
                   Expanded(
-                    child: ListView.builder(
-                      itemCount: controller.diagnosticInvestList?.length,
-                      shrinkWrap: true,
-                      itemBuilder: (BuildContext context, int index) {
-                        return TestNameCard(
-                          patientList: controller.diagnosticInvestList?[index],
-                          cardItemDetailsList: cardItemDetailsList,
-                          isSecondColumnVisiable: true,
-                          path1: "assets/send_to_tech.png",
-                          path2: "assets/ct_report.png",
-                          path3: "assets/edit.png",
-                          path4: "assets/delete-bin.png",
-                          userData: userData,
-                          callB1: (index) async {
-                            await controller.sendToTechnician(
-                                controller
-                                    .diagnosticInvestList?[index].billDetailsId,
-                                userData['ui'].toString(),
-                                widget.patientData?.treatmentId.toString(),
-                                widget.patientData?.patientId.toString(),
-                                userData['unitId'].toString());
-                          },
-                          callB2: (index) async {
-                            await controller.viewCtReoprt(
-                                userData['unitId'].toString(),
-                                widget.patientData!.patientId.toString(),
-                                controller.treatmentIdModel![0][0].toString(),
-                                userData['ui'].toString());
-                          },
-                          callB3: (index) {
-                            groupVal = CustomRadioButtons.no;
-                            controller.update();
-                            showModalBottomSheet(
-                              isScrollControlled: true,
-                              context: context,
-                              builder: (BuildContext context) {
-                                return customBottomSheet(true,
-                                    controller.diagnosticInvestList?[index]);
-                              },
-                            );
-                          },
-                          callB4: (index) {
-                            showCustomSnackBar(
-                                context: context,
-                                topTitle: 'Delete Test',
-                                title:
-                                    'Are you sure\nyou want to delete this Test?',
-                                img: 'assets/delete-photo.png',
-                                onPress2: () async {
-                                  controller.deleteDiagnosticIns(
+                    child: diagnosticList.isEmpty
+                        ? CommonStatusScreen(
+                            title: "No Data Found",
+                            description:
+                                "We are unable to find the data that\nyou are looking for ",
+                            img: "assets/no_Data_Found.png",
+                            buttonText: "Go Back",
+                            onPressed: () {
+                              Get.back();
+                            },
+                          )
+                        : ListView.builder(
+                            itemCount: controller.diagnosticInvestList?.length,
+                            shrinkWrap: true,
+                            itemBuilder: (BuildContext context, int index) {
+                              return TestNameCard(
+                                patientList:
+                                    controller.diagnosticInvestList?[index],
+                                cardItemDetailsList: cardItemDetailsList,
+                                isSecondColumnVisiable: true,
+                                path1: "assets/send_to_tech.png",
+                                path2: "assets/ct_report.png",
+                                path3: "assets/edit.png",
+                                path4: "assets/delete-bin.png",
+                                userData: userData,
+                                callB1: (index) async {
+                                  await controller.sendToTechnician(
                                       controller.diagnosticInvestList?[index]
                                           .billDetailsId,
-                                      userData['ui'],
+                                      userData['user_ID'].toString(),
                                       widget.patientData?.treatmentId
-                                          .toString());
-                                  Get.back();
+                                          .toString(),
+                                      widget.patientData?.patientId.toString(),
+                                      userData['unitId'].toString());
                                 },
-                                onPress1: () {
-                                  Get.back();
+                                callB2: (index) async {
+                                  await controller.viewCtReoprt(
+                                      userData['unitId'].toString(),
+                                      widget.patientData!.patientId.toString(),
+                                      controller.treatmentIdModel![0][0]
+                                          .toString(),
+                                      userData['user_ID'].toString());
                                 },
-                                buttonTitle: 'No',
-                                buttonTitle2: 'Yes');
-                          },
-                          index: index,
-                        );
-                      },
-                    ),
+                                callB3: (index) {
+                                  groupVal = CustomRadioButtons.no;
+                                  controller.update();
+                                  showModalBottomSheet(
+                                    isScrollControlled: true,
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return customBottomSheet(
+                                          true,
+                                          controller
+                                              .diagnosticInvestList?[index]);
+                                    },
+                                  );
+                                },
+                                callB4: (index) {
+                                  showCustomSnackBar(
+                                      context: context,
+                                      topTitle: 'Delete Test',
+                                      title:
+                                          'Are you sure\nyou want to delete this Test?',
+                                      img: 'assets/delete-photo.png',
+                                      onPress2: () async {
+                                        controller.deleteDiagnosticIns(
+                                            controller.diagnosticInvestList?[
+                                                    index]
+                                                .billDetailsId,
+                                            userData['user_ID'],
+                                            widget.patientData?.treatmentId
+                                                .toString());
+                                        Get.back();
+                                      },
+                                      onPress1: () {
+                                        Get.back();
+                                      },
+                                      buttonTitle: 'No',
+                                      buttonTitle2: 'Yes');
+                                },
+                                index: index,
+                              );
+                            },
+                          ),
                   ),
                 ],
               );
@@ -298,8 +301,13 @@ class _DiagnosticInvState extends State<DiagnosticInv> {
     return StatefulBuilder(builder: (context, updateState) {
       if (isEdit) {
         nephroController.testNameField.text = data?.categoryName ?? '';
-        selectedTestNAmeObj = nephroController.testNameList
-            ?.firstWhere((e) => e.categoryName == data?.categoryName);
+        // testNameList is search-driven (repopulated on every typeahead
+        // query), so it may not contain this card's test at edit time -
+        // guard with orElse instead of letting firstWhere throw
+        // "Bad state: No element".
+        selectedTestNAmeObj = nephroController.testNameList?.firstWhere(
+            (e) => e.categoryName == data?.categoryName,
+            orElse: () => LstService());
 
         nephroController.instructions.text = data?.instructions ?? '';
         nephroController.clinicalNote.text = data?.clinicalNotes ?? '';
@@ -437,7 +445,7 @@ class _DiagnosticInvState extends State<DiagnosticInv> {
                             userData['unitId'].toString(),
                             '2',
                             search,
-                            userData['ui'].toString());
+                            userData['user_ID'].toString());
                       },
                       builder: (context, textEditingController, focusNode) {
                         return TextField(
@@ -582,14 +590,14 @@ class _DiagnosticInvState extends State<DiagnosticInv> {
                             widget.patientData!.treatmentId.toString(),
                             selectedTestNAmeObj!.categoryid.toString(),
                             userData['unitId'].toString(),
-                            userData['ui'].toString());
+                            userData['user_ID'].toString());
                     if (isDuplicate == false) {
                       nephroController.testPackageList.add(AddTestPackageModel(
                           patienttId: widget.patientData?.patientId.toString(),
                           perticularSName: selectedTestNAmeObj?.categoryName,
                           billDetailsId: "0",
                           serviceId: selectedTestNAmeObj?.serviceid.toString(),
-                          doctorId: userData['ui'].toString(),
+                          doctorId: userData['user_ID'].toString(),
                           treatmentId:
                               widget.patientData?.treatmentId.toString(),
                           departmentId: selectedTestNAmeObj?.deptId.toString(),
@@ -640,7 +648,7 @@ class _DiagnosticInvState extends State<DiagnosticInv> {
                       await nephroController.saveTestPackage(
                           nephroController.testPackageList,
                           userData['unitId'].toString(),
-                          userData['ui'].toString(),
+                          userData['user_ID'].toString(),
                           widget.patientData?.treatmentId?.toString());
                     } else {
                       CustomMessage.toast(
@@ -683,7 +691,7 @@ class _DiagnosticInvState extends State<DiagnosticInv> {
                                   perticularSName: allTest[i].testName,
                                   billDetailsId: "0",
                                   serviceId: "11",
-                                  doctorId: userData['ui'].toString(),
+                                  doctorId: userData['user_ID'].toString(),
                                   treatmentId: widget.patientData?.treatmentId
                                       .toString(),
                                   departmentId: '2',
@@ -741,7 +749,7 @@ class _DiagnosticInvState extends State<DiagnosticInv> {
                           await nephroController.savePackage(
                               nephroController.testPackageList[i],
                               userData['unitId'].toString(),
-                              userData['ui'].toString(),
+                              userData['user_ID'].toString(),
                               widget.patientData?.treatmentId?.toString());
                         }
                         CustomMessage.toast("Test Added");

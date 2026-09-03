@@ -74,6 +74,8 @@ class DataDet {
         required this.fName,
         this.status,
         this.mulDeptid,
+        this.mobileNo,
+        this.otpBasedLoginFlag,
     });
 
     String lName;
@@ -101,6 +103,8 @@ class DataDet {
     String fName;
     String? status;
     String? mulDeptid;
+    String? mobileNo;
+    String? otpBasedLoginFlag;
 
     factory DataDet.fromJson(Map<dynamic, dynamic> json) => DataDet(
         lName: json["l_name"],
@@ -128,6 +132,8 @@ class DataDet {
         fName: json["f_name"],
         status: json["status"],
         mulDeptid: json["mulDeptid"],
+        mobileNo: json["mobile_no"],
+        otpBasedLoginFlag: json["otpBasedLoginFlag"],
     );
 
     Map<dynamic, dynamic> toJson() => {
@@ -156,5 +162,7 @@ class DataDet {
         "f_name": fName,
         "status": status,
         "mulDeptid": mulDeptid,
+        "mobile_no": mobileNo,
+        "otpBasedLoginFlag": otpBasedLoginFlag,
     };
 }

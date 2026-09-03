@@ -118,7 +118,7 @@ class _ClinicalConditionState extends State<ClinicalCondition>
                                   String ids = idsList.join(',');
                                   await controller.updateCondtion(
                                       ids,
-                                      userData['ui'],
+                                      userData['user_ID'],
                                       "Confirmed",
                                       widget.patientData?.treatmentId);
                                 } else if (controller.confirmationList
@@ -135,7 +135,7 @@ class _ClinicalConditionState extends State<ClinicalCondition>
 
                                   await controller.updateCondtion(
                                       ids,
-                                      userData['ui'],
+                                      userData['user_ID'],
                                       "Provisional",
                                       widget.patientData?.treatmentId);
                                 } else {

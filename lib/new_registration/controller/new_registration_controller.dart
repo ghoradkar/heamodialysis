@@ -41,21 +41,23 @@ import 'package:heamodialysis/new_registration/model/view_patient_model.dart';
 import 'package:heamodialysis/new_registration/model/viral_status/viral_data.dart';
 import 'package:heamodialysis/new_registration/model/viral_status/viral_status_model.dart';
 import 'package:heamodialysis/new_registration/model/scrutiny_response.dart';
-import 'package:heamodialysis/new_registration/screens/upload_document_tab.dart';
+import 'package:heamodialysis/new_registration/repository/new_registration_repository.dart';
+import 'package:heamodialysis/new_registration/screen/upload_document_tab.dart';
 import 'package:heamodialysis/registered_patient_list/model/patient_history/regis_patient_history.dart';
-import 'package:heamodialysis/registered_patient_list/screens/registered_patient_list.dart';
+import 'package:heamodialysis/registered_patient_list/screen/registered_patient_list.dart';
+import 'package:heamodialysis/utils/api_client.dart';
 import 'package:heamodialysis/utils/api_names.dart';
 import 'package:heamodialysis/utils/api_urls.dart';
-import 'package:heamodialysis/utils/network_call.dart';
 import 'package:heamodialysis/widgets/cust_toast.dart';
 import 'package:heamodialysis/widgets/custom_popup.dart';
 import 'package:heamodialysis/widgets/custom_textfield.dart';
 import 'package:http/http.dart' as http;
-import 'package:http/io_client.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 
 class NewRegistrationController extends GetxController {
+  final NewRegistrationRepository _repository = NewRegistrationRepository();
+
   IdProofListModel? idProofListModel;
   ViewDocument? viewDocument;
   DocUploadListModel? docUploadListModel;
@@ -80,7 +82,6 @@ class NewRegistrationController extends GetxController {
   DialysisMode? dialysisMode;
   bool isLoading = false;
   bool isChecked = false;
-  IOClient ioClient = IOClient(ByPassCert().httpClient);
 
   FileDetails userProfilePhoto = FileDetails(
       name: 'userProfilePhoto',
@@ -380,7 +381,7 @@ class NewRegistrationController extends GetxController {
     isChecked = false;
     isLoading = false;
     groupVal = CustomRadioButtons.yes;
-    
+
     update();
   }
 
@@ -388,34 +389,17 @@ class NewRegistrationController extends GetxController {
     isLoading = true;
     update();
 
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl}${ApiNames.getStageByPatientId}?patientId=$patientId");
-
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
     try {
-      final response = await ioClient.post(uri, headers: headers, body: null);
-      if (response.statusCode == 200) {
-        isLoading = false;
-        final data = json.decode(response.body);
-        regisPatientHistory = RegisPatientHistory.fromJson(data);
-        update();
-        return true;
-      } else if (response.statusCode == 401) {
-        isLoading = false;
-        update();
-        return false;
-      } else {
-        isLoading = false;
-        update();
-        throw Exception('Failed getting getPatientHistory');
-      }
-    } catch (e) {
+      final data = await _repository.getPatientHistory(patientId);
+      isLoading = false;
+      regisPatientHistory = RegisPatientHistory.fromJson(data);
+      update();
+      return true;
+    } on ApiException catch (e) {
       isLoading = false;
       update();
-      rethrow;
+      if (e.statusCode == 401) return false;
+      throw Exception('Failed getting getPatientHistory');
     }
   }
 
@@ -423,18 +407,10 @@ class NewRegistrationController extends GetxController {
     isLoading = true;
     update();
 
-    final uri =
-        Uri.parse("${ApiConstants.baseUrl}${ApiNames.getNewDropdownList}");
-
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    final response = await ioClient.post(uri, headers: headers);
-    if (response.statusCode == 200) {
+    final result = await _repository.getEduSocOccuReligDropDown();
+    if (result != null) {
       isLoading = false;
-      commomDropdownList =
-          CommomDropdownList.fromJson(jsonDecode(response.body));
+      commomDropdownList = result;
     } else {
       isLoading = false;
       debugPrint('Failed getting dropdowns');
@@ -445,13 +421,6 @@ class NewRegistrationController extends GetxController {
   uploadDocuments(String? patientId, String userId, String unitId) async {
     isLoading = true;
     update();
-    HttpClient httpClient = ByPassCert().httpClient;
-    IOClient ioClient = IOClient(httpClient);
-
-    Uri uri = Uri.parse(
-        "${ApiConstants.baseUrl}${ApiNames.savePatientDocuments}?files");
-
-    var request = http.MultipartRequest('POST', uri);
 
     List<String?> selectedDocIds = items
         .where((e) =>
@@ -462,24 +431,25 @@ class NewRegistrationController extends GetxController {
 
     String docIdString = selectedDocIds.whereType<String>().join(',');
 
-    request.fields.addAll({
-      'documentChecklistId': docIdString,
-      'patientId': patientId ?? "",
-      'userId': userId,
-      'unitId': unitId
-    });
-
     try {
+      final files = <http.MultipartFile>[];
       for (int i = 0; i < items.length; i++) {
         if (items[i].isSelected &&
             items[i].file!.path.contains("com.mahadialysis.technician")) {
-          request.files.add(await http.MultipartFile.fromPath(
+          files.add(await http.MultipartFile.fromPath(
             items[i].key,
             items[i].file!.path,
           ));
         }
       }
-      http.StreamedResponse response = await ioClient.send(request);
+
+      final response = await _repository.uploadDocuments(
+        docIdString: docIdString,
+        patientId: patientId,
+        userId: userId,
+        unitId: unitId,
+        files: files,
+      );
 
       if (response.statusCode == 200) {
         debugPrint('Documents uploaded successfully');
@@ -499,21 +469,11 @@ class NewRegistrationController extends GetxController {
     update();
 
     try {
-      HttpClient httpClient = ByPassCert().httpClient;
-      IOClient ioClient = IOClient(httpClient);
-
-      Uri uri =
-          Uri.parse(ApiConstants.baseUrl + ApiNames.savePatientRegDetails);
-      var request = http.MultipartRequest('POST', uri);
       var formattedJson = prettyPrintJson(savePatientReqModel.toJson());
-      request.fields.addAll({'data': formattedJson});
-      
-      request.headers.addAll({
-        'Content-Type': 'multipart/form-data',
-      });
 
+      final files = <http.MultipartFile>[];
       if (userProfilePhoto.isSelected && userProfilePhoto.file != null) {
-        request.files.add(await http.MultipartFile.fromPath(
+        files.add(await http.MultipartFile.fromPath(
           userProfilePhoto.key,
           userProfilePhoto.file!.path,
         ));
@@ -523,7 +483,7 @@ class NewRegistrationController extends GetxController {
           historyOfDialysis.isSelected &&
           historyOfDialysis.file!.path
               .contains("com.mahadialysis.technician")) {
-        request.files.add(await http.MultipartFile.fromPath(
+        files.add(await http.MultipartFile.fromPath(
           historyOfDialysis.key,
           historyOfDialysis.file!.path,
         ));
@@ -532,16 +492,19 @@ class NewRegistrationController extends GetxController {
       if (relativeDoc.file != null &&
           relativeDoc.isSelected &&
           relativeDoc.file!.path.contains("com.mahadialysis.technician")) {
-        request.files.add(await http.MultipartFile.fromPath(
+        files.add(await http.MultipartFile.fromPath(
           relativeDoc.key,
           relativeDoc.file!.path,
         ));
       }
 
-      http.StreamedResponse response = await ioClient.send(request);
-      final finalResp = await http.Response.fromStream(response);
+      final finalResp = await _repository.savePatient(
+        savePatientReqModel: savePatientReqModel,
+        formattedJson: formattedJson,
+        files: files,
+      );
 
-      if (response.statusCode == 200) {
+      if (finalResp.statusCode == 200) {
         final responseData = jsonDecode(finalResp.body);
         int patientId = responseData['patid'];
 
@@ -552,7 +515,7 @@ class NewRegistrationController extends GetxController {
         );
 
         await getPatientReport(patientId.toString(), userId);
-        
+
         if (pageTitle == "Edit Patient Details") {
           CustomMessage.toast('Updated Successfully');
           CustomPopup.showSuccessDialog(() {
@@ -591,25 +554,12 @@ class NewRegistrationController extends GetxController {
   checkDuplicateMobileNo(String mobNo) async {
     isLoading = true;
     update();
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl}${ApiNames.checkMobileNo}?mobile=$mobNo");
-
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
 
     try {
-      final response = await ioClient.post(uri, headers: headers);
-      if (response.statusCode == 200) {
-        isLoading = false;
-        update();
-        final data = json.decode(response.body);
-        return mobileNoCheckMsg = data['message'];
-      } else {
-        isLoading = false;
-        update();
-        throw Exception('Failed getting checkDuplicateMobileNo');
-      }
+      final data = await _repository.checkDuplicateMobileNo(mobNo);
+      isLoading = false;
+      update();
+      return mobileNoCheckMsg = data['message'];
     } catch (e) {
       isLoading = false;
       update();
@@ -622,13 +572,8 @@ class NewRegistrationController extends GetxController {
     update();
 
     try {
-      final uri = Uri.parse(
-        '${ApiConstants.ip + ApiNames.generateAckReport}?patientId=$patientId&userId=$userId',
-      );
-      final request = http.Request('GET', uri);
-      final response = await request.send();
-      if (response.statusCode == 200) {
-        final bytes = await response.stream.toBytes();
+      final bytes = await _repository.getPatientReportBytes(patientId, userId);
+      if (bytes != null) {
         final fileName =
             'patient_report_${DateTime.now().millisecondsSinceEpoch}.pdf';
 
@@ -637,7 +582,7 @@ class NewRegistrationController extends GetxController {
         await patientReportFile?.writeAsBytes(bytes);
         debugPrint('📄 Patient report saved: ${patientReportFile?.path}');
       } else {
-        debugPrint('❌ Download failed: ${response.reasonPhrase}');
+        debugPrint('❌ Download failed');
       }
     } catch (e) {
       debugPrint('❌ Exception: $e');
@@ -652,16 +597,9 @@ class NewRegistrationController extends GetxController {
     update();
 
     try {
-      final uri = Uri.parse(
-        '${ApiConstants.ip + ApiNames.checkScrutinyDefinedOrNot}?unitId=$unitId&serviceCode=NPV',
-      );
-
-      final request = http.Request('GET', uri);
-      final response = await request.send();
-
-      if (response.statusCode == 200) {
-        var data = await response.stream.bytesToString();
-        scrutinyResponse = ScrutinyResponse.fromJson(jsonDecode(data));
+      final result = await _repository.checkScrutinyDefinedOrNot(unitId);
+      if (result != null) {
+        scrutinyResponse = result;
         if (scrutinyResponse?.status == '1' &&
             scrutinyResponse?.details != null) {
           isServiceDefined =
@@ -671,8 +609,6 @@ class NewRegistrationController extends GetxController {
           isQuestionsDefined =
               scrutinyResponse?.details?.isQuestionsDefineOrNot == 'true';
         }
-      } else {
-        debugPrint('${response.reasonPhrase}');
       }
     } catch (e) {
       debugPrint('❌ Exception: $e');
@@ -686,25 +622,16 @@ class NewRegistrationController extends GetxController {
     isLoading = true;
     update();
 
-    final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getIdProofList);
-
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
     try {
-      final response = await ioClient.get(uri, headers: headers);
-      if (response.statusCode == 200) {
-        isLoading = false;
-        final data = json.decode(response.body);
-        idProofListModel = IdProofListModel.fromJson(data);
-        update();
+      final result = await _repository.fetchModel(
+          ApiConstants.baseUrl + ApiNames.getIdProofList, IdProofListModel.fromJson);
+      isLoading = false;
+      update();
+      if (result != null) {
+        idProofListModel = result;
         return true;
-      } else {
-        isLoading = false;
-        update();
-        return false;
       }
+      return false;
     } catch (e) {
       isLoading = false;
       update();
@@ -716,31 +643,19 @@ class NewRegistrationController extends GetxController {
     isLoading = true;
     update();
 
-    final uri = Uri.parse(
-        '${ApiConstants.oldBaseUrl}${ApiNames.getDocumentList}?patientId=$patientId');
-
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
     try {
-      final response = await ioClient.get(uri, headers: headers);
-      if (response.statusCode == 200) {
-        isLoading = false;
-        var data = json.decode(response.body);
-        if (data is Map && data['status'] == 'Success') {
-          viewDocument = ViewDocument.fromJson(data);
-          tempFilePaths.clear();
-          if (viewDocument?.obj != null && viewDocument!.obj!.isNotEmpty) {
-            await downloadAndSaveFilesTemporarily(viewDocument?.obj ?? []);
-          }
-          update();
-          return true;
+      final data = await _repository.getDocumentList(patientId);
+      isLoading = false;
+      if (data != null) {
+        viewDocument = ViewDocument.fromJson(data);
+        tempFilePaths.clear();
+        if (viewDocument?.obj != null && viewDocument!.obj!.isNotEmpty) {
+          await downloadAndSaveFilesTemporarily(viewDocument?.obj ?? []);
         }
-      } else {
-        isLoading = false;
         update();
+        return true;
       }
+      update();
     } catch (e) {
       isLoading = false;
       update();
@@ -758,7 +673,7 @@ class NewRegistrationController extends GetxController {
         File file = File(filePath);
 
         var response =
-            await http.get(Uri.parse(ApiConstants.imageBaseUrl + url));
+            await _repository.downloadFile(ApiConstants.imageBaseUrl + url);
 
         if (response.statusCode == 200) {
           await file.writeAsBytes(response.bodyBytes);
@@ -774,28 +689,22 @@ class NewRegistrationController extends GetxController {
     isLoading = true;
     update();
 
-    final uri = Uri.parse(ApiConstants.oldBaseUrl + ApiNames.getDocCheckLIst);
+    items.clear();
 
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
+    historyOfDialysis = FileDetails(
+        name: 'Upload Document',
+        key: 'previousHospitalDocument',
+        isSelected: false,
+        isReq: false);
+
+    relativeDoc = FileDetails(
+        name: 'Document', key: 'relativeDoc', isSelected: false, isReq: false);
 
     try {
-      final response = await ioClient.get(uri, headers: headers);
-      items.clear();
+      final data = await _repository.getDocList();
 
-      historyOfDialysis = FileDetails(
-          name: 'Upload Document',
-          key: 'previousHospitalDocument',
-          isSelected: false,
-          isReq: false);
-
-      relativeDoc = FileDetails(
-          name: 'Document', key: 'relativeDoc', isSelected: false, isReq: false);
-
-      if (response.statusCode == 200) {
+      if (data != null) {
         await getDocumentList(patientId);
-        final data = json.decode(response.body);
         docUploadListModel = DocUploadListModel.fromJson(data);
 
         if (isViewPatient) {
@@ -812,7 +721,7 @@ class NewRegistrationController extends GetxController {
               file: obj == null ? null : File(ApiConstants.imageBaseUrl + obj[0]),
             ));
           }
-          
+
           if (viewDocument?.obj != null) {
             for (int i = 0; i < viewDocument!.obj!.length; i++) {
               if (viewDocument!.obj![i][0].contains("Previous_Hospital_Document")) {
@@ -827,7 +736,7 @@ class NewRegistrationController extends GetxController {
             for (int i = 0; i < docUploadListModel!.data!.length; i++) {
               List<dynamic>? obj = viewDocument!.obj?.firstWhereOrNull(
                   (e) => e[1] == docUploadListModel!.data?[i].docId);
-              
+
               if (obj != null) {
                 for (int j = 0; j < tempFilePaths.length; j++) {
                   String tempFileN = tempFilePaths[j].split('/').last;
@@ -878,18 +787,10 @@ class NewRegistrationController extends GetxController {
   }
 
   Future<bool> getAddressDataFromPinCode(pincode) async {
-    final uri = Uri.parse(
-        '${ApiConstants.baseUrl}${ApiNames.getPincodeData}?pinCode=$pincode');
-
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
     try {
-      final response = await ioClient.get(uri, headers: headers);
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        pincodeAdressModel = PincodeAdressModel.fromJson(data);
+      final result = await _repository.getAddressDataFromPinCode(pincode);
+      if (result != null) {
+        pincodeAdressModel = result;
         return true;
       }
       return false;
@@ -902,23 +803,16 @@ class NewRegistrationController extends GetxController {
     isLoading = true;
     update();
 
-    final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getSchemaAdoptedList);
-
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
     try {
-      final response = await ioClient.get(uri, headers: headers);
-      if (response.statusCode == 200) {
-        isLoading = false;
-        final data = json.decode(response.body);
-        schemaAdoptedModel = SchemaAdoptedModel.fromJson(data);
-        update();
-        return true;
-      }
+      final result = await _repository.fetchModel(
+          ApiConstants.baseUrl + ApiNames.getSchemaAdoptedList,
+          SchemaAdoptedModel.fromJson);
       isLoading = false;
       update();
+      if (result != null) {
+        schemaAdoptedModel = result;
+        return true;
+      }
       return false;
     } catch (e) {
       isLoading = false;
@@ -931,23 +825,15 @@ class NewRegistrationController extends GetxController {
     isLoading = true;
     update();
 
-    final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getInstituteList);
-
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
     try {
-      final response = await ioClient.get(uri, headers: headers);
-      if (response.statusCode == 200) {
-        isLoading = false;
-        final data = json.decode(response.body);
-        instituteList = InstituteList.fromJson(data);
-        update();
-        return instituteList;
-      }
+      final result = await _repository.fetchModel(
+          ApiConstants.baseUrl + ApiNames.getInstituteList, InstituteList.fromJson);
       isLoading = false;
       update();
+      if (result != null) {
+        instituteList = result;
+        return instituteList;
+      }
     } catch (e) {
       isLoading = false;
       update();
@@ -958,23 +844,15 @@ class NewRegistrationController extends GetxController {
     isLoading = true;
     update();
 
-    final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getPrefixList);
-
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
     try {
-      final response = await ioClient.get(uri, headers: headers);
-      if (response.statusCode == 200) {
-        isLoading = false;
-        final data = json.decode(response.body);
-        predixList = PredixList.fromJson(data);
-        update();
-        return true;
-      }
+      final result = await _repository.fetchModel(
+          ApiConstants.baseUrl + ApiNames.getPrefixList, PredixList.fromJson);
       isLoading = false;
       update();
+      if (result != null) {
+        predixList = result;
+        return true;
+      }
       return false;
     } catch (e) {
       isLoading = false;
@@ -987,23 +865,15 @@ class NewRegistrationController extends GetxController {
     isLoading = true;
     update();
 
-    final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getGenderList);
-
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
     try {
-      final response = await ioClient.get(uri, headers: headers);
-      if (response.statusCode == 200) {
-        isLoading = false;
-        final data = json.decode(response.body);
-        genderList = GenderList.fromJson(data);
-        update();
-        return true;
-      }
+      final result = await _repository.fetchModel(
+          ApiConstants.baseUrl + ApiNames.getGenderList, GenderList.fromJson);
       isLoading = false;
       update();
+      if (result != null) {
+        genderList = result;
+        return true;
+      }
       return false;
     } catch (e) {
       isLoading = false;
@@ -1016,23 +886,15 @@ class NewRegistrationController extends GetxController {
     isLoading = true;
     update();
 
-    final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getViralStatus);
-
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
     try {
-      final response = await ioClient.get(uri, headers: headers);
-      if (response.statusCode == 200) {
-        isLoading = false;
-        final data = json.decode(response.body);
-        viralStatusModel = ViralStatusModel.fromJson(data);
-        update();
-        return true;
-      }
+      final result = await _repository.fetchModel(
+          ApiConstants.baseUrl + ApiNames.getViralStatus, ViralStatusModel.fromJson);
       isLoading = false;
       update();
+      if (result != null) {
+        viralStatusModel = result;
+        return true;
+      }
       return false;
     } catch (e) {
       isLoading = false;
@@ -1045,23 +907,15 @@ class NewRegistrationController extends GetxController {
     isLoading = true;
     update();
 
-    final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getDialysisList);
-
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
     try {
-      final response = await ioClient.get(uri, headers: headers);
-      if (response.statusCode == 200) {
-        isLoading = false;
-        final data = json.decode(response.body);
-        dialysisMode = DialysisMode.fromJson(data);
-        update();
-        return true;
-      }
+      final result = await _repository.fetchModel(
+          ApiConstants.baseUrl + ApiNames.getDialysisList, DialysisMode.fromJson);
       isLoading = false;
       update();
+      if (result != null) {
+        dialysisMode = result;
+        return true;
+      }
       return false;
     } catch (e) {
       isLoading = false;
@@ -1074,23 +928,15 @@ class NewRegistrationController extends GetxController {
     isLoading = true;
     update();
 
-    final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getStateList);
-
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
     try {
-      final response = await ioClient.get(uri, headers: headers);
-      if (response.statusCode == 200) {
-        isLoading = false;
-        final data = json.decode(response.body);
-        stateModel = StateModel.fromJson(data);
-        update();
-        return true;
-      }
+      final result = await _repository.fetchModel(
+          ApiConstants.baseUrl + ApiNames.getStateList, StateModel.fromJson);
       isLoading = false;
       update();
+      if (result != null) {
+        stateModel = result;
+        return true;
+      }
       return false;
     } catch (e) {
       isLoading = false;
@@ -1103,23 +949,15 @@ class NewRegistrationController extends GetxController {
     isLoading = true;
     update();
 
-    final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getDivisionList);
-
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
     try {
-      final response = await ioClient.get(uri, headers: headers);
-      if (response.statusCode == 200) {
-        isLoading = false;
-        final data = json.decode(response.body);
-        divisionModel = DivisionModel.fromJson(data);
-        update();
-        return true;
-      }
+      final result = await _repository.fetchModel(
+          ApiConstants.baseUrl + ApiNames.getDivisionList, DivisionModel.fromJson);
       isLoading = false;
       update();
+      if (result != null) {
+        divisionModel = result;
+        return true;
+      }
       return false;
     } catch (e) {
       isLoading = false;
@@ -1132,23 +970,15 @@ class NewRegistrationController extends GetxController {
     isLoading = true;
     update();
 
-    final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getDistrictList);
-
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
     try {
-      final response = await ioClient.get(uri, headers: headers);
-      if (response.statusCode == 200) {
-        isLoading = false;
-        final data = json.decode(response.body);
-        districtModel = DistrictModel.fromJson(data);
-        update();
-        return true;
-      }
+      final result = await _repository.fetchModel(
+          ApiConstants.baseUrl + ApiNames.getDistrictList, DistrictModel.fromJson);
       isLoading = false;
       update();
+      if (result != null) {
+        districtModel = result;
+        return true;
+      }
       return false;
     } catch (e) {
       isLoading = false;
@@ -1161,23 +991,15 @@ class NewRegistrationController extends GetxController {
     isLoading = true;
     update();
 
-    final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getTalukaList);
-
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
     try {
-      final response = await ioClient.get(uri, headers: headers);
-      if (response.statusCode == 200) {
-        isLoading = false;
-        final data = json.decode(response.body);
-        talukaModel = TalukaModel.fromJson(data);
-        update();
-        return true;
-      }
+      final result = await _repository.fetchModel(
+          ApiConstants.baseUrl + ApiNames.getTalukaList, TalukaModel.fromJson);
       isLoading = false;
       update();
+      if (result != null) {
+        talukaModel = result;
+        return true;
+      }
       return false;
     } catch (e) {
       isLoading = false;
@@ -1190,23 +1012,15 @@ class NewRegistrationController extends GetxController {
     isLoading = true;
     update();
 
-    final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getTownList);
-
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
     try {
-      final response = await ioClient.get(uri, headers: headers);
-      if (response.statusCode == 200) {
-        isLoading = false;
-        final data = json.decode(response.body);
-        townModel = TownModel.fromJson(data);
-        update();
-        return true;
-      }
+      final result = await _repository.fetchModel(
+          ApiConstants.baseUrl + ApiNames.getTownList, TownModel.fromJson);
       isLoading = false;
       update();
+      if (result != null) {
+        townModel = result;
+        return true;
+      }
       return false;
     } catch (e) {
       isLoading = false;
@@ -1219,18 +1033,9 @@ class NewRegistrationController extends GetxController {
     isLoading = true;
     update();
 
-    final uri = Uri.parse("${ApiConstants.ip}${ApiNames.getAllDropDownList}");
-
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
     try {
-      final response = await ioClient.get(uri, headers: headers);
-      final decodedBody = utf8.decode(response.bodyBytes);
-
-      if (response.statusCode == 200) {
-        final data = json.decode(decodedBody);
+      final data = await _repository.getMonthlyIncome();
+      if (data != null) {
         getMonthyIncomeList = PatientDetailsResponse.fromJson(data);
         isLoading = false;
         update();
@@ -1308,23 +1113,15 @@ class NewRegistrationController extends GetxController {
     isLoading = true;
     update();
 
-    final uri = Uri.parse(ApiConstants.ip + ApiNames.getAllDropDownList);
-
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
     try {
-      final response = await ioClient.get(uri, headers: headers);
-      if (response.statusCode == 200) {
-        isLoading = false;
-        final data = json.decode(response.body);
-        dialysisFreqModel = DialysisFreqModel.fromJson(data);
-        update();
-        return true;
-      }
+      final result = await _repository.fetchModel(
+          ApiConstants.ip + ApiNames.getAllDropDownList, DialysisFreqModel.fromJson);
       isLoading = false;
       update();
+      if (result != null) {
+        dialysisFreqModel = result;
+        return true;
+      }
       return false;
     } catch (e) {
       isLoading = false;
@@ -1337,23 +1134,15 @@ class NewRegistrationController extends GetxController {
     isLoading = true;
     update();
 
-    final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getRelation);
-
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
     try {
-      final response = await ioClient.get(uri, headers: headers);
-      if (response.statusCode == 200) {
-        isLoading = false;
-        final data = json.decode(response.body);
-        relationModel = RelationModel.fromJson(data);
-        update();
-        return true;
-      }
+      final result = await _repository.fetchModel(
+          ApiConstants.baseUrl + ApiNames.getRelation, RelationModel.fromJson);
       isLoading = false;
       update();
+      if (result != null) {
+        relationModel = result;
+        return true;
+      }
       return false;
     } catch (e) {
       isLoading = false;
@@ -1366,23 +1155,15 @@ class NewRegistrationController extends GetxController {
     isLoading = true;
     update();
 
-    final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getRefferedBy);
-
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
     try {
-      final response = await ioClient.get(uri, headers: headers);
-      if (response.statusCode == 200) {
-        isLoading = false;
-        final data = json.decode(response.body);
-        referredByModel = ReferredByModel.fromJson(data);
-        update();
-        return true;
-      }
+      final result = await _repository.fetchModel(
+          ApiConstants.baseUrl + ApiNames.getRefferedBy, ReferredByModel.fromJson);
       isLoading = false;
       update();
+      if (result != null) {
+        referredByModel = result;
+        return true;
+      }
       return false;
     } catch (e) {
       isLoading = false;
@@ -1395,19 +1176,10 @@ class NewRegistrationController extends GetxController {
     isLoading = true;
     update();
 
-    var headers = {
-      'Content-Type': 'application/json',
-    };
-    var request = http.Request(
-        'GET', Uri.parse(ApiConstants.baseUrl + ApiNames.capturePhoto));
-    request.body = json.encode({"patientId": patientId});
-    request.headers.addAll(headers);
-
     try {
-      http.StreamedResponse response = await ioClient.send(request);
-      if (response.statusCode == 200) {
-        final data = json.decode(await response.stream.bytesToString());
-        patientProfilePhoto = PatientProfilePhoto.fromJson(data);
+      final result = await _repository.getProfilePhoto(patientId);
+      if (result != null) {
+        patientProfilePhoto = result;
       }
     } catch (e) {
       debugPrint(e.toString());
@@ -1421,22 +1193,10 @@ class NewRegistrationController extends GetxController {
     isLoading = true;
     update();
 
-    var headers = {
-      'Content-Type': 'application/json',
-    };
-    var request = http.Request(
-        'POST',
-        Uri.parse(
-            '${ApiConstants.baseUrl}${ApiNames.viewRelativeDoc}?patientId=$patientId'));
-    request.headers.addAll(headers);
-
     try {
-      http.StreamedResponse response = await ioClient.send(request);
-
-      if (response.statusCode == 200) {
-        List<dynamic> data = json.decode(await response.stream.bytesToString());
-        relativeDocList =
-            data.map((json) => RelativeInfoDoc.fromJson(json)).toList();
+      final result = await _repository.getRelativeInfoDoc(patientId);
+      if (result != null) {
+        relativeDocList = result;
 
         if (relativeDocList.isNotEmpty) {
           relativedocInfo = relativeDocList.length == 1
@@ -1466,23 +1226,15 @@ class NewRegistrationController extends GetxController {
     isLoading = true;
     update();
 
-    final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getMaritalStatus);
-
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
     try {
-      final response = await ioClient.get(uri, headers: headers);
-      if (response.statusCode == 200) {
-        isLoading = false;
-        final data = json.decode(response.body);
-        maritalStatusModel = MaritalStatusModel.fromJson(data);
-        update();
-        return true;
-      }
+      final result = await _repository.fetchModel(
+          ApiConstants.baseUrl + ApiNames.getMaritalStatus, MaritalStatusModel.fromJson);
       isLoading = false;
       update();
+      if (result != null) {
+        maritalStatusModel = result;
+        return true;
+      }
       return false;
     } catch (e) {
       isLoading = false;
@@ -1494,24 +1246,14 @@ class NewRegistrationController extends GetxController {
   viewPatientData(patientId) async {
     isLoading = true;
     update();
-    final uri = Uri.parse(
-        '${ApiConstants.oldBaseUrl}${ApiNames.viewPatientDetails}?patientId=$patientId');
-
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
 
     try {
-      final response = await ioClient.get(uri, headers: headers);
-      if (response.statusCode == 200) {
-        isLoading = false;
-        final data = json.decode(response.body);
+      final data = await _repository.viewPatientData(patientId);
+      isLoading = false;
+      if (data != null) {
         viewPatientModel = ViewPatientModel.fromJson(data);
-        update();
-      } else {
-        isLoading = false;
-        update();
       }
+      update();
     } catch (e) {
       isLoading = false;
       update();
@@ -1522,23 +1264,15 @@ class NewRegistrationController extends GetxController {
     isLoading = true;
     update();
 
-    final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getBloodGroup);
-
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
     try {
-      final response = await ioClient.get(uri, headers: headers);
-      if (response.statusCode == 200) {
-        isLoading = false;
-        final data = json.decode(response.body);
-        bloodGroupModel = BloodGroupModel.fromJson(data);
-        update();
-        return true;
-      }
+      final result = await _repository.fetchModel(
+          ApiConstants.baseUrl + ApiNames.getBloodGroup, BloodGroupModel.fromJson);
       isLoading = false;
       update();
+      if (result != null) {
+        bloodGroupModel = result;
+        return true;
+      }
       return false;
     } catch (e) {
       isLoading = false;

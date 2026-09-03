@@ -11,7 +11,7 @@ import 'package:heamodialysis/dialysis_queue/pre_dialysis/patient_history/tabs/t
 // import 'package:heamodialysis/nephro_desk_patient_list/edit_nephro/tabs/clinical_history.dart';
 import 'package:heamodialysis/nephro_desk_patient_list/controller/nephro_controller.dart';
 import 'package:heamodialysis/nephro_desk_patient_list/screen/edit_nephro/tabs/clinical_history.dart';
-import 'package:heamodialysis/schedular/schedular_controller/schedular_controller.dart';
+import 'package:heamodialysis/schedular/controller/schedular_controller.dart';
 import 'package:heamodialysis/utils/color_constants.dart';
 import 'package:heamodialysis/utils/shared_pref_constants.dart';
 import 'package:heamodialysis/utils/shared_preference.dart';
@@ -63,7 +63,7 @@ class CoversheetState extends State<Coversheet> {
 
   Future<void> getUserData() async {
     userData = await SharedPref().read(const SharedPrefConstant().kUserData);
-    debugPrint(userData['ui'].toString());
+    debugPrint(userData['user_ID'].toString());
   }
 
   @override

@@ -65,6 +65,9 @@ Widget box({double h = 12, double w = double.infinity, double radius = 4}) {
 
 Widget buildShimmerLoader() {
   return ListView.builder(
+    shrinkWrap: true,
+    physics: const NeverScrollableScrollPhysics(),
+    itemCount: 5,
     itemBuilder: (context, index) {
       return Padding(
         padding: const EdgeInsets.all(8.0),

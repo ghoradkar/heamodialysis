@@ -85,7 +85,7 @@ class InvoiceGenerationState extends State<InvoiceGeneration> {
       yearList = getLastThreeYears();
 
       await invoiceApprovalController.getInvoiceList(int.parse(month),
-          int.parse(year), userData['unitId'], userData['ui']);
+          int.parse(year), userData['unitId'], userData['user_ID']);
     }
   }
 
@@ -150,12 +150,12 @@ class InvoiceGenerationState extends State<InvoiceGeneration> {
                 invoiceApprovalController.sendForApprovalReq.unitId =
                     userData['unitId'];
                 invoiceApprovalController.sendForApprovalReq.userIdd =
-                    userData['ui'];
+                    userData['user_ID'];
                 await invoiceApprovalController.sendForApproval(
                     int.parse(month),
                     int.parse(year),
                     userData['unitId'],
-                    userData['ui']);
+                    userData['user_ID']);
               }
             },
             child: CustomText(
@@ -196,7 +196,7 @@ class InvoiceGenerationState extends State<InvoiceGeneration> {
                               var body = {
                                 "invNo": invoiceApprovalController
                                     .invoiceApprovalModel?[index].invNo,
-                                "userId": userData['ui']
+                                "userId": userData['user_ID']
                               };
 
                               controller.viewInvoiceReport(
@@ -206,7 +206,7 @@ class InvoiceGenerationState extends State<InvoiceGeneration> {
                               var body = {
                                 "invNo": invoiceApprovalController
                                     .invoiceApprovalModel?[index].invNo,
-                                "userId": userData['ui']
+                                "userId": userData['user_ID']
                               };
                               controller.viewInvoiceSummary(
                                   body, "Invoice Summary");
@@ -221,7 +221,7 @@ class InvoiceGenerationState extends State<InvoiceGeneration> {
                               var body = {
                                 "invNo": invoiceApprovalController
                                     .invoiceApprovalModel?[index].invNo,
-                                "userId": userData['ui']
+                                "userId": userData['user_ID']
                               };
 
                               controller.viewMavCalculation(
@@ -360,7 +360,7 @@ class InvoiceGenerationState extends State<InvoiceGeneration> {
                             int.parse(month),
                             int.parse(selectedYear!),
                             userData['unitId'],
-                            userData['ui']);
+                            userData['user_ID']);
                         setState(() {});
                       },
                       child: Container(

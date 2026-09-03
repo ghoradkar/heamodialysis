@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:heamodialysis/dashboard/screen/nephro_first_level/first_level_controller.dart';
-import 'package:heamodialysis/dashboard/screen/nephro_first_level/model/first_level_scrutiny_approval_list.dart';
+import 'package:heamodialysis/dashboard/controller/first_level_controller.dart';
+import 'package:heamodialysis/dashboard/model/first_level_scrutiny_approval_list.dart';
 import 'package:heamodialysis/login/controller/login_controller.dart';
 import 'package:heamodialysis/utils/color_constants.dart';
 import 'package:heamodialysis/utils/shared_pref_constants.dart';
@@ -595,7 +595,7 @@ class _SecondLevelServiceDescriptionTabState
 
                                 firstLevelScrutinyController
                                     .firstLevelSendReqModel
-                                    .userId = userData['ui'].toString();
+                                    .userId = userData['user_ID'].toString();
 
                                 firstLevelScrutinyController
                                     .firstLevelSendReqModel

@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:heamodialysis/dashboard/screen/technician/institutewise_dashboard_screen.dart';
-import 'package:heamodialysis/dialysis_queue/hd_chart/hd_chart_controller.dart';
+import 'package:heamodialysis/dialysis_queue/hd_chart/controller/hd_chart_controller.dart';
 import 'package:heamodialysis/upload_document/controller/document_list_controller.dart';
 import 'package:heamodialysis/upload_document/model/document_search_request_model.dart';
 import 'package:heamodialysis/upload_document/model/patient_document_model.dart';

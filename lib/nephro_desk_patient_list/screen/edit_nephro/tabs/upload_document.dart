@@ -10,7 +10,7 @@ import 'package:heamodialysis/internet/no_internet_connectivity.dart';
 import 'package:heamodialysis/nephro_desk_patient_list/model/uploaded_document_nephro.dart';
 import 'package:heamodialysis/nephro_desk_patient_list/controller/nephro_controller.dart';
 import 'package:heamodialysis/registered_patient_list/model/search_patient_dropdown/search_data.dart';
-import 'package:heamodialysis/registered_patient_list/screens/registered_patient_list.dart';
+import 'package:heamodialysis/registered_patient_list/screen/registered_patient_list.dart';
 import 'package:heamodialysis/utils/color_constants.dart';
 import 'package:heamodialysis/utils/custom_shimmer_loader.dart';
 import 'package:heamodialysis/utils/shared_pref_constants.dart';
@@ -316,7 +316,7 @@ class _UploadDocumentState extends State<UploadDocument> {
                                                                       .text,
                                                                   userData['unitId']
                                                                       .toString(),
-                                                                  userData['ui']
+                                                                  userData['user_ID']
                                                                       .toString()
                                                               );
                                                               Get.back();
@@ -395,7 +395,7 @@ class _UploadDocumentState extends State<UploadDocument> {
                                   await nephroController.deleteUploadedImage(
                                       nephroController
                                           .uploadedDocList?[index].documentId,
-                                      userData['ui'],
+                                      userData['user_ID'],
                                       widget.patientData?.patientId,
                                       widget.patientData?.treatmentId,
                                       userData['unitId']);

@@ -81,7 +81,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
 
   Future<void> getUserData() async {
     userData = await SharedPref().read(const SharedPrefConstant().kUserData);
-    var userId = userData['ui'];
+    var userId = userData['user_ID'];
     debugPrint(userId.toString());
   }
 
@@ -753,7 +753,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                                   }, () {
                                     Get.back();
                                   }, () async {
-                                    var userId = userData['ui'];
+                                    var userId = userData['user_ID'];
                                     String formattedDate;
                                     if (selectedValue == null) {
                                       DateTime now = DateTime.now();

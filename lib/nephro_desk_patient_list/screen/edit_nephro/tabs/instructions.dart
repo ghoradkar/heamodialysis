@@ -106,7 +106,7 @@ class _InstructionsState extends State<Instructions>
                           "individualTreatmentInstructionCheckboxIDArray":
                           ids,
                           "unitId": userData['unitId'].toString(),
-                          "userId": userData['ui']
+                          "userId": userData['user_ID']
                         };
 
                         await controller.saveInstructions(context,
@@ -181,7 +181,7 @@ class _InstructionsState extends State<Instructions>
                   },
                   // onDelete: (index) async {
                   //   await controller.deleteIndivisualInst(
-                  //       userData['ui'],
+                  //       userData['user_ID'],
                   //       nephroController
                   //           .defaultInstructionList?[index].reportInstructionID,
                   //       widget.patientData?.treatmentId,
@@ -213,7 +213,7 @@ class _InstructionsState extends State<Instructions>
                         Get.back(); // Close dialog first
 
                         // await controller.deleteIndivisualInst(
-                        //   userData['ui'],
+                        //   userData['user_ID'],
                         //   nephroController.defaultInstructionList?[index].reportInstructionID,
                         //   widget.patientData?.treatmentId,
                         //   widget.patientData?.patientId,
@@ -221,7 +221,7 @@ class _InstructionsState extends State<Instructions>
                         // );
 
                         await controller.deleteIndivisualInst(
-                                userData['ui'],
+                                userData['user_ID'],
                                 nephroController
                                     .defaultInstructionList?[index].reportInstructionID,
                                 widget.patientData?.treatmentId,
@@ -305,7 +305,7 @@ class _InstructionsState extends State<Instructions>
                           Get.back(); // close popup first
 
                           await controller.deleteInstruction(
-                              userData['ui'],
+                              userData['user_ID'],
                               nephroController.instructionsList?[value]
                                   .idindividualtreatmentinstruction,
                               widget.patientData?.treatmentId.toString(),
@@ -318,7 +318,7 @@ class _InstructionsState extends State<Instructions>
                         context: context,
                       );
                       // await controller.deleteInstruction(
-                      //     userData['ui'],
+                      //     userData['user_ID'],
                       //     nephroController.instructionsList?[value]
                       //         .idindividualtreatmentinstruction,
                       //     widget.patientData?.treatmentId.toString(),

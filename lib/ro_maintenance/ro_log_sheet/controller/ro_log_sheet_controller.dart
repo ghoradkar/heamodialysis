@@ -1,8 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-// import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 import 'package:heamodialysis/new_registration/model/institute/Institute_list.dart';
 import 'package:heamodialysis/new_registration/model/institute/institute_data.dart';
@@ -21,17 +18,17 @@ import 'package:heamodialysis/ro_maintenance/ro_log_sheet/model/ro_water_conduct
 import 'package:heamodialysis/ro_maintenance/ro_log_sheet/model/ro_water_tds_model.dart';
 import 'package:heamodialysis/ro_maintenance/ro_log_sheet/model/sand_filter_pre_post_model.dart';
 import 'package:heamodialysis/ro_maintenance/ro_log_sheet/model/softner_available_model.dart';
-import 'package:heamodialysis/ro_maintenance/ro_log_sheet/screens/ro_log_sheet_list.dart';
+import 'package:heamodialysis/ro_maintenance/ro_log_sheet/repository/ro_log_sheet_repository.dart';
+import 'package:heamodialysis/ro_maintenance/ro_log_sheet/screen/ro_log_sheet_list.dart';
 import 'package:heamodialysis/ro_maintenance/ro_machine_issue_log/model/add_machine_issue_req_model/add_edit_machine_issue_log_req.dart';
 import 'package:heamodialysis/ro_maintenance/ro_machine_issue_log/model/problem_resolve/problem_data.dart';
 import 'package:heamodialysis/ro_maintenance/ro_machine_issue_log/model/problem_resolve/problem_resolved_model.dart';
-import 'package:heamodialysis/utils/api_names.dart';
-import 'package:heamodialysis/utils/api_urls.dart';
-import 'package:heamodialysis/utils/network_call.dart';
+import 'package:heamodialysis/utils/api_client.dart';
 import 'package:heamodialysis/widgets/cust_toast.dart';
-import 'package:http/io_client.dart';
 
 class RoLogSheetController extends GetxController {
+  final RoLogSheetRepository _repository = RoLogSheetRepository();
+
   bool isLoading = false;
   InstituteDataModel? dropDownValue;
 
@@ -124,107 +121,57 @@ class RoLogSheetController extends GetxController {
   bool uvLampSecondCheckBox = false;
 
   DoneByModel? doneByModel;
-  IOClient ioClient = IOClient(ByPassCert().httpClient);
 
   InitialValueEditModel? initialValueEditModel;
 
   getRoMachineIssueLogAndSearchList(unitId, fromDate, toDate) async {
     isLoading = true;
 
-    final uri = Uri.parse(
-        ApiConstants.baseUrl + ApiNames.getallROMachineLogSheetBySearch);
-    var body = {"unitId": unitId, "fromDate": fromDate, "toDate": toDate};
-    String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.post(uri, headers: headers, body: jsonbody);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      roLogSheetModel = RoLogSheetModel.fromJson(data);
+    try {
+      roLogSheetModel = await _repository
+          .getRoMachineIssueLogAndSearchList(unitId, fromDate, toDate);
       isLoading = false;
 
       update();
-    } else if (response.statusCode == 401) {
+    } on ApiException catch (e) {
       isLoading = false;
-
-      update();
-    } else {
-      isLoading = false;
-
-      throw Exception('Failed getting getRoMaintenanceDetAndSearchList');
+      if (e.statusCode == 401) {
+        update();
+      } else {
+        throw Exception('Failed getting getRoMaintenanceDetAndSearchList');
+      }
     }
   }
 
   Future<bool> deleteLogSheet(id, unitId) async {
     isLoading = true;
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl}${ApiNames.roMachineLogSheetDelete}?id=$id");
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
+    try {
+      final responseBody = await _repository.deleteLogSheet(id);
       isLoading = false;
-      //getDeviceDetails
-      // final data = json.decode(response.body);
-      CustomMessage.toast(response.body);
+      CustomMessage.toast(responseBody);
       update();
 
-      getRoMachineIssueLogAndSearchList(unitId,'','');
+      getRoMachineIssueLogAndSearchList(unitId, '', '');
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
-
       throw Exception('Failed getting captcha');
     }
   }
 
   Future<bool> getInitialValueForEdit(id) async {
     isLoading = true;
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl}${ApiNames.getROMachineLogNewById}?machId=$id");
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
+    try {
+      initialValueEditModel = await _repository.getInitialValueForEdit(id);
       isLoading = false;
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      initialValueEditModel = InitialValueEditModel.fromJson(data);
-
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
-
       throw Exception('Failed getting captcha');
     }
   }
@@ -232,34 +179,15 @@ class RoLogSheetController extends GetxController {
   getMachineList(unitId) async {
     isLoading = true;
 
-    final uri =
-        Uri.parse(ApiConstants.baseUrl + ApiNames.getMachineNameList);
-    var body = {"unitId": unitId};
-    String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.post(uri, headers: headers, body: jsonbody);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      getMachineNameModel = GetMachineNameModel.fromJson(data);
+    try {
+      getMachineNameModel = await _repository.getMachineList(unitId);
       isLoading = false;
-
       return getMachineNameModel;
-    } else if (response.statusCode == 401) {
+    } on ApiException catch (e) {
       isLoading = false;
-    } else {
-      isLoading = false;
-
-      throw Exception('Failed getting getMachineNameList');
+      if (e.statusCode != 401) {
+        throw Exception('Failed getting getMachineNameList');
+      }
     }
 
     update();
@@ -268,32 +196,14 @@ class RoLogSheetController extends GetxController {
   getSandPrePost() async {
     isLoading = true;
 
-    final uri =
-        Uri.parse(ApiConstants.baseUrl + ApiNames.getSandFilterPrePost);
-
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      sandFilterPrePostModel = SandFilterPrePostModel.fromJson(data);
+    try {
+      sandFilterPrePostModel = await _repository.getSandPrePost();
       isLoading = false;
-    } else if (response.statusCode == 401) {
+    } on ApiException catch (e) {
       isLoading = false;
-    } else {
-      isLoading = false;
-
-      throw Exception('Failed getting InstituteList');
+      if (e.statusCode != 401) {
+        throw Exception('Failed getting InstituteList');
+      }
     }
 
     update();
@@ -302,33 +212,16 @@ class RoLogSheetController extends GetxController {
   getSoftnerAvailable() async {
     isLoading = true;
 
-    final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getSoftnerAvl);
-
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      softnerAvailableModel = SoftnerAvailableModel.fromJson(data);
+    try {
+      softnerAvailableModel = await _repository.getSoftnerAvailable();
       isLoading = false;
 
       return instituteList;
-    } else if (response.statusCode == 401) {
+    } on ApiException catch (e) {
       isLoading = false;
-    } else {
-      isLoading = false;
-
-      throw Exception('Failed getting InstituteList');
+      if (e.statusCode != 401) {
+        throw Exception('Failed getting InstituteList');
+      }
     }
 
     update();
@@ -337,31 +230,14 @@ class RoLogSheetController extends GetxController {
   getRawWaterTds() async {
     isLoading = true;
 
-    final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getRawWaterTDS);
-
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      rawWaterTdsModel = RawWaterTdsModel.fromJson(data);
+    try {
+      rawWaterTdsModel = await _repository.getRawWaterTds();
       isLoading = false;
-    } else if (response.statusCode == 401) {
+    } on ApiException catch (e) {
       isLoading = false;
-    } else {
-      isLoading = false;
-
-      throw Exception('Failed getting InstituteList');
+      if (e.statusCode != 401) {
+        throw Exception('Failed getting InstituteList');
+      }
     }
 
     update();
@@ -370,31 +246,14 @@ class RoLogSheetController extends GetxController {
   getRoWaterTds() async {
     isLoading = true;
 
-    final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getROWaterTDS);
-
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      roWaterTdsModel = RoWaterTdsModel.fromJson(data);
+    try {
+      roWaterTdsModel = await _repository.getRoWaterTds();
       isLoading = false;
-    } else if (response.statusCode == 401) {
+    } on ApiException catch (e) {
       isLoading = false;
-    } else {
-      isLoading = false;
-
-      throw Exception('Failed getting InstituteList');
+      if (e.statusCode != 401) {
+        throw Exception('Failed getting InstituteList');
+      }
     }
 
     update();
@@ -403,31 +262,14 @@ class RoLogSheetController extends GetxController {
   getPostCarbonChloride() async {
     isLoading = true;
 
-    final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getPostCarbonCl);
-
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      postCarbonChloridModel = PostCarbonChloridModel.fromJson(data);
+    try {
+      postCarbonChloridModel = await _repository.getPostCarbonChloride();
       isLoading = false;
-    } else if (response.statusCode == 401) {
+    } on ApiException catch (e) {
       isLoading = false;
-    } else {
-      isLoading = false;
-
-      throw Exception('Failed getting InstituteList');
+      if (e.statusCode != 401) {
+        throw Exception('Failed getting InstituteList');
+      }
     }
 
     update();
@@ -436,31 +278,14 @@ class RoLogSheetController extends GetxController {
   getRoWaterConduct() async {
     isLoading = true;
 
-    final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getROWaterCond);
-
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      roWaterConductivityModel = RoWaterConductivityModel.fromJson(data);
+    try {
+      roWaterConductivityModel = await _repository.getRoWaterConduct();
       isLoading = false;
-    } else if (response.statusCode == 401) {
+    } on ApiException catch (e) {
       isLoading = false;
-    } else {
-      isLoading = false;
-
-      throw Exception('Failed getting InstituteList');
+      if (e.statusCode != 401) {
+        throw Exception('Failed getting InstituteList');
+      }
     }
 
     update();
@@ -469,32 +294,14 @@ class RoLogSheetController extends GetxController {
   getReturnLoopRange() async {
     isLoading = true;
 
-    final uri =
-        Uri.parse(ApiConstants.oldBaseUrl + ApiNames.getReturnLoopP);
-
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      returnLoopRangeModel = ReturnLoopRangeModel.fromJson(data);
+    try {
+      returnLoopRangeModel = await _repository.getReturnLoopRange();
       isLoading = false;
-    } else if (response.statusCode == 401) {
+    } on ApiException catch (e) {
       isLoading = false;
-    } else {
-      isLoading = false;
-
-      throw Exception('Failed getting InstituteList');
+      if (e.statusCode != 401) {
+        throw Exception('Failed getting InstituteList');
+      }
     }
 
     update();
@@ -503,34 +310,16 @@ class RoLogSheetController extends GetxController {
   getBeforeAfterHardness() async {
     isLoading = true;
 
-    final uri =
-        Uri.parse(ApiConstants.baseUrl + ApiNames.getBeforeAfterRegHard);
-
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      beforAfterHardnessModel = BeforAfterHardnessModel.fromJson(data);
+    try {
+      beforAfterHardnessModel = await _repository.getBeforeAfterHardness();
       isLoading = false;
 
       return instituteList;
-    } else if (response.statusCode == 401) {
+    } on ApiException catch (e) {
       isLoading = false;
-    } else {
-      isLoading = false;
-
-      throw Exception('Failed getting InstituteList');
+      if (e.statusCode != 401) {
+        throw Exception('Failed getting InstituteList');
+      }
     }
 
     update();
@@ -539,33 +328,16 @@ class RoLogSheetController extends GetxController {
   getBackwashRinse() async {
     isLoading = true;
 
-    final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getBackWashRinse);
-
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      getBackWashAndRinseModel = GetBackWashAndRinseModel.fromJson(data);
+    try {
+      getBackWashAndRinseModel = await _repository.getBackwashRinse();
       isLoading = false;
 
       return instituteList;
-    } else if (response.statusCode == 401) {
+    } on ApiException catch (e) {
       isLoading = false;
-    } else {
-      isLoading = false;
-
-      throw Exception('Failed getting InstituteList');
+      if (e.statusCode != 401) {
+        throw Exception('Failed getting InstituteList');
+      }
     }
 
     update();
@@ -574,33 +346,15 @@ class RoLogSheetController extends GetxController {
   getDoneByList(unitId) async {
     isLoading = true;
 
-    final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getUsersByUnit);
-    var body = {"unitId": unitId};
-    String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.post(uri, headers: headers, body: jsonbody);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      doneByModel = DoneByModel.fromJson(data);
+    try {
+      doneByModel = await _repository.getDoneByList(unitId);
       isLoading = false;
-
       return doneByModel;
-    } else if (response.statusCode == 401) {
+    } on ApiException catch (e) {
       isLoading = false;
-    } else {
-      isLoading = false;
-
-      throw Exception('Failed getting getMachineNameList');
+      if (e.statusCode != 401) {
+        throw Exception('Failed getting getMachineNameList');
+      }
     }
 
     update();
@@ -609,20 +363,17 @@ class RoLogSheetController extends GetxController {
   addEditROLogSheet(isEdit) async {
     isLoading = true;
     update();
-    var headers = {'Content-Type': 'application/json'};
 
-    var response = await ioClient.post(
-        Uri.parse(ApiConstants.oldBaseUrl + ApiNames.saveMachineLogsNew),
-        body: json.encode(addRoLogSheetRequestModel),
-        headers: headers);
-    if (response.statusCode == 200) {
+    try {
+      final responseBody =
+          await _repository.addEditROLogSheet(addRoLogSheetRequestModel);
       isLoading = false;
-      debugPrint(response.body);
+      debugPrint(responseBody);
 
       CustomMessage.toast("Saved Successfully");
       Get.off(const RoLogSheetList());
-    } else {
-      debugPrint(response.reasonPhrase);
+    } on ApiException catch (e) {
+      debugPrint(e.body);
       isLoading = false;
       CustomMessage.toast("Save Fail");
     }
@@ -661,70 +412,17 @@ class RoLogSheetController extends GetxController {
   getInstituteList() async {
     isLoading = true;
 
-    final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getInstituteList);
-
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      instituteList = InstituteList.fromJson(data);
+    try {
+      instituteList = await _repository.getInstituteList();
       isLoading = false;
-
       return instituteList;
-    } else if (response.statusCode == 401) {
+    } on ApiException catch (e) {
       isLoading = false;
-    } else {
-      isLoading = false;
-
-      throw Exception('Failed getting InstituteList');
+      if (e.statusCode != 401) {
+        throw Exception('Failed getting InstituteList');
+      }
     }
 
     update();
   }
-//
-// getProblemResolvedList(unitId) async {
-//   isLoading = true;
-//
-//   final uri = Uri.parse(ApiConstants.baseUrl + ApiConstants.getProbResolved);
-//   var body = {"unitId": unitId};
-//   String jsonbody = json.encode(body);
-//   Map<String, String> headers = {
-//     "Content-Type": "application/json",
-//   };
-//
-//   debugPrint(uri.path);
-//   // print(body);
-//
-//   final response = await http.post(uri, headers: headers, body: jsonbody);
-//   debugPrint(response.statusCode.toString());
-//   debugPrint("response.body : ${response.body}");
-//
-//   if (response.statusCode == 200) {
-//     //getDeviceDetails
-//     final data = json.decode(response.body);
-//     problemResolvedModel = ProblemResolvedModel.fromJson(data);
-//     isLoading = false;
-//
-//     return getMachineNameModel;
-//   } else if (response.statusCode == 401) {
-//     isLoading = false;
-//   } else {
-//     isLoading = false;
-//
-//     throw Exception('Failed getting getMachineNameList');
-//   }
-//
-//   update();
-// }
 }

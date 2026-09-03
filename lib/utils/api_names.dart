@@ -1,5 +1,6 @@
 class ApiNames {
   static const String login = "/verifyLogin";
+  static const String verifyLoginOtp = "/verifyLoginOtp";
   static const String generateAckReport = "pdfcontroller/generateAckReport";
   static const String sessionEndReport = "pdfcontroller/generate";
   static const String slotList = "hemodialysis-api/unit-slots";

@@ -1,18 +1,14 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/registered_patient_list/model/already_regidtered_patient/already_registered_patient.dart';
 import 'package:heamodialysis/registered_patient_list/model/search_patient_dropdown/search_dropdown_list_model.dart';
-import 'package:heamodialysis/utils/api_names.dart';
-
-import 'package:heamodialysis/utils/api_urls.dart';
-import 'package:heamodialysis/utils/network_call.dart';
-import 'package:http/io_client.dart';
-// import 'package:http/http.dart' as http;
+import 'package:heamodialysis/registered_patient_list/repository/registration_repository.dart';
+import 'package:heamodialysis/utils/api_client.dart';
 
 class RegistrationController extends GetxController {
+  final RegistrationRepository _repository = RegistrationRepository();
+
   String? msg;
 
   String? status;
@@ -27,38 +23,17 @@ class RegistrationController extends GetxController {
 
   AlreadyRegisteredPatient? searchedPatientResultModel;
   TextEditingController valueController = TextEditingController();
-  IOClient ioClient = IOClient(ByPassCert().httpClient);
 
   bool isLoading = false;
 
   Future<bool> searchByDropDownList() async {
-    final uri =
-        Uri.parse(ApiConstants.baseUrl + ApiNames.searchByDropDownListApi);
-
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.post(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      searchByModel = SearchRegisteredPatientModel.fromJson(data);
-
+    try {
+      searchByModel = await _repository.searchByDropDownList();
       update();
       return true;
-    } else if (response.statusCode == 401) {
+    } on ApiException catch (e) {
       update();
-
-      return false;
-    } else {
+      if (e.statusCode == 401) return false;
       throw Exception('Failed getting search By list');
     }
   }
@@ -68,26 +43,9 @@ class RegistrationController extends GetxController {
     update();
 
     try {
-      final uri = Uri.parse(
-          "${ApiConstants.baseUrl}${ApiNames.getApprovalStatus}?patientId=$patientId");
-
-      Map<String, String> headers = {
-        "Content-Type": "application/json",
-      };
-
-      debugPrint(uri.path);
-
-      final response = await ioClient.get(uri, headers: headers);
-      debugPrint(response.statusCode.toString());
-      debugPrint("response.body : ${response.body}");
-
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        scrutinyType = data['UserType'];
-        approvalStat = data['ApprovalStatus'];
-      } else {
-        throw Exception('Failed getting getAnswers');
-      }
+      final data = await _repository.checkScrutinyApproval(patientId);
+      scrutinyType = data['UserType'];
+      approvalStat = data['ApprovalStatus'];
     } catch (e) {
       debugPrint("Error in checkScrutinyApproval: $e");
       rethrow;
@@ -103,45 +61,23 @@ class RegistrationController extends GetxController {
     update();
 
     try {
-      final uri = Uri.parse(
-          ApiConstants.baseUrl + ApiNames.searchRegisteredPatientApi);
-
-      final Map<String, dynamic> body = {
-        "unitId": unitId,
-        "type": type,
-        "input": input,
-        "category": "",
-        "sId": sId,
-      };
-
-      String jsonbody = json.encode(body);
-      Map<String, String> headers = {
-        "Content-Type": "application/json",
-      };
-
-      debugPrint("Url Registration : ${uri.path}");
-      debugPrint("Url Registration : ${uri}");
-      debugPrint(body.toString());
-
-      final response = await ioClient.post(uri, headers: headers, body: jsonbody);
-      debugPrint(response.statusCode.toString());
-      debugPrint("response.body : ${response.body}");
-
-      if (response.statusCode == 200) {
-        valueController.text = "";
-        final data = json.decode(response.body);
-        if (data['status'] == 'Success') {
-          alreadyRegisteredPatient = AlreadyRegisteredPatient.fromJson(data);
-          print("response of registered user : ${alreadyRegisteredPatient!.data!.length}");
-          print("response of registered user : ${data}");
-          print("response of registered user : ${alreadyRegisteredPatient!.data![0].patientId}");
-        } else {
-          status = data['status'];
-        }
-      } else if (response.statusCode == 401) {
+      final data =
+          await _repository.searchRegisteredPatient(type, input, unitId, sId);
+      valueController.text = "";
+      if (data['status'] == 'Success') {
+        alreadyRegisteredPatient = AlreadyRegisteredPatient.fromJson(data);
+        print("response of registered user : ${alreadyRegisteredPatient!.data!.length}");
+        print("response of registered user : ${data}");
+        print("response of registered user : ${alreadyRegisteredPatient!.data![0].patientId}");
+      } else {
+        status = data['status'];
+      }
+    } on ApiException catch (e) {
+      if (e.statusCode == 401) {
         status = "Something went wrong";
       } else {
-        throw Exception('Failed search');
+        debugPrint("Error in searchRegisteredPatient: $e");
+        rethrow;
       }
     } catch (e) {
       debugPrint("Error in searchRegisteredPatient: $e");

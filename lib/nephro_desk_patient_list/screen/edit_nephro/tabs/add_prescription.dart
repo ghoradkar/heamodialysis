@@ -224,6 +224,22 @@ class _AddPrescriptionState extends State<AddPrescription> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
+                              MyCustomDropdown(
+                                selectedItem: nephroController.selectedPrep,
+                                labelText: 'Prep',
+                                items: nephroController.prepListDropDown
+                                    ?.map((e) => e.preparationName)
+                                    .toList() ??
+                                    [],
+                                hint: 'Select',
+                                isRequired: true,
+                                senValue: (value) {
+                                  nephroController.selectedPrep = value;
+                                  controller.update();
+                                },
+                                filledColor: Colors.white,
+                              ),
+
                               Row(
                                 children: [
                                   const CustomText(
@@ -353,21 +369,6 @@ class _AddPrescriptionState extends State<AddPrescription> {
                                     ],
                                   );
                                 },
-                              ),
-                              MyCustomDropdown(
-                                selectedItem: nephroController.selectedPrep,
-                                labelText: 'Prep',
-                                items: nephroController.prepListDropDown
-                                        ?.map((e) => e.preparationName)
-                                        .toList() ??
-                                    [],
-                                hint: 'Select',
-                                isRequired: true,
-                                senValue: (value) {
-                                  nephroController.selectedPrep = value;
-                                  controller.update();
-                                },
-                                filledColor: Colors.white,
                               ),
                               Row(
                                 children: [
@@ -706,7 +707,7 @@ class _AddPrescriptionState extends State<AddPrescription> {
                                             "prescriptionOrderDate":
                                                 formattedDate,
                                             "unitId": userData['unitId'],
-                                            "userId": userData['ui'],
+                                            "userId": userData['user_ID'],
                                             "medId": widget.isEdit == true
                                                 ? widget
                                                     .prescriptionDtoSp?.medicineId

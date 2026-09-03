@@ -1,24 +1,18 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/machine_status/model/add_machine_counter_list_model.dart';
 import 'package:heamodialysis/machine_status/model/machine_count_model.dart';
+import 'package:heamodialysis/machine_status/repository/machine_status_repository.dart';
 import 'package:heamodialysis/new_registration/model/institute/Institute_list.dart';
 import 'package:heamodialysis/registered_patient_list/model/already_regidtered_patient/already_registered_patient.dart';
 import 'package:heamodialysis/registered_patient_list/model/search_patient_dropdown/search_dropdown_list_model.dart';
-import 'package:heamodialysis/utils/api_names.dart';
-
-import 'package:heamodialysis/utils/api_urls.dart';
-import 'package:heamodialysis/utils/network_call.dart';
+import 'package:heamodialysis/utils/api_client.dart';
 import 'package:heamodialysis/widgets/cust_toast.dart';
-import 'package:http/io_client.dart';
-import 'package:http/http.dart' as http;
-
-// import 'package:http/http.dart' as http;
 
 class MachineStatusController extends GetxController {
+  final MachineStatusRepository _repository = MachineStatusRepository();
+
   String? msg;
 
   String? status;
@@ -36,7 +30,6 @@ class MachineStatusController extends GetxController {
   TextEditingController fromDateController = TextEditingController();
   TextEditingController currentReading = TextEditingController();
   TextEditingController lastReading = TextEditingController();
-  IOClient ioClient = IOClient(ByPassCert().httpClient);
 
   bool isLoading = false;
 
@@ -59,32 +52,16 @@ class MachineStatusController extends GetxController {
   getMachineList(
       String callFrom, String startIndex, unitId, String searchDate) async {
     isLoading = true;
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl}${ApiNames.getSavedMachineReading}?callfrom=&startIndex=$startIndex&searchdate=$searchDate&unitId=$unitId");
 
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
-      isLoading = false;
-
-      List<dynamic> data = json.decode(response.body);
-
+    try {
       machineCountList =
-          data.map((item) => MachineCountModel.fromJson(item)).toList();
+          await _repository.getMachineList(startIndex, unitId, searchDate);
+      isLoading = false;
 
       await getMachineListInAddMachineCounterPage(
           searchDate, searchDate, unitId.toString());
-    } else {
+    } on ApiException {
       isLoading = false;
-
       throw Exception('Failed search');
     }
     update();
@@ -95,19 +72,11 @@ class MachineStatusController extends GetxController {
     isLoading = true;
     update();
 
-    final uri = Uri.parse(
-      "${ApiConstants.baseUrl}${ApiNames.getMachineListreading}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId",
-    );
+    final result = await _repository.getMachineListInAddMachineCounterPage(
+        fromDate, toDate, unitId);
 
-    final response = await http.Request('POST', uri).send();
-
-    if (response.statusCode == 200) {
-      final responseString = await response.stream.bytesToString();
-      final List<dynamic> resp = jsonDecode(responseString);
-
-      addMachineCounterListModel = resp
-          .map((item) => AddMachineCounterListModel.fromJson(item))
-          .toList();
+    if (result != null) {
+      addMachineCounterListModel = result;
 
       // init controllers aligned with list length
       currentReadingCtrls = List.generate(
@@ -151,22 +120,13 @@ class MachineStatusController extends GetxController {
     isLoading = true;
     update();
 
-    final uri =
-        Uri.parse("${ApiConstants.baseUrl}${ApiNames.saveMachineReading}");
-    final payload = jsonEncode(body.map((e) => e.toJson()).toList());
-
-    final res = await ioClient.post(
-      uri,
-      headers: {"Content-Type": "application/json"},
-      body: payload,
-    );
+    final resBody = await _repository.addMachineCounter(body);
 
     isLoading = false;
     update();
 
-    if (res.statusCode == 200) {
-      // var data = jsonDecode(res.body);
-      CustomMessage.toast(res.body);
+    if (resBody != null) {
+      CustomMessage.toast(resBody);
       await getMachineList('', '0', unitId, '');
       Get.back();
     }
@@ -183,27 +143,13 @@ class MachineStatusController extends GetxController {
     isLoading = true;
     update();
 
-    final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getInstituteList);
-
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
+    try {
+      instituteList = await _repository.getInstituteList();
       isLoading = false;
-      final data = json.decode(response.body);
-      instituteList = InstituteList.fromJson(data);
       selectInstitute =
           instituteList?.data?.firstWhere((e) => e.unitId == unitId).unitName;
-    } else {
+    } on ApiException {
       isLoading = false;
-
       throw Exception('Failed getting InstituteList');
     }
 

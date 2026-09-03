@@ -169,12 +169,12 @@ class InvoiceApprovalState extends State<InvoiceApproval> {
                 invoiceApprovalController.sendForApprovalReq.unitId =
                     userData['unitId'];
                 invoiceApprovalController.sendForApprovalReq.userIdd =
-                    userData['ui'];
+                    userData['user_ID'];
                 await invoiceApprovalController.sendForApproval(
                     int.parse(month),
                     int.parse(year),
                     userData['unitId'],
-                    userData['ui']);
+                    userData['user_ID']);
               }
             },
             child: CustomText(
@@ -231,7 +231,7 @@ class InvoiceApprovalState extends State<InvoiceApproval> {
                               var body = {
                                 "invNo": invoiceApprovalController
                                     .invoiceApprovalModel?[index].invNo,
-                                "userId": userData['ui']
+                                "userId": userData['user_ID']
                               };
 
                               controller.viewInvoiceReport(
@@ -241,7 +241,7 @@ class InvoiceApprovalState extends State<InvoiceApproval> {
                               var body = {
                                 "invNo": invoiceApprovalController
                                     .invoiceApprovalModel?[index].invNo,
-                                "userId": userData['ui']
+                                "userId": userData['user_ID']
                               };
                               controller.viewInvoiceSummary(
                                   body, "Invoice Summary");
@@ -256,7 +256,7 @@ class InvoiceApprovalState extends State<InvoiceApproval> {
                               var body = {
                                 "invNo": invoiceApprovalController
                                     .invoiceApprovalModel?[index].invNo,
-                                "userId": userData['ui']
+                                "userId": userData['user_ID']
                               };
 
                               controller.viewMavCalculation(
@@ -395,7 +395,7 @@ class InvoiceApprovalState extends State<InvoiceApproval> {
                             int.parse(month),
                             int.parse(selectedYear!),
                             userData['unitId'],
-                            userData['ui']);
+                            userData['user_ID']);
                         setState(() {});
                       },
                       child: Container(

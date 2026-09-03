@@ -5,15 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:heamodialysis/dashboard/screen/cluster_dashboard/cluster_district_wise_dash.dart';
-import 'package:heamodialysis/dashboard/screen/cluster_dashboard/cluster_division_dash.dart';
-import 'package:heamodialysis/dashboard/screen/mis/mis_dash.dart';
-import 'package:heamodialysis/dashboard/screen/nephro_first_level/nephro_dashboard.dart';
-import 'package:heamodialysis/dashboard/screen/super_admin/operational_head.dart';
-import 'package:heamodialysis/dashboard/screen/super_admin/super_admin_dash_screen.dart';
-import 'package:heamodialysis/dashboard/screen/technician/institutewise_dashboard_screen.dart';
 import 'package:heamodialysis/internet/no_internet_connectivity.dart';
 import 'package:heamodialysis/login/controller/login_controller.dart';
+import 'package:heamodialysis/login/screen/login_navigation.dart';
+import 'package:heamodialysis/login/screen/otp_screen.dart';
 import 'package:heamodialysis/utils/color_constants.dart';
 import 'package:heamodialysis/widgets/cust_toast.dart';
 import 'package:heamodialysis/widgets/custom_text.dart';
@@ -451,106 +446,38 @@ class _LoginScreenState extends State<LoginScreen> {
                                                     .trim(),
                                               );
 
-                                              void handleSuccessfulLogin(
-                                                  Widget nextScreen) async {
-                                                await Get.off(() => nextScreen);
-                                                loginCtrl.userName.value
-                                                    .clear();
-                                                loginCtrl.password.value
-                                                    .clear();
-                                                loginCtrl.captcha.value.clear();
-                                                loginCtrl.update();
-                                              }
-
                                               if (loginCtrl.status ==
                                                   "Success") {
-                                                CustomMessage.toast(
-                                                    "Login successful");
-                                                // final userRole = loginCtrl
-                                                //         .loginRespModel
-                                                //         ?.data?[0]
-                                                //         .ut ??
-                                                //     "";
-
-                                                final userRole = loginCtrl
-                                                        .loginRespModel
-                                                        ?.dataDet
-                                                        .userType ??
-                                                    "";
-
-                                                // Define role-based navigation
-                                                switch (userRole) {
-                                                  case "nurse":
-                                                  case "ADMIN":
-                                                  case "TECHNICIAN":
-                                                  case "Technician":
-                                                    handleSuccessfulLogin(
-                                                        const InstituteWiseDashboardScreen());
-                                                    break;
-
-                                                  case "NEPHROLOGIST":
-                                                    // Second-level approval (can be changed to relevant screen)
-                                                    handleSuccessfulLogin(
-                                                        const NephroDashboard());
-                                                    break;
-
-                                                  case "DOCTOR":
-                                                    // First-level approval
-                                                    handleSuccessfulLogin(
-                                                        const InstituteWiseDashboardScreen());
-                                                    break;
-
-                                                  case "SUPER ADMIN":
-                                                    handleSuccessfulLogin(
-                                                        const SuperAdminDashScreen());
-                                                    break;
-                                                  case "INVOICE SECOND APPROVAL":
-                                                    handleSuccessfulLogin(
-                                                        const SuperAdminDashScreen());
-                                                    break;
-                                                  case "INVOICE GENERATION":
-                                                    handleSuccessfulLogin(
-                                                        const SuperAdminDashScreen());
-                                                    break;
-
-                                                  case "OPERATIONAL TEAM":
-                                                    handleSuccessfulLogin(
-                                                        const SuperAdminDashScreen());
-                                                    break;
-
-                                                  case "HOD ONE":
-                                                    handleSuccessfulLogin(
-                                                        const SuperAdminDashScreen());
-                                                    break;
-
-                                                  case "OPERATION HEAD":
-                                                    handleSuccessfulLogin(
-                                                        const OperationalHeadScreen());
-                                                    break;
-
-                                                  case "CLUSTER HEAD DISTRICT":
-                                                    handleSuccessfulLogin(
-                                                        const ClusterDistrictWiseDash());
-                                                    break;
-
-                                                  case "CLUSTER HEAD DIVISION":
-                                                    handleSuccessfulLogin(
-                                                        const ClusterDivisionWiseDash());
-                                                    break;
-
-                                                  case "MIS":
-                                                    handleSuccessfulLogin(
-                                                        const MISDashboardScreen());
-                                                    break;
-                                                  case "DIETICIAN":
-                                                    handleSuccessfulLogin(
-                                                        const InstituteWiseDashboardScreen());
-                                                    break;
-
-                                                  default:
-                                                    CustomMessage.toast(
-                                                        "Unknown user role: $userRole");
-                                                }
+                                                await navigateAfterLogin(
+                                                    loginCtrl);
+                                              } else if (loginCtrl.status ==
+                                                  "OTP_REQUIRED") {
+                                                // Credentials are valid but
+                                                // the backend has texted an
+                                                // OTP to the registered
+                                                // mobile number - collect it
+                                                // on a dedicated screen.
+                                                await Get.to(() => OtpScreen(
+                                                      userName: loginCtrl
+                                                          .userName.value.text
+                                                          .trim(),
+                                                      unitId: loginCtrl
+                                                              .unitName?.unitId
+                                                              ?.toString() ??
+                                                          "1",
+                                                      password: loginCtrl
+                                                          .password.value.text
+                                                          .trim(),
+                                                      captcha1: loginCtrl
+                                                              .captchaModel
+                                                              ?.captcha ??
+                                                          "",
+                                                      captcha2: loginCtrl
+                                                          .captcha.value.text
+                                                          .trim(),
+                                                      mobileNo:
+                                                          loginCtrl.otpMobileNo,
+                                                    ));
                                               } else {
                                                 CustomMessage.toast(
                                                     loginCtrl.status ??

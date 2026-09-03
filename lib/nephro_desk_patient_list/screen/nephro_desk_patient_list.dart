@@ -11,7 +11,7 @@ import 'package:heamodialysis/nephro_desk_patient_list/screen/nephro_desk_dropdo
 import 'package:heamodialysis/nephro_desk_patient_list/screen/nepro_card.dart';
 import 'package:heamodialysis/nephro_desk_patient_list/screen/edit_nephro/edit_nephro_desk.dart';
 import 'package:heamodialysis/registered_patient_list/model/already_regidtered_patient/patient_data.dart';
-import 'package:heamodialysis/schedular/screens/patient_history_schedular.dart';
+import 'package:heamodialysis/schedular/screen/patient_history_schedular.dart';
 import 'package:heamodialysis/utils/color_constants.dart';
 import 'package:heamodialysis/utils/shared_pref_constants.dart';
 import 'package:heamodialysis/utils/shared_preference.dart';

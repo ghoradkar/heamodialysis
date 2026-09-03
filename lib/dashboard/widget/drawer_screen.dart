@@ -14,13 +14,13 @@ import 'package:heamodialysis/login/controller/login_controller.dart';
 import 'package:heamodialysis/machine_status/screen/machine_counter_list.dart';
 import 'package:heamodialysis/nephro_desk_patient_list/screen/nephro_desk_patient_list.dart';
 
-import 'package:heamodialysis/schedular/screens/schedular_list.dart';
+import 'package:heamodialysis/schedular/screen/schedular_list.dart';
 import 'package:heamodialysis/upload_document/screen/upload_doc_dash.dart';
 import 'package:heamodialysis/widgets/custom_text.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../login/screen/logout_screen.dart';
-import '../../registered_patient_list/screens/registration_screen.dart';
+import '../../registered_patient_list/screen/registration_screen.dart';
 import '../../ro_maintenance/ro_maintenance_screen.dart';
 
 class DrawerScreen extends StatefulWidget {

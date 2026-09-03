@@ -57,6 +57,20 @@ class _ClinicalHistoryState extends State<ClinicalHistory> {
     }
   }
 
+  /// checkBoxValues is sized from the loaded comorbidities list, which can be
+  /// shorter than the number of comorbidity blocks hardcoded below - guard
+  /// against that mismatch instead of crashing with a RangeError.
+  bool _checkBoxAt(int index) {
+    final values = nephroController.checkBoxValues;
+    return index < values.length && values[index] == true;
+  }
+
+  /// Same guard as [_checkBoxAt], for the per-row relation selections.
+  List<String> _selectedItemsAt(int index) {
+    final rows = nephroController.selectedItemsPerRow;
+    return index < rows.length ? rows[index] : const <String>[];
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -638,9 +652,11 @@ class _ClinicalHistoryState extends State<ClinicalHistory> {
                               "treatmentId": widget.patientData?.treatmentId,
                               "lookupDetIdDiet": nephroController
                                   .dietListClinicalHistory
-                                  ?.firstWhere((e) =>
-                                      e.lookupDetDescEn ==
-                                      nephroController.selectedDiet)
+                                  ?.firstWhere(
+                                      (e) =>
+                                          e.lookupDetDescEn ==
+                                          nephroController.selectedDiet,
+                                      orElse: () => RelationListM())
                                   .lookupDetId,
                               "alcoholConsumption":
                                   nephroController.selectedAlcoholCon == "Yes"
@@ -673,7 +689,7 @@ class _ClinicalHistoryState extends State<ClinicalHistory> {
                               "allergiesReactions":
                                   nephroController.allergies.text,
                               "status": null,
-                              "createdBy": userData['ui'],
+                              "createdBy": userData['user_ID'],
                               "createdDatetime": null,
                               "updatedBy": null,
                               "updatedDatetime": null,
@@ -693,11 +709,7 @@ class _ClinicalHistoryState extends State<ClinicalHistory> {
                                       ? convertToNumber(nephroController
                                           .diabetesMellitusDuration.text)
                                       : null,
-                                  "comorFlag":
-                                      nephroController.checkBoxValues.first ==
-                                              true
-                                          ? "Y"
-                                          : "N",
+                                  "comorFlag": _checkBoxAt(0) ? "Y" : "N",
                                   "lookupDetIdRelation": null,
                                   "status": null,
                                   "createdBy": null,
@@ -708,15 +720,16 @@ class _ClinicalHistoryState extends State<ClinicalHistory> {
                                   "deletedDatetime": null,
                                   "lookupDetIdComorbidities": nephroController
                                       .addDetailsList
-                                      ?.firstWhere((e) =>
-                                          e.descriptionEn ==
-                                          "Diabetes Mellitus")
+                                      ?.firstWhere(
+                                          (e) =>
+                                              e.descriptionEn ==
+                                              "Diabetes Mellitus",
+                                          orElse: () => AddDetailsTable())
                                       .lookDetId,
                                   "multiRelaId": nephroController.relationList
-                                      ?.where((item) => nephroController
-                                          .selectedItemsPerRow.first
-                                          .contains(item
-                                              .lookupDetDescEn)) // Filter matching items
+                                      ?.where((item) => _selectedItemsAt(0)
+                                          .contains(
+                                              item.lookupDetDescEn)) // Filter matching items
                                       .map((item) =>
                                           item.lookupDetId) // Extract IDs
                                       .toList(),
@@ -733,10 +746,7 @@ class _ClinicalHistoryState extends State<ClinicalHistory> {
                                       ? convertToNumber(nephroController
                                           .hypertensionDuration.text)
                                       : null,
-                                  "comorFlag":
-                                      nephroController.checkBoxValues[1] == true
-                                          ? "Y"
-                                          : "N",
+                                  "comorFlag": _checkBoxAt(1) ? "Y" : "N",
                                   "lookupDetIdRelation": null,
                                   "status": null,
                                   "createdBy": null,
@@ -747,14 +757,16 @@ class _ClinicalHistoryState extends State<ClinicalHistory> {
                                   "deletedDatetime": null,
                                   "lookupDetIdComorbidities": nephroController
                                       .addDetailsList
-                                      ?.firstWhere((e) =>
-                                          e.descriptionEn == 'Hypertension')
+                                      ?.firstWhere(
+                                          (e) =>
+                                              e.descriptionEn ==
+                                              'Hypertension',
+                                          orElse: () => AddDetailsTable())
                                       .lookDetId,
                                   "multiRelaId": nephroController.relationList
-                                      ?.where((item) => nephroController
-                                          .selectedItemsPerRow[1]
-                                          .contains(item
-                                              .lookupDetDescEn)) // Filter matching items
+                                      ?.where((item) => _selectedItemsAt(1)
+                                          .contains(
+                                              item.lookupDetDescEn)) // Filter matching items
                                       .map((item) =>
                                           item.lookupDetId) // Extract IDs
                                       .toList(),
@@ -771,10 +783,7 @@ class _ClinicalHistoryState extends State<ClinicalHistory> {
                                       ? convertToNumber(nephroController
                                           .dyslipidemiaDuration.text)
                                       : null,
-                                  "comorFlag":
-                                      nephroController.checkBoxValues[2] == true
-                                          ? "Y"
-                                          : "N",
+                                  "comorFlag": _checkBoxAt(2) ? "Y" : "N",
                                   "lookupDetIdRelation": null,
                                   "status": null,
                                   "createdBy": null,
@@ -785,14 +794,16 @@ class _ClinicalHistoryState extends State<ClinicalHistory> {
                                   "deletedDatetime": null,
                                   "lookupDetIdComorbidities": nephroController
                                       .addDetailsList
-                                      ?.firstWhere((e) =>
-                                          e.descriptionEn == 'Dyslipidemia')
+                                      ?.firstWhere(
+                                          (e) =>
+                                              e.descriptionEn ==
+                                              'Dyslipidemia',
+                                          orElse: () => AddDetailsTable())
                                       .lookDetId,
                                   "multiRelaId": nephroController.relationList
-                                      ?.where((item) => nephroController
-                                          .selectedItemsPerRow[2]
-                                          .contains(item
-                                              .lookupDetDescEn)) // Filter matching items
+                                      ?.where((item) => _selectedItemsAt(2)
+                                          .contains(
+                                              item.lookupDetDescEn)) // Filter matching items
                                       .map((item) =>
                                           item.lookupDetId) // Extract IDs
                                       .toList(),
@@ -812,10 +823,7 @@ class _ClinicalHistoryState extends State<ClinicalHistory> {
                                   "updatedDatetime": null,
                                   "deletedBy": null,
                                   "deletedDatetime": null,
-                                  "comorFlag":
-                                      nephroController.checkBoxValues[3] == true
-                                          ? "Y"
-                                          : "N",
+                                  "comorFlag": _checkBoxAt(3) ? "Y" : "N",
                                   "durationYear": nephroController
                                           .chronicHeartDiseaseDuration
                                           .text
@@ -825,15 +833,16 @@ class _ClinicalHistoryState extends State<ClinicalHistory> {
                                       : null,
                                   "lookupDetIdComorbidities": nephroController
                                       .addDetailsList
-                                      ?.firstWhere((e) =>
-                                          e.descriptionEn ==
-                                          'Chronic Heart Disease')
+                                      ?.firstWhere(
+                                          (e) =>
+                                              e.descriptionEn ==
+                                              'Chronic Heart Disease',
+                                          orElse: () => AddDetailsTable())
                                       .lookDetId,
                                   "multiRelaId": nephroController.relationList
-                                      ?.where((item) => nephroController
-                                          .selectedItemsPerRow[3]
-                                          .contains(item
-                                              .lookupDetDescEn)) // Filter matching items
+                                      ?.where((item) => _selectedItemsAt(3)
+                                          .contains(
+                                              item.lookupDetDescEn)) // Filter matching items
                                       .map((item) =>
                                           item.lookupDetId) // Extract IDs
                                       .toList(),
@@ -853,10 +862,7 @@ class _ClinicalHistoryState extends State<ClinicalHistory> {
                                   "updatedDatetime": null,
                                   "deletedBy": null,
                                   "deletedDatetime": null,
-                                  "comorFlag":
-                                      nephroController.checkBoxValues[4] == true
-                                          ? "Y"
-                                          : "N",
+                                  "comorFlag": _checkBoxAt(4) ? "Y" : "N",
                                   "durationYear": nephroController
                                           .chronicLiverDiseaseDuratin
                                           .text
@@ -866,15 +872,16 @@ class _ClinicalHistoryState extends State<ClinicalHistory> {
                                       : null,
                                   "lookupDetIdComorbidities": nephroController
                                       .addDetailsList
-                                      ?.firstWhere((e) =>
-                                          e.descriptionEn ==
-                                          'Chronic Liver Disease')
+                                      ?.firstWhere(
+                                          (e) =>
+                                              e.descriptionEn ==
+                                              'Chronic Liver Disease',
+                                          orElse: () => AddDetailsTable())
                                       .lookDetId,
                                   "multiRelaId": nephroController.relationList
-                                      ?.where((item) => nephroController
-                                          .selectedItemsPerRow[4]
-                                          .contains(item
-                                              .lookupDetDescEn)) // Filter matching items
+                                      ?.where((item) => _selectedItemsAt(4)
+                                          .contains(
+                                              item.lookupDetDescEn)) // Filter matching items
                                       .map((item) =>
                                           item.lookupDetId) // Extract IDs
                                       .toList(),
@@ -894,10 +901,7 @@ class _ClinicalHistoryState extends State<ClinicalHistory> {
                                   "updatedDatetime": null,
                                   "deletedBy": null,
                                   "deletedDatetime": null,
-                                  "comorFlag":
-                                      nephroController.checkBoxValues[5] == true
-                                          ? "Y"
-                                          : "N",
+                                  "comorFlag": _checkBoxAt(5) ? "Y" : "N",
                                   "durationYear": nephroController
                                           .strokeDuration.text.isNotEmpty
                                       ? convertToNumber(
@@ -906,13 +910,13 @@ class _ClinicalHistoryState extends State<ClinicalHistory> {
                                   "lookupDetIdComorbidities": nephroController
                                       .addDetailsList
                                       ?.firstWhere(
-                                          (e) => e.descriptionEn == 'Stroke')
+                                          (e) => e.descriptionEn == 'Stroke',
+                                          orElse: () => AddDetailsTable())
                                       .lookDetId,
                                   "multiRelaId": nephroController.relationList
-                                      ?.where((item) => nephroController
-                                          .selectedItemsPerRow[5]
-                                          .contains(item
-                                              .lookupDetDescEn)) // Filter matching items
+                                      ?.where((item) => _selectedItemsAt(5)
+                                          .contains(
+                                              item.lookupDetDescEn)) // Filter matching items
                                       .map((item) =>
                                           item.lookupDetId) // Extract IDs
                                       .toList(),
@@ -937,20 +941,19 @@ class _ClinicalHistoryState extends State<ClinicalHistory> {
                                   "updatedDatetime": null,
                                   "deletedBy": null,
                                   "deletedDatetime": null,
-                                  "comorFlag":
-                                      nephroController.checkBoxValues[6] == true
-                                          ? "Y"
-                                          : "N",
+                                  "comorFlag": _checkBoxAt(6) ? "Y" : "N",
                                   "lookupDetIdComorbidities": nephroController
                                       .addDetailsList
-                                      ?.firstWhere((e) =>
-                                          e.descriptionEn == 'Tuberculosis')
+                                      ?.firstWhere(
+                                          (e) =>
+                                              e.descriptionEn ==
+                                              'Tuberculosis',
+                                          orElse: () => AddDetailsTable())
                                       .lookDetId,
                                   "multiRelaId": nephroController.relationList
-                                      ?.where((item) => nephroController
-                                          .selectedItemsPerRow[6]
-                                          .contains(item
-                                              .lookupDetDescEn)) // Filter matching items
+                                      ?.where((item) => _selectedItemsAt(6)
+                                          .contains(
+                                              item.lookupDetDescEn)) // Filter matching items
                                       .map((item) =>
                                           item.lookupDetId) // Extract IDs
                                       .toList(),
@@ -975,20 +978,17 @@ class _ClinicalHistoryState extends State<ClinicalHistory> {
                                   "updatedDatetime": null,
                                   "deletedBy": null,
                                   "deletedDatetime": null,
-                                  "comorFlag":
-                                      nephroController.checkBoxValues[7] == true
-                                          ? "Y"
-                                          : "N",
+                                  "comorFlag": _checkBoxAt(7) ? "Y" : "N",
                                   "lookupDetIdComorbidities": nephroController
                                       .addDetailsList
                                       ?.firstWhere(
-                                          (e) => e.descriptionEn == 'HIV')
+                                          (e) => e.descriptionEn == 'HIV',
+                                          orElse: () => AddDetailsTable())
                                       .lookDetId,
                                   "multiRelaId": nephroController.relationList
-                                      ?.where((item) => nephroController
-                                          .selectedItemsPerRow[7]
-                                          .contains(item
-                                              .lookupDetDescEn)) // Filter matching items
+                                      ?.where((item) => _selectedItemsAt(7)
+                                          .contains(
+                                              item.lookupDetDescEn)) // Filter matching items
                                       .map((item) =>
                                           item.lookupDetId) // Extract IDs
                                       .toList(),
@@ -1005,13 +1005,10 @@ class _ClinicalHistoryState extends State<ClinicalHistory> {
                                       ? convertToNumber(
                                           nephroController.hBVDuration.text)
                                       : null,
-                                  "comorFlag":
-                                      nephroController.checkBoxValues[8] == true
-                                          ? "Y"
-                                          : "N",
+                                  "comorFlag": _checkBoxAt(8) ? "Y" : "N",
                                   "lookupDetIdRelation": null,
                                   "status": null,
-                                  "createdBy": userData['ui'],
+                                  "createdBy": userData['user_ID'],
                                   "createdDatetime": null,
                                   "updatedBy": null,
                                   "updatedDatetime": null,
@@ -1020,13 +1017,13 @@ class _ClinicalHistoryState extends State<ClinicalHistory> {
                                   "lookupDetIdComorbidities": nephroController
                                       .addDetailsList
                                       ?.firstWhere(
-                                          (e) => e.descriptionEn == 'HBV')
+                                          (e) => e.descriptionEn == 'HBV',
+                                          orElse: () => AddDetailsTable())
                                       .lookDetId,
                                   "multiRelaId": nephroController.relationList
-                                      ?.where((item) => nephroController
-                                          .selectedItemsPerRow[8]
-                                          .contains(item
-                                              .lookupDetDescEn)) // Filter matching items
+                                      ?.where((item) => _selectedItemsAt(8)
+                                          .contains(
+                                              item.lookupDetDescEn)) // Filter matching items
                                       .map((item) =>
                                           item.lookupDetId) // Extract IDs
                                       .toList(),
@@ -1046,10 +1043,7 @@ class _ClinicalHistoryState extends State<ClinicalHistory> {
                                   "updatedDatetime": null,
                                   "deletedBy": null,
                                   "deletedDatetime": null,
-                                  "comorFlag":
-                                      nephroController.checkBoxValues[8] == true
-                                          ? "Y"
-                                          : "N",
+                                  "comorFlag": _checkBoxAt(8) ? "Y" : "N",
                                   "durationYear": nephroController
                                           .hcvTreatedDuration.text.isNotEmpty
                                       ? convertToNumber(nephroController
@@ -1057,14 +1051,16 @@ class _ClinicalHistoryState extends State<ClinicalHistory> {
                                       : null,
                                   "lookupDetIdComorbidities": nephroController
                                       .addDetailsList
-                                      ?.firstWhere((e) =>
-                                          e.descriptionEn == 'HCV Treated')
+                                      ?.firstWhere(
+                                          (e) =>
+                                              e.descriptionEn ==
+                                              'HCV Treated',
+                                          orElse: () => AddDetailsTable())
                                       .lookDetId,
                                   "multiRelaId": nephroController.relationList
-                                      ?.where((item) => nephroController
-                                          .selectedItemsPerRow[9]
-                                          .contains(item
-                                              .lookupDetDescEn)) // Filter matching items
+                                      ?.where((item) => _selectedItemsAt(9)
+                                          .contains(
+                                              item.lookupDetDescEn)) // Filter matching items
                                       .map((item) =>
                                           item.lookupDetId) // Extract IDs
                                       .toList(),
@@ -1084,11 +1080,7 @@ class _ClinicalHistoryState extends State<ClinicalHistory> {
                                   "updatedDatetime": null,
                                   "deletedBy": null,
                                   "deletedDatetime": null,
-                                  "comorFlag":
-                                      nephroController.checkBoxValues[10] ==
-                                              true
-                                          ? "Y"
-                                          : "N",
+                                  "comorFlag": _checkBoxAt(10) ? "Y" : "N",
                                   "durationYear": nephroController
                                           .mentalHealthDisorderDuration
                                           .text
@@ -1098,15 +1090,16 @@ class _ClinicalHistoryState extends State<ClinicalHistory> {
                                       : null,
                                   "lookupDetIdComorbidities": nephroController
                                       .addDetailsList
-                                      ?.firstWhere((e) =>
-                                          e.descriptionEn ==
-                                          'Mental Health Disorder')
+                                      ?.firstWhere(
+                                          (e) =>
+                                              e.descriptionEn ==
+                                              'Mental Health Disorder',
+                                          orElse: () => AddDetailsTable())
                                       .lookDetId,
                                   "multiRelaId": nephroController.relationList
-                                      ?.where((item) => nephroController
-                                          .selectedItemsPerRow[10]
-                                          .contains(item
-                                              .lookupDetDescEn)) // Filter matching items
+                                      ?.where((item) => _selectedItemsAt(10)
+                                          .contains(
+                                              item.lookupDetDescEn)) // Filter matching items
                                       .map((item) =>
                                           item.lookupDetId) // Extract IDs
                                       .toList(),
@@ -1126,11 +1119,7 @@ class _ClinicalHistoryState extends State<ClinicalHistory> {
                                   "updatedDatetime": null,
                                   "deletedBy": null,
                                   "deletedDatetime": null,
-                                  "comorFlag":
-                                      nephroController.checkBoxValues[11] ==
-                                              true
-                                          ? "Y"
-                                          : "N",
+                                  "comorFlag": _checkBoxAt(11) ? "Y" : "N",
                                   "durationYear": nephroController
                                           .chronicLungDiseaseDuration
                                           .text
@@ -1140,13 +1129,14 @@ class _ClinicalHistoryState extends State<ClinicalHistory> {
                                       : null,
                                   "lookupDetIdComorbidities": nephroController
                                       .addDetailsList
-                                      ?.firstWhere((e) =>
-                                          e.descriptionEn ==
-                                          'Chronic Lung Disease')
+                                      ?.firstWhere(
+                                          (e) =>
+                                              e.descriptionEn ==
+                                              'Chronic Lung Disease',
+                                          orElse: () => AddDetailsTable())
                                       .lookDetId,
                                   "multiRelaId": nephroController.relationList
-                                      ?.where((item) => nephroController
-                                          .selectedItemsPerRow[11]
+                                      ?.where((item) => _selectedItemsAt(11)
                                           .contains(item.lookupDetDescEn))
                                       .map((item) => item.lookupDetId)
                                       .toList(),
@@ -1166,11 +1156,7 @@ class _ClinicalHistoryState extends State<ClinicalHistory> {
                                   "updatedDatetime": null,
                                   "deletedBy": null,
                                   "deletedDatetime": null,
-                                  "comorFlag":
-                                      nephroController.checkBoxValues[12] ==
-                                              true
-                                          ? "Y"
-                                          : "N",
+                                  "comorFlag": _checkBoxAt(12) ? "Y" : "N",
                                   "durationYear": nephroController
                                           .hcvTreatedDuration.text.isNotEmpty
                                       ? convertToNumber(nephroController
@@ -1178,14 +1164,16 @@ class _ClinicalHistoryState extends State<ClinicalHistory> {
                                       : null,
                                   "lookupDetIdComorbidities": nephroController
                                       .addDetailsList
-                                      ?.firstWhere((e) =>
-                                          e.descriptionEn == 'HCV Untreated')
+                                      ?.firstWhere(
+                                          (e) =>
+                                              e.descriptionEn ==
+                                              'HCV Untreated',
+                                          orElse: () => AddDetailsTable())
                                       .lookDetId,
                                   "multiRelaId": nephroController.relationList
-                                      ?.where((item) => nephroController
-                                          .selectedItemsPerRow[12]
-                                          .contains(item
-                                              .lookupDetDescEn)) // Filter matching items
+                                      ?.where((item) => _selectedItemsAt(12)
+                                          .contains(
+                                              item.lookupDetDescEn)) // Filter matching items
                                       .map((item) =>
                                           item.lookupDetId) // Extract IDs
                                       .toList(),

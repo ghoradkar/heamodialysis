@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dialysis_queue/consumable_entry/model/add_consumable_entry_model.dart';
@@ -14,14 +12,14 @@ import 'package:heamodialysis/ro_maintenance/ro_machine_issue_log/model/problem_
 import 'package:heamodialysis/ro_maintenance/ro_machine_issue_log/model/problem_resolve/problem_resolved_model.dart';
 import 'package:heamodialysis/ro_maintenance/ro_machine_issue_log/model/product_name_list_model.dart';
 import 'package:heamodialysis/ro_maintenance/ro_machine_issue_log/model/ro_machine_issue_log/ro_machine_issue_log_model.dart';
-import 'package:heamodialysis/ro_maintenance/ro_machine_issue_log/screens/ro_machine_issue_log.dart';
-import 'package:heamodialysis/utils/api_names.dart';
-import 'package:heamodialysis/utils/api_urls.dart';
-import 'package:heamodialysis/utils/network_call.dart';
+import 'package:heamodialysis/ro_maintenance/ro_machine_issue_log/repository/ro_machine_issue_log_repository.dart';
+import 'package:heamodialysis/ro_maintenance/ro_machine_issue_log/screen/ro_machine_issue_log.dart';
+import 'package:heamodialysis/utils/api_client.dart';
 import 'package:heamodialysis/widgets/cust_toast.dart';
-import 'package:http/io_client.dart';
 
 class RoMachineIssueLogController extends GetxController {
+  final RoMachineIssueLogRepository _repository = RoMachineIssueLogRepository();
+
   bool isLoading = false;
   InstituteDataModel? dropDownValue;
   TextEditingController issueDateController = TextEditingController();
@@ -58,72 +56,37 @@ class RoMachineIssueLogController extends GetxController {
   String? initialMachine;
   String? initialProblemSolved;
   ProblemData? selectedProblem;
-  IOClient ioClient = IOClient(ByPassCert().httpClient);
 
   getRoMachineIssueLogAndSearchList(unitId, machineName) async {
     isLoading = true;
 
-    final uri = Uri.parse(
-        ApiConstants.baseUrl + ApiNames.getallROMachineLogBySearch);
-    var body = {"unitId": unitId, "input": machineName};
-    String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.post(uri, headers: headers, body: jsonbody);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      roMachineIssueLogModel = RoMachineIssueLogModel.fromJson(data);
+    try {
+      roMachineIssueLogModel = await _repository
+          .getRoMachineIssueLogAndSearchList(unitId, machineName);
       isLoading = false;
 
       update();
-    } else if (response.statusCode == 401) {
+    } on ApiException catch (e) {
       isLoading = false;
-
-      update();
-    } else {
-      isLoading = false;
-
-      throw Exception('Failed getting getRoMaintenanceDetAndSearchList');
+      if (e.statusCode == 401) {
+        update();
+      } else {
+        throw Exception('Failed getting getRoMaintenanceDetAndSearchList');
+      }
     }
   }
 
-  saveAddConsumableEntry(roMachineIssueController,patientId) async {
+  saveAddConsumableEntry(roMachineIssueController, patientId) async {
     isLoading = true;
 
-    final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.savePhysicalDet);
-
-    String jsonbody = json.encode(addConsumableEntryModel);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.post(uri, headers: headers, body: jsonbody);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
-      //getDeviceDetails
-      // final data = json.decode(response.body);
+    try {
+      await _repository.saveAddConsumableEntry(addConsumableEntryModel);
       CustomMessage.toast("Success");
-      await roMachineIssueController
-          .getConsumableList(patientId);
+      await roMachineIssueController.getConsumableList(patientId);
       isLoading = false;
       Get.back();
-    } else {
+    } on ApiException {
       isLoading = false;
-
       // throw Exception('Failed getting saveAddConsumableEntry');
     }
 
@@ -137,34 +100,12 @@ class RoMachineIssueLogController extends GetxController {
         addEditMachineIssueLogReq?.informationDate?.replaceAll("/", "-");
     isLoading = true;
     update();
-    var headers = {'Content-Type': 'application/json'};
 
-    var body = json.encode({
-      "roMachineIssueLogsId": addEditMachineIssueLogReq?.roMachineIssueLogsId,
-      "roMachineMasterId": addEditMachineIssueLogReq?.roMachineMasterId,
-      "issueDate": issueDate,
-      "issueDescription": addEditMachineIssueLogReq?.issueDescription,
-      "informedTo": addEditMachineIssueLogReq?.informedTo,
-      "informedBy": addEditMachineIssueLogReq?.informedBy,
-      "informationDate": informationDate,
-      "callAttendedBy": addEditMachineIssueLogReq?.callAttendedBy,
-      "correctiveAction": addEditMachineIssueLogReq?.correctiveAction,
-      "lookupDetId": addEditMachineIssueLogReq?.lookupDetId,
-      "comments": addEditMachineIssueLogReq?.comments,
-      "createdBy": addEditMachineIssueLogReq?.createdBy,
-      "unitId": addEditMachineIssueLogReq?.unitId
-    });
-
-    var response = await ioClient.post(
-        Uri.parse(ApiConstants.baseUrl + ApiNames.saveROMachineIssueLog),
-        body: body,
-        headers: headers);
-
-    // http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
+    try {
+      final responseBody = await _repository.addEditRoMachineIssueLog(
+          addEditMachineIssueLogReq, issueDate, informationDate);
       isLoading = false;
-      debugPrint(response.body);
+      debugPrint(responseBody);
 
       selectedInsti = null;
       initialInsti = null;
@@ -182,8 +123,8 @@ class RoMachineIssueLogController extends GetxController {
       correctionActionController.text = "";
       CustomMessage.toast("Saved Successfully");
       Get.off(const RoMachineIssueLogs());
-    } else {
-      debugPrint(response.reasonPhrase);
+    } on ApiException catch (e) {
+      debugPrint(e.body);
       isLoading = false;
       CustomMessage.toast("Save Fail");
     }
@@ -192,32 +133,18 @@ class RoMachineIssueLogController extends GetxController {
 
   Future<bool> deleteMachineIssueLog(id, unitId) async {
     isLoading = true;
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl}${ApiNames.roMachineIssueLogDelete}?id=$id");
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
+    try {
+      final responseBody = await _repository.deleteMachineIssueLog(id);
       isLoading = false;
-      //getDeviceDetails
-      CustomMessage.toast(response.body);
+      CustomMessage.toast(responseBody);
       update();
       getRoMachineIssueLogAndSearchList(unitId, "");
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
-
       throw Exception('Failed getting captcha');
     }
   }
@@ -225,36 +152,15 @@ class RoMachineIssueLogController extends GetxController {
   getMachineList(unitId) async {
     isLoading = true;
 
-    final uri =
-        Uri.parse(ApiConstants.baseUrl + ApiNames.getMachineNameList);
-    var body = {
-      "unitId": unitId,
-    };
-    String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.post(uri, headers: headers, body: jsonbody);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      getMachineNameModel = GetMachineNameModel.fromJson(data);
+    try {
+      getMachineNameModel = await _repository.getMachineList(unitId);
       isLoading = false;
-
       return getMachineNameModel;
-    } else if (response.statusCode == 401) {
+    } on ApiException catch (e) {
       isLoading = false;
-    } else {
-      isLoading = false;
-
-      throw Exception('Failed getting getMachineNameList');
+      if (e.statusCode != 401) {
+        throw Exception('Failed getting getMachineNameList');
+      }
     }
 
     update();
@@ -263,33 +169,15 @@ class RoMachineIssueLogController extends GetxController {
   getInstituteList() async {
     isLoading = true;
 
-    final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getInstituteList);
-
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      instituteList = InstituteList.fromJson(data);
+    try {
+      instituteList = await _repository.getInstituteList();
       isLoading = false;
-
       return instituteList;
-    } else if (response.statusCode == 401) {
+    } on ApiException catch (e) {
       isLoading = false;
-    } else {
-      isLoading = false;
-
-      throw Exception('Failed getting InstituteList');
+      if (e.statusCode != 401) {
+        throw Exception('Failed getting InstituteList');
+      }
     }
 
     update();
@@ -298,33 +186,15 @@ class RoMachineIssueLogController extends GetxController {
   getProblemResolvedList(unitId) async {
     isLoading = true;
 
-    final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getProbResolved);
-    var body = {"unitId": unitId};
-    String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.post(uri, headers: headers, body: jsonbody);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      problemResolvedModel = ProblemResolvedModel.fromJson(data);
+    try {
+      problemResolvedModel = await _repository.getProblemResolvedList(unitId);
       isLoading = false;
-
       return getMachineNameModel;
-    } else if (response.statusCode == 401) {
+    } on ApiException catch (e) {
       isLoading = false;
-    } else {
-      isLoading = false;
-
-      throw Exception('Failed getting getMachineNameList');
+      if (e.statusCode != 401) {
+        throw Exception('Failed getting getMachineNameList');
+      }
     }
 
     update();
@@ -332,33 +202,17 @@ class RoMachineIssueLogController extends GetxController {
 
   getProductNameList(unitId) async {
     isLoading = true;
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl}${ApiNames.getProdNameList}?unitId=$unitId");
-    // "${ApiConstants.baseUrl}${ApiConstants.getProdNameList}?unitId=$unitId");
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
+    try {
+      final list = await _repository.getProductNameList(unitId);
       isLoading = false;
-      List<dynamic> data = json.decode(response.body);
-      productNameListModel =
-          data.map((json) => ProductNameListModel.fromJson(json)).toList();
 
       final uniqueProducts = {
-        for (var product in productNameListModel!) product.itemId: product
+        for (var product in list) product.itemId: product
       }.values.toList();
 
       productNameListModel = uniqueProducts;
-    } else {
+    } on ApiException {
       isLoading = false;
     }
 
@@ -367,29 +221,11 @@ class RoMachineIssueLogController extends GetxController {
 
   getConsumableList(patientId) async {
     isLoading = true;
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl}${ApiNames.getAllConsumableItems}?patId=$patientId");
-    // "${ApiConstants.baseUrl}${ApiConstants.getProdNameList}?unitId=$unitId");
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
+    try {
+      consumableListModel = await _repository.getConsumableList(patientId);
       isLoading = false;
-      List<dynamic> data = json.decode(response.body);
-      consumableListModel =
-          data.map((json) => ConsumableListModel.fromJson(json)).toList();
-
-
-    } else {
+    } on ApiException {
       isLoading = false;
     }
 
@@ -399,27 +235,11 @@ class RoMachineIssueLogController extends GetxController {
 
   getBatchNoList(unitId, itemId) async {
     isLoading = true;
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl}${ApiNames.getBatchNoList}?itemId=$itemId&unitId=$unitId");
-    // "${ApiConstants.baseUrl}${ApiConstants.getBatchNoList}?itemId=$itemId&unitId=$unitId");
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
+    try {
+      batchNoListModel = await _repository.getBatchNoList(unitId, itemId);
       isLoading = false;
-      List<dynamic> data = json.decode(response.body);
-      batchNoListModel =
-          data.map((json) => BatchNoListModel.fromJson(json)).toList();
-    } else {
+    } on ApiException {
       isLoading = false;
     }
 
@@ -428,27 +248,11 @@ class RoMachineIssueLogController extends GetxController {
 
   getExpiryList(unitId, prodCode, itemId) async {
     isLoading = true;
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl}${ApiNames.getExpiryDateList}?itemId=$itemId&prodCode=$prodCode&unitId=$unitId");
-    // "${ApiConstants.baseUrl}${ApiConstants.getExpiryDateList}?itemId=$itemId&prodCode=$prodCode&unitId=$unitId");
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
+    try {
+      expiryDatelst = await _repository.getExpiryList(unitId, prodCode, itemId);
       isLoading = false;
-      List<dynamic> data = json.decode(response.body);
-      expiryDatelst =
-          data.map((json) => BatchNoListModel.fromJson(json)).toList();
-    } else {
+    } on ApiException {
       isLoading = false;
     }
 
@@ -457,26 +261,12 @@ class RoMachineIssueLogController extends GetxController {
 
   getOrderListList(unitId, prodCode, itemId, date) async {
     isLoading = true;
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl}${ApiNames.getProductOrderId}?itemId=$itemId&prodCode=$prodCode&date=$date&unitId=$unitId");
-    // "${ApiConstants.baseUrl}${ApiConstants.getProductOrderId}?itemId=$itemId&prodCode=$prodCode&date=$date&unitId=$unitId");
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
+    try {
+      orderIdlst =
+          await _repository.getOrderListList(unitId, prodCode, itemId, date);
       isLoading = false;
-      List<dynamic> data = json.decode(response.body);
-      orderIdlst = data.map((json) => BatchNoListModel.fromJson(json)).toList();
-    } else {
+    } on ApiException {
       isLoading = false;
     }
 

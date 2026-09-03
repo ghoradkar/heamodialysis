@@ -97,7 +97,7 @@ class ListCliniComorBean {
     required this.status,
     required this.createdBy,
     required this.createdDatetime,
-    required this.lookupDetIdComorbidities,
+    this.lookupDetIdComorbidities,
     this.multiRelaId,
   });
 
@@ -110,7 +110,7 @@ class ListCliniComorBean {
   int status;
   int createdBy;
   String createdDatetime;
-  int lookupDetIdComorbidities;
+  int? lookupDetIdComorbidities;
   List<int>? multiRelaId;
 
   factory ListCliniComorBean.fromJson(Map<String, dynamic> json) =>

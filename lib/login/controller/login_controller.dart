@@ -1,27 +1,22 @@
-import 'dart:async';
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/login/model/get_captcha_model.dart';
 import 'package:heamodialysis/login/model/login_model.dart';
-import 'package:heamodialysis/login/model/login_model.dart';
 import 'package:heamodialysis/login/model/unit_name_model.dart';
-import 'package:heamodialysis/utils/api_names.dart';
-import 'package:heamodialysis/utils/api_urls.dart';
-import 'package:heamodialysis/utils/network_call.dart';
+import 'package:heamodialysis/login/repository/login_repository.dart';
+import 'package:heamodialysis/utils/api_client.dart';
 import 'package:heamodialysis/utils/session_manager.dart';
 import 'package:heamodialysis/utils/shared_pref_constants.dart';
 import 'package:heamodialysis/utils/shared_preference.dart';
-import 'package:http/io_client.dart';
 
 class LoginController extends GetxController {
+  final LoginRepository _repository = LoginRepository();
+
   final userName = TextEditingController().obs;
   final password = TextEditingController().obs;
   final captcha = TextEditingController().obs;
   final isPasswordVisible = true.obs;
   bool obscurePassword = true;
-  IOClient ioClient = IOClient(ByPassCert().httpClient);
 
   String? msg;
 
@@ -30,6 +25,10 @@ class LoginController extends GetxController {
   UnitNameModel? unitName;
 
   String? status;
+  int? code;
+  // Only present on the OTP_REQUIRED response from verifyLogin - the
+  // number the OTP was texted to, for showing a masked hint on the OTP screen.
+  String? otpMobileNo;
 
   LoginModel? loginRespModel;
 
@@ -39,43 +38,22 @@ class LoginController extends GetxController {
       String? captcha2) async {
     isLoading = true;
     update();
-    final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.login);
-    print(ApiConstants.baseUrl);
 
-    final Map<String, dynamic> body = {
-      "userName": username,
-      "password": password,
-      "captcha2": captcha1 ?? "",
-      "unitId": unitId,
-      "captcha1": captcha2 ?? ""
-    };
-
-    String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-    debugPrint(body.toString());
-
-    final response = await ioClient.post(uri, headers: headers, body: jsonbody);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
-      //getDeviceDetails/
-      final data = json.decode(response.body);
+    try {
+      final data =
+          await _repository.login(username, unitId, password, captcha1, captcha2);
+      code = data['code'];
       if (data['status'] == 'Success') {
         isLoading = false;
 
         await SessionManager().setLoggedIn(true);
         loginRespModel = LoginModel.fromJson(data);
         if (loginRespModel != null && unitName != null) {
-          var unitId = checkAndExtractUnitId(
+          var resolvedUnitId = checkAndExtractUnitId(
             loginRespModel!.dataDet.unitId.toString(),
             unitName!.unitId.toString(),
           );
-          loginRespModel!.dataDet.unitId = int.parse(unitId);
+          loginRespModel!.dataDet.unitId = int.parse(resolvedUnitId);
         }
 
         await SharedPref().save(
@@ -84,19 +62,68 @@ class LoginController extends GetxController {
       } else {
         isLoading = false;
 
+        // OTP_REQUIRED (code 2) also lands here: no dataDet is returned yet,
+        // so we only record the status/code/mobileNo and let the caller
+        // decide to navigate to the OTP screen instead of treating this as
+        // a failure.
+        SessionManager().setLoggedIn(false);
+        status = data['status'];
+        otpMobileNo = data['mobileNo'];
+      }
+    } on ApiException catch (e) {
+      isLoading = false;
+      SessionManager().setLoggedIn(false);
+      if (e.statusCode == 401) {
+        status = "Something went wrong";
+      } else {
+        throw Exception('Failed to sign in');
+      }
+    }
+    update();
+  }
+
+  /// Verifies the OTP sent by [login] when the backend responded with
+  /// code:2 / "OTP_REQUIRED". On success this behaves exactly like a
+  /// direct login: same response shape, same session storage.
+  Future<void> verifyOtp(String userName, String unitId, String otp) async {
+    isLoading = true;
+    update();
+
+    try {
+      final data = await _repository.verifyOtp(userName, unitId, otp);
+      code = data['code'];
+      if (data['status'] == 'Success') {
+        isLoading = false;
+
+        await SessionManager().setLoggedIn(true);
+        loginRespModel = LoginModel.fromJson(data);
+        if (loginRespModel != null && unitName != null) {
+          var resolvedUnitId = checkAndExtractUnitId(
+            loginRespModel!.dataDet.unitId.toString(),
+            unitName!.unitId.toString(),
+          );
+          loginRespModel!.dataDet.unitId = int.parse(resolvedUnitId);
+        }
+
+        await SharedPref().save(
+            const SharedPrefConstant().kUserData, loginRespModel!.dataDet);
+        status = data['status'];
+      } else {
+        // "Invalid or Expired OTP" or "Invalid User" - both come back as
+        // code:1, distinguished only by the status message.
+        isLoading = false;
+
         SessionManager().setLoggedIn(false);
         status = data['status'];
       }
-    } else if (response.statusCode == 401) {
+    } on ApiException catch (e) {
       isLoading = false;
-
       SessionManager().setLoggedIn(false);
-      status = "Something went wrong";
-    } else {
-      isLoading = false;
-
-      SessionManager().setLoggedIn(false);
-      throw Exception('Failed to sign in');
+      if (e.statusCode == 401) {
+        status = "Something went wrong";
+      } else {
+        throw Exception('Failed to verify OTP');
+      }
     }
     update();
   }
@@ -116,126 +143,31 @@ class LoginController extends GetxController {
   }
 
   Future<bool> getCaptcha() async {
-    final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getCaptcha);
-    // final uri = Uri.parse(ApiConstants.baseUrl + ApiConstants.getCaptcha);
-
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      captchaModel = GetCaptchaModel.fromJson(data);
-
+    try {
+      captchaModel = await _repository.getCaptcha();
       update();
       return true;
-    } else if (response.statusCode == 401) {
+    } on ApiException catch (e) {
       update();
-
-      return false;
-    } else {
+      if (e.statusCode == 401) return false;
       throw Exception('Failed getting captcha');
     }
   }
 
-  // Future<bool> getCaptcha() async {
-  //   final uri = Uri.parse(ApiConstants.baseUrl + ApiConstants.getCaptcha);
-  //   Map<String, String> headers = {
-  //     "Content-Type": "application/json",
-  //   };
-  //
-  //   debugPrint(uri.path);
-  //
-  //   try {
-  //     final response = await ioClient
-  //         .get(uri, headers: headers)
-  //         .timeout(const Duration(seconds: 10)); // Set a 10-second timeout
-  //
-  //     debugPrint(response.statusCode.toString());
-  //     debugPrint("response.body : ${response.body}");
-  //
-  //     if (response.statusCode == 200) {
-  //       final data = json.decode(response.body);
-  //       captchaModel = GetCaptchaModel.fromJson(data);
-  //       update();
-  //       return true;
-  //     } else if (response.statusCode == 401) {
-  //       update();
-  //       return false;
-  //     } else {
-  //       throw Exception('Failed getting captcha');
-  //     }
-  //   } on TimeoutException {
-  //     debugPrint("Request timed out");
-  //     _showTimeoutDialog(); // Show dialog for timeout
-  //     return false; // Return false to indicate failure
-  //   } catch (e) {
-  //     debugPrint("Error occurred: $e");
-  //     throw Exception('Failed getting captcha: $e');
-  //   }
-  // }
-  //
-  // Future _showTimeoutDialog() {
-  //   return Get.dialog(Column(
-  //     children: [
-  //       const Text("Notice"),
-  //       const Text("This app only available in Indian region"),
-  //       TextButton(
-  //         onPressed: () {
-  //           Get.back();
-  //         },
-  //         child: const Text("OK"),
-  //       ),
-  //     ],
-  //   ));
-  // }
-
-  // Future<void> getCaptcha() async {
-  //   await Future.delayed(Duration(seconds: 15)); // Simulate a delay
-  //   captchaModel = null; // Simulate no captcha received
-  //   update();
-  // }
-
   getUnitId(String userName) async {
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl}${ApiNames.getUnitByUserName}?userName=$userName");
-
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
-      //getDeviceDetails
-      List<dynamic> data = json.decode(response.body);
-      // unitNameM = UnitNameModel.fromJson(data);
-      if (data.isNotEmpty) {
-        unitNameList =
-            data.map((item) => UnitNameModel.fromJson(item)).toList();
-
+    try {
+      final list = await _repository.getUnitByUserName(userName);
+      if (list.isNotEmpty) {
+        unitNameList = list;
         unitName = unitNameList?.first;
         update();
       }
-    } else if (response.statusCode == 401) {
-      update();
-    } else {
-      throw Exception('Failed getting unitname');
+    } on ApiException catch (e) {
+      if (e.statusCode == 401) {
+        update();
+      } else {
+        throw Exception('Failed getting unitname');
+      }
     }
   }
 }

@@ -74,7 +74,7 @@ class _ClusterDistrictWiseDashState extends State<ClusterDistrictWiseDash>
     String toDate =
         DateFormat('yyyy/MM/dd').format(now.add(const Duration(days: 1)));
 
-    String ui = userData['ui'].toString();
+    String ui = userData['user_ID'].toString();
     String unitId = userData['unitId'].toString();
     String mulSelunit = userData['mulSelunit'].toString();
 
@@ -153,7 +153,7 @@ class _ClusterDistrictWiseDashState extends State<ClusterDistrictWiseDash>
                   .format(now.add(const Duration(days: 1)));
               String toDateTime = DateFormat('yyyy-MM-dd HH:mm:ss').format(now);
 
-              String ui = userData['ui'].toString();
+              String ui = userData['user_ID'].toString();
               String unitId = userData['unitId'].toString();
               String mulSelunit = userData['mulSelunit'].toString();
 
@@ -197,34 +197,34 @@ class _ClusterDistrictWiseDashState extends State<ClusterDistrictWiseDash>
               // String toDate = DateFormat('yyyy/MM/dd').format(tomorrow);
               //
               // await dashboardController.getDashCountClusterDistrictWise(
-              //     fromDate, toDate, userData['ui']);
+              //     fromDate, toDate, userData['user_ID']);
               // await dashboardController.getRadialChartCluster(
-              //     fromDate, toDate, userData['ui']);
+              //     fromDate, toDate, userData['user_ID']);
               //
               // String toDateTime = DateFormat('yyyy-MM-dd HH:mm:ss').format(now);
               // await dashboardController.getPatientRegiCluster(
-              //     fromDate, toDate, userData['ui']);
+              //     fromDate, toDate, userData['user_ID']);
               // await dashboardController.getAbhaPatientCluster(
-              //     fromDate, toDateTime, userData['ui']);
+              //     fromDate, toDateTime, userData['user_ID']);
               // await dashboardController.getFunctionalUnitListCluster(
-              //     fromDate, toDate, userData['ui']);
+              //     fromDate, toDate, userData['user_ID']);
               // await dashboardController.getDialysisSessionCluster(
-              //     fromDate, toDate, userData['ui']);
+              //     fromDate, toDate, userData['user_ID']);
               // await newRegistrationController.getInstituteList();
               //
               // await dashboardController.getDialysisSessionCancelledCluster(
-              //     fromDate, toDate, userData['ui']);
+              //     fromDate, toDate, userData['user_ID']);
               // await dashboardController.getMachineCountClusterWise(
-              //     fromDate, toDate, userData['ui']);
+              //     fromDate, toDate, userData['user_ID']);
               // await dashboardController.getTotalTicketsCluster(
-              //     fromDate, toDate, userData['ui']);
+              //     fromDate, toDate, userData['user_ID']);
               // await dashboardController.getComplaintCluster(
-              //     fromDate, toDate, userData['ui']);
+              //     fromDate, toDate, userData['user_ID']);
               // await dashboardController.getTestDetClusterWise(
-              //     fromDate, toDate, userData['ui']);
+              //     fromDate, toDate, userData['user_ID']);
               //
               // await dashboardController.getEventDetailCluster(
-              //     fromDate, fromDate, userData['ui']);
+              //     fromDate, fromDate, userData['user_ID']);
               // await dashboardController.getChartData(
               //     fromDate, toDate, ApiConstants.baseUrlCluster);
               // await dashboardController.getChartDataAbhaCluster(
@@ -343,29 +343,29 @@ class _ClusterDistrictWiseDashState extends State<ClusterDistrictWiseDash>
                                                   dashboardController
                                                       .fDateController.text,
                                                   selectedToDate,
-                                                  userData['ui']);
+                                                  userData['user_ID']);
 
                                           await dashboardController.getRadialChartCluster(
                                               dashboardController
                                                   .fDateController.text,
                                               selectedToDate,
-                                              userData['ui']);
+                                              userData['user_ID']);
                                           await dashboardController.getPatientRegiCluster(
                                               dashboardController
                                                   .fDateController.text,
                                               selectedToDate,
-                                              userData['ui']);
+                                              userData['user_ID']);
                                           await dashboardController
                                               .getFunctionalUnitListCluster(
                                                   dashboardController
                                                       .fDateController.text,
                                                   selectedToDate,
-                                                  userData['ui']);
+                                                  userData['user_ID']);
                                           await dashboardController.getAbhaPatientCluster(
                                               dashboardController
                                                   .fDateController.text,
                                               selectedToDate,
-                                              userData['ui']);
+                                              userData['user_ID']);
                                           await dashboardController
                                               .getDialysisSessionCluster(
                                                   dashboardController
@@ -377,35 +377,35 @@ class _ClusterDistrictWiseDashState extends State<ClusterDistrictWiseDash>
                                                   dashboardController
                                                       .fDateController.text,
                                                   selectedToDate,
-                                                  userData['ui']);
+                                                  userData['user_ID']);
                                           await dashboardController
                                               .getMachineCountClusterWise(
                                                   dashboardController
                                                       .fDateController.text,
                                                   selectedToDate,
-                                                  userData['ui']);
+                                                  userData['user_ID']);
                                           await dashboardController.getTotalTicketsCluster(
                                               dashboardController
                                                   .fDateController.text,
                                               selectedToDate,
-                                              userData['ui']);
+                                              userData['user_ID']);
                                           await dashboardController
                                               .getComplaintCluster(
                                                   dashboardController
                                                       .fDateController.text,
                                                   selectedToDate,
-                                                  userData['ui']);
+                                                  userData['user_ID']);
                                           await dashboardController.getTestDetClusterWise(
                                               dashboardController
                                                   .fDateController.text,
                                               selectedToDate,
-                                              userData['ui']);
+                                              userData['user_ID']);
 
                                           await dashboardController.getEventDetailCluster(
                                               dashboardController
                                                   .fDateController.text,
                                               selectedToDate,
-                                              userData['ui']);
+                                              userData['user_ID']);
                                           dashboardController.isTodaysDate =
                                               false;
 

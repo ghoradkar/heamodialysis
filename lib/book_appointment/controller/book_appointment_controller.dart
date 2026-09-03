@@ -1,31 +1,25 @@
-import 'dart:convert';
-
-import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/book_appointment/model/bedAvailable/bed_available_model.dart';
+import 'package:heamodialysis/book_appointment/repository/book_appointment_repository.dart';
 import 'package:heamodialysis/registered_patient_list/model/already_regidtered_patient/patient_data.dart';
-import 'package:heamodialysis/registered_patient_list/screens/registered_patient_list.dart';
-import 'package:heamodialysis/schedular/schedular_controller/schedular_controller.dart';
-import 'package:heamodialysis/schedular/screens/schedular_list.dart';
-import 'package:heamodialysis/utils/api_names.dart';
-import 'package:heamodialysis/utils/api_urls.dart';
-import 'package:heamodialysis/utils/network_call.dart';
+import 'package:heamodialysis/registered_patient_list/screen/registered_patient_list.dart';
+import 'package:heamodialysis/schedular/controller/schedular_controller.dart';
+import 'package:heamodialysis/schedular/screen/schedular_list.dart';
+import 'package:heamodialysis/utils/api_client.dart';
 import 'package:heamodialysis/widgets/cust_toast.dart';
-import 'package:http/io_client.dart';
 import 'package:intl/intl.dart';
-
-// import 'package:http/http.dart' as http;
 
 import '../model/slot/slot_list_model.dart';
 
 class BookAppointmentController extends GetxController {
+  final BookAppointmentRepository _repository = BookAppointmentRepository();
+
   bool isLoading = false;
   String? selectInstitute;
   String? selectedDateSendReq;
 
   SlotListModel? slotListModel;
   BedAvailableModel? bedAvailableModel;
-  IOClient ioClient = IOClient(ByPassCert().httpClient);
 
   Future<bool> getSlotList(unitId, pId, date) async {
     isLoading = true;
@@ -35,43 +29,16 @@ class BookAppointmentController extends GetxController {
     String formattedDate =
         DateFormat("dd-MMM-yyyy").format(parsedDate).toUpperCase();
 
-    final uri = Uri.parse(ApiConstants.oldBaseUrl + ApiNames.getSlotList);
-
-    final Map<String, dynamic> body = {
-      "unitId": unitId,
-      "pId": pId,
-      "date": formattedDate
-    };
-
-    String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.post(uri, headers: headers, body: jsonbody);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
+    try {
+      slotListModel = await _repository.getSlotList(
+          unitId: unitId, pId: pId, formattedDate: formattedDate);
       isLoading = false;
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      slotListModel = SlotListModel.fromJson(data);
       update();
-
       return true;
-    } else if (response.statusCode == 401) {
+    } on ApiException catch (e) {
       isLoading = false;
       update();
-
-      return false;
-    } else {
-      isLoading = false;
-      update();
-
+      if (e.statusCode == 401) return false;
       throw Exception('Failed getting id proof');
     }
   }
@@ -80,40 +47,13 @@ class BookAppointmentController extends GetxController {
     isLoading = true;
     update();
 
-    final uri =
-        Uri.parse(ApiConstants.oldBaseUrl + ApiNames.getAvailableBedList);
-
-    final Map<String, dynamic> body = {
-      "unitId": unitId,
-      "slotId": slotId,
-      "date": date,
-      "patientId": patientId,
-      "slotFlag": "Y"
-    };
-
-    String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-    // print(body);
-    debugPrint("map : $jsonbody");
-
-    final response = await ioClient.post(uri, headers: headers, body: jsonbody);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
+    try {
+      bedAvailableModel = await _repository.getBedList(
+          unitId: unitId, slotId: slotId, date: date, patientId: patientId);
       isLoading = false;
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      bedAvailableModel = BedAvailableModel.fromJson(data);
       update();
-    } else {
+    } on ApiException {
       isLoading = false;
-
-      debugPrint('Failed getting id proof');
       update();
     }
   }
@@ -126,32 +66,18 @@ class BookAppointmentController extends GetxController {
       bool? iron,
       bool? epo}) async {
     isLoading = true;
-    final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.bookBedApi);
 
-    final Map<String, dynamic> body = {
-      "unitId": unitId,
-      "slotMapDetId": slotMapDetId,
-      "date": date,
-      "pId": patientId,
-      "userId": userId,
-      "tId": treatId
-    };
+    try {
+      final data = await _repository.bookAppointment(
+        unitId: unitId,
+        slotMapDetId: slotMapDetId,
+        date: date,
+        patientId: patientId,
+        userId: userId,
+        treatId: treatId,
+      );
 
-    String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-    debugPrint(jsonbody);
-
-    final response = await ioClient.post(uri, headers: headers, body: jsonbody);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
       isLoading = false;
-      final data = json.decode(response.body);
       CustomMessage.toast(data['status']);
       if (isFromSchedular) {
         await schedularController!.updateVisitorEntry(
@@ -178,19 +104,12 @@ class BookAppointmentController extends GetxController {
       update();
 
       return true;
-    } else if (response.statusCode == 401) {
+    } on ApiException catch (e) {
       isLoading = false;
       CustomMessage.toast("Booked fail");
-
       update();
 
-      return false;
-    } else {
-      isLoading = false;
-      CustomMessage.toast("Booked fail");
-
-      update();
-
+      if (e.statusCode == 401) return false;
       throw Exception('Failed Booking');
     }
   }

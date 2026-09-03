@@ -212,7 +212,7 @@ class _AddEditInstState extends State<AddEditInst> {
                                             "deleted": "N",
                                             "createdBy": userData['createdBy'],
                                             "unitId": userData['unitId'],
-                                            "userId": userData['ui']
+                                            "userId": userData['user_ID']
                                           };
 
                                           final isSave = await controller

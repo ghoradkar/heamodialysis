@@ -9,7 +9,7 @@ import 'package:heamodialysis/nephro_desk_patient_list/model/prescription_list_m
 import 'package:heamodialysis/nephro_desk_patient_list/controller/nephro_controller.dart';
 import 'package:heamodialysis/nephro_desk_patient_list/screen/edit_nephro/tabs/add_prescription.dart';
 import 'package:heamodialysis/registered_patient_list/model/search_patient_dropdown/search_data.dart';
-import 'package:heamodialysis/registered_patient_list/screens/registered_patient_list.dart';
+import 'package:heamodialysis/registered_patient_list/screen/registered_patient_list.dart';
 import 'package:heamodialysis/utils/color_constants.dart';
 import 'package:heamodialysis/utils/shared_pref_constants.dart';
 import 'package:heamodialysis/utils/shared_preference.dart';
@@ -138,13 +138,13 @@ class _PrescriptionState extends State<Prescription> {
                         child: Image.asset("assets/add-pre-dialysis.png"),
                       ),
                       const SizedBox(width: 8),
-                      Image.asset("assets/download.png"),
+                      // Image.asset("assets/download.png"),
                     ],
                   ).paddingOnly(right: 8),
                   // FIXED: Added Expanded to give ListView a bounded height
                   Expanded(
                     child: controller.prescrriptionList?.isEmpty ?? true
-                        ? Center(
+                        ? const Center(
                             child: CustomText(
                               text: "No prescriptions found",
                               fontSize: 16,
@@ -182,7 +182,7 @@ class _PrescriptionState extends State<Prescription> {
                                     await controller.deletePrescriptin(userData['unitId']
                                         .toString(), controller
                                         .prescrriptionList?[index].prescriptionId
-                                        .toString(), userData['ui'].toString(), widget
+                                        .toString(), userData['user_ID'].toString(), widget
                                         .patientData?.treatmentId.toString());
                                   },
                                 )

@@ -115,7 +115,7 @@ class _CapturePhotoState extends State<CapturePhoto> {
 
 
                               var unitId = int.parse(userData['unitId'].toString());
-                            var userId = userData['ui'];
+                            var userId = userData['user_ID'];
                             capturePhotoController.saveCapturedPhotoModel
                                 .unitId = unitId.toString();
                             capturePhotoController.saveCapturedPhotoModel
@@ -264,7 +264,7 @@ class _CapturePhotoState extends State<CapturePhoto> {
 //                           imagePath: image.path,
 //                           callB: () {
 //                             var unitId = int.parse(userData['unitId']);
-//                             var userId = userData['ui'];
+//                             var userId = userData['user_ID'];
 //                             capturePhotoController.saveCapturedPhotoModel
 //                                 .unitId = unitId.toString();
 //                             capturePhotoController.saveCapturedPhotoModel

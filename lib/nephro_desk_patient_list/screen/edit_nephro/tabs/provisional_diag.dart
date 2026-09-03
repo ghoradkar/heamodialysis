@@ -103,6 +103,7 @@ class _ProvisionalDiagState extends State<ProvisionalDiag> {
           result == ConnectivityResult.wifi,
     );
 
+    if (!mounted) return;
     setState(() {
       _isNetworkAvailable = isConnected;
     });

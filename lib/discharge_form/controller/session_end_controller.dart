@@ -1,22 +1,20 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:heamodialysis/discharge_form/repository/session_end_repository.dart';
+import 'package:heamodialysis/nephro_desk_patient_list/screen/edit_nephro/tabs/choose_package.dart';
 import 'package:heamodialysis/discharge_form/screen/session_end_list.dart';
 import 'package:heamodialysis/discharge_form/model/checkbox_flag_discharge.dart';
 import 'package:heamodialysis/discharge_form/model/discharge_list.dart';
 import 'package:heamodialysis/discharge_form/model/discharge_patient_details.dart';
-import 'package:heamodialysis/nephro_desk_patient_list/screen/edit_nephro/tabs/choose_package.dart';
-import 'package:heamodialysis/utils/api_names.dart';
-import 'package:heamodialysis/utils/api_urls.dart';
-import 'package:heamodialysis/utils/network_call.dart';
+import 'package:heamodialysis/utils/api_client.dart';
 import 'package:heamodialysis/widgets/custom_popup.dart';
-import 'package:http/io_client.dart';
-import 'package:http/http.dart' as http;
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 
 class SessionEndController extends GetxController {
+  final SessionEndRepository _repository = SessionEndRepository();
+
   bool isLoading = true;
   List<String> typeList = [
     'Patient Id',
@@ -37,7 +35,6 @@ class SessionEndController extends GetxController {
   // 🔹 Loader
   bool isLoadingType = false;
 
-  IOClient ioClient = IOClient(ByPassCert().httpClient);
   var pageSize = 10;
 
   // late PagingController<int, DischargeListModel> pagingController;
@@ -70,41 +67,13 @@ class SessionEndController extends GetxController {
     int? unitId,
   ) async {
     isLoading = true;
-    // final uri =
-    //     Uri.parse(ApiConstants.baseUrl4 + ApiConstants.getCentralDashboarCount);
-
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl}${ApiNames.getPreDialysisQueueList}?inputValue=$inputValue&startIndex=$startIndex&callFrom=$callFrom&searchType=$searchType&unitId=$unitId");
-
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
 
     try {
-      final response = await ioClient.get(uri, headers: headers);
-      debugPrint(response.statusCode.toString());
-      debugPrint("response.body : ${response.body}");
-
-      if (response.statusCode == 200) {
-        try {
-          final List<dynamic> jsonData = json.decode(response.body);
-          dischargeList =
-              jsonData.map((item) => DischargeListModel.fromJson(item)).toList();
-        } catch (e) {
-          debugPrint("JSON Decode Error: $e");
-          dischargeList = [];
-        }
-        isLoading = false;
-        update();
-        return dischargeList;
-      } else {
-        isLoading = false;
-        update();
-        throw Exception('Failed getting fetchDialysisEventListFromAPI');
-      }
+      dischargeList = await _repository.fetchDialysisEventList(
+          inputValue, startIndex, callFrom, searchType, unitId);
+      isLoading = false;
+      update();
+      return dischargeList;
     } catch (e) {
       isLoading = false;
       update();
@@ -112,46 +81,6 @@ class SessionEndController extends GetxController {
       return dischargeList;
     }
   }
-
-  // Future<void> getSessionReport(String patientId) async {
-  //   isLoading = true;
-  //   update();
-  //
-  //   try {
-  //     var request = http.Request(
-  //       'GET',
-  //       Uri.parse(
-  //         '${ApiConstants.ip + ApiConstants.sessionEndReport}?details=no&fromDate=&toDate=&treatmentId=&patientId=$patientId',
-  //       ),
-  //     );
-  //
-  //     http.StreamedResponse response = await request.send();
-  //
-  //     if (response.statusCode == 200) {
-  //       Uint8List bytes = await response.stream.toBytes();
-  //       final fileName =
-  //           'session_report_${DateTime.now().millisecondsSinceEpoch}.pdf';
-  //
-  //       // ✅ Save in app's files directory (No permission required)
-  //       final dir =
-  //           await getExternalStorageDirectory(); // e.g., /storage/emulated/0/Android/data/<your_app>/files
-  //       final file = File('${dir!.path}/$fileName');
-  //       await file.writeAsBytes(bytes);
-  //
-  //       debugPrint('PDF saved at: ${file.path}');
-  //
-  //       // ✅ Optional: Open the file
-  //       await OpenFile.open(file.path);
-  //     } else {
-  //       debugPrint("Failed to download report: ${response.reasonPhrase}");
-  //     }
-  //   } catch (e) {
-  //     debugPrint("Error: $e");
-  //   }
-  //
-  //   isLoading = false;
-  //   update();
-  // }
 
   Future<void> getSessionReport({
     required String patientId,
@@ -163,33 +92,13 @@ class SessionEndController extends GetxController {
     update();
 
     try {
-      final uri = Uri.parse(
-        '${ApiConstants.ip + ApiNames.sessionEndReport}?details=no&fromDate=&toDate=&treatmentId=$treatmentId&patientId=$patientId',
+      final bytes = await _repository.getSessionReportBytes(
+        patientId: patientId,
+        treatmentId: treatmentId,
+        unitId: unitId,
       );
-      print("url:$uri");
 
-      final headers = {'Content-Type': 'application/json'};
-      // ✅ BODY MAP
-      final Map<String, dynamic> body = {
-        "patientId": int.parse(patientId),
-        "details": "no",
-        "fromDate": "",
-        "toDate": "",
-        "treatmentId": treatmentId,
-        "userId": userId,
-        "unitId": unitId,
-      };
-
-      final request = http.Request('POST', uri);
-      request.body = jsonEncode(body);
-      request.headers.addAll(headers);
-      debugPrint('📦 REQUEST BODY KEYS & VALUES:');
-      debugPrint('📄 REQUEST BODY JSON: ${request.body}');
-      final response = await request.send();
-
-      if (response.statusCode == 200) {
-        final bytes = await response.stream.toBytes();
-
+      if (bytes != null) {
         final fileName =
             'session_report_${DateTime.now().millisecondsSinceEpoch}.pdf';
 
@@ -198,10 +107,6 @@ class SessionEndController extends GetxController {
         final dir = await getApplicationDocumentsDirectory();
         sessionEndReportFile = File('${dir.path}/$fileName');
         await sessionEndReportFile?.writeAsBytes(bytes);
-
-
-      } else {
-        debugPrint("❌ Failed: ${response.reasonPhrase}");
       }
     } catch (e) {
       debugPrint("❌ Exception: $e");
@@ -216,31 +121,14 @@ class SessionEndController extends GetxController {
   ) async {
     isLoading = true;
 
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl}${ApiNames.getPatientRecordsbypatientId}?patientId=$patientId");
-
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-
-    final response = await ioClient.post(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
+    try {
+      dischargePatientDet = await _repository.getPatientDetails(patientId);
       isLoading = false;
-      final jsonData = json.decode(response.body);
-      dischargePatientDet = DischargePatientDetails.fromJson(jsonData);
-
       debugPrint(dischargePatientDet?.lName ?? "");
       update();
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
-
       throw Exception('Failed getting getPatientDetails');
     }
   }
@@ -248,24 +136,11 @@ class SessionEndController extends GetxController {
   saveDischarge(String? patientId, String? treatmentId, String? unitId,
       String? userId, dynamic userData) async {
     isLoading = true;
-    // final uri =
-    //     Uri.parse(ApiConstants.baseUrl4 + ApiConstants.getCentralDashboarCount);
 
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl}${ApiNames.saveDischarge}?patientId=$patientId&treatmentId=$treatmentId&unitId=$unitId&userId=$userId");
+    try {
+      final data = await _repository.saveDischarge(
+          patientId, treatmentId, unitId, userId);
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-
-    final response = await ioClient.post(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
       await getSessionReport(
           patientId: patientId.toString(),
           treatmentId: int.parse(treatmentId!),
@@ -279,7 +154,6 @@ class SessionEndController extends GetxController {
         int.parse(unitId),
       );
       isLoading = false;
-      final data = jsonDecode(response.body);
       if (data['patientId'] != null) {
         update();
         CustomPopup.showConfirmationDialog(() {
@@ -309,97 +183,18 @@ class SessionEndController extends GetxController {
           }
         }, "Print Report?", '', "assets/success-popup.png");
       }
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
-
       throw Exception('Failed getting getPatientDetails');
     }
   }
 
-// getPostFlag(
-//   String? patientId,
-//   String? treatmentId,
-// ) async {
-//   isLoading = true;
-//   // final uri =
-//   //     Uri.parse(ApiConstants.baseUrl4 + ApiConstants.getCentralDashboarCount);
-//
-//   final uri = Uri.parse(
-//       "${ApiConstants.baseUrl}${ApiConstants.getPostFlag}?patientId=$patientId&treatmentId=$treatmentId");
-//
-//   Map<String, String> headers = {
-//     "Content-Type": "application/json",
-//   };
-//
-//   debugPrint(uri.path);
-//
-//   final response = await ioClient.post(uri, headers: headers);
-//   debugPrint(response.statusCode.toString());
-//   debugPrint("response.body : ${response.body}");
-//
-//   if (response.statusCode == 200) {
-//     isLoading = false;
-//     dischargeFlagString = response.body;
-//     // final jsonData = json.decode(response.body);
-//     // dischargeFlag = CheckBoxFlagDischarge.fromJson(jsonData);
-//     // debugPrint(dischargePatientDet?.lName ?? "");
-//     update();
-//   } else {
-//     isLoading = false;
-//     update();
-//
-//     throw Exception('Failed getting getPatientDetails');
-//   }
-// }
-
   Future<void> getPostFlag(String patientId, String treatmentId) async {
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl}${ApiNames.getPostFlag}?patientId=$patientId&treatmentId=$treatmentId");
-
-    var request = http.Request('POST', uri);
-
-    // var request = http.Request(
-    //     'POST',
-    //     Uri.parse(
-    //         'http://210.89.42.122:8080/Hemodialysis-Apis/api/mobile/getPostFlag?patientId=858&treatmentId=16602'));
-
-    http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
-      dischargeFlagString = await response.stream.bytesToString();
+    final result = await _repository.getPostFlag(patientId, treatmentId);
+    if (result != null) {
+      dischargeFlagString = result;
       debugPrint(dischargeFlagString);
-    } else {
-      debugPrint(response.reasonPhrase);
     }
-
-    // isLoading = true;
-    // update();
-    //
-    // final url = Uri.parse(
-    //   'http://210.89.42.122:8080/Hemodialysis-Apis/api/mobile/getPostFlag?patientId=$patientId&treatmentId=$treatmentId',
-    // );
-    //
-    // try {
-    //   final request = http.Request('POST', url);
-    //
-    //   // ONLY THIS FIX: Set Postman's User-Agent
-    //   request.headers['User-Agent'] = 'PostmanRuntime/7.44.1';
-    //
-    //   final response = await request.send();
-    //
-    //   if (response.statusCode == 200) {
-    //     final body = await response.stream.bytesToString();
-    //     dischargeFlagString = body;
-    //     print('✅ Success: $body');
-    //   } else {
-    //     print('❌ Error: ${response.statusCode} - ${response.reasonPhrase}');
-    //   }
-    // } catch (e) {
-    //   print('❌ Exception: $e');
-    // }
-    //
-    // isLoading = false;
-    // update();
   }
 }

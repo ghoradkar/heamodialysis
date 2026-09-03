@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:heamodialysis/dialysis_queue/post_dialysis/post_dialysis_screen.dart';
-import 'package:heamodialysis/dialysis_queue/pre_dialysis/pre_dialysis_list/pre_dialysis_screen.dart';
+import 'package:heamodialysis/dialysis_queue/post_dialysis/screen/post_dialysis_screen.dart';
+import 'package:heamodialysis/dialysis_queue/pre_dialysis/pre_dialysis_list/screen/pre_dialysis_screen.dart';
 import '../utils/color_constants.dart';
 import '../widgets/custom_shimmer_loader.dart';
 import '../widgets/custom_text.dart';
 import 'consumable_entry/consumable.dart';
-import 'dialysis_event/dialysis_event_list.dart';
-import 'hd_chart/hd_chart_list.dart';
-import 'investigation/investigation_queue.dart';
+import 'dialysis_event/screen/dialysis_event_list.dart';
+import 'hd_chart/screen/hd_chart_list.dart';
+import 'investigation/screen/investigation_queue.dart';
 
 class DialysisQueueScreen extends StatefulWidget {
   const DialysisQueueScreen({super.key});

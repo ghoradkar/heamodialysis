@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:heamodialysis/ro_maintenance/ro_desinfect_details/screens/ro_disinfection_details.dart';
-import 'package:heamodialysis/ro_maintenance/ro_log_sheet/screens/ro_log_sheet_list.dart';
-import 'package:heamodialysis/ro_maintenance/ro_machine_issue_log/screens/ro_machine_issue_log.dart';
+import 'package:heamodialysis/ro_maintenance/ro_desinfect_details/screen/ro_disinfection_details.dart';
+import 'package:heamodialysis/ro_maintenance/ro_log_sheet/screen/ro_log_sheet_list.dart';
+import 'package:heamodialysis/ro_maintenance/ro_machine_issue_log/screen/ro_machine_issue_log.dart';
 
 import '../utils/color_constants.dart';
 import '../widgets/custom_text.dart';
-import 'daily_ro_log_sheet/screens/daily_ro_logsheet_list.dart';
+import 'daily_ro_log_sheet/screen/daily_ro_logsheet_list.dart';
 
 class RoMaintenanceScreen extends StatelessWidget {
   const RoMaintenanceScreen({super.key});

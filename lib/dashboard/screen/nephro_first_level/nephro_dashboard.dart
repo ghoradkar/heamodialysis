@@ -82,7 +82,7 @@ class _NephroDashboardState extends State<NephroDashboard>
         DateFormat('yyyy/MM/dd').format(now.add(const Duration(days: 1)));
 
     String district = userData['district'].toString();
-    String ui = userData['ui'].toString();
+    String ui = userData['user_ID'].toString();
     String unitId = userData['unitId'].toString();
 
     await Future.wait(<Future>[
@@ -175,7 +175,7 @@ class _NephroDashboardState extends State<NephroDashboard>
                         .format(now.add(const Duration(days: 1)));
 
                     String district = userData['district'].toString();
-                    String ui = userData['ui'].toString();
+                    String ui = userData['user_ID'].toString();
 
                     await Future.wait([
                       dashboardController.getDashCountNephro(
@@ -313,7 +313,7 @@ class _NephroDashboardState extends State<NephroDashboard>
 
                                       await dashboardController
                                           .getDashCountNephro(
-                                              userData['ui'].toString(),
+                                              userData['user_ID'].toString(),
                                               dashboardController
                                                   .fDateController.text,
                                               selectedToDate,

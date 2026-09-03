@@ -8,7 +8,7 @@ import 'package:heamodialysis/discharge_form/model/discharge_list.dart';
 import 'package:heamodialysis/internet/no_internet_connectivity.dart';
 import 'package:heamodialysis/registered_patient_list/model/already_regidtered_patient/patient_data.dart';
 import 'package:heamodialysis/registered_patient_list/model/search_patient_dropdown/search_data.dart';
-import 'package:heamodialysis/schedular/screens/patient_history_schedular.dart';
+import 'package:heamodialysis/schedular/screen/patient_history_schedular.dart';
 import 'package:heamodialysis/utils/color_constants.dart';
 import 'package:heamodialysis/widgets/custom_text.dart';
 

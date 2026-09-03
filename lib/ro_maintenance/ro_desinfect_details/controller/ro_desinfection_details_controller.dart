@@ -15,17 +15,17 @@ import 'package:heamodialysis/ro_maintenance/ro_desinfect_details/model/get_mach
 import 'package:heamodialysis/ro_maintenance/ro_desinfect_details/model/get_machine_list/machine_data.dart';
 import 'package:heamodialysis/ro_maintenance/ro_desinfect_details/model/ro_disinfection_doc.dart';
 import 'package:heamodialysis/ro_maintenance/ro_desinfect_details/model/ro_maint_details/ro_maintenance_details_model.dart';
-import 'package:heamodialysis/ro_maintenance/ro_desinfect_details/screens/add_edit_ro_desinfec_details.dart';
-import 'package:heamodialysis/ro_maintenance/ro_desinfect_details/screens/ro_disinfection_details.dart';
-import 'package:heamodialysis/utils/api_names.dart';
+import 'package:heamodialysis/ro_maintenance/ro_desinfect_details/repository/ro_desinfection_details_repository.dart';
+import 'package:heamodialysis/ro_maintenance/ro_desinfect_details/screen/add_edit_ro_desinfec_details.dart';
+import 'package:heamodialysis/ro_maintenance/ro_desinfect_details/screen/ro_disinfection_details.dart';
+import 'package:heamodialysis/utils/api_client.dart';
 import 'package:heamodialysis/utils/api_urls.dart';
-import 'package:heamodialysis/utils/network_call.dart';
 import 'package:heamodialysis/widgets/cust_toast.dart';
-import 'package:http/http.dart' as http;
-// import 'package:http/http.dart' as http;
-import 'package:http/io_client.dart';
 
 class RoDesinfectionDetailsController extends GetxController {
+  final RoDesinfectionDetailsRepository _repository =
+      RoDesinfectionDetailsRepository();
+
   bool isLoading = false;
   RoMaintenanceDetailsModel? roMaintenanceDetailsModel;
   SearchRegisteredPatientModel? searchByModel;
@@ -56,41 +56,21 @@ class RoDesinfectionDetailsController extends GetxController {
   // ROFileDetails(
   // name: 'Image Upload', key: 'files', isSelected: false, isReq: false)
 
-  IOClient ioClient = IOClient(ByPassCert().httpClient);
-
   List<RoDisinfectionDoc> roDisinfecDocList = [];
 
   getInstituteList() async {
     isLoading = true;
     update();
 
-    final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getInstituteList);
-
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      instituteList = InstituteList.fromJson(data);
+    try {
+      instituteList = await _repository.getInstituteList();
       isLoading = false;
-
       return instituteList;
-    } else if (response.statusCode == 401) {
+    } on ApiException catch (e) {
       isLoading = false;
-    } else {
-      isLoading = false;
-
-      throw Exception('Failed getting InstituteList');
+      if (e.statusCode != 401) {
+        throw Exception('Failed getting InstituteList');
+      }
     }
 
     update();
@@ -99,33 +79,15 @@ class RoDesinfectionDetailsController extends GetxController {
   getMachineList(unitId) async {
     isLoading = true;
 
-    final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getMachineNameList);
-    var body = {"unitId": unitId};
-    String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.post(uri, headers: headers, body: jsonbody);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      getMachineNameModel = GetMachineNameModel.fromJson(data);
+    try {
+      getMachineNameModel = await _repository.getMachineList(unitId);
       isLoading = false;
-
       return getMachineNameModel;
-    } else if (response.statusCode == 401) {
+    } on ApiException catch (e) {
       isLoading = false;
-    } else {
-      isLoading = false;
-
-      throw Exception('Failed getting getMachineNameList');
+      if (e.statusCode != 401) {
+        throw Exception('Failed getting getMachineNameList');
+      }
     }
 
     update();
@@ -134,33 +96,15 @@ class RoDesinfectionDetailsController extends GetxController {
   getDoneByList(unitId) async {
     isLoading = true;
 
-    final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getUsersByUnit);
-    var body = {"unitId": unitId};
-    String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.post(uri, headers: headers, body: jsonbody);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      doneByModel = DoneByModel.fromJson(data);
+    try {
+      doneByModel = await _repository.getDoneByList(unitId);
       isLoading = false;
-
       return doneByModel;
-    } else if (response.statusCode == 401) {
+    } on ApiException catch (e) {
       isLoading = false;
-    } else {
-      isLoading = false;
-
-      throw Exception('Failed getting getMachineNameList');
+      if (e.statusCode != 401) {
+        throw Exception('Failed getting getMachineNameList');
+      }
     }
 
     update();
@@ -168,34 +112,19 @@ class RoDesinfectionDetailsController extends GetxController {
 
   Future<bool> deleteDesinfectionDet(id, unitId) async {
     isLoading = true;
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl}${ApiNames.roMachineDisinfectionDelete}?id=$id");
 
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
+    try {
+      final responseBody = await _repository.deleteDesinfectionDet(id);
       isLoading = false;
-      //getDeviceDetails
-      // final data = json.decode(response.body);
-      CustomMessage.toast(response.body);
+      CustomMessage.toast(responseBody);
       update();
 
       getRoMaintenanceDetAndSearchList(unitId, "");
 
       return true;
-    } else {
+    } on ApiException {
       isLoading = false;
       update();
-
       throw Exception('Failed getting captcha');
     }
   }
@@ -208,78 +137,36 @@ class RoDesinfectionDetailsController extends GetxController {
     update();
 
     try {
-      // Create the custom HttpClient from ByPassCert
-      HttpClient httpClient = ByPassCert().httpClient;
-      IOClient ioClient = IOClient(httpClient);
-
-      Uri uri = Uri.parse(ApiConstants.baseUrl + ApiNames.saveRODisDet);
-
-      var body = json.encode({
-        "roDisinfectionDetailsId": addRoDisinfectModel?.roDisinfectionDetailsId,
-        "roMachineMasterId": addRoDisinfectModel?.roMachineMasterId,
-        "lookupDetId": addRoDisinfectModel?.lookupDetId,
-        "nextInspectionDate": nextInsD,
-        "comments": addRoDisinfectModel?.comments,
-        "doneBy": addRoDisinfectModel?.doneBy,
-        "inspectionDate": insD,
-        "createdBy": addRoDisinfectModel?.createdBy ?? 1,
-        "unitId": addRoDisinfectModel?.unitId
-      });
-
-      // Create a multipart request
-      var request = http.MultipartRequest('POST', uri);
-
       List<String?> selectedDocIds =
           uploadImage.where((e) => e.isSelected).map((e) => e.ids).toList();
       List<String?> enteredDocName =
           uploadImage.where((e) => e.isSelected).map((e) => e.docName).toList();
 
-      // Convert to comma-separated string, ignoring null ids
       String docIdString = selectedDocIds.whereType<String>().join(',');
       String docNameString = enteredDocName.whereType<String>().join(',');
 
-      request.fields.addAll({'data': body});
-      request.fields.addAll({'documentNames': docNameString});
-      request.fields.addAll({'docId': docIdString});
-      // Add headers
-      request.headers.addAll({
-        'Content-Type': 'multipart/form-data',
-      });
-
-      for (int i = 0; i < uploadImage.length; i++) {
-        if (uploadImage[i].isSelected) {
-          request.files.add(await http.MultipartFile.fromPath(
-            uploadImage[i].key,
-            uploadImage[i].file!.path,
-          ));
-        }
-      }
-
-      debugPrint("====== API HIT: SAVE RO DISINFECTION DETAILS ======");
-      debugPrint("URL: ${uri.toString()}");
-      debugPrint("BODY FIELDS: ${request.fields}");
-      debugPrint("FILES COUNT: ${request.files.length}");
-      for (var f in request.files) {
-        debugPrint("FILE FIELD: ${f.field}, FILENAME: ${f.filename}");
-      }
-      debugPrint("====================================================");
-
-      // Send the request using the custom IOClient
-      http.StreamedResponse response = await ioClient.send(request);
-      final finalResp = await http.Response.fromStream(response);
-
-      debugPrint("====== API RESPONSE ======");
-      debugPrint("STATUS CODE: ${finalResp.statusCode}");
-      debugPrint("RESPONSE BODY: ${finalResp.body}");
-      debugPrint("==========================");
+      final finalResp = await _repository.addEditRoDisinfectDetails(
+        data: {
+          "roDisinfectionDetailsId": addRoDisinfectModel?.roDisinfectionDetailsId,
+          "roMachineMasterId": addRoDisinfectModel?.roMachineMasterId,
+          "lookupDetId": addRoDisinfectModel?.lookupDetId,
+          "nextInspectionDate": nextInsD,
+          "comments": addRoDisinfectModel?.comments,
+          "doneBy": addRoDisinfectModel?.doneBy,
+          "inspectionDate": insD,
+          "createdBy": addRoDisinfectModel?.createdBy ?? 1,
+          "unitId": addRoDisinfectModel?.unitId
+        },
+        docIdString: docIdString,
+        docNameString: docNameString,
+        selectedFiles: uploadImage.where((e) => e.isSelected).toList(),
+      );
 
       if (finalResp.statusCode == 200) {
-        var data = jsonDecode(finalResp.body); // Use the response body here
+        var data = jsonDecode(finalResp.body);
 
         if (data['status'] == "Success") {
           isLoading = false;
-          debugPrint(finalResp
-              .body); // Use finalResp.body instead of reading stream again
 
           CustomMessage.toast("Saved Successfully");
           initialInsti = null;
@@ -309,178 +196,19 @@ class RoDesinfectionDetailsController extends GetxController {
     update();
   }
 
-//   addEditRoDisinfectDetails() async {
-//     String? insD = addRoDisinfectModel?.inspectionDate?.replaceAll("/", "-");
-//     String? nextInsD =
-//         addRoDisinfectModel?.nextInspectionDate?.replaceAll("/", "-");
-//     isLoading = true;
-//     update();
-//
-//     try {
-//       // Create the custom HttpClient from ByPassCert
-//       HttpClient httpClient = ByPassCert().httpClient;
-//       IOClient ioClient = IOClient(httpClient);
-//
-//       Uri uri = Uri.parse(ApiConstants.baseUrl + ApiConstants.saveRODisDet);
-//
-//       var body = json.encode({
-//         "roDisinfectionDetailsId": addRoDisinfectModel?.roDisinfectionDetailsId,
-//         "roMachineMasterId": addRoDisinfectModel?.roMachineMasterId,
-//         "lookupDetId": addRoDisinfectModel?.lookupDetId,
-//         "nextInspectionDate": nextInsD,
-//         "comments": addRoDisinfectModel?.comments,
-//         "doneBy": addRoDisinfectModel?.doneBy,
-//         "inspectionDate": insD,
-//         "createdBy": addRoDisinfectModel?.createdBy ?? 1,
-//         "unitId": addRoDisinfectModel?.unitId
-//       });
-//
-//       // Create a multipart request
-//       var request = http.MultipartRequest('POST', uri);
-//
-//       List<String?> selectedDocIds =
-//           uploadImage.where((e) => e.isSelected).map((e) => e.ids).toList();
-//
-//       List<String?> enteredDocName =
-//           uploadImage.where((e) => e.isSelected).map((e) => e.docName).toList();
-//
-// // Convert to comma-separated string, ignoring null ids
-//       String docIdString = selectedDocIds.whereType<String>().join(',');
-//       String docNameString = enteredDocName.whereType<String>().join(',');
-//
-//       request.fields.addAll({'data': body});
-//       request.fields.addAll({'documentNames': docNameString});
-//       request.fields.addAll({'docId': docIdString});
-//
-//       // Add headers
-//       request.headers.addAll({
-//         'Content-Type': 'multipart/form-data',
-//       });
-//
-//       for (int i = 0; i < uploadImage.length; i++) {
-//         if (uploadImage[i].isSelected) {
-//           request.files.add(await http.MultipartFile.fromPath(
-//             uploadImage[i].key,
-//             uploadImage[i].file!.path,
-//           ));
-//         }
-//       }
-//
-//       // Send the request using the custom IOClient
-//       http.StreamedResponse response = await ioClient.send(request);
-//       final finalResp = await http.Response.fromStream(response);
-//
-//       if (response.statusCode == 200) {
-//         var data = jsonDecode(await response.stream.bytesToString());
-//         if (data['status'] == "Success") {
-//           isLoading = false;
-//           debugPrint(await response.stream.bytesToString());
-//
-//           CustomMessage.toast("Saved Successfully");
-//           initialInsti = null;
-//           initialMachine = null;
-//           initialDisinfect = null;
-//           initialDoneBy = null;
-//           nextInspecDateController.text = "";
-//           inspectionDateController.text = "";
-//           commentController.text = "";
-//           Get.off(const RoDisinfectionDetails());
-//         } else {
-//           isLoading = false;
-//           update();
-//           CustomMessage.toast('Upload failed');
-//         }
-//       } else {
-//         isLoading = false;
-//         update();
-//         CustomMessage.toast('Upload failed');
-//       }
-//     } catch (error) {
-//       isLoading = false;
-//       debugPrint(error.toString());
-//     }
-//     update();
-//   }
-
-  // addEditRoDisinfectDetails() async {
-  //   String? insD = addRoDisinfectModel?.inspectionDate?.replaceAll("/", "-");
-  //   String? nextInsD =
-  //       addRoDisinfectModel?.nextInspectionDate?.replaceAll("/", "-");
-  //   isLoading = true;
-  //   update();
-  //   var headers = {'Content-Type': 'application/json'};
-  //   var body = json.encode({
-  //     "roDisinfectionDetailsId": addRoDisinfectModel?.roDisinfectionDetailsId,
-  //     "roMachineMasterId": addRoDisinfectModel?.roMachineMasterId,
-  //     "lookupDetId": addRoDisinfectModel?.lookupDetId,
-  //     "nextInspectionDate": nextInsD,
-  //     "comments": addRoDisinfectModel?.comments,
-  //     "doneBy": addRoDisinfectModel?.doneBy,
-  //     "inspectionDate": insD,
-  //     "createdBy": addRoDisinfectModel?.createdBy ?? 1,
-  //     "unitId": addRoDisinfectModel?.unitId
-  //   });
-  //
-  //   debugPrint(body);
-  //
-  //   var response = await ioClient.post(
-  //       Uri.parse(ApiConstants.baseUrl + ApiConstants.saveRODisDet),
-  //       body: body,
-  //       headers: headers);
-  //
-  //   // http.StreamedResponse response = await request.send();
-  //
-  //   if (response.statusCode == 200) {
-  //     isLoading = false;
-  //     debugPrint(response.body);
-  //
-  //     CustomMessage.toast("Saved Successfully");
-  //     initialInsti = null;
-  //     initialMachine = null;
-  //     initialDisinfect = null;
-  //     initialDoneBy = null;
-  //     nextInspecDateController.text = "";
-  //     inspectionDateController.text = "";
-  //     commentController.text = "";
-  //     Get.off(const RoDisinfectionDetails());
-  //   } else {
-  //     debugPrint(response.reasonPhrase);
-  //     isLoading = false;
-  //     CustomMessage.toast("Save Fail");
-  //   }
-  //   update();
-  // }
-
   getDisinfecUsed() async {
     isLoading = true;
 
-    final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getDisinfectionDet);
-
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      disinfectTypeModel = DisinfectTypeModel.fromJson(data);
+    try {
+      disinfectTypeModel = await _repository.getDisinfecUsed();
       isLoading = false;
 
       return instituteList;
-    } else if (response.statusCode == 401) {
+    } on ApiException catch (e) {
       isLoading = false;
-    } else {
-      isLoading = false;
-
-      throw Exception('Failed getting getDisinfectionDet');
+      if (e.statusCode != 401) {
+        throw Exception('Failed getting getDisinfectionDet');
+      }
     }
 
     update();
@@ -489,23 +217,9 @@ class RoDesinfectionDetailsController extends GetxController {
   getRODisinfectionDoc(roMachineId) async {
     isLoading = true;
 
-    var headers = {
-      'Content-Type': 'application/json',
-    };
-    var request = http.Request(
-        'POST',
-        Uri.parse(
-            '${ApiConstants.baseUrl}${ApiNames.getRoDisDocById}?Id=$roMachineId'));
-    request.headers.addAll(headers);
-
-    http.StreamedResponse response = await ioClient.send(request);
-
-    if (response.statusCode == 200) {
+    try {
+      roDisinfecDocList = await _repository.getRODisinfectionDoc(roMachineId);
       isLoading = false;
-
-      List<dynamic> data = json.decode(await response.stream.bytesToString());
-      roDisinfecDocList =
-          data.map((json) => RoDisinfectionDoc.fromJson(json)).toList();
 
       if (roDisinfecDocList.isNotEmpty) {
         RoDisinfectionDoc? file = (roDisinfecDocList.length == 1
@@ -517,9 +231,9 @@ class RoDesinfectionDetailsController extends GetxController {
         uploadImage[0].ids = file.roDisId.toString();
         uploadImage[0].file = File(ApiConstants.imageBaseUrl1 + file.docpath!);
       }
-    } else {
+    } on ApiException catch (e) {
       isLoading = false;
-      debugPrint(response.reasonPhrase);
+      debugPrint(e.body);
     }
     update();
   }
@@ -527,40 +241,19 @@ class RoDesinfectionDetailsController extends GetxController {
   getRoMaintenanceDetAndSearchList(unitId, machineName) async {
     isLoading = true;
     update();
-    final uri =
-        Uri.parse(ApiConstants.baseUrl + ApiNames.getallROMachineDisBySearch);
-    var body = {"unitId": unitId, "input": machineName};
-    String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
 
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.post(uri, headers: headers, body: jsonbody);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      roMaintenanceDetailsModel = RoMaintenanceDetailsModel.fromJson(data);
-      // var innerProList =
-      //     roMaintenanceDetailsModel?.data?.map((e) => e.proLi).toList();
-      // proList = innerProList![0];
-      // debugPrint(proList?.length.toString());
+    try {
+      roMaintenanceDetailsModel = await _repository
+          .getRoMaintenanceDetAndSearchList(unitId, machineName);
       isLoading = false;
 
       update();
-    } else if (response.statusCode == 401) {
+    } on ApiException catch (e) {
       isLoading = false;
-
       update();
-    } else {
-      isLoading = false;
-
-      throw Exception('Failed getting getRoMaintenanceDetAndSearchList');
+      if (e.statusCode != 401) {
+        throw Exception('Failed getting getRoMaintenanceDetAndSearchList');
+      }
     }
   }
 }

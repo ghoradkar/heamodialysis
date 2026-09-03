@@ -1,10 +1,7 @@
 import 'dart:io';
 
 import 'package:get/get.dart';
-import 'package:heamodialysis/utils/api_urls.dart';
-import 'package:heamodialysis/utils/shared_pref_constants.dart';
-import 'package:heamodialysis/utils/shared_preference.dart';
-import 'package:http/http.dart' as http;
+import 'package:heamodialysis/upload_document/repository/upload_document_repository.dart';
 
 class DocumentUploadResult {
   final bool success;
@@ -14,6 +11,8 @@ class DocumentUploadResult {
 }
 
 class DocumentCapturePhotoController extends GetxController {
+  final UploadDocumentRepository _repository = UploadDocumentRepository();
+
   bool isUploading = false;
 
   Future<DocumentUploadResult> uploadDocument({
@@ -26,19 +25,12 @@ class DocumentCapturePhotoController extends GetxController {
     update();
 
     try {
-      final userData =
-          await SharedPref().read(const SharedPrefConstant().kUserData);
-      final uri = Uri.parse(ApiConstants.baseUrl + uploadApiPath);
-
-      final request = http.MultipartRequest('POST', uri)
-        ..fields['patientId'] = patientId.toString()
-        ..fields['treatmentId'] = treatmentId.toString()
-        ..fields['userId'] = userData['user_ID'].toString()
-        ..fields['unitId'] = userData['unitId'].toString()
-        ..files.add(await http.MultipartFile.fromPath('file', file.path));
-
-      final streamedResponse = await request.send();
-      final response = await http.Response.fromStream(streamedResponse);
+      final response = await _repository.uploadDocument(
+        file: file,
+        patientId: patientId,
+        treatmentId: treatmentId,
+        uploadApiPath: uploadApiPath,
+      );
       final message = response.body.trim();
 
       return DocumentUploadResult(

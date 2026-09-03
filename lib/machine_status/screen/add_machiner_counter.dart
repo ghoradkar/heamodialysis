@@ -281,7 +281,7 @@ class _AddMachineCounterState extends State<AddMachineCounter> {
                             await machineController.addMachineCounter(
                                 machineController.addMachineCounterListModel,
                                 userData['unitId'].toString(),
-                                userData['ui'].toString());
+                                userData['user_ID'].toString());
                           },
                           buttonWidth: 120,
                         ).paddingOnly(top: 16, bottom: 16)

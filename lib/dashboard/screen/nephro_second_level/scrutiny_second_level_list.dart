@@ -4,8 +4,8 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:heamodialysis/dashboard/screen/nephro_first_level/first_level_controller.dart';
-import 'package:heamodialysis/dashboard/screen/nephro_first_level/model/first_level_scrutiny_approval_list.dart';
+import 'package:heamodialysis/dashboard/controller/first_level_controller.dart';
+import 'package:heamodialysis/dashboard/model/first_level_scrutiny_approval_list.dart';
 import 'package:heamodialysis/dashboard/screen/nephro_first_level/nephro_dashboard.dart';
 import 'package:heamodialysis/dashboard/screen/nephro_second_level/application_details_second_level.dart';
 import 'package:heamodialysis/dashboard/screen/nephro_second_level/nephro_second_level.dart';
@@ -76,10 +76,10 @@ class _ScrutinySecondLevelState extends State<ScrutinySecondLevel> {
     firstLevelScrutinyController.update();
     if (hasInternet) {
       // await firstLevelScrutinyController.getFirstApprovalList(
-      //     userData['ui'], userData['unitId']);
+      //     userData['user_ID'], userData['unitId']);
 
       await firstLevelScrutinyController.getFirstApprovalList(
-          userData['ui'], userData['unitId']);
+          userData['user_ID'], userData['unitId']);
       firstLevelScrutinyController.originalPatientList =
           firstLevelScrutinyController
                   .firstLevelScrutinyApprovalModel?.details?.tmCmScrutinyBean ??

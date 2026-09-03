@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/new_registration/model/institute/Institute_list.dart';
@@ -8,8 +6,9 @@ import 'package:heamodialysis/registered_patient_list/model/search_patient_dropd
 import 'package:heamodialysis/ro_maintenance/daily_ro_log_sheet/model/GetRoDetById.dart';
 import 'package:heamodialysis/ro_maintenance/daily_ro_log_sheet/model/daily_ro_log_sheet_save_model.dart';
 import 'package:heamodialysis/ro_maintenance/daily_ro_log_sheet/model/daily_ro_logsheet_model.dart';
-import 'package:heamodialysis/ro_maintenance/daily_ro_log_sheet/screens/add_edit_daily_ro_logsheet.dart';
-import 'package:heamodialysis/ro_maintenance/daily_ro_log_sheet/screens/daily_ro_logsheet_list.dart';
+import 'package:heamodialysis/ro_maintenance/daily_ro_log_sheet/repository/daily_ro_logsheet_repository.dart';
+import 'package:heamodialysis/ro_maintenance/daily_ro_log_sheet/screen/add_edit_daily_ro_logsheet.dart';
+import 'package:heamodialysis/ro_maintenance/daily_ro_log_sheet/screen/daily_ro_logsheet_list.dart';
 import 'package:heamodialysis/ro_maintenance/ro_desinfect_details/model/disinfect_type/disinfect_data.dart';
 import 'package:heamodialysis/ro_maintenance/ro_desinfect_details/model/disinfect_type/disinfect_type_model.dart';
 import 'package:heamodialysis/ro_maintenance/ro_desinfect_details/model/done_by_model/done_by_model.dart';
@@ -17,16 +16,13 @@ import 'package:heamodialysis/ro_maintenance/ro_desinfect_details/model/done_by_
 import 'package:heamodialysis/ro_maintenance/ro_desinfect_details/model/get_machine_list/get_machine_name_model.dart';
 import 'package:heamodialysis/ro_maintenance/ro_desinfect_details/model/get_machine_list/machine_data.dart';
 import 'package:heamodialysis/ro_maintenance/ro_desinfect_details/model/ro_disinfection_doc.dart';
-import 'package:heamodialysis/ro_maintenance/ro_desinfect_details/screens/add_edit_ro_desinfec_details.dart';
-import 'package:heamodialysis/utils/api_names.dart';
-import 'package:heamodialysis/utils/api_urls.dart';
-import 'package:heamodialysis/utils/network_call.dart';
+import 'package:heamodialysis/ro_maintenance/ro_desinfect_details/screen/add_edit_ro_desinfec_details.dart';
+import 'package:heamodialysis/utils/api_client.dart';
 import 'package:heamodialysis/widgets/cust_toast.dart';
 
-// import 'package:http/http.dart' as http;
-import 'package:http/io_client.dart';
-
 class DailyRoLogSheetController extends GetxController {
+  final DailyRoLogSheetRepository _repository = DailyRoLogSheetRepository();
+
   bool isLoading = false;
   List<DailyRoLogSheetModel>? roMaintenanceDetailsModel;
   List<GetRoDetById>? roDet;
@@ -91,53 +87,37 @@ class DailyRoLogSheetController extends GetxController {
   // ROFileDetails(
   // name: 'Image Upload', key: 'files', isSelected: false, isReq: false)
 
-  IOClient ioClient = IOClient(ByPassCert().httpClient);
-
   List<RoDisinfectionDoc> roDisinfecDocList = [];
 
   addEditDailyRoLogSheet() async {
-    // String? insD = addDailyRoLogSheetModel?.inspectionDate?.replaceAll("/", "-");
-    // String? nextInsD =
-    //     addDailyRoLogSheetModel?.nextInspectionDate?.replaceAll("/", "-");
     isLoading = true;
     update();
 
     try {
-      Uri uri = Uri.parse(ApiConstants.baseUrl + ApiNames.saveLogSheet);
+      final data =
+          await _repository.addEditDailyRoLogSheet(addDailyRoLogSheetModel);
 
-      var body = json.encode(addDailyRoLogSheetModel);
-
-      Map<String, String> headers = {
-        "Content-Type": "application/json",
-      };
-      final response = await ioClient.post(uri, headers: headers, body: body);
-
-      if (response.statusCode == 200) {
-        var data = jsonDecode(response.body); // Use the response body here
-
-        if (data == 1 || data == 2) {
-          isLoading = false;
-          update();
-          rawWaterTDS.text = "";
-          postSoftnerTDS.text = "";
-          postMembraneTDS.text = "";
-          postMixbedTDS.text = "";
-          loopLineTDS.text = "";
-          postSoftnerHardness.text = "";
-          carbonChlorine.text = "";
-          rejectFlow.text = "";
-          productPermeateFlow.text = "";
-          debugPrint(response.body);
-
-          CustomMessage.toast("Saved Successfully");
-
-          Get.off(const DailyRoLogSheetScreen());
-        }
-      } else {
+      if (data == 1 || data == 2) {
         isLoading = false;
         update();
-        CustomMessage.toast('Saved Failed');
+        rawWaterTDS.text = "";
+        postSoftnerTDS.text = "";
+        postMembraneTDS.text = "";
+        postMixbedTDS.text = "";
+        loopLineTDS.text = "";
+        postSoftnerHardness.text = "";
+        carbonChlorine.text = "";
+        rejectFlow.text = "";
+        productPermeateFlow.text = "";
+
+        CustomMessage.toast("Saved Successfully");
+
+        Get.off(const DailyRoLogSheetScreen());
       }
+    } on ApiException {
+      isLoading = false;
+      update();
+      CustomMessage.toast('Saved Failed');
     } catch (error) {
       isLoading = false;
       debugPrint(error.toString());
@@ -149,28 +129,11 @@ class DailyRoLogSheetController extends GetxController {
     isLoading = true;
     update();
 
-    final uri = Uri.parse(ApiConstants.baseUrl + ApiNames.getInstituteList);
-
-    // String jsonbody = json.encode(body);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
+    try {
+      instituteList = await _repository.getInstituteList();
       isLoading = false;
-      //getDeviceDetails
-      final data = json.decode(response.body);
-      instituteList = InstituteList.fromJson(data);
-    } else {
+    } on ApiException {
       isLoading = false;
-
       throw Exception('Failed getting InstituteList');
     }
 
@@ -180,32 +143,14 @@ class DailyRoLogSheetController extends GetxController {
   getDailyRoLogSheetAndSearchList(String date, String unitId) async {
     isLoading = true;
     update();
-    final uri = Uri.parse(
-        "${ApiConstants.baseUrl}${ApiNames.getRoAllData}?date=$date&unitId=$unitId");
 
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
-      //getDeviceDetails
-      List<dynamic> data = json.decode(response.body);
-
-      roMaintenanceDetailsModel =
-          data.map((json) => DailyRoLogSheetModel.fromJson(json)).toList();
+    try {
+      roMaintenanceDetailsModel = await _repository
+          .getDailyRoLogSheetAndSearchList(date, unitId);
       isLoading = false;
-
       update();
-    } else {
+    } on ApiException {
       isLoading = false;
-
       debugPrint('failed getDailyRoLogSheetAndSearchList');
     }
   }
@@ -213,30 +158,13 @@ class DailyRoLogSheetController extends GetxController {
   getRoById(int id) async {
     isLoading = true;
     update();
-    final uri =
-        Uri.parse("${ApiConstants.baseUrl}${ApiNames.getRoAllDataById}?id=$id");
 
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-
-    debugPrint(uri.path);
-    // print(body);
-
-    final response = await ioClient.get(uri, headers: headers);
-    debugPrint(response.statusCode.toString());
-    debugPrint("response.body : ${response.body}");
-
-    if (response.statusCode == 200) {
-      List<dynamic> data = json.decode(response.body);
-
-      roDet = data.map((json) => GetRoDetById.fromJson(json)).toList();
+    try {
+      roDet = await _repository.getRoById(id);
       isLoading = false;
-
       update();
-    } else {
+    } on ApiException {
       isLoading = false;
-
       debugPrint('failed getRoById');
     }
   }

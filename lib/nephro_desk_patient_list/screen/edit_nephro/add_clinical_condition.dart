@@ -290,7 +290,7 @@ class _AddClinicalConditionState extends State<AddClinicalCondition> {
                                                           ?.patientId,
                                                       widget.patientData
                                                           ?.treatmentId,
-                                                      userData['ui'],
+                                                      userData['user_ID'],
                                                       userData['un']);
                                             } else {
                                               CustomMessage.toast(

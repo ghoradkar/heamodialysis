@@ -265,7 +265,7 @@ class AddConsumableState extends State<AddConsumable> {
                                           // roMachineIssueController
                                           //         .addConsumableEntryModel
                                           //         .userId =
-                                          //     userData['ui'].toString();
+                                          //     userData['user_ID'].toString();
                                           //
                                           // roMachineIssueController
                                           //     .saveAddConsumableEntry(roMachineIssueController,widget.preDialysisData?.patientId);
@@ -334,7 +334,7 @@ class AddConsumableState extends State<AddConsumable> {
                                           model.unitId =
                                               userData['unitId'].toString();
                                           model.userId =
-                                              userData['ui'].toString();
+                                              userData['user_ID'].toString();
 
                                           // Save
                                           await roMachineIssueController

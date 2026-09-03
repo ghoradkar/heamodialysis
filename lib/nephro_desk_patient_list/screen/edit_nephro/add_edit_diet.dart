@@ -243,7 +243,7 @@ class _AddEditDietState extends State<AddEditDiet> {
                                         "updatedBy": selectedempObj?.createdBy,
                                         "deletedDateTime": null,
                                         "unitId": userData['unitId'].toString(),
-                                        "userId": userData['ui'],
+                                        "userId": userData['user_ID'],
                                         "listOfOPDDietDTO": null,
                                         "patientId":
                                             widget.proLiItem?.patientId,

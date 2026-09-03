@@ -445,7 +445,7 @@ class _SessionEndFormDetailsState extends State<SessionEndFormDetails> {
                                                             .toString(),
                                                         widget.userData[
                                                             'unitId'].toString(),
-                                                        widget.userData['ui']
+                                                        widget.userData['user_ID']
                                                             .toString(),
                                                         widget.userData);
                                                   } else {

@@ -9,7 +9,7 @@ import 'package:heamodialysis/nephro_desk_patient_list/controller/nephro_control
 import 'package:heamodialysis/schedular/model/schedular_consultation_details.dart';
 import 'package:heamodialysis/schedular/model/schedular_post_dialysis.dart';
 import 'package:heamodialysis/schedular/model/schedular_pre_dialysis.dart';
-import 'package:heamodialysis/schedular/schedular_controller/schedular_controller.dart';
+import 'package:heamodialysis/schedular/controller/schedular_controller.dart';
 import 'package:heamodialysis/utils/color_constants.dart';
 import 'package:heamodialysis/utils/shared_pref_constants.dart';
 import 'package:heamodialysis/utils/shared_preference.dart';
@@ -112,13 +112,13 @@ class _DialysisQueueState extends State<DialysisQueue>
             widget.patientId.toString(),
             userData['unitId'].toString(),
             widget.treatmentId!,
-            userData['ui']);
+            userData['user_ID']);
 
         await schedularController.getPrescriptionDet(
             widget.treatmentId.toString(),
             userData['unitId'].toString(),
             widget.patientId.toString(),
-            userData['ui'].toString());
+            userData['user_ID'].toString());
 
         await schedularController.getLabInvest(widget.patientId.toString());
 
@@ -158,7 +158,7 @@ class _DialysisQueueState extends State<DialysisQueue>
 
   Future<void> getUserData() async {
     userData = await SharedPref().read(const SharedPrefConstant().kUserData);
-    debugPrint(userData['ui'].toString());
+    debugPrint(userData['user_ID'].toString());
   }
 
   @override

@@ -25,7 +25,7 @@ import 'package:heamodialysis/nephro_desk_patient_list/screen/edit_nephro/tabs/i
 import 'package:heamodialysis/nephro_desk_patient_list/screen/edit_nephro/tabs/prescription.dart';
 import 'package:heamodialysis/nephro_desk_patient_list/screen/edit_nephro/tabs/upload_document.dart';
 
-import 'package:heamodialysis/schedular/schedular_controller/schedular_controller.dart';
+import 'package:heamodialysis/schedular/controller/schedular_controller.dart';
 import 'package:heamodialysis/utils/color_constants.dart';
 import 'package:heamodialysis/utils/shared_pref_constants.dart';
 import 'package:heamodialysis/utils/shared_preference.dart';
@@ -164,13 +164,13 @@ class _EditNephroDeskState extends State<EditNephroDesk> {
           widget.patientData!.patientId.toString(),
           userData['unitId'].toString(),
           widget.patientData!.treatmentId!,
-          userData['ui'],
+          userData['user_ID'],
         ),
         schedularController.getPrescriptionDet(
           widget.patientData!.treatmentId.toString(),
           userData['unitId'].toString(),
           widget.patientData!.patientId.toString(),
-          userData['ui'].toString(),
+          userData['user_ID'].toString(),
         ),
       ]);
 

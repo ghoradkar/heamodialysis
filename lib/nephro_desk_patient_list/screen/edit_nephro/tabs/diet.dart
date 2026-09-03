@@ -8,10 +8,11 @@ import 'package:heamodialysis/nephro_desk_patient_list/model/diet_list_model.dar
 import 'package:heamodialysis/nephro_desk_patient_list/controller/nephro_controller.dart';
 import 'package:heamodialysis/nephro_desk_patient_list/screen/edit_nephro/add_edit_diet.dart';
 import 'package:heamodialysis/registered_patient_list/model/search_patient_dropdown/search_data.dart';
-import 'package:heamodialysis/registered_patient_list/screens/registered_patient_list.dart';
+import 'package:heamodialysis/registered_patient_list/screen/registered_patient_list.dart';
 import 'package:heamodialysis/utils/color_constants.dart';
 import 'package:heamodialysis/utils/shared_pref_constants.dart';
 import 'package:heamodialysis/utils/shared_preference.dart';
+import 'package:heamodialysis/utils/status_update_screen.dart';
 import 'package:heamodialysis/widgets/custom_card.dart';
 import 'package:heamodialysis/widgets/custom_text.dart';
 import 'package:heamodialysis/widgets/status_dialog.dart';
@@ -105,60 +106,73 @@ class _DietScreenState extends State<DietScreen> {
                             const SizedBox(
                               width: 8,
                             ),
-                            Image.asset("assets/download.png")
+                            // Image.asset("assets/download.png")
                           ],
                         ).paddingOnly(right: 8, top: 2, bottom: 4),
                         Expanded(
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: controller.dietList?.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return DietCard(
-                                index: index,
-                                roList: controller.dietList?[index],
-                                cardItemDetailsList: cardItemDetailsList,
-                                path1: "assets/edit.png",
-                                path2: "assets/delete-bin.png",
-                                callB1: (index) async {
-                                  await controller.getDietDetailsOnClick(
-                                      controller.dietList?[index].dietMasterId);
-                                  Get.to(() => AddEditDiet(
-                                        userData: userData,
-                                        proLiItem: widget.patientData,
-                                        dietDetails:
-                                            controller.dietList?[index],
-                                        isEdit: true,
-                                      ));
-                                },
-                                callB2: (index) async {
-                                  showCustomSnackBar(
-                                      context: context,
-                                      topTitle: 'Delete Diet',
-                                      title:
-                                          'Are you sure\nyou want to delete this Diet?',
-                                      img: 'assets/delete-photo.png',
-                                      onPress2: () async {
-                                        await controller.deleteDiet(
-                                            controller.dietList?[index].dietMasterId,
-                                            controller.dietList?[index].userId,
-                                            widget.patientData?.treatmentId);
-                                        Get.back();
+                          child: (controller.dietList ?? []).isEmpty
+                              ? CommonStatusScreen(
+                                  title: "No Data Found",
+                                  description:
+                                      "We are unable to find the data that\nyou are looking for ",
+                                  img: "assets/no_Data_Found.png",
+                                  buttonText: "Go Back",
+                                  onPressed: () {
+                                    Get.back();
+                                  },
+                                )
+                              : ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: controller.dietList?.length,
+                                  itemBuilder: (BuildContext context, int index) {
+                                    return DietCard(
+                                      index: index,
+                                      roList: controller.dietList?[index],
+                                      cardItemDetailsList: cardItemDetailsList,
+                                      path1: "assets/edit.png",
+                                      path2: "assets/delete-bin.png",
+                                      callB1: (index) async {
+                                        await controller.getDietDetailsOnClick(
+                                            controller.dietList?[index]
+                                                .dietMasterId);
+                                        Get.to(() => AddEditDiet(
+                                              userData: userData,
+                                              proLiItem: widget.patientData,
+                                              dietDetails:
+                                                  controller.dietList?[index],
+                                              isEdit: true,
+                                            ));
                                       },
-                                      onPress1: () {
-                                        Get.back();
-
+                                      callB2: (index) async {
+                                        showCustomSnackBar(
+                                            context: context,
+                                            topTitle: 'Delete Diet',
+                                            title:
+                                                'Are you sure\nyou want to delete this Diet?',
+                                            img: 'assets/delete-photo.png',
+                                            onPress2: () async {
+                                              await controller.deleteDiet(
+                                                  controller.dietList?[index]
+                                                      .dietMasterId,
+                                                  controller.dietList?[index]
+                                                      .userId,
+                                                  widget
+                                                      .patientData?.treatmentId);
+                                              Get.back();
+                                            },
+                                            onPress1: () {
+                                              Get.back();
+                                            },
+                                            buttonTitle: 'No',
+                                            buttonTitle2: 'Yes');
+                                        // await controller.deleteDiet(
+                                        //     controller.dietList?[index].dietMasterId,
+                                        //     controller.dietList?[index].userId,
+                                        //     widget.patientData?.treatmentId);
                                       },
-                                      buttonTitle: 'No',
-                                      buttonTitle2: 'Yes'
-                                  );
-                                  // await controller.deleteDiet(
-                                  //     controller.dietList?[index].dietMasterId,
-                                  //     controller.dietList?[index].userId,
-                                  //     widget.patientData?.treatmentId);
-                                },
-                              );
-                            },
-                          ),
+                                    );
+                                  },
+                                ),
                         ),
                       ],
                     )
