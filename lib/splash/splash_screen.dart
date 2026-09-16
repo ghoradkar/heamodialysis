@@ -127,19 +127,53 @@ class _SplashScreenState extends State<SplashScreen> {
     bool isLogin = await SessionManager().isLoggedIn();
 
     if (isLogin) {
-      _navigateBasedOnUserType();
+      // AuthTokenManager only lives in memory, so it's empty whenever the
+      // app is (re)launched - re-run the real login here to get a fresh
+      // Bearer token before showing the dashboard, instead of skipping
+      // straight to it with no token at all.
+      if (await _silentReLogin()) {
+        await _fetchUserData();
+        _navigateBasedOnUserType();
+      } else {
+        _goToLoginScreen();
+      }
     } else {
-      Get.off(() => UpgradeAlert(
-          shouldPopScope: () => false,
-          showIgnore: false,
-          showLater: false,
-          dialogStyle: UpgradeDialogStyle.material,
-          upgrader: upgrader ??
-              Upgrader(
-                debugLogging: true, // Enable debug logging
-              ),
-          child: LoginScreen()));
+      _goToLoginScreen();
     }
+  }
+
+  /// Re-runs verifyLogin with the credentials saved at the last successful
+  /// login. Returns false (falls back to the login screen) if nothing was
+  /// saved - e.g. an OTP-only account, which this pilot doesn't cover - or
+  /// if the login itself fails (bad/changed password, network, server).
+  Future<bool> _silentReLogin() async {
+    const prefs = SharedPrefConstant();
+    final savedUsername = await SharedPref().read(prefs.kSavedUsername);
+    final savedUnitId = await SharedPref().read(prefs.kSavedUnitId);
+    final savedPassword = await SharedPref().read(prefs.kSavedPassword);
+
+    if (savedUsername == null || savedUnitId == null || savedPassword == null) {
+      return false;
+    }
+
+    // Captcha is only checked for equality server-side, not against a
+    // real generated value, so any matching pair works for a silent call.
+    await loginController.login(
+        savedUsername, savedUnitId, savedPassword, "AUTO", "AUTO");
+    return loginController.status == 'Success';
+  }
+
+  void _goToLoginScreen() {
+    Get.off(() => UpgradeAlert(
+        shouldPopScope: () => false,
+        showIgnore: false,
+        showLater: false,
+        dialogStyle: UpgradeDialogStyle.material,
+        upgrader: upgrader ??
+            Upgrader(
+              debugLogging: true, // Enable debug logging
+            ),
+        child: const LoginScreen()));
   }
 
   void _navigateBasedOnUserType() {
@@ -164,16 +198,7 @@ class _SplashScreenState extends State<SplashScreen> {
     if (route != null) {
       Get.off(route);
     } else {
-      Get.off(() => UpgradeAlert(
-          shouldPopScope: () => false,
-          showIgnore: false,
-          showLater: false,
-          dialogStyle: UpgradeDialogStyle.material,
-          upgrader: upgrader ??
-              Upgrader(
-                debugLogging: true, // Enable debug logging
-              ),
-          child: const LoginScreen()));
+      _goToLoginScreen();
     }
   }
 }

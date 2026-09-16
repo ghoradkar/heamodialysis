@@ -72,6 +72,14 @@ class LoginController extends GetxController {
             () => _repository.login(username, unitId, password, captcha1, captcha2),
           );
         }
+
+        // So the splash screen can silently re-authenticate (and get a
+        // fresh token) when the app reopens via "stay logged in", instead
+        // of skipping straight to the dashboard with no token at all.
+        const prefs = SharedPrefConstant();
+        await SharedPref().save(prefs.kSavedUsername, username);
+        await SharedPref().save(prefs.kSavedUnitId, unitId);
+        await SharedPref().save(prefs.kSavedPassword, password);
       } else {
         isLoading = false;
 
