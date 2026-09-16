@@ -6,6 +6,7 @@ import 'package:heamodialysis/upload_document/controller/feedback_form_controlle
 import 'package:heamodialysis/upload_document/model/pending_feedback_treatment_model.dart';
 import 'package:heamodialysis/upload_document/screen/feedback_form/feedback_form_upload_review_screen.dart';
 import 'package:heamodialysis/utils/color_constants.dart';
+import 'package:heamodialysis/utils/status_update_screen.dart';
 import 'package:heamodialysis/widgets/cust_toast.dart';
 import 'package:heamodialysis/widgets/custom_text.dart';
 
@@ -302,15 +303,15 @@ class _FeedbackFormScreenState extends State<FeedbackFormScreen> {
           return const SizedBox.shrink();
         }
         if (controller.treatments.isEmpty) {
-          return Center(
-            child: CustomText(
-              text: 'No pending feedback treatments found',
-              fontSize: 14.sp,
-              fontFam: 'Lato',
-              fontWeight: FontWeight.normal,
-              textColor: AppColor.grey,
-              textAlign: TextAlign.center,
-            ),
+          return CommonStatusScreen(
+            title: "No Data Found",
+            description:
+                "We are unable to find the data that\nyou are looking for ",
+            img: "assets/no_Data_Found.png",
+            buttonText: "Go Back",
+            onPressed: () {
+              Get.back();
+            },
           );
         }
         return Column(
