@@ -23,6 +23,13 @@ class AuthTokenManager {
   static const _refreshInterval = Duration(minutes: 59);
 
   String? _token;
+
+  /// The `SESSION` cookie verifyLogin also sets (Set-Cookie). Some
+  /// endpoints - confirmed on saveLogoutHistoryMobile - still depend on
+  /// this server-side session on top of the JWT, likely left over from
+  /// before bearer-token auth was added. Sent alongside the token on
+  /// every request since it's harmless where it isn't needed.
+  String? _sessionCookie;
   Timer? _refreshTimer;
   TokenRefreshCall? _refreshCall;
   DateTime? _lastRefreshAt;
@@ -34,13 +41,31 @@ class AuthTokenManager {
 
   String? get token => _token;
 
+  String? get sessionCookie => _sessionCookie;
+
   bool get isActive => _token != null;
 
   /// Convenience for call sites that build their own [http.BaseRequest]
   /// (multipart uploads, raw downloads) instead of going through
   /// [ApiClient.get]/[ApiClient.post].
-  Map<String, String> get authHeaders =>
-      _token == null ? const {} : {'Authorization': 'Bearer $_token'};
+  Map<String, String> get authHeaders {
+    if (_token == null) return const {};
+    return {
+      'Authorization': 'Bearer $_token',
+      if (_sessionCookie != null) 'Cookie': _sessionCookie!,
+    };
+  }
+
+  /// Called from LoginRepository.login() right after a successful
+  /// verifyLogin response - covers manual login, the silent 59-minute
+  /// refresh, and the splash-screen silent re-login, since they all go
+  /// through that same repository method.
+  void setSessionCookie(String? rawSetCookieHeader) {
+    if (rawSetCookieHeader == null) return;
+    // Strip cookie attributes (Path, HttpOnly, SameSite, ...) - only the
+    // "name=value" pair belongs in a Cookie request header.
+    _sessionCookie = rawSetCookieHeader.split(';').first.trim();
+  }
 
   /// Call once right after a successful login. [refreshCall] should re-run
   /// the same login request - the caller already has the credentials in
@@ -95,6 +120,7 @@ class AuthTokenManager {
     _refreshTimer?.cancel();
     _refreshTimer = null;
     _token = null;
+    _sessionCookie = null;
     _refreshCall = null;
     _lastRefreshAt = null;
   }

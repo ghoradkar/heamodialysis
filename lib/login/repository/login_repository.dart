@@ -5,6 +5,7 @@ import 'package:heamodialysis/login/model/unit_name_model.dart';
 import 'package:heamodialysis/utils/api_client.dart';
 import 'package:heamodialysis/utils/api_names.dart';
 import 'package:heamodialysis/utils/api_urls.dart';
+import 'package:heamodialysis/utils/auth_token_manager.dart';
 
 class LoginRepository {
   Future<Map<String, dynamic>> login(
@@ -21,6 +22,11 @@ class LoginRepository {
     );
 
     if (response.statusCode == 200) {
+      // Some endpoints (confirmed on saveLogoutHistoryMobile) still need
+      // this server-side session cookie alongside the JWT - captured here
+      // so it covers manual login, the silent refresh, and the splash
+      // screen's silent re-login, since they all call this method.
+      AuthTokenManager().setSessionCookie(response.headers['set-cookie']);
       return json.decode(response.body) as Map<String, dynamic>;
     }
     throw ApiException(response.statusCode, response.body);
