@@ -19,7 +19,6 @@ class FeedbackFormScreen extends StatefulWidget {
 class _FeedbackFormScreenState extends State<FeedbackFormScreen> {
   final FeedbackFormController controller = Get.put(FeedbackFormController());
   final TextEditingController _patientIdController = TextEditingController();
-  final TextEditingController _treatmentIdController = TextEditingController();
   int? _year;
   int? _month;
 
@@ -41,16 +40,7 @@ class _FeedbackFormScreenState extends State<FeedbackFormScreen> {
   @override
   void dispose() {
     _patientIdController.dispose();
-    _treatmentIdController.dispose();
     super.dispose();
-  }
-
-  List<PendingFeedbackTreatment> get _filteredTreatments {
-    final query = _treatmentIdController.text.trim();
-    if (query.isEmpty) return controller.treatments;
-    return controller.treatments
-        .where((t) => t.treatmentId.toString().contains(query))
-        .toList();
   }
 
   Future<void> _openSearchSheet() async {
@@ -139,22 +129,6 @@ class _FeedbackFormScreenState extends State<FeedbackFormScreen> {
                         ),
                       ),
                     ],
-                  ),
-                  _fieldLabel('Treatment ID'),
-                  TextField(
-                    controller: _treatmentIdController,
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      hintText: 'Enter (optional)',
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xFFE1E1E1)),
-                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xFFE1E1E1)),
-                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                      ),
-                    ),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -345,9 +319,9 @@ class _FeedbackFormScreenState extends State<FeedbackFormScreen> {
             Expanded(
               child: ListView.builder(
                 padding: EdgeInsets.only(bottom: 12.h),
-                itemCount: _filteredTreatments.length,
+                itemCount: controller.treatments.length,
                 itemBuilder: (context, index) =>
-                    _treatmentRow(_filteredTreatments[index]),
+                    _treatmentRow(controller.treatments[index]),
               ),
             ),
             _bottomButton(),
