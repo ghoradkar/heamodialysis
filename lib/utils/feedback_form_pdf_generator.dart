@@ -1,7 +1,6 @@
-import 'dart:io';
+import 'dart:typed_data';
 import 'dart:ui';
 
-import 'package:path_provider/path_provider.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 
 class _FeedbackQuestion {
@@ -13,9 +12,10 @@ class _FeedbackQuestion {
 
 /// Builds the fixed patient-feedback questionnaire as a PDF (same 5
 /// questions on every form - this isn't per-patient data beyond the
-/// Name/Date line) and saves it to persistent external storage so it
-/// survives after the app closes, matching the save location already used
-/// for other report downloads (see SchedularController's PDF downloads).
+/// Name/Date line). Only builds the bytes - saving is done via
+/// FilePicker.saveFile's native "Save As" dialog (see
+/// FeedbackFormController.downloadPdf), not a silently-chosen directory,
+/// so the file ends up somewhere the user can actually find it again.
 class FeedbackFormPdfGenerator {
   static const List<_FeedbackQuestion> _questions = [
     _FeedbackQuestion(
@@ -40,7 +40,7 @@ class FeedbackFormPdfGenerator {
     ),
   ];
 
-  static Future<File> generate({required String patientName}) async {
+  static Future<Uint8List> generateBytes() async {
     final PdfDocument document = PdfDocument();
     final PdfPage page = document.pages.add();
     final PdfGraphics graphics = page.graphics;
@@ -80,12 +80,6 @@ class FeedbackFormPdfGenerator {
 
     final List<int> pdfBytes = await document.save();
     document.dispose();
-
-    final Directory? dir = await getExternalStorageDirectory();
-    final String safeName =
-        patientName.replaceAll(RegExp(r'[^A-Za-z0-9]'), '');
-    final String fileName = 'feedbackform_$safeName.pdf';
-    final File pdfFile = File('${(dir ?? await getApplicationDocumentsDirectory()).path}/$fileName');
-    return pdfFile.writeAsBytes(pdfBytes, flush: true);
+    return Uint8List.fromList(pdfBytes);
   }
 }

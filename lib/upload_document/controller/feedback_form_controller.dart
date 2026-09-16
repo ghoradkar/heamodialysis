@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/new_registration/controller/new_registration_controller.dart';
 import 'package:heamodialysis/upload_document/model/pending_feedback_treatment_model.dart';
@@ -21,7 +22,13 @@ class FeedbackFormController extends GetxController {
 
   int? patientId;
   List<PendingFeedbackTreatment> treatments = [];
-  File? generatedPdf;
+
+  /// Where the user saved the PDF via the native "Save As" dialog - set
+  /// once [downloadPdf] succeeds, so the "Download"/"Upload" button knows
+  /// which state to show. Not used to reopen the file: the upload step
+  /// re-picks it via FilePicker.pickFiles so the user can pick from
+  /// wherever they actually saved it.
+  String? downloadedPath;
 
   String get patientName {
     final data = _registrationController.viewPatientModel?.data;
@@ -48,7 +55,7 @@ class FeedbackFormController extends GetxController {
     required int month,
   }) async {
     isSearching = true;
-    generatedPdf = null;
+    downloadedPath = null;
     update();
 
     try {
@@ -71,13 +78,26 @@ class FeedbackFormController extends GetxController {
     }
   }
 
+  /// Builds the PDF, then hands the bytes to the OS "Save As" dialog
+  /// (FilePicker.saveFile) so the user picks a visible location - e.g.
+  /// Downloads - instead of it landing silently in an app-private folder
+  /// nobody can find afterward.
   Future<bool> downloadPdf() async {
     isDownloading = true;
     update();
     try {
-      generatedPdf = await FeedbackFormPdfGenerator.generate(
-        patientName: patientName.isNotEmpty ? patientName : 'patient',
+      final bytes = await FeedbackFormPdfGenerator.generateBytes();
+      final safeName =
+          patientName.isNotEmpty ? patientName.replaceAll(RegExp(r'[^A-Za-z0-9]'), '') : 'patient';
+      final path = await FilePicker.platform.saveFile(
+        dialogTitle: 'Save Feedback Form',
+        fileName: 'feedbackform_$safeName.pdf',
+        type: FileType.custom,
+        allowedExtensions: ['pdf'],
+        bytes: bytes,
       );
+      if (path == null) return false;
+      downloadedPath = path;
       return true;
     } catch (_) {
       return false;

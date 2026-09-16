@@ -499,7 +499,7 @@ class _FeedbackFormScreenState extends State<FeedbackFormScreen> {
   }
 
   Widget _bottomButton() {
-    final bool showUpload = controller.generatedPdf != null;
+    final bool showUpload = controller.downloadedPath != null;
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       child: InkWell(
@@ -545,10 +545,10 @@ class _FeedbackFormScreenState extends State<FeedbackFormScreen> {
   Future<void> _downloadPdf() async {
     final success = await controller.downloadPdf();
     if (success) {
-      CustomMessage.toast('Feedback form downloaded');
+      CustomMessage.toast('Feedback form saved');
       setState(() {});
     } else {
-      CustomMessage.toast('Failed to generate the feedback form');
+      CustomMessage.toast('Feedback form was not saved');
     }
   }
 
