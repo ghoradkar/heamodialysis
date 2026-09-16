@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/upload_document/screen/feedback/feedback_upload_document_screen.dart';
+import 'package:heamodialysis/upload_document/screen/feedback_form/feedback_form_screen.dart';
 import 'package:heamodialysis/upload_document/screen/hd_chart/he_chart_upload_document_screen.dart';
 import 'package:heamodialysis/utils/color_constants.dart';
 import 'package:heamodialysis/widgets/custom_shimmer_loader.dart';
@@ -34,7 +35,8 @@ class _UploadDocDashScreenState extends State<UploadDocDashScreen> {
 
   List<Map<String, dynamic>> _options(BuildContext context) => [
         {"title": context.l10n.uploadHdChart, "icon": "assets/HD Chart.png", "color": const Color(0xFFFFE7E7)},
-        {"title": context.l10n.uploadFeedbackForm, "icon": "assets/feedback.png", "color": const Color(0xFFDDF5FF)},
+        {"title": "Old FeedBack Form", "icon": "assets/feedback.png", "color": const Color(0xFFDDF5FF)},
+        {"title": "Feedback Form", "icon": "assets/feedback.png", "color": const Color(0xFFDDF5FF)},
       ];
 
   @override
@@ -102,6 +104,8 @@ class _UploadDocDashScreenState extends State<UploadDocDashScreen> {
           Get.to(() => const HdChartUploadDocScreen());
         } else if (index == 1) {
           Get.to(() => const FeedbackUploadDocScreen());
+        } else if (index == 2) {
+          Get.to(() => const FeedbackFormScreen());
         }
       },
       child: Container(

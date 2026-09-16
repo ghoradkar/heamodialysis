@@ -304,4 +304,5 @@ class ApiNames {
   static const String uploadPatientHdChartDocument = "/uploadPatientHdChartDocument";
   static const String getFeedbackDocuments = "/getFeedbackDocuments";
   static const String uploadFeedbackDocument = "/uploadFeedbackDocument";
+  static const String getPendingFeedbackTreatments = "/getPendingFeedbackTreatments";
 }
