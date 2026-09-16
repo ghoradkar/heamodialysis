@@ -9,9 +9,11 @@ import 'package:heamodialysis/l10n/l10n.dart';
 
 import '../../dashboard/controller/dashboard_controller.dart';
 import '../../internet/no_internet_connectivity.dart';
+import '../../utils/auth_token_manager.dart';
 import '../../utils/shared_preference.dart';
 import '../../utils/status_update_screen.dart';
 import '../controller/login_controller.dart';
+import '../repository/login_repository.dart';
 import 'login_screen.dart';
 
 class LogoutScreen extends StatefulWidget {
@@ -70,6 +72,15 @@ class _LogoutScreenState extends State<LogoutScreen> {
     loginController.captcha.value.text = '';
     loginController.unitNameList = null;
     loginController.update();
+
+    // Bearer-token pilot: tell the backend the session ended. Best-effort -
+    // local logout proceeds even if this fails (e.g. no network).
+    try {
+      await LoginRepository().logout();
+    } catch (e) {
+      debugPrint('saveLogoutHistoryMobile failed: $e');
+    }
+    AuthTokenManager().clear();
 
     // Clear saved data
     await SharedPref().clearSaveData();

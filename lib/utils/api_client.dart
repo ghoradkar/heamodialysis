@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:heamodialysis/utils/auth_token_manager.dart';
 import 'package:heamodialysis/utils/network_call.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/io_client.dart';
@@ -42,8 +43,9 @@ class ApiClient {
   Future<http.Response> get(String url, {Map<String, String>? headers}) async {
     final uri = Uri.parse(url);
     debugPrint('GET $uri');
-    final response = await _client.get(uri, headers: headers ?? jsonHeaders);
+    final response = await _client.get(uri, headers: _withAuth(headers));
     debugPrint('response.body : ${response.body}');
+    _handleUnauthorized(response);
     return response;
   }
 
@@ -55,15 +57,38 @@ class ApiClient {
     debugPrint('POST $uri');
     if (encodedBody != null) debugPrint(encodedBody);
     final response = await _client.post(uri,
-        headers: headers ?? jsonHeaders, body: encodedBody);
+        headers: _withAuth(headers), body: encodedBody);
     debugPrint('response.body : ${response.body}');
+    _handleUnauthorized(response);
     return response;
   }
 
+  /// Merges in `Authorization: Bearer <token>` when a token is active, so
+  /// every repository picks up the current (and any later rotated) token
+  /// without needing to pass it explicitly.
+  Map<String, String> _withAuth(Map<String, String>? headers) {
+    return {...(headers ?? jsonHeaders), ...AuthTokenManager().authHeaders};
+  }
+
+  /// Safety net for a token that expired or was rejected without the
+  /// silent 59-minute refresh having caught it yet.
+  void _handleUnauthorized(http.Response response) {
+    if (response.statusCode == 401 && AuthTokenManager().isActive) {
+      AuthTokenManager().clear();
+      AuthTokenManager().onSessionExpired?.call();
+    }
+  }
+
   /// Passthrough for callers that need to build their own [http.BaseRequest]
-  /// (e.g. a GET with a body) but still want the same SSL-bypass client
-  /// every other ApiClient call uses.
-  Future<http.StreamedResponse> sendRaw(http.BaseRequest request) {
-    return _client.send(request);
+  /// (e.g. a GET with a body) but still want the same SSL-bypass client,
+  /// auth header, and 401 handling every other ApiClient call gets.
+  Future<http.StreamedResponse> sendRaw(http.BaseRequest request) async {
+    request.headers.addAll(AuthTokenManager().authHeaders);
+    final response = await _client.send(request);
+    if (response.statusCode == 401 && AuthTokenManager().isActive) {
+      AuthTokenManager().clear();
+      AuthTokenManager().onSessionExpired?.call();
+    }
+    return response;
   }
 }

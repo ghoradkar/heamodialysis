@@ -6,6 +6,7 @@ import 'package:heamodialysis/discharge_form/model/discharge_patient_details.dar
 import 'package:heamodialysis/utils/api_client.dart';
 import 'package:heamodialysis/utils/api_names.dart';
 import 'package:heamodialysis/utils/api_urls.dart';
+import 'package:heamodialysis/utils/auth_token_manager.dart';
 import 'package:http/http.dart' as http;
 
 class SessionEndRepository {
@@ -53,6 +54,7 @@ class SessionEndRepository {
       "unitId": unitId,
     });
     request.headers.addAll({'Content-Type': 'application/json'});
+    request.headers.addAll(AuthTokenManager().authHeaders);
 
     final response = await request.send();
     if (response.statusCode == 200) {
@@ -90,6 +92,7 @@ class SessionEndRepository {
         "${ApiConstants.baseUrl}${ApiNames.getPostFlag}?patientId=$patientId&treatmentId=$treatmentId");
 
     final request = http.Request('POST', uri);
+    request.headers.addAll(AuthTokenManager().authHeaders);
     final response = await request.send();
 
     if (response.statusCode == 200) {

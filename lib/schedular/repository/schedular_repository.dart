@@ -24,6 +24,7 @@ import 'package:heamodialysis/nephro_desk_patient_list/model/get_instructions_mo
 import 'package:heamodialysis/utils/api_client.dart';
 import 'package:heamodialysis/utils/api_names.dart';
 import 'package:heamodialysis/utils/api_urls.dart';
+import 'package:heamodialysis/utils/auth_token_manager.dart';
 import 'package:heamodialysis/utils/network_call.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/io_client.dart';
@@ -133,7 +134,9 @@ class SchedularRepository {
     final uri = Uri.parse(
       "${ApiConstants.baseUrl}${ApiNames.viewOpdDocuments}?fileName=$fileName&documentId=$documentId",
     );
-    final response = await http.Request('GET', uri).send();
+    final response = await (http.Request('GET', uri)
+          ..headers.addAll(AuthTokenManager().authHeaders))
+        .send();
 
     if (response.statusCode == 200) {
       return response.stream.toBytes();
@@ -186,6 +189,7 @@ class SchedularRepository {
       "unitId": unitId
     });
     request.headers.addAll({'Content-Type': 'application/json'});
+    request.headers.addAll(AuthTokenManager().authHeaders);
 
     final response = await request.send();
     if (response.statusCode == 200) {
@@ -282,6 +286,7 @@ class SchedularRepository {
       'unitId': unitId,
     });
     request.files.add(await http.MultipartFile.fromPath(fileFieldKey, filePath));
+    request.headers.addAll(AuthTokenManager().authHeaders);
 
     return ioClient.send(request);
   }
@@ -296,6 +301,7 @@ class SchedularRepository {
     final url = Uri.parse("${ApiConstants.baseUrl}${ApiNames.updateTreatmentData}");
     final request = http.MultipartRequest("POST", url);
     request.fields['data'] = jsonEncode(dataMap);
+    request.headers.addAll(AuthTokenManager().authHeaders);
 
     if (filePath != null && fileFieldKey != null) {
       request.files.add(await http.MultipartFile.fromPath(fileFieldKey, filePath));
@@ -456,6 +462,7 @@ class SchedularRepository {
         'GET',
         Uri.parse(
             '${ApiConstants.ip}${ApiNames.prescriptionReport}?unitId=$unitId&patientId=$patientId&treatId=$treatId&userId=$userId'));
+    request.headers.addAll(AuthTokenManager().authHeaders);
     final response = await request.send();
 
     if (response.statusCode == 200) {

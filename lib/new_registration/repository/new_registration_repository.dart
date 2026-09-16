@@ -12,6 +12,7 @@ import 'package:heamodialysis/registered_patient_list/model/patient_history/regi
 import 'package:heamodialysis/utils/api_client.dart';
 import 'package:heamodialysis/utils/api_names.dart';
 import 'package:heamodialysis/utils/api_urls.dart';
+import 'package:heamodialysis/utils/auth_token_manager.dart';
 import 'package:heamodialysis/utils/network_call.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/io_client.dart';
@@ -69,6 +70,7 @@ class NewRegistrationRepository {
       'unitId': unitId
     });
     request.files.addAll(files);
+    request.headers.addAll(AuthTokenManager().authHeaders);
 
     return ioClient.send(request);
   }
@@ -84,6 +86,7 @@ class NewRegistrationRepository {
     final request = http.MultipartRequest('POST', uri);
     request.fields.addAll({'data': formattedJson});
     request.headers.addAll({'Content-Type': 'multipart/form-data'});
+    request.headers.addAll(AuthTokenManager().authHeaders);
     request.files.addAll(files);
 
     final response = await ioClient.send(request);
@@ -107,7 +110,9 @@ class NewRegistrationRepository {
     final uri = Uri.parse(
       '${ApiConstants.ip + ApiNames.generateAckReport}?patientId=$patientId&userId=$userId',
     );
-    final response = await http.Request('GET', uri).send();
+    final response = await (http.Request('GET', uri)
+          ..headers.addAll(AuthTokenManager().authHeaders))
+        .send();
 
     if (response.statusCode == 200) {
       return response.stream.toBytes();
@@ -121,7 +126,9 @@ class NewRegistrationRepository {
     final uri = Uri.parse(
       '${ApiConstants.ip + ApiNames.checkScrutinyDefinedOrNot}?unitId=$unitId&serviceCode=NPV',
     );
-    final response = await http.Request('GET', uri).send();
+    final response = await (http.Request('GET', uri)
+          ..headers.addAll(AuthTokenManager().authHeaders))
+        .send();
 
     if (response.statusCode == 200) {
       final data = await response.stream.bytesToString();

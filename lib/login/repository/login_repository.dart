@@ -53,6 +53,21 @@ class LoginRepository {
     throw ApiException(response.statusCode, response.body);
   }
 
+  /// Bearer-token pilot: this requires a valid Authorization header (403
+  /// without one, per replica testing) - exercised via ApiClient's
+  /// automatic header injection.
+  Future<Map<String, dynamic>> logout() async {
+    final response = await ApiClient().post(
+      ApiConstants.baseUrl + ApiNames.saveLogoutHistoryMobile,
+      body: {},
+    );
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body) as Map<String, dynamic>;
+    }
+    throw ApiException(response.statusCode, response.body);
+  }
+
   Future<List<UnitNameModel>> getUnitByUserName(String userName) async {
     final response = await ApiClient().get(
         "${ApiConstants.baseUrl}${ApiNames.getUnitByUserName}?userName=$userName");

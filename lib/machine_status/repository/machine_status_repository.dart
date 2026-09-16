@@ -6,6 +6,7 @@ import 'package:heamodialysis/new_registration/model/institute/Institute_list.da
 import 'package:heamodialysis/utils/api_client.dart';
 import 'package:heamodialysis/utils/api_names.dart';
 import 'package:heamodialysis/utils/api_urls.dart';
+import 'package:heamodialysis/utils/auth_token_manager.dart';
 import 'package:http/http.dart' as http;
 
 class MachineStatusRepository {
@@ -29,7 +30,9 @@ class MachineStatusRepository {
       "${ApiConstants.baseUrl}${ApiNames.getMachineListreading}?fromDate=$fromDate&toDate=$toDate&unitId=$unitId",
     );
 
-    final response = await http.Request('POST', uri).send();
+    final response = await (http.Request('POST', uri)
+          ..headers.addAll(AuthTokenManager().authHeaders))
+        .send();
 
     if (response.statusCode == 200) {
       final responseString = await response.stream.bytesToString();

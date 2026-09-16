@@ -5,6 +5,7 @@ import 'package:heamodialysis/upload_document/model/document_search_request_mode
 import 'package:heamodialysis/upload_document/model/patient_document_model.dart';
 import 'package:heamodialysis/utils/api_client.dart';
 import 'package:heamodialysis/utils/api_urls.dart';
+import 'package:heamodialysis/utils/auth_token_manager.dart';
 import 'package:heamodialysis/utils/shared_pref_constants.dart';
 import 'package:heamodialysis/utils/shared_preference.dart';
 import 'package:http/http.dart' as http;
@@ -27,7 +28,8 @@ class UploadDocumentRepository {
       ..fields['treatmentId'] = treatmentId.toString()
       ..fields['userId'] = userData['user_ID'].toString()
       ..fields['unitId'] = userData['unitId'].toString()
-      ..files.add(await http.MultipartFile.fromPath('file', file.path));
+      ..files.add(await http.MultipartFile.fromPath('file', file.path))
+      ..headers.addAll(AuthTokenManager().authHeaders);
 
     final streamedResponse = await request.send();
     return http.Response.fromStream(streamedResponse);

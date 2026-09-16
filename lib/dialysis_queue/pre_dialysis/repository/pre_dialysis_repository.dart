@@ -16,6 +16,7 @@ import 'package:heamodialysis/registered_patient_list/model/search_patient_dropd
 import 'package:heamodialysis/utils/api_client.dart';
 import 'package:heamodialysis/utils/api_names.dart';
 import 'package:heamodialysis/utils/api_urls.dart';
+import 'package:heamodialysis/utils/auth_token_manager.dart';
 import 'package:http/http.dart' as http;
 
 class PreDialysisRepository {
@@ -133,6 +134,7 @@ class PreDialysisRepository {
         'GET', Uri.parse('${ApiConstants.baseUrl}${ApiNames.getPreHistory}'));
     request.body = json.encode({"patientId": patientId});
     request.headers.addAll({'Content-Type': 'application/json'});
+    request.headers.addAll(AuthTokenManager().authHeaders);
 
     final response = await request.send();
     if (response.statusCode == 200) {

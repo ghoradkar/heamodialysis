@@ -6,6 +6,7 @@ import 'package:heamodialysis/login/model/login_model.dart';
 import 'package:heamodialysis/login/model/unit_name_model.dart';
 import 'package:heamodialysis/login/repository/login_repository.dart';
 import 'package:heamodialysis/utils/api_client.dart';
+import 'package:heamodialysis/utils/auth_token_manager.dart';
 import 'package:heamodialysis/utils/session_manager.dart';
 import 'package:heamodialysis/utils/shared_pref_constants.dart';
 import 'package:heamodialysis/utils/shared_preference.dart';
@@ -60,6 +61,17 @@ class LoginController extends GetxController {
         await SharedPref().save(
             const SharedPrefConstant().kUserData, loginRespModel!.dataDet);
         status = data['status'];
+
+        // Pilot: verifyLogin only (not verifyLoginNew/OTP). Silently
+        // re-calls this same login every 59 minutes to rotate the token
+        // instead of logging the user out on a fixed timer.
+        final token = loginRespModel!.token;
+        if (token != null) {
+          AuthTokenManager().activate(
+            token,
+            () => _repository.login(username, unitId, password, captcha1, captcha2),
+          );
+        }
       } else {
         isLoading = false;
 

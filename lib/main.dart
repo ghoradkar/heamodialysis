@@ -4,8 +4,12 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/l10n/l10n.dart';
+import 'package:heamodialysis/login/screen/login_screen.dart';
 import 'package:heamodialysis/splash/splash_screen.dart';
+import 'package:heamodialysis/utils/app_lifecycle_watcher.dart';
+import 'package:heamodialysis/utils/auth_token_manager.dart';
 import 'package:heamodialysis/utils/image_ssl.dart';
+import 'package:heamodialysis/utils/shared_preference.dart';
 // import 'package:media_kit/media_kit.dart';
 // import 'package:media_store_plus/media_store_plus.dart';
 import 'package:device_preview/device_preview.dart';
@@ -26,6 +30,14 @@ void main() async {
   //   await MediaStore.ensureInitialized();
   // }
   HttpOverrides.global = MyHttpOverrides();
+
+  // Bearer-token pilot: forced logout when the silent 59-minute refresh
+  // fails or any API returns 401 (see ApiClient/AuthTokenManager).
+  AuthTokenManager().onSessionExpired = () {
+    SharedPref().clearSaveData();
+    Get.offAll(() => const LoginScreen());
+  };
+  WidgetsBinding.instance.addObserver(AppLifecycleWatcher());
 
   // Register the locale controller before the first frame and apply any
   // previously persisted language choice.

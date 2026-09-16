@@ -28,22 +28,34 @@ class LoginModel {
         required this.code,
         required this.dataDet,
         required this.status,
+        this.token,
+        this.tokenType,
+        this.expiresIn,
     });
 
     int code;
     DataDet dataDet;
     String status;
+    String? token;
+    String? tokenType;
+    int? expiresIn;
 
     factory LoginModel.fromJson(Map<dynamic, dynamic> json) => LoginModel(
         code: json["code"],
         dataDet: DataDet.fromJson(json["dataDet"]),
         status: json["status"],
+        token: json["token"],
+        tokenType: json["tokenType"],
+        expiresIn: json["expiresIn"],
     );
 
     Map<dynamic, dynamic> toJson() => {
         "code": code,
         "dataDet": dataDet.toJson(),
         "status": status,
+        "token": token,
+        "tokenType": tokenType,
+        "expiresIn": expiresIn,
     };
 }
 

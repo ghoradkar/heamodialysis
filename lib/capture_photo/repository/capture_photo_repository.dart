@@ -5,6 +5,7 @@ import 'package:heamodialysis/capture_photo/model/captured_photo_list_model.dart
 import 'package:heamodialysis/capture_photo/model/delete_photo_model.dart';
 import 'package:heamodialysis/utils/api_names.dart';
 import 'package:heamodialysis/utils/api_urls.dart';
+import 'package:heamodialysis/utils/auth_token_manager.dart';
 import 'package:http/http.dart' as http;
 
 /// Moves the raw HTTP calls out of CapturePhotoController.
@@ -28,6 +29,7 @@ class CapturePhotoRepository {
     request.files
         .add(await http.MultipartFile.fromPath(fileFieldKey, filePath));
     request.headers.addAll({'Content-Type': 'multipart/form-data'});
+    request.headers.addAll(AuthTokenManager().authHeaders);
 
     return request.send();
   }
@@ -37,6 +39,7 @@ class CapturePhotoRepository {
     final client = http.Client();
     final request = http.Request('GET', Uri.parse(url));
     request.headers.addAll({'Content-Type': 'application/json'});
+    request.headers.addAll(AuthTokenManager().authHeaders);
     request.body = jsonEncode({"patientId": patientId.toString()});
 
     final response = await client.send(request);
@@ -58,6 +61,7 @@ class CapturePhotoRepository {
     final request = http.MultipartRequest(
         'POST', Uri.parse('${ApiConstants.baseUrl + ApiNames.deletedPhoto}?id=$id'));
     request.fields[id] = id;
+    request.headers.addAll(AuthTokenManager().authHeaders);
 
     final response = await request.send();
     if (response.statusCode == 200) {

@@ -32,6 +32,7 @@ import 'package:heamodialysis/nephro_desk_patient_list/screen/edit_nephro/tabs/c
 import 'package:heamodialysis/utils/api_client.dart';
 import 'package:heamodialysis/utils/api_names.dart';
 import 'package:heamodialysis/utils/api_urls.dart';
+import 'package:heamodialysis/utils/auth_token_manager.dart';
 import 'package:heamodialysis/utils/network_call.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/io_client.dart';
@@ -51,6 +52,7 @@ class NephroRepository {
     request.fields.addAll({'patientId': patientId});
     request.fields.addAll({'treatmentId': treatmentId});
     request.headers.addAll({'Content-Type': 'multipart/form-data'});
+    request.headers.addAll(AuthTokenManager().authHeaders);
 
     if (filePath != null) {
       request.files.add(await http.MultipartFile.fromPath('uploadOpdDocs', filePath));
@@ -137,7 +139,8 @@ class NephroRepository {
 
     final response = await http.get(uri, headers: {
       'Content-Type': 'application/json',
-      'Cookie': 'SESSION=ZDkzYTM1ZmMtMzNkYi00MzAxLWFiMjYtYjJjNGQ1NDM0YjQz'
+      'Cookie': 'SESSION=ZDkzYTM1ZmMtMzNkYi00MzAxLWFiMjYtYjJjNGQ1NDM0YjQz',
+      ...AuthTokenManager().authHeaders,
     });
 
     if (response.statusCode == 200) {
@@ -353,7 +356,9 @@ class NephroRepository {
     final uri = Uri.parse(
       "${ApiConstants.baseUrl}${ApiNames.viewOpdDocuments}?fileName=$fileName&documentId=$documentId",
     );
-    final response = await http.Request('GET', uri).send();
+    final response = await (http.Request('GET', uri)
+          ..headers.addAll(AuthTokenManager().authHeaders))
+        .send();
 
     if (response.statusCode == 200) {
       return response.stream.toBytes();
@@ -369,7 +374,9 @@ class NephroRepository {
     final uri = Uri.parse(
       "${ApiConstants.baseUrl}${ApiNames.ctReport}?unitId=$unitId&patientId=$patientId&treatId=$treatId&userId=$userId",
     );
-    final response = await http.Request('GET', uri).send();
+    final response = await (http.Request('GET', uri)
+          ..headers.addAll(AuthTokenManager().authHeaders))
+        .send();
 
     if (response.statusCode == 200) {
       return response.stream.toBytes();
@@ -477,6 +484,7 @@ class NephroRepository {
         "${ApiConstants.baseUrl}${ApiNames.lisofDiagonosis}?treatmentId=$treatmentId");
     final request = http.Request('GET', uri);
     request.headers.addAll({'Content-Type': 'application/json'});
+    request.headers.addAll(AuthTokenManager().authHeaders);
 
     final response = await http.Client().send(request);
     if (response.statusCode == 200) {
@@ -495,6 +503,7 @@ class NephroRepository {
         "${ApiConstants.baseUrl}${ApiNames.getClinicalHistoryData}?patientId=$patientId&treatmentId=$treatmentId");
     final request = http.Request('GET', uri);
     request.headers.addAll({'Content-Type': 'application/json'});
+    request.headers.addAll(AuthTokenManager().authHeaders);
 
     final response = await http.Client().send(request);
     if (response.statusCode == 200) {
@@ -514,6 +523,7 @@ class NephroRepository {
         "${ApiConstants.baseUrl}${ApiNames.getIndivisualInstructions}?unitId=$unit&treatmentId=$treatmentId");
     final request = http.Request('GET', uri);
     request.headers.addAll({'Content-Type': 'application/json'});
+    request.headers.addAll(AuthTokenManager().authHeaders);
 
     final response = await http.Client().send(request);
     if (response.statusCode == 200) {
@@ -530,6 +540,7 @@ class NephroRepository {
         Uri.parse("${ApiConstants.baseUrl}${ApiNames.getPackageList}?unitId=$unitId");
     final request = http.Request('GET', uri);
     request.headers.addAll({'Content-Type': 'application/json'});
+    request.headers.addAll(AuthTokenManager().authHeaders);
 
     final response = await http.Client().send(request);
     if (response.statusCode == 200) {
@@ -631,6 +642,7 @@ class NephroRepository {
     request.fields["userId"] = userId;
     request.fields["sampleWiseBarcodes"] = '{"labSampleWiseMasterDtoList":[]}';
     request.headers.addAll({'Content-Type': 'multipart/form-data'});
+    request.headers.addAll(AuthTokenManager().authHeaders);
 
     final response = await ioClient.send(request);
     return http.Response.fromStream(response);
@@ -657,6 +669,7 @@ class NephroRepository {
     request.fields["userId"] = userId;
     request.fields["sampleWiseBarcodes"] = '{"labSampleWiseMasterDtoList":[]}';
     request.headers.addAll({'Content-Type': 'multipart/form-data'});
+    request.headers.addAll(AuthTokenManager().authHeaders);
 
     final response = await ioClient.send(request);
     return http.Response.fromStream(response);

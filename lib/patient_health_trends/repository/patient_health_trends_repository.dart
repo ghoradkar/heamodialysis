@@ -10,6 +10,7 @@ import 'package:heamodialysis/patient_health_trends/model/vital_report_model.dar
 import 'package:heamodialysis/utils/api_client.dart';
 import 'package:heamodialysis/utils/api_names.dart';
 import 'package:heamodialysis/utils/api_urls.dart';
+import 'package:heamodialysis/utils/auth_token_manager.dart';
 import 'package:heamodialysis/utils/network_call.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/io_client.dart';
@@ -113,6 +114,7 @@ class PatientHealthTrendsRepository {
       "userId": userId
     });
     request.headers.addAll({'Content-Type': 'application/json'});
+    request.headers.addAll(AuthTokenManager().authHeaders);
 
     return ioClient.send(request);
   }
@@ -130,6 +132,7 @@ class PatientHealthTrendsRepository {
       "userId": userId
     });
     request.headers.addAll({'Content-Type': 'application/json'});
+    request.headers.addAll(AuthTokenManager().authHeaders);
 
     return ioClient.send(request);
   }

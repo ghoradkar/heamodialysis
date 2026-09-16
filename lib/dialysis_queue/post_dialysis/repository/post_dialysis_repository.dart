@@ -9,6 +9,7 @@ import 'package:heamodialysis/registered_patient_list/model/search_patient_dropd
 import 'package:heamodialysis/utils/api_client.dart';
 import 'package:heamodialysis/utils/api_names.dart';
 import 'package:heamodialysis/utils/api_urls.dart';
+import 'package:heamodialysis/utils/auth_token_manager.dart';
 import 'package:http/http.dart' as http;
 
 class PostDialysisRepository {
@@ -64,7 +65,9 @@ class PostDialysisRepository {
   Future<String?> getStartTime(String patientId, String treatmentId) async {
     final uri = Uri.parse(
         "${ApiConstants.baseUrl}${ApiNames.getPostFlag}?patientId=$patientId&treatmentId=$treatmentId");
-    final response = await http.Request('POST', uri).send();
+    final response = await (http.Request('POST', uri)
+          ..headers.addAll(AuthTokenManager().authHeaders))
+        .send();
 
     if (response.statusCode == 200) {
       return response.stream.bytesToString();
@@ -77,6 +80,7 @@ class PostDialysisRepository {
     final url = Uri.parse('${ApiConstants.baseUrl}${ApiNames.getPostFlag}');
     final request = http.Request('GET', url);
     request.headers.addAll({'Content-Type': 'application/json'});
+    request.headers.addAll(AuthTokenManager().authHeaders);
     request.body = json.encode({"patientId": patientId, "treatmentId": treatmentId});
 
     final response = await request.send();

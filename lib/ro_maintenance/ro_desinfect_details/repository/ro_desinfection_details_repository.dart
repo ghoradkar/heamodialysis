@@ -11,6 +11,7 @@ import 'package:heamodialysis/ro_maintenance/ro_desinfect_details/screen/add_edi
 import 'package:heamodialysis/utils/api_client.dart';
 import 'package:heamodialysis/utils/api_names.dart';
 import 'package:heamodialysis/utils/api_urls.dart';
+import 'package:heamodialysis/utils/auth_token_manager.dart';
 import 'package:heamodialysis/utils/network_call.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/io_client.dart';
@@ -76,6 +77,7 @@ class RoDesinfectionDetailsRepository {
     request.fields.addAll({'documentNames': docNameString});
     request.fields.addAll({'docId': docIdString});
     request.headers.addAll({'Content-Type': 'multipart/form-data'});
+    request.headers.addAll(AuthTokenManager().authHeaders);
 
     for (final file in selectedFiles) {
       request.files
@@ -103,6 +105,7 @@ class RoDesinfectionDetailsRepository {
     final request = http.Request('POST',
         Uri.parse('${ApiConstants.baseUrl}${ApiNames.getRoDisDocById}?Id=$roMachineId'));
     request.headers.addAll({'Content-Type': 'application/json'});
+    request.headers.addAll(AuthTokenManager().authHeaders);
 
     final response = await ioClient.send(request);
     if (response.statusCode == 200) {
