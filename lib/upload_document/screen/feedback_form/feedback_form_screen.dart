@@ -439,45 +439,57 @@ class _FeedbackFormScreenState extends State<FeedbackFormScreen> {
           ),
           SizedBox(width: 12.w),
           Expanded(
-            child: RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'Treatment Date : ',
-                    style: TextStyle(
-                      fontSize: 13.sp,
-                      fontFamily: 'Lato',
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: 'Treatment ID : ',
+                        style: TextStyle(
+                          fontSize: 13.sp,
+                          fontFamily: 'Lato',
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                      TextSpan(
+                        text: treatment.treatmentId.toString(),
+                        style: TextStyle(
+                          fontSize: 13.sp,
+                          fontFamily: 'Lato',
+                          color: AppColor.grey,
+                        ),
+                      ),
+                    ],
                   ),
-                  TextSpan(
-                    text: '${treatment.formattedTreatmentDate}   |   ',
-                    style: TextStyle(
-                      fontSize: 13.sp,
-                      fontFamily: 'Lato',
-                      color: AppColor.grey,
-                    ),
+                ),
+                SizedBox(height: 4.h),
+                RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: 'Treatment Date : ',
+                        style: TextStyle(
+                          fontSize: 13.sp,
+                          fontFamily: 'Lato',
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                      TextSpan(
+                        text: treatment.formattedTreatmentDate,
+                        style: TextStyle(
+                          fontSize: 13.sp,
+                          fontFamily: 'Lato',
+                          color: AppColor.grey,
+                        ),
+                      ),
+                    ],
                   ),
-                  TextSpan(
-                    text: 'Treatment ID : ',
-                    style: TextStyle(
-                      fontSize: 13.sp,
-                      fontFamily: 'Lato',
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                  TextSpan(
-                    text: treatment.treatmentId.toString(),
-                    style: TextStyle(
-                      fontSize: 13.sp,
-                      fontFamily: 'Lato',
-                      color: AppColor.grey,
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ],
