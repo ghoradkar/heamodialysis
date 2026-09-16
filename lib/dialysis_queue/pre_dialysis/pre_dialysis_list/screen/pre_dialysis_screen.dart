@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dashboard/screen/technician/institutewise_dashboard_screen.dart';
@@ -43,14 +44,14 @@ class _PreDialysisScreenState extends State<PreDialysisScreen> {
 
   bool hasInternet = true;
 
-  List<String> cardItemDetailsList = [
-    'Patient Id',
-    'Patient Name',
-    'Patient Age',
-    'Mobile No',
-    'Last dialysis session',
-    'Viral Load Status'
-  ];
+  List<String> _cardItemDetailsList(BuildContext context) => [
+        context.l10n.colPatientId,
+        context.l10n.colPatientName,
+        context.l10n.regPatientAge,
+        context.l10n.commonMobileNo,
+        context.l10n.dqLastDialysisSession,
+        context.l10n.colViralLoadStatus
+      ];
 
   SearchedData? dropDownValue;
   SearchedData? dropDownValue2;
@@ -131,8 +132,8 @@ class _PreDialysisScreenState extends State<PreDialysisScreen> {
           ),
         ),
         backgroundColor: AppColor.primaryBackgroundColor,
-        title: const CustomText(
-          text: 'Pre Dialysis Patient List',
+        title: CustomText(
+          text: context.l10n.dqPreDialysisPatientList,
           fontSize: 18.0,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,
@@ -178,8 +179,8 @@ class _PreDialysisScreenState extends State<PreDialysisScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const CustomText(
-                                    text: "Search",
+                            CustomText(
+                                    text: context.l10n.commonSearch,
                                     fontSize: 16,
                                     fontFam: "Lato",
                                     fontWeight: FontWeight.w400,
@@ -201,12 +202,12 @@ class _PreDialysisScreenState extends State<PreDialysisScreen> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const CustomText(
-                                    text: "Search By",
+                            CustomText(
+                                    text: context.l10n.commonSearchBy,
                                     fontSize: 16,
                                     fontFam: "Lato",
                                     fontWeight: FontWeight.normal,
-                                    textColor: Color(0xff515151),
+                                    textColor: const Color(0xff515151),
                                     textAlign: TextAlign.start)
                                 .paddingOnly(top: 10, bottom: 4),
                             Container(
@@ -243,28 +244,28 @@ class _PreDialysisScreenState extends State<PreDialysisScreen> {
                             ),
                           ],
                         ),
-                        const Align(
+                        Align(
                           alignment: Alignment.centerLeft,
                           child: CustomText(
-                              text: "Value",
+                              text: context.l10n.commonValue,
                               fontSize: 16,
                               fontFam: "Lato",
                               fontWeight: FontWeight.normal,
-                              textColor: Color(0xff515151),
+                              textColor: const Color(0xff515151),
                               textAlign: TextAlign.start),
                         ).paddingOnly(top: 10, bottom: 4),
                         TextField(
                             controller: valueController,
-                            decoration: const InputDecoration(
-                              labelText: 'Patient Id, name, mobile no etc.',
-                              labelStyle: TextStyle(color: Color(0xFFE1E1E1)),
-                              enabledBorder: OutlineInputBorder(
+                            decoration: InputDecoration(
+                              labelText: context.l10n.regSearchPatientHint,
+                              labelStyle: const TextStyle(color: Color(0xFFE1E1E1)),
+                              enabledBorder: const OutlineInputBorder(
                                 borderSide:
                                     BorderSide(color: Color(0xFFE1E1E1)),
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10.0)),
                               ),
-                              focusedBorder: OutlineInputBorder(
+                              focusedBorder: const OutlineInputBorder(
                                 borderSide:
                                     BorderSide(color: Color(0xFFE1E1E1)),
                                 borderRadius:
@@ -294,8 +295,8 @@ class _PreDialysisScreenState extends State<PreDialysisScreen> {
                                           MainAxisAlignment.center,
                                       children: [
                                         Image.asset("assets/cancel.png"),
-                                        const CustomText(
-                                            text: "Cancel",
+                                        CustomText(
+                                            text: context.l10n.commonCancel,
                                             fontSize: 16,
                                             fontFam: "Lato",
                                             fontWeight: FontWeight.normal,
@@ -323,7 +324,7 @@ class _PreDialysisScreenState extends State<PreDialysisScreen> {
                                     padding:
                                         const EdgeInsets.symmetric(vertical: 8),
                                     alignment: Alignment.center,
-                                    width: 100,
+                                    width: 130,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
                                       gradient: LinearGradient(
@@ -335,16 +336,16 @@ class _PreDialysisScreenState extends State<PreDialysisScreen> {
                                         end: Alignment.bottomCenter,
                                       ),
                                     ),
-                                    child: const Row(
+                                    child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        Icon(
+                                        const Icon(
                                           Icons.search,
                                           color: Colors.white,
                                         ),
                                         CustomText(
-                                            text: "Search",
+                                            text: context.l10n.commonSearch,
                                             fontSize: 16,
                                             fontFam: "Lato",
                                             fontWeight: FontWeight.normal,
@@ -380,7 +381,7 @@ class _PreDialysisScreenState extends State<PreDialysisScreen> {
           init: PreDialysisController(),
           builder: (controller) {
             if (controller.isLoading) {
-              return Center(child: SessionEndPatientsShimmer());
+              return const Center(child: SessionEndPatientsShimmer());
             }
             // 2️⃣ Get list safely
             final preDialysisList =
@@ -389,11 +390,11 @@ class _PreDialysisScreenState extends State<PreDialysisScreen> {
             // 3️⃣ No Data Found state
             if (preDialysisList.isEmpty) {
               return CommonStatusScreen(
-                title: "No Data Found",
+                title: context.l10n.commonNoDataFound,
                 description:
                 "We are unable to find the data that\nyou are looking for ",
                 img: "assets/no_Data_Found.png",
-                buttonText: "Go Back",
+                buttonText: context.l10n.commonGoBack,
                 onPressed: () {
                   Get.back();
                 },
@@ -403,7 +404,7 @@ class _PreDialysisScreenState extends State<PreDialysisScreen> {
             return  PreDialysisCardList(
                         patientList:
                             controller.preDialysisListModel?.data ?? [],
-                        cardItemDetailsList: cardItemDetailsList,
+                        cardItemDetailsList: _cardItemDetailsList(context),
                         isSecondColumnVisiable: false,
                         isfromPredialysis: true,
                         path1: "assets/file-list.png",
@@ -513,13 +514,13 @@ class PreDialysisCardList extends StatelessWidget {
                                   }, null),
                                   Visibility(
                                     visible: isSecondColumnVisiable,
-                                    child: SizedBox(
+                                    child: const SizedBox(
                                      // width: 12.w,
                                     ),
                                   ),
                                   Visibility(
                                     visible: isSecondColumnVisiable,
-                                    child: SizedBox(
+                                    child: const SizedBox(
                                      // width: 12.w,
                                     ),
                                   ),

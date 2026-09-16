@@ -14,4 +14,7 @@ class SharedPrefConstant {
   String get backDatedCount => 'backDatedCount';
   String get pendingActionsCount => 'pendingActionsCount';
   String get locationPermissionGranted => 'locationPermissionGranted';
+
+  /// Persisted UI language code ('en' | 'fr') chosen from the language switcher.
+  String get kAppLocale => 'kAppLocale';
 }

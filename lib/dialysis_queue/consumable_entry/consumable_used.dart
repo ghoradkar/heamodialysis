@@ -1,5 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dialysis_queue/consumable_entry/add_consumable.dart';
@@ -67,7 +68,7 @@ class _ConsumableUsedState extends State<ConsumableUsed> {
           return Scaffold(
             appBar: AppBar(
               title:  CustomText(
-                text: 'Physical Entry of Consumable Used',
+                text: context.l10n.dqPhysicalEntryConsumable,
                 fontSize: 18.sp,
                 fontFam: 'Lato',
                 fontWeight: FontWeight.w400,
@@ -172,7 +173,7 @@ class _ConsumableUsedState extends State<ConsumableUsed> {
                     Row(
                       children: [
                          CustomText(
-                            text: "Order ID :",
+                            text: "${context.l10n.dqOrderId} : ",
                             fontSize: 14.sp,
                             fontFam: "Lato",
                             fontWeight: FontWeight.w500,
@@ -191,7 +192,7 @@ class _ConsumableUsedState extends State<ConsumableUsed> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                          CustomText(
-                            text: "Product Name  :",
+                            text: "${context.l10n.dqProductName} : ",
                             fontSize: 14.sp,
                             fontFam: "Lato",
                             fontWeight: FontWeight.w500,
@@ -210,7 +211,7 @@ class _ConsumableUsedState extends State<ConsumableUsed> {
                         Row(
                           children: [
                              CustomText(
-                                text: "Batch No :",
+                                text: "${context.l10n.dqBatchNo} : ",
                                 fontSize: 14.sp,
                                 fontFam: "Lato",
                                 fontWeight: FontWeight.w500,
@@ -232,7 +233,7 @@ class _ConsumableUsedState extends State<ConsumableUsed> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                          CustomText(
-                            text: "Expiry Date :",
+                            text: "${context.l10n.dqExpiryDate} : ",
                             fontSize: 14.sp,
                             fontFam: "Lato",
                             fontWeight: FontWeight.w500,
@@ -249,7 +250,7 @@ class _ConsumableUsedState extends State<ConsumableUsed> {
                         Row(
                           children: [
                              CustomText(
-                                text: "Available Quantity :",
+                                text: "${context.l10n.dqAvailableQuantity} : ",
                                 fontSize: 14.sp,
                                 fontFam: "Lato",
                                 fontWeight: FontWeight.w500,
@@ -269,7 +270,7 @@ class _ConsumableUsedState extends State<ConsumableUsed> {
                     Row(
                       children: [
                          CustomText(
-                            text: "Consumed Quantity :",
+                            text: "${context.l10n.dqConsumedQuantity} : ",
                             fontSize: 14.sp,
                             fontFam: "Lato",
                             fontWeight: FontWeight.w500,
@@ -362,9 +363,9 @@ class _ConsumableUsedState extends State<ConsumableUsed> {
 //                             selectedItem: cardData.productName.isNotEmpty
 //                                 ? cardData.productName
 //                                 : null,
-//                             labelText: 'Product Name',
+//                             labelText: context.l10n.dqProductName,
 //                             items: const ['Product 1', 'Product 2'],
-//                             hint: 'Select',
+//                             hint: context.l10n.regHintSelect,
 //                             isRequired: false,
 //                             senValue: (value) {
 //                               updateCardData(index, 'productName', value!);
@@ -380,8 +381,8 @@ class _ConsumableUsedState extends State<ConsumableUsed> {
 //                             maxLines: 1,
 //                             isReadOnly: false,
 //                             keyBoardType: TextInputType.number,
-//                             labelText: 'Quantity',
-//                             hintText: 'Enter',
+//                             labelText: context.l10n.dqQuantity,
+//                             hintText: context.l10n.regHintEnter,
 //                             isRequired: false,
 //                             txtController: pincodeController,
 //                             fillColor: Colors.white),
@@ -396,8 +397,8 @@ class _ConsumableUsedState extends State<ConsumableUsed> {
 //                       maxLines: 1,
 //                       isReadOnly: false,
 //                       keyBoardType: TextInputType.streetAddress,
-//                       labelText: 'Remark',
-//                       hintText: 'Enter',
+//                       labelText: context.l10n.commonRemarks,
+//                       hintText: context.l10n.regHintEnter,
 //                       isRequired: false,
 //                       txtController: addressController,
 //                       fillColor: Colors.white),

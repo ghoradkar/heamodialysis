@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/ro_maintenance/ro_desinfect_details/screen/ro_disinfection_details.dart';
 import 'package:heamodialysis/ro_maintenance/ro_log_sheet/screen/ro_log_sheet_list.dart';
@@ -16,25 +17,25 @@ class RoMaintenanceScreen extends StatelessWidget {
     final List<Map<String, dynamic>> menuItems = [
       {
         "icon": "assets/rodisinfection.png",
-        "label": "RO Disinfection\nDetails",
+        "label": context.l10n.roDisinfectionDetails,
         "color": const Color(0xffD4F1F4),
         "page": const RoDisinfectionDetails(),
       },
       {
         "icon": "assets/romachineissuelogs.png",
-        "label": "RO Machine\nIssue Logs",
+        "label": context.l10n.roMachineIssueLogs,
         "color": const Color(0xffFFE3E3),
         "page": const RoMachineIssueLogs(),
       },
       {
         "icon": "assets/ROMachineLogSheet.png",
-        "label": "RO Machine\nLog Sheet",
+        "label": context.l10n.roMachineLogSheet,
         "color": const Color(0xffFFF4CC),
         "page": const RoLogSheetList(),
       },
       {
         "icon": "assets/DailyROLogSheet.png",
-        "label": "Daily RO\nLog Sheet",
+        "label": context.l10n.roDailyLogSheet,
         "color": const Color(0xffE3FCEC),
         "page": const DailyRoLogSheetScreen(),
       },
@@ -46,8 +47,8 @@ class RoMaintenanceScreen extends StatelessWidget {
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(bottomRight: Radius.circular(30)),
         ),
-        title: const CustomText(
-          text: 'RO Maintenance',
+        title: CustomText(
+          text: context.l10n.drawerRoMaintenance,
           fontSize: 18.0,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,
@@ -105,7 +106,7 @@ class RoMaintenanceScreen extends StatelessWidget {
                             height: constraints.maxWidth < 350 ? 60 : 70,
                           ),
                         ),
-                        const SizedBox(height: 8),
+                        SizedBox(height: 8),
                         Flexible(
                           flex: 3,
                           child: FittedBox(

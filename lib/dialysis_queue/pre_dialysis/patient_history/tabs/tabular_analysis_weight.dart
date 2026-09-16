@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/nephro_desk_patient_list/model/cover_sheet_nephro.dart';
 import 'package:heamodialysis/widgets/custom_table.dart';
@@ -19,7 +20,7 @@ class _TabularAnalysisWeightState extends State<TabularAnalysisWeight> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          const SizedBox(
+          SizedBox(
             height: 10,
           ),
           Column(
@@ -28,17 +29,17 @@ class _TabularAnalysisWeightState extends State<TabularAnalysisWeight> {
               const SizedBox(
                 height: 20,
               ),
-              const Row(
+              Row(
                 children: [
                   CustomText(
-                      text: 'Test Name :',
+                      text: "${context.l10n.dqTestName} : ",
                       fontSize: 14,
                       fontFam: "Lato",
                       fontWeight: FontWeight.w500,
                       textColor: Colors.black,
                       textAlign: TextAlign.start),
                   CustomText(
-                      text: 'Weight',
+                      text: context.l10n.clinDryWeight,
                       fontSize: 14,
                       fontFam: "Lato",
                       fontWeight: FontWeight.normal,
@@ -49,46 +50,43 @@ class _TabularAnalysisWeightState extends State<TabularAnalysisWeight> {
               const SizedBox(
                 height: 15,
               ),
-              SizedBox(
-                height: 150,
-                child: RoundedCornerTable(
-                  l1: widget.weight != null && widget.weight!.isNotEmpty
-                      ? widget.weight!
-                          .asMap()
-                          .keys
-                          .map((index) => (index + 1).toString())
-                          .toList()
-                      : [],
-                  l2: widget.weight
-                          ?.map((e) => e.preDialysisStartDate)
-                          .toList() ??
-                      [],
-                  l3: widget.weight
-                          ?.map((e) => e.postDialysisStopDate)
-                          .toList() ??
-                      [],
-                  l4: widget.weight?.map((e) => e.preWeight).toList() ?? [],
-                  tableHeader: const [
-                    "Sr.\nNo",
-                    "Pre \nDate",
-                    "Post \nDate",
-                    "Pre\nWeight",
-                    "Post\nWeight"
-                  ],
-                  lastColumnWidgets: widget.weight
-                          ?.map((diet) => CustomText(
-                                text: diet.postWeight ?? 'N/A',
-                                fontSize: 14,
-                                fontFam: "Lato",
-                                fontWeight: FontWeight.w400,
-                                textColor: Colors.black,
-                                textAlign: TextAlign.start,
-                              ))
-                          .toList() ??
-                      [],
-                  onButtonPressed: handleButtonPress,
-                ),
-              )
+              RoundedCornerTable(
+                l1: widget.weight != null && widget.weight!.isNotEmpty
+                    ? widget.weight!
+                        .asMap()
+                        .keys
+                        .map((index) => (index + 1).toString())
+                        .toList()
+                    : [],
+                l2: widget.weight
+                        ?.map((e) => e.preDialysisStartDate)
+                        .toList() ??
+                    [],
+                l3: widget.weight
+                        ?.map((e) => e.postDialysisStopDate)
+                        .toList() ??
+                    [],
+                l4: widget.weight?.map((e) => e.preWeight).toList() ?? [],
+                tableHeader: const [
+                  "Sr.\nNo",
+                  "Pre \nDate",
+                  "Post \nDate",
+                  "Pre\nWeight",
+                  "Post\nWeight"
+                ],
+                lastColumnWidgets: widget.weight
+                        ?.map((diet) => CustomText(
+                              text: diet.postWeight ?? 'N/A',
+                              fontSize: 14,
+                              fontFam: "Lato",
+                              fontWeight: FontWeight.w400,
+                              textColor: Colors.black,
+                              textAlign: TextAlign.start,
+                            ))
+                        .toList() ??
+                    [],
+                onButtonPressed: handleButtonPress,
+              ),
             ],
           ),
           const SizedBox(

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dashboard/screen/technician/institutewise_dashboard_screen.dart';
 import 'package:heamodialysis/internet/no_internet_connectivity.dart';
@@ -33,15 +34,15 @@ class _RoDisinfectionDetailsState extends State<RoDisinfectionDetails> {
   final RoDesinfectionDetailsController roMaintDetailsController =
       Get.put(RoDesinfectionDetailsController());
 
-  List<String> cardItemDetailsList = [
-    "RO Machine Name",
-    "Unit",
-    "Type of Disinfection Used",
-    "Inspection Date",
-    "Next Inspection Date",
-    "Done By",
-    "Comments"
-  ];
+  List<String> _cardItemDetailsList(BuildContext context) => [
+        context.l10n.roMachineName,
+        context.l10n.commonUnit,
+        context.l10n.roTypeOfDisinfection,
+        context.l10n.roInspectionDate,
+        context.l10n.roNextInspectionDate,
+        context.l10n.roDoneBy,
+        context.l10n.commonComments
+      ];
   bool hasInternet = true;
 
   var userData;
@@ -110,8 +111,8 @@ class _RoDisinfectionDetailsState extends State<RoDisinfectionDetails> {
   Widget build(BuildContext context) {
     return _isNetworkAvailable ? Scaffold(
       appBar: AppBar(
-        title: const CustomText(
-          text: 'RO Disinfection Details',
+        title: CustomText(
+          text: context.l10n.roDisinfectionDetails,
           fontSize: 18.0,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,
@@ -133,7 +134,7 @@ class _RoDisinfectionDetailsState extends State<RoDisinfectionDetails> {
               child: Image.asset("assets/add-pre-dialysis.png"),
             ),
           ),
-          const SizedBox(
+          SizedBox(
             width: 4,
           ),
           InkWell(
@@ -169,8 +170,8 @@ class _RoDisinfectionDetailsState extends State<RoDisinfectionDetails> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const CustomText(
-                                      text: "Search",
+                              CustomText(
+                                      text: context.l10n.commonSearch,
                                       fontSize: 16,
                                       fontFam: "Lato",
                                       fontWeight: FontWeight.w500,
@@ -196,8 +197,8 @@ class _RoDisinfectionDetailsState extends State<RoDisinfectionDetails> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const CustomText(
-                                      text: "Institute Name",
+                              CustomText(
+                                      text: context.l10n.colInstituteName,
                                       fontSize: 16,
                                       fontFam: "Lato",
                                       fontWeight: FontWeight.normal,
@@ -216,7 +217,7 @@ class _RoDisinfectionDetailsState extends State<RoDisinfectionDetails> {
                                 child: DropdownButton<InstituteDataModel>(
                                   isExpanded: true,
                                   value: roMaintDetailsController.dropDownValue,
-                                  hint: const Text("select"),
+                                  hint: Text("select"),
                                   onChanged: int.parse(userData['unitId'].toString()) == 1
                                       ? (InstituteDataModel? newValue) {
                                           setState(() {
@@ -236,7 +237,7 @@ class _RoDisinfectionDetailsState extends State<RoDisinfectionDetails> {
                                       child: Text(value.unitName ?? ""),
                                     );
                                   }).toList(),
-                                  underline: const SizedBox(),
+                                  underline: SizedBox(),
                                   icon: Icon(
                                     Icons.keyboard_arrow_down_outlined,
                                     color: AppColor.primaryBackgroundColor,
@@ -245,10 +246,10 @@ class _RoDisinfectionDetailsState extends State<RoDisinfectionDetails> {
                               ),
                             ],
                           ),
-                          const Align(
+                          Align(
                             alignment: Alignment.centerLeft,
                             child: CustomText(
-                                text: "Machine Name",
+                                text: context.l10n.machMachineName,
                                 fontSize: 16,
                                 fontFam: "Lato",
                                 fontWeight: FontWeight.normal,
@@ -258,8 +259,8 @@ class _RoDisinfectionDetailsState extends State<RoDisinfectionDetails> {
                           TextField(
                               controller:
                                   roMaintDetailsController.valueController,
-                              decoration: const InputDecoration(
-                                labelText: 'Please enter special no.',
+                              decoration: InputDecoration(
+                                labelText: context.l10n.roSpecialNo,
                                 labelStyle: TextStyle(color: Color(0xFFE1E1E1)),
                                 enabledBorder: OutlineInputBorder(
                                   borderSide:
@@ -297,8 +298,8 @@ class _RoDisinfectionDetailsState extends State<RoDisinfectionDetails> {
                                             MainAxisAlignment.center,
                                         children: [
                                           Image.asset("assets/cancel.png"),
-                                          const CustomText(
-                                              text: "Cancel",
+                                          CustomText(
+                                              text: context.l10n.commonCancel,
                                               fontSize: 16,
                                               fontFam: "Lato",
                                               fontWeight: FontWeight.normal,
@@ -308,7 +309,7 @@ class _RoDisinfectionDetailsState extends State<RoDisinfectionDetails> {
                                       )),
                                 ),
                               ).paddingOnly(top: 20),
-                              const SizedBox(
+                              SizedBox(
                                 width: 14,
                               ),
                               Align(
@@ -340,7 +341,7 @@ class _RoDisinfectionDetailsState extends State<RoDisinfectionDetails> {
                                           end: Alignment.bottomCenter,
                                         ),
                                       ),
-                                      child: const Row(
+                                      child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
@@ -349,7 +350,7 @@ class _RoDisinfectionDetailsState extends State<RoDisinfectionDetails> {
                                             color: Colors.white,
                                           ),
                                           CustomText(
-                                              text: "Search",
+                                              text: context.l10n.commonSearch,
                                               fontSize: 16,
                                               fontFam: "Lato",
                                               fontWeight: FontWeight.normal,
@@ -373,7 +374,7 @@ class _RoDisinfectionDetailsState extends State<RoDisinfectionDetails> {
               child: Image.asset("assets/filter-line.png"),
             ),
           ),
-          const SizedBox(
+          SizedBox(
             width: 2,
           ),
         ],
@@ -387,10 +388,10 @@ class _RoDisinfectionDetailsState extends State<RoDisinfectionDetails> {
             final roList = controller.roMaintenanceDetailsModel?.data ?? [];
             if (roList.isEmpty) {
               return CommonStatusScreen(
-                title: "No Data Found",
+                title: context.l10n.commonNoDataFound,
                 description: "We are unable to find the data that\nyou are looking for",
                 img: "assets/no_Data_Found.png",
-                buttonText: "Go Back",
+                buttonText: context.l10n.commonGoBack,
                 onPressed: () {
                   Get.back();
                 },
@@ -401,7 +402,7 @@ class _RoDisinfectionDetailsState extends State<RoDisinfectionDetails> {
                         roList:
                             controller.roMaintenanceDetailsModel?.data ?? [],
 
-                        cardItemDetailsList: cardItemDetailsList,
+                        cardItemDetailsList: _cardItemDetailsList(context),
                         path1: "assets/edit.png",
                         path2: "assets/delete-bin.png",
                         callB1: (index) {

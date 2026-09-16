@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
+import 'package:heamodialysis/l10n/l10n.dart';
+
 import '../../dashboard/controller/dashboard_controller.dart';
 import '../../internet/no_internet_connectivity.dart';
 import '../../utils/shared_preference.dart';
@@ -88,16 +90,15 @@ class _LogoutScreenState extends State<LogoutScreen> {
   Widget build(BuildContext context) {
     return _isNetworkAvailable ?  Scaffold(
       body: CommonStatusScreen(
-        title: "Logout",
-        description:
-            "Are you sure you want to Logout?",
+        title: context.l10n.commonLogout,
+        description: context.l10n.logoutConfirm,
         img: "assets/logout.png",
-        buttonText: "No",primaryTextColor: Colors.black,
-        primaryGradient: [
+        buttonText: context.l10n.commonNo, primaryTextColor: Colors.black,
+        primaryGradient: const [
           Color(0xFFE1E1E1),
           Color(0XffE1E1E1),
         ],
-        secondButtonText: "Yes",secondaryTextColor: Colors.white,
+        secondButtonText: context.l10n.commonYes, secondaryTextColor: Colors.white,
         secondOnPressed:_performLogout,
         onPressed: () {
           Get.back();

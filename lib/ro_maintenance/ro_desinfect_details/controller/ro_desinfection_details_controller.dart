@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/new_registration/model/institute/Institute_list.dart';
 import 'package:heamodialysis/new_registration/model/institute/institute_data.dart';
@@ -168,7 +169,7 @@ class RoDesinfectionDetailsController extends GetxController {
         if (data['status'] == "Success") {
           isLoading = false;
 
-          CustomMessage.toast("Saved Successfully");
+          CustomMessage.toast(l10n.roSavedSuccessfully);
           initialInsti = null;
           uploadImage.clear();
 
@@ -182,12 +183,12 @@ class RoDesinfectionDetailsController extends GetxController {
         } else {
           isLoading = false;
           update();
-          CustomMessage.toast('Upload failed');
+          CustomMessage.toast(l10n.regUploadFailed);
         }
       } else {
         isLoading = false;
         update();
-        CustomMessage.toast('Upload failed');
+        CustomMessage.toast(l10n.regUploadFailed);
       }
     } catch (error) {
       isLoading = false;

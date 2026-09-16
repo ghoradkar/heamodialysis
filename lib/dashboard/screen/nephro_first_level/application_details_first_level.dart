@@ -14,6 +14,7 @@ import 'package:heamodialysis/registered_patient_list/model/already_regidtered_p
 import 'package:heamodialysis/utils/color_constants.dart';
 import 'package:heamodialysis/utils/shared_pref_constants.dart';
 import 'package:heamodialysis/utils/shared_preference.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:heamodialysis/widgets/custom_text.dart';
 import 'package:heamodialysis/widgets/custom_textfield.dart';
 import 'package:intl/intl.dart';
@@ -122,7 +123,7 @@ class _ApplicationDetailsFirstLevelState
     return _isNetworkAvailable ? Scaffold(
       appBar: AppBar(
         title:  CustomText(
-          text: 'Patient Details',
+          text: context.l10n.patientDetailsTitle,
           fontSize: 18.sp,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,
@@ -144,7 +145,7 @@ class _ApplicationDetailsFirstLevelState
               Get.to(NewRegistration(
                   patientData: patientDet,
                   isViewPatient: true,
-                  pageTitle: "View Application",
+                  pageTitle: context.l10n.viewApplication,
                   isEdit: false));
             },
             child: Container(
@@ -164,7 +165,7 @@ class _ApplicationDetailsFirstLevelState
                       ),
                     ),
                     child:  CustomText(
-                        text: "View Application",
+                        text: context.l10n.viewApplication,
                         fontSize: 12.sp,
                         fontFam: "Lato",
                         fontWeight: FontWeight.normal,
@@ -182,10 +183,10 @@ class _ApplicationDetailsFirstLevelState
             }
             if (controller.patientData?.data == null || controller.patientData!.data!.isEmpty) {
               return CommonStatusScreen(
-                title: "No Data Found",
-                description: "We are unable to find the data you are looking for.",
+                title: context.l10n.commonNoDataFound,
+                description: context.l10n.commonNoDataFoundDescription,
                 img: "assets/no_Data_Found.png",
-                buttonText: "Go Back",
+                buttonText: context.l10n.commonGoBack,
                 onPressed: () {
                   Get.back();
                 },
@@ -212,8 +213,8 @@ class _ApplicationDetailsFirstLevelState
                             indicatorPadding: EdgeInsets.zero,
                             labelPadding: EdgeInsets.zero,
                             tabs: [
-                              buildTab(0, "Application Details"),
-                              buildTab(1, "Service Description"),
+                              buildTab(0, context.l10n.tabApplicationDetails),
+                              buildTab(1, context.l10n.tabServiceDescription),
                             ],
                           ).paddingOnly(top: 14.h, bottom: 10.h),
                           Expanded(
@@ -261,8 +262,8 @@ class _ApplicationDetailsFirstLevelState
                       maxLines: 1,
                       isReadOnly: true,
                       keyBoardType: TextInputType.text,
-                      labelText: 'Application Number',
-                      hintText: 'Application Number',
+                      labelText: context.l10n.colApplicationNumber,
+                      hintText: context.l10n.colApplicationNumber,
                       isRequired: false,
                       initialValue: widget.patient?.appNumber,
                       fillColor: Colors.white, fontSize: 14.sp,),
@@ -274,8 +275,8 @@ class _ApplicationDetailsFirstLevelState
                       maxLines: 1,
                       isReadOnly: true,
                       keyBoardType: TextInputType.text,
-                      labelText: 'Service Name',
-                      hintText: 'Service Name',
+                      labelText: context.l10n.colServiceName,
+                      hintText: context.l10n.colServiceName,
                       isRequired: false,
                       initialValue: widget.patient?.serviceName,
                       fillColor: Colors.white, fontSize: 14.sp,),
@@ -291,8 +292,8 @@ class _ApplicationDetailsFirstLevelState
                       maxLines: 1,
                       isReadOnly: true,
                       keyBoardType: TextInputType.text,
-                      labelText: 'District Name',
-                      hintText: 'District Name',
+                      labelText: context.l10n.colDistrictName,
+                      hintText: context.l10n.colDistrictName,
                       isRequired: false,
                       initialValue: widget.patient?.distName,
                       fillColor: Colors.white, fontSize: 14.sp,),
@@ -304,8 +305,8 @@ class _ApplicationDetailsFirstLevelState
                       maxLines: 1,
                       isReadOnly: true,
                       keyBoardType: TextInputType.text,
-                      labelText: 'Institute Name',
-                      hintText: 'Institute Name',
+                      labelText: context.l10n.colInstituteName,
+                      hintText: context.l10n.colInstituteName,
                       isRequired: false,
                       initialValue: widget.patient?.unitName,
                       fillColor: Colors.white, fontSize: 14.sp,),
@@ -417,7 +418,7 @@ class PatientCardDetails extends StatelessWidget {
                 width: 10.w,
               ),
                CustomText(
-                text: 'Patient ID : ',
+                text: "${context.l10n.colPatientId} : ",
                 fontSize: 12.sp,
                 fontFam: 'Lato',
                 fontWeight: FontWeight.w400,
@@ -449,7 +450,7 @@ class PatientCardDetails extends StatelessWidget {
           Row(
             children: [
                CustomText(
-                text: 'Patient Name  : ',
+                text: "${context.l10n.colPatientName}  : ",
                 fontSize: 12.sp,
                 fontFam: 'Lato',
                 fontWeight: FontWeight.w400,
@@ -474,7 +475,7 @@ class PatientCardDetails extends StatelessWidget {
                 child: Row(
                   children: [
                      CustomText(
-                      text: 'Age :',
+                      text: "${context.l10n.commonAge} :",
                       fontSize: 12.sp,
                       fontFam: 'Lato',
                       fontWeight: FontWeight.w400,
@@ -497,7 +498,7 @@ class PatientCardDetails extends StatelessWidget {
                 child: Row(
                   children: [
                      CustomText(
-                      text: 'Gender :',
+                      text: "${context.l10n.commonGender} :",
                       fontSize: 12.sp,
                       fontFam: 'Lato',
                       fontWeight: FontWeight.w400,
@@ -521,7 +522,7 @@ class PatientCardDetails extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CustomText(
-                text: 'Blood Group : ',
+                text: "${context.l10n.colBloodGroup} : ",
                 fontSize: 12.sp,
                 fontFam: 'Lato',
                 fontWeight: FontWeight.w400,
@@ -543,7 +544,7 @@ class PatientCardDetails extends StatelessWidget {
           Row(
             children: [
               CustomText(
-                text: 'Viral Load Status : ',
+                text: "${context.l10n.colViralLoadStatus} : ",
                 fontSize: 12.sp,
                 fontFam: 'Lato',
                 fontWeight: FontWeight.w400,
@@ -574,7 +575,7 @@ class PatientCardDetails extends StatelessWidget {
                       child: Row(
                         children: [
                            CustomText(
-                            text: 'Height :',
+                            text: "${context.l10n.colHeight} :",
                             fontSize: 12.sp,
                             fontFam: 'Lato',
                             fontWeight: FontWeight.w400,
@@ -599,7 +600,7 @@ class PatientCardDetails extends StatelessWidget {
                       child: Row(
                         children: [
                            CustomText(
-                            text: 'Weight :',
+                            text: "${context.l10n.colWeight} :",
                             fontSize: 12.sp,
                             fontFam: 'Lato',
                             fontWeight: FontWeight.w400,
@@ -629,7 +630,7 @@ class PatientCardDetails extends StatelessWidget {
                       child: Row(
                         children: [
                            CustomText(
-                            text: 'Date Of Registration :',
+                            text: "${context.l10n.colDateOfRegistration} :",
                             fontSize: 12.sp,
                             fontFam: 'Lato',
                             fontWeight: FontWeight.w400,
@@ -654,7 +655,7 @@ class PatientCardDetails extends StatelessWidget {
                       child: Row(
                         children: [
                            CustomText(
-                            text: 'Nephrologist Name :',
+                            text: "${context.l10n.colNephrologistName} :",
                             fontSize: 12.sp,
                             fontFam: 'Lato',
                             fontWeight: FontWeight.w400,
@@ -684,7 +685,7 @@ class PatientCardDetails extends StatelessWidget {
                       child: Row(
                         children: [
                            CustomText(
-                            text: 'Relative Name :',
+                            text: "${context.l10n.colRelativeName} :",
                             fontSize: 12.sp,
                             fontFam: 'Lato',
                             fontWeight: FontWeight.w400,
@@ -709,7 +710,7 @@ class PatientCardDetails extends StatelessWidget {
                       child: Row(
                         children: [
                            CustomText(
-                            text: 'Relative Contact :',
+                            text: "${context.l10n.colRelativeContact} :",
                             fontSize: 12.sp,
                             fontFam: 'Lato',
                             fontWeight: FontWeight.w400,

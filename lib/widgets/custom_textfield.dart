@@ -7,10 +7,40 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:get/get_utils/src/extensions/widget_extensions.dart';
 import 'package:heamodialysis/dialysis_queue/post_dialysis/model/common_dropdown_post_dialysis_model.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:heamodialysis/nephro_desk_patient_list/model/route_list_model.dart';
 import 'package:heamodialysis/utils/color_constants.dart';
 import 'package:heamodialysis/widgets/custom_text.dart';
 import 'package:intl/intl.dart';
+
+/// Stable, locale-independent identifiers for [CustomTextField] / [DoubleTextField].
+///
+/// Screens should pass the localized string to `labelText` (for display) and the
+/// matching constant here to `fieldKey` (for input-formatter / validation logic).
+/// When `fieldKey` is omitted the widget falls back to `labelText`, so
+/// not-yet-localized call sites keep working unchanged.
+class FieldKeys {
+  static const mobileNo = 'Mobile No';
+  static const referredContactNumber = 'Referred Contact Number';
+  static const nephrologistContactNo = 'Nephrologist Contact No';
+  static const contactNo = 'Contact No';
+  static const pinCode = 'Pin Code';
+  static const abhaNo = 'ABHA No';
+  static const abhaNumber = 'ABHA Number';
+  static const middleName = 'Middle Name';
+  static const firstName = 'First Name';
+  static const lastName = 'Last Name';
+  static const identificationNumber = 'Identification Number';
+  static const emailId = 'Email Id';
+  static const oxygenLevel = 'Oxygen Level';
+  static const venousPressure = 'Venous Pressure';
+  static const bloodFlowQb = 'Blood Flow(QB)';
+  static const dialysateFlowQd = 'Dialysate Flow(QD)';
+  static const rrfUrineVol = 'RRF Urine Vol';
+  static const reasonNotRegisteredMjpjay = 'Reason for not registered on MJPJAY';
+  static const heightInFt = 'Height (In Ft.)';
+  static const finalUfv = 'Final UFV';
+}
 
 class CustomTableTextField extends StatelessWidget {
   final String? identification;
@@ -79,6 +109,10 @@ class CustomTableTextField extends StatelessWidget {
 
 class CustomTextField extends StatefulWidget {
   final String labelText;
+
+  /// Locale-independent identity used for input-formatter and validation
+  /// logic. Falls back to [labelText] when not supplied. See [FieldKeys].
+  final String? fieldKey;
   final String? identification;
   final String? errorM;
   final String hintText;
@@ -99,6 +133,7 @@ class CustomTextField extends StatefulWidget {
   const CustomTextField({
     super.key,
     required this.labelText,
+    this.fieldKey,
     required this.hintText,
     required this.isRequired,
     required this.keyBoardType,
@@ -124,12 +159,15 @@ class CustomTextField extends StatefulWidget {
 class _CustomTextFieldState extends State<CustomTextField> {
   int remainingCharacters = 0;
 
+  /// Locale-independent field identity for logic branching.
+  String get _fieldId => widget.fieldKey ?? widget.labelText;
+
   @override
   void initState() {
     remainingCharacters = widget.mazLenght ?? 0;
 
     widget.txtController?.addListener(() {
-      if (widget.labelText == "Reason for not registered on MJPJAY") {
+      if (_fieldId == "Reason for not registered on MJPJAY") {
         setState(() {
           remainingCharacters = (widget.mazLenght ?? 500) -
               (widget.txtController?.text.length ?? 0);
@@ -149,32 +187,32 @@ class _CustomTextFieldState extends State<CustomTextField> {
   Widget build(BuildContext context) {
     List<TextInputFormatter> inputFormatters = [];
 
-    if (widget.labelText == "Mobile No" ||
-        widget.labelText == "Referred Contact Number" ||
-        widget.labelText == "Nephrologist Contact No" ||
-        widget.labelText == "Contact No") {
+    if (_fieldId == "Mobile No" ||
+        _fieldId == "Referred Contact Number" ||
+        _fieldId == "Nephrologist Contact No" ||
+        _fieldId == "Contact No") {
       inputFormatters = [
         FilteringTextInputFormatter.digitsOnly,
         LengthLimitingTextInputFormatter(10),
       ];
-    } else if (widget.labelText == "Pin Code") {
+    } else if (_fieldId == "Pin Code") {
       inputFormatters = [
         FilteringTextInputFormatter.digitsOnly,
         LengthLimitingTextInputFormatter(6),
       ];
-    } else if (widget.labelText == "ABHA No") {
+    } else if (_fieldId == "ABHA No") {
       inputFormatters = [
         FilteringTextInputFormatter.digitsOnly,
         LengthLimitingTextInputFormatter(14),
         AbhaIdInputFormatter(),
       ];
-    } else if (widget.labelText == "Middle Name" ||
-        widget.labelText == "First Name" ||
-        widget.labelText == "Last Name") {
+    } else if (_fieldId == "Middle Name" ||
+        _fieldId == "First Name" ||
+        _fieldId == "Last Name") {
       inputFormatters = [
         UpperCaseTextFormatter(),
       ];
-    } else if (widget.labelText == "Identification Number") {
+    } else if (_fieldId == "Identification Number") {
       if (widget.identification == "Ration Card") {
         inputFormatters = [
           FilteringTextInputFormatter.digitsOnly,
@@ -196,16 +234,16 @@ class _CustomTextFieldState extends State<CustomTextField> {
           LengthLimitingTextInputFormatter(12)
         ];
       }
-    } else if (widget.labelText == "Email Id") {
+    } else if (_fieldId == "Email Id") {
       inputFormatters = [
         FilteringTextInputFormatter.allow(RegExp(r'[a-z0-9._%+-@]')),
         LowerTextFormatter()
       ];
-    } else if (widget.labelText == "Oxygen Level" ||
-        widget.labelText == "Venous Pressure" ||
-        widget.labelText == "Blood Flow(QB)" ||
-        widget.labelText == "Dialysate Flow(QD)" ||
-        widget.labelText == "RRF Urine Vol") {
+    } else if (_fieldId == "Oxygen Level" ||
+        _fieldId == "Venous Pressure" ||
+        _fieldId == "Blood Flow(QB)" ||
+        _fieldId == "Dialysate Flow(QD)" ||
+        _fieldId == "RRF Urine Vol") {
       inputFormatters = [FilteringTextInputFormatter.digitsOnly];
     }
 
@@ -219,12 +257,14 @@ class _CustomTextFieldState extends State<CustomTextField> {
             child: Row(
               children: [
                 // Text(widget.labelText, style: const TextStyle(fontSize: 16)),
-                CustomText(
-                    text: widget.labelText,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    textColor: const Color(0xFF515151),
-                    textAlign: TextAlign.start),
+                Flexible(
+                  child: CustomText(
+                      text: widget.labelText,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      textColor: const Color(0xFF515151),
+                      textAlign: TextAlign.start),
+                ),
                 if (widget.isRequired)
                   // Text(
                   //   ' *',
@@ -301,123 +341,117 @@ class _CustomTextFieldState extends State<CustomTextField> {
               ),
             ),
             validator: (value) {
+              final l10n = context.l10n;
               // Existing validations
 
               if (widget.isRequired) {
                 if (value == null || value.isEmpty) {
-                  return '${widget.labelText} is required';
+                  return l10n.fieldRequired(widget.labelText);
                 }
 
-                if ((widget.labelText == "Mobile No" ||
-                        widget.labelText == "Referred Contact Number" ||
-                        widget.labelText == "Nephrologist Contact No") &&
+                if ((_fieldId == "Mobile No" ||
+                        _fieldId == "Referred Contact Number" ||
+                        _fieldId == "Nephrologist Contact No") &&
                     !RegExp(r'^[0-9]{10}$').hasMatch(value)) {
-                  return 'Please enter a valid ${widget.labelText}';
+                  return l10n.fieldInvalid(widget.labelText);
                 }
 
-                if (widget.labelText == "Email Id") {
+                if (_fieldId == "Email Id") {
                   final RegExp emailRegex =
                       RegExp(r'^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$');
                   if (!emailRegex.hasMatch(value)) {
-                    return 'Please enter a valid email';
+                    return l10n.validationInvalidEmail;
                   }
                 }
 
-                if (widget.labelText == "Reason for not registered on MJPJAY") {
+                if (_fieldId == "Reason for not registered on MJPJAY") {
                   final trimmedValue = value.trim();
                   if (trimmedValue.isEmpty) {
-                    return '${widget.labelText} is required';
+                    return l10n.fieldRequired(widget.labelText);
                   }
                   if (trimmedValue.length > 500) {
-                    return 'Maximum 500 characters allowed';
+                    return l10n.validationMaxLength(500);
                   }
                 }
               }
 
               // New validations for Identification types
-              if (widget.labelText == "Identification Number") {
+              if (_fieldId == "Identification Number") {
                 if (widget.identification == "Ration Card" &&
                     (value?.length != 10 ||
                         !RegExp(r'^\d{10}$').hasMatch(value!))) {
-                  return 'Please enter a 10-digit Ration Card number';
+                  return l10n.validationDigits(10);
                 } else if (widget.identification == "Licenece" &&
                     (value?.length != 14 ||
                         !RegExp(r'^\d{14}$').hasMatch(value!))) {
-                  return 'Please enter a 14-digit';
+                  return l10n.validationDigits(14);
                 } else if (widget.identification == "Pan Card" &&
                     !RegExp(r'^[A-Z]{5}[0-9]{4}[A-Z]$').hasMatch(value ?? '')) {
-                  return 'Please enter a valid PAN';
+                  return l10n.validationInvalidPan;
                 } else if (widget.identification == "Aadhaar Card" &&
                     (value?.length != 12 ||
                         !RegExp(r'^\d{12}$').hasMatch(value!))) {
-                  return 'Please enter a 12-digit';
+                  return l10n.validationDigits(12);
                 }
               }
 
               // Validation for ABHA No (non-required)
-              if (widget.labelText == "ABHA No" &&
+              if (_fieldId == "ABHA No" &&
                   value != null &&
                   value.isNotEmpty &&
                   value.length < 17) {
-                return 'Please enter 17 digits';
+                return l10n.validationMinDigits(17);
               }
 
-              if (widget.labelText == "Height (In Ft.)" &&
+              if (_fieldId == "Height (In Ft.)" &&
                   value != null &&
                   value.isNotEmpty &&
                   !RegExp(r"^\d{1,2}'\d{1,2}$").hasMatch(value)) {
-                return "Please enter height in\n(e.g., 5'8)";
+                return l10n.validationHeightFormat;
               }
 
-              if (widget.labelText == "Final UFV" &&
+              if (_fieldId == "Final UFV" &&
                   value != null &&
                   value.isNotEmpty) {
                 final parsedValue = double.tryParse(value);
 
                 if (parsedValue == null) {
-                  return "Enter a valid number";
+                  return l10n.validationInvalidNumber;
                 }
 
                 if (parsedValue > 6.0) {
-                  return "${widget.labelText} should not\ngreater than 6.0 ltrs";
+                  return l10n.validationMaxLitres(widget.labelText, '6.0');
                 }
               }
 
-              // if (widget.labelText == "Final UFV" &&
-              //     value != null &&
-              //     value.isNotEmpty &&
-              //     int.parse(value) > 6) {
-              //   return "${widget.labelText} should not\ngreater than 6.0 ltrs";
-              // }
-
-              if (widget.labelText == "Venous Pressure" &&
+              if (_fieldId == "Venous Pressure" &&
                   value != null &&
                   value.isNotEmpty &&
                   int.parse(value) > 350) {
-                return "${widget.labelText} should\nnot greater than 350 ltrs";
+                return l10n.validationMaxLitres(widget.labelText, '350');
               }
-              if (widget.labelText == "Blood Flow(QB)" &&
+              if (_fieldId == "Blood Flow(QB)" &&
                   value != null &&
                   value.isNotEmpty &&
                   int.parse(value) > 450) {
-                return "${widget.labelText} should not\ngreater than 450 ltrs";
+                return l10n.validationMaxLitres(widget.labelText, '450');
               }
 
-              if (widget.labelText == "Dialysate Flow(QD)" &&
+              if (_fieldId == "Dialysate Flow(QD)" &&
                   value != null &&
                   value.isNotEmpty &&
                   int.parse(value) > 800) {
-                return "${widget.labelText} should\nnot greater than 800 ltrs";
+                return l10n.validationMaxLitres(widget.labelText, '800');
               }
 
               return null;
             },
           ),
-          if (widget.labelText == "Reason for not registered on MJPJAY")
+          if (_fieldId == "Reason for not registered on MJPJAY")
             Padding(
               padding: const EdgeInsets.only(top: 4.0, left: 4),
               child: Text(
-                '$remainingCharacters characters remaining',
+                context.l10n.charactersRemaining(remainingCharacters),
                 style: const TextStyle(fontSize: 12, color: Colors.grey),
               ),
             ),
@@ -493,12 +527,14 @@ class CustomTextFieldTempState extends State<CustomTextFieldTemp> {
             child: Row(
               children: [
                 // Text(widget.labelText, style: const TextStyle(fontSize: 16)),
-                CustomText(
-                    text: widget.labelText,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    textColor: const Color(0xFF515151),
-                    textAlign: TextAlign.start),
+                Flexible(
+                  child: CustomText(
+                      text: widget.labelText,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      textColor: const Color(0xFF515151),
+                      textAlign: TextAlign.start),
+                ),
 
                 if (widget.isRequired)
                   CustomText(
@@ -527,7 +563,9 @@ class CustomTextFieldTempState extends State<CustomTextFieldTemp> {
                 errorText: widget.errorM,
                 fillColor: widget.fillColor,
                 filled: true,
-                hintText: isFahrenheit ? "Fahrenheit" : "Celsius",
+                hintText: isFahrenheit
+                    ? context.l10n.unitFahrenheit
+                    : context.l10n.unitCelsius,
                 hintStyle: const TextStyle(
                   fontSize: 14.0,
                   color: Color(0xff999999),
@@ -618,9 +656,14 @@ class DoubleTextField extends StatelessWidget {
   final Function onChange1;
   final Function onChange2;
 
+  /// Locale-independent identity for input-formatter logic. Falls back to
+  /// [labelText]. See [FieldKeys].
+  final String? fieldKey;
+
   const DoubleTextField({
     super.key,
     required this.labelText,
+    this.fieldKey,
     required this.hintText1,
     required this.hintText2,
     required this.isRequired,
@@ -638,21 +681,22 @@ class DoubleTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final fieldId = fieldKey ?? labelText;
     List<TextInputFormatter> inputFormatters = [];
-    if (labelText == "Mobile No" ||
-        labelText == "Referred Contact Number" ||
-        labelText == "Nephrologist Contact No" ||
-        labelText == "Contact No") {
+    if (fieldId == "Mobile No" ||
+        fieldId == "Referred Contact Number" ||
+        fieldId == "Nephrologist Contact No" ||
+        fieldId == "Contact No") {
       inputFormatters = [
         FilteringTextInputFormatter.digitsOnly,
         LengthLimitingTextInputFormatter(10),
       ];
-    } else if (labelText == "Pin Code") {
+    } else if (fieldId == "Pin Code") {
       inputFormatters = [
         FilteringTextInputFormatter.digitsOnly,
         LengthLimitingTextInputFormatter(6),
       ];
-    } else if (labelText == "ABHA Number") {
+    } else if (fieldId == "ABHA Number") {
       inputFormatters = [
         FilteringTextInputFormatter.digitsOnly,
         LengthLimitingTextInputFormatter(14),
@@ -670,12 +714,14 @@ class DoubleTextField extends StatelessWidget {
             child: Row(
               children: [
                 // Text(labelText, style: const TextStyle(fontSize: 16)),
-                CustomText(
-                    text: labelText,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    textColor: const Color(0xFF515151),
-                    textAlign: TextAlign.start),
+                Flexible(
+                  child: CustomText(
+                      text: labelText,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      textColor: const Color(0xFF515151),
+                      textAlign: TextAlign.start),
+                ),
 
                 if (isRequired)
                   CustomText(
@@ -752,7 +798,7 @@ class DoubleTextField extends StatelessWidget {
                   validator: (value) {
                     if (isRequired) {
                       if (value == null || value.isEmpty) {
-                        return 'required';
+                        return context.l10n.commonRequiredField;
                       }
                     }
                     return null;
@@ -817,7 +863,7 @@ class DoubleTextField extends StatelessWidget {
                   validator: (value) {
                     if (isRequired) {
                       if (value == null || value.isEmpty) {
-                        return 'required';
+                        return context.l10n.commonRequiredField;
                       }
                     }
                     return null;
@@ -862,17 +908,23 @@ class CustomRadioField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        if (text.isNotEmpty)
-          CustomText(
-            text: text,
-            fontSize: 14.0,
-            fontFam: 'Lato',
-            fontWeight: FontWeight.normal,
-            textColor: Colors.black,
-            textAlign: TextAlign.center,
-          ),
+    // Scale the whole radio row down to fit - the label and the Yes/No option
+    // texts are longer in French / bilingual mode.
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      alignment: Alignment.centerLeft,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (text.isNotEmpty)
+            CustomText(
+              text: text,
+              fontSize: 14.0,
+              fontFam: 'Lato',
+              fontWeight: FontWeight.normal,
+              textColor: Colors.black,
+              textAlign: TextAlign.center,
+            ),
         if (isRequired)
           Text(
             ' *',
@@ -954,7 +1006,8 @@ class CustomRadioField extends StatelessWidget {
               ),
             ],
           ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -979,13 +1032,15 @@ class LookupRadioGroup extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        CustomText(
-          text: label,
-          fontSize: 14,
-          fontFam: 'Lato',
-          fontWeight: FontWeight.normal,
-          textColor: Colors.black,
-          textAlign: TextAlign.start,
+        Flexible(
+          child: CustomText(
+            text: label,
+            fontSize: 14,
+            fontFam: 'Lato',
+            fontWeight: FontWeight.normal,
+            textColor: Colors.black,
+            textAlign: TextAlign.start,
+          ),
         ),
         if (isRequired)
           const Text(' *', style: TextStyle(color: Colors.red, fontSize: 16)),
@@ -1049,12 +1104,14 @@ class MyCustomDropdown extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(0, 8, 8, 8),
             child: Row(
               children: [
-                CustomText(
-                    text: labelText,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    textColor: const Color(0xFF515151),
-                    textAlign: TextAlign.start),
+                Flexible(
+                  child: CustomText(
+                      text: labelText,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      textColor: const Color(0xFF515151),
+                      textAlign: TextAlign.start),
+                ),
                 if (isRequired)
                   CustomText(
                       text: "*",
@@ -1157,7 +1214,7 @@ class MyCustomDropdown extends StatelessWidget {
             validator: isRequired
                 ? (value) {
                     if (value == null) {
-                      return "$labelText is required";
+                      return context.l10n.fieldRequired(labelText);
                     }
                     return null;
                   }
@@ -1318,7 +1375,7 @@ class MyCustomDropdownObject extends StatelessWidget {
             validator: isRequired
                 ? (value) {
                     if (value == null) {
-                      return "$labelText is required";
+                      return context.l10n.fieldRequired(labelText);
                     }
                     return null;
                   }
@@ -1433,12 +1490,14 @@ class CustomDateField extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(0, 8, 8, 8),
             child: Row(
               children: [
-                CustomText(
-                    text: labelText,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    textColor: const Color(0xFF515151),
-                    textAlign: TextAlign.start),
+                Flexible(
+                  child: CustomText(
+                      text: labelText,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      textColor: const Color(0xFF515151),
+                      textAlign: TextAlign.start),
+                ),
                 if (isRequired)
                   CustomText(
                       text: "*",
@@ -1505,7 +1564,7 @@ class CustomDateField extends StatelessWidget {
             validator: isRequired
                 ? (value) {
                     if (value == null || value.isEmpty) {
-                      return "$labelText is required";
+                      return context.l10n.fieldRequired(labelText);
                     }
                     return null;
                   }
@@ -1552,12 +1611,14 @@ class CustomDOBField extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(0, 8, 8, 8),
             child: Row(
               children: [
-                CustomText(
-                    text: labelText,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    textColor: const Color(0xFF515151),
-                    textAlign: TextAlign.start),
+                Flexible(
+                  child: CustomText(
+                      text: labelText,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      textColor: const Color(0xFF515151),
+                      textAlign: TextAlign.start),
+                ),
                 if (isRequired)
                   CustomText(
                       text: "*",
@@ -1627,21 +1688,21 @@ class CustomDOBField extends StatelessWidget {
             validator: isRequired
                 ? (value) {
                     if (value == null || value.isEmpty) {
-                      return "$labelText is required";
+                      return context.l10n.fieldRequired(labelText);
                     }
 
                     // Validate the date format (dd-MM-yyyy)
                     // final dateRegex = RegExp(r'^\d{2}-\d{2}-\d{4}$');
                     final dateRegex = RegExp(r'^\d{2}/\d{2}/\d{4}$');
                     if (!dateRegex.hasMatch(value)) {
-                      return 'Please enter the date in the format dd/MM/yyyy';
+                      return context.l10n.validationDateFormat;
                     }
 
                     // Check if the date is valid
                     try {
                       DateFormat('dd/MM/yyyy').parseStrict(value);
                     } catch (e) {
-                      return 'Invalid date. Please check the format';
+                      return context.l10n.validationInvalidDate;
                     }
                     return null;
                   }
@@ -1683,12 +1744,14 @@ class CustomDocUploadField extends StatelessWidget {
           /// Label
           Row(
             children: [
-              CustomText(
-                text: labelText,
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                textColor: const Color(0xFF515151),
-                textAlign: TextAlign.start,
+              Flexible(
+                child: CustomText(
+                  text: labelText,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  textColor: const Color(0xFF515151),
+                  textAlign: TextAlign.start,
+                ),
               ),
               if (isRequired)
                 CustomText(
@@ -1785,7 +1848,7 @@ class CustomDocUploadField extends StatelessWidget {
             Padding(
               padding: EdgeInsets.only(top: 4.h),
               child: Text(
-                "$labelText is required",
+                context.l10n.fieldRequired(labelText),
                 style: TextStyle(
                   color: Colors.red,
                   fontSize: 11.sp,
@@ -1833,8 +1896,6 @@ class CustomButtonWithoutIcon extends StatelessWidget {
               colors: [
                 primColor,
                 secColor
-                // AppColor.primaryBackgroundColor,
-                // AppColor.secondaryColor
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomCenter,
@@ -1844,13 +1905,18 @@ class CustomButtonWithoutIcon extends StatelessWidget {
               ? const CircularProgressIndicator(
                   color: Colors.white,
                 )
+              // Keep the designed width - a long (bilingual "EN / FR") label
+              // wraps onto a second line rather than shrinking or overflowing.
               : CustomText(
                   text: buttonText,
                   fontSize: 12.sp,
                   fontFam: "Lato",
                   fontWeight: FontWeight.normal,
                   textColor: textColor,
-                  textAlign: TextAlign.center)),
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis),
+                ),
     );
   }
 }
@@ -1894,8 +1960,6 @@ class CustomButton extends StatelessWidget {
               colors: [
                 primColor,
                 secColor
-                // AppColor.primaryBackgroundColor,
-                // AppColor.secondaryColor
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomCenter,
@@ -1905,7 +1969,10 @@ class CustomButton extends StatelessWidget {
               ? const CircularProgressIndicator(
                   color: Colors.white,
                 )
+              // Keep the designed width - a long (bilingual "EN / FR") label
+              // wraps onto a second line rather than shrinking or overflowing.
               : Row(
+                  mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset(
@@ -1914,15 +1981,19 @@ class CustomButton extends StatelessWidget {
                       color: iconColor,
                     ),
                     SizedBox(
-                      width: 10.w,
+                      width: 8.w,
                     ),
-                    CustomText(
-                        text: buttonText,
-                        fontSize: 12.sp,
-                        fontFam: "Lato",
-                        fontWeight: FontWeight.normal,
-                        textColor: textColor,
-                        textAlign: TextAlign.center),
+                    Flexible(
+                      child: CustomText(
+                          text: buttonText,
+                          fontSize: 12.sp,
+                          fontFam: "Lato",
+                          fontWeight: FontWeight.normal,
+                          textColor: textColor,
+                          textAlign: TextAlign.center,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis),
+                    ),
                   ],
                 )),
     );

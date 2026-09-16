@@ -16,6 +16,7 @@ import 'package:heamodialysis/utils/shared_preference.dart';
 import 'package:heamodialysis/utils/status_update_screen.dart';
 import 'package:heamodialysis/widgets/custom_card.dart';
 import 'package:heamodialysis/widgets/custom_shimmer_loader.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:heamodialysis/widgets/custom_text.dart';
 import 'package:intl/intl.dart';
 
@@ -39,15 +40,15 @@ class _ScrutinySecondLevelState extends State<ScrutinySecondLevel> {
       Get.put(FirstLevelController());
   bool hasInternet = true;
 
-  List<String> cardItemDetailsList = [
-    'Application No',
-    'Application Date',
-    'Patient ID',
-    'Applicant Name',
-    'Unit Name',
-    'District Name',
-    "Service Name"
-  ];
+  List<String> _cardItemDetailsList(BuildContext context) => [
+        context.l10n.colApplicationNo,
+        context.l10n.colApplicationDate,
+        context.l10n.colPatientId,
+        context.l10n.colApplicantName,
+        context.l10n.colUnitName,
+        context.l10n.colDistrictName,
+        context.l10n.colServiceName,
+      ];
 
   var userData;
 
@@ -162,7 +163,7 @@ class _ScrutinySecondLevelState extends State<ScrutinySecondLevel> {
           ),
         ),
         title: CustomText(
-          text: "Scrutiny Approval",
+          text: context.l10n.scrutinyApproval,
           fontSize: 18.sp,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,
@@ -212,7 +213,7 @@ class _ScrutinySecondLevelState extends State<ScrutinySecondLevel> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               CustomText(
-                                      text: "Search",
+                                      text: context.l10n.commonSearch,
                                       fontSize: 16.sp,
                                       fontFam: "Lato",
                                       fontWeight: FontWeight.w500,
@@ -234,7 +235,7 @@ class _ScrutinySecondLevelState extends State<ScrutinySecondLevel> {
                            Align(
                             alignment: Alignment.centerLeft,
                             child: CustomText(
-                                text: "Search BY",
+                                text: context.l10n.commonSearchBy,
                                 fontSize: 16.sp,
                                 fontFam: "Lato",
                                 fontWeight: FontWeight.normal,
@@ -244,9 +245,8 @@ class _ScrutinySecondLevelState extends State<ScrutinySecondLevel> {
                           TextField(
                               controller:
                                   firstLevelScrutinyController.searchController,
-                              decoration: const InputDecoration(
-                                labelText:
-                                    'Application no, date, patient id, name',
+                              decoration: InputDecoration(
+                                labelText: context.l10n.searchHintAppNoDateIdName,
                                 labelStyle: TextStyle(color: Color(0xFFE1E1E1)),
                                 enabledBorder: OutlineInputBorder(
                                   borderSide:
@@ -271,27 +271,31 @@ class _ScrutinySecondLevelState extends State<ScrutinySecondLevel> {
                                     Get.back();
                                   },
                                   child: Container(
-                                      padding:  EdgeInsets.symmetric(
-                                          vertical: 8.h),
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 8.h, horizontal: 20.w),
                                       alignment: Alignment.center,
-                                      width: 100.w,
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(10),
                                         color: AppColor.red,
                                       ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Image.asset("assets/cancel.png"),
-                                           CustomText(
-                                              text: "Cancel",
-                                              fontSize: 16.sp,
-                                              fontFam: "Lato",
-                                              fontWeight: FontWeight.normal,
-                                              textColor: Colors.white,
-                                              textAlign: TextAlign.start),
-                                        ],
+                                      child: FittedBox(
+                                        fit: BoxFit.scaleDown,
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Image.asset("assets/cancel.png"),
+                                            SizedBox(width: 6.w),
+                                            CustomText(
+                                                text: context.l10n.commonCancel,
+                                                fontSize: 16.sp,
+                                                fontFam: "Lato",
+                                                fontWeight: FontWeight.normal,
+                                                textColor: Colors.white,
+                                                textAlign: TextAlign.start),
+                                          ],
+                                        ),
                                       )),
                                 ),
                               ).paddingOnly(top: 20.h),
@@ -306,10 +310,9 @@ class _ScrutinySecondLevelState extends State<ScrutinySecondLevel> {
                                     Get.back();
                                   },
                                   child: Container(
-                                      padding:  EdgeInsets.symmetric(
-                                          vertical: 8.h),
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 8.h, horizontal: 20.w),
                                       alignment: Alignment.center,
-                                      width: 100.w,
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(10),
                                         gradient: LinearGradient(
@@ -321,22 +324,27 @@ class _ScrutinySecondLevelState extends State<ScrutinySecondLevel> {
                                           end: Alignment.bottomCenter,
                                         ),
                                       ),
-                                      child:  Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          const Icon(
-                                            Icons.search,
-                                            color: Colors.white,
-                                          ),
-                                          CustomText(
-                                              text: "Search",
-                                              fontSize: 16.sp,
-                                              fontFam: "Lato",
-                                              fontWeight: FontWeight.normal,
-                                              textColor: Colors.white,
-                                              textAlign: TextAlign.start),
-                                        ],
+                                      child: FittedBox(
+                                        fit: BoxFit.scaleDown,
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            const Icon(
+                                              Icons.search,
+                                              color: Colors.white,
+                                            ),
+                                            SizedBox(width: 6.w),
+                                            CustomText(
+                                                text: context.l10n.commonSearch,
+                                                fontSize: 16.sp,
+                                                fontFam: "Lato",
+                                                fontWeight: FontWeight.normal,
+                                                textColor: Colors.white,
+                                                textAlign: TextAlign.start),
+                                          ],
+                                        ),
                                       )),
                                 ),
                               ).paddingOnly(top: 20.h),
@@ -367,11 +375,10 @@ class _ScrutinySecondLevelState extends State<ScrutinySecondLevel> {
             final patientList = controller.filteredPatientList ?? [];
             if (patientList.isEmpty) {
               return CommonStatusScreen(
-                title: "No Data Found",
-                description:
-                "We are unable to find the data that\nyou are looking for ",
+                title: context.l10n.commonNoDataFound,
+                description: context.l10n.commonNoDataFoundDescription,
                 img: "assets/no_Data_Found.png",
-                buttonText: "Go Back",
+                buttonText: context.l10n.commonGoBack,
                 onPressed: () {
                   Get.back();
                 },
@@ -380,7 +387,7 @@ class _ScrutinySecondLevelState extends State<ScrutinySecondLevel> {
 
             return ScrutinyApprovalCard(
                         patientList: controller.filteredPatientList,
-                        cardItemDetailsList: cardItemDetailsList,
+                        cardItemDetailsList: _cardItemDetailsList(context),
                         path1: "assets/edit.png",
                         callB1: (index) {
                           Get.to(() => ApplicationDetailsSecondLevel(

@@ -1,5 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dashboard/model/nephro_list.dart';
 import 'package:heamodialysis/internet/no_internet_connectivity.dart';
@@ -61,8 +62,8 @@ class _NephroPatientHistoryScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const CustomText(
-          text: 'Patient History',
+        title: CustomText(
+          text: context.l10n.schedPatientHistory,
           fontSize: 18.0,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,

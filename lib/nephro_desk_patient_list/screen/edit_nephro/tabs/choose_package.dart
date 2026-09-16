@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/nephro_desk_patient_list/model/package_list_model.dart';
 import 'package:heamodialysis/nephro_desk_patient_list/controller/nephro_controller.dart';
@@ -85,7 +86,7 @@ class _ChoosePackageState extends State<ChoosePackage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const CustomText(
+                            CustomText(
                                     text:
                                         "Investigation Test Scheduling Details",
                                     fontSize: 16,
@@ -145,7 +146,7 @@ class _ChoosePackageState extends State<ChoosePackage> {
                               }),
                         ),
                         CustomButton(
-                          buttonText: 'Add to Test',
+                          buttonText: context.l10n.nephroAddToTest,
                           path: 'assets/save-ro-disinfec.png',
                           callB: () {
                             Get.back();
@@ -166,7 +167,7 @@ class _ChoosePackageState extends State<ChoosePackage> {
           labelText: widget.label,
           // initialValue: widget.selectedVal,
 
-          hintText: 'Select',
+          hintText: context.l10n.regHintSelect,
           isRequired: false,
           keyBoardType: TextInputType.text,
           txtController: nephroController.selectedTestsController,

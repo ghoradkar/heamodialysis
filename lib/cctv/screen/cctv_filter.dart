@@ -1,5 +1,6 @@
 // import 'package:connectivity_plus/connectivity_plus.dart';
 // import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 // import 'package:get/get.dart';
 // import 'package:heamodialysis/cctv/screen/cctv_camera_details.dart';
 // import 'package:heamodialysis/cctv/controller/cctv_controller.dart';
@@ -47,8 +48,8 @@
 //   Widget build(BuildContext context) {
 //     return Scaffold(
 //       appBar: AppBar(
-//         title: const CustomText(
-//           text: 'CCTV Camera',
+//         title: CustomText(
+//           text: context.l10n.cctvCamera,
 //           fontSize: 18.0,
 //           fontFam: 'Lato',
 //           fontWeight: FontWeight.w400,
@@ -109,10 +110,10 @@
 //                               onSearched: (searchdText) {
 //                                 return searchState(searchdText);
 //                               },
-//                               hintText: 'State',
+//                               hintText: context.l10n.regState,
 //                             ),
 //                           ),
-//                           const SizedBox(height: 8),
+//                           SizedBox(height: 8),
 //                           Expanded(
 //                             child: SearchableDropDown(
 //                               selectedItem: newRegistrationController
@@ -139,12 +140,12 @@
 //                                     'Division changed to: $value');
 //                               },
 //                               onSearched: searchDivision,
-//                               hintText: 'Division',
+//                               hintText: context.l10n.regDivision,
 //                             ),
 //                           ),
 //                         ],
 //                       ),
-//                       const SizedBox(height: 6),
+//                       SizedBox(height: 6),
 //                       Row(
 //                         children: [
 //                           Expanded(
@@ -176,10 +177,10 @@
 //                               onSearched: (searchdText) {
 //                                 return searchDistrict(searchdText);
 //                               },
-//                               hintText: 'District',
+//                               hintText: context.l10n.regDistrict,
 //                             ),
 //                           ),
-//                           const SizedBox(height: 8),
+//                           SizedBox(height: 8),
 //                           Expanded(
 //                             child: SearchableDropDown(
 //                               selectedItem: newRegistrationController
@@ -209,12 +210,12 @@
 //                               onSearched: (searchdText) {
 //                                 return searchTaluka(searchdText);
 //                               },
-//                               hintText: 'Taluka',
+//                               hintText: context.l10n.regTaluka,
 //                             ),
 //                           ),
 //                         ],
 //                       ),
-//                       const SizedBox(height: 6),
+//                       SizedBox(height: 6),
 //                       SearchableDropDown(
 //                         selectedItem: newRegistrationController
 //                             .selectedInstitute,
@@ -232,7 +233,7 @@
 //                         onSearched: (searchdText) {
 //                           return searchInst(searchdText);
 //                         },
-//                         hintText: 'Institute Name',
+//                         hintText: context.l10n.colInstituteName,
 //                       ),
 //
 //                       Align(
@@ -302,7 +303,7 @@
 //                                   end: Alignment.bottomCenter,
 //                                 ),
 //                               ),
-//                               child: const Row(
+//                               child: Row(
 //                                 mainAxisAlignment:
 //                                 MainAxisAlignment.center,
 //                                 children: [
@@ -311,7 +312,7 @@
 //                                     color: Colors.white,
 //                                   ),
 //                                   CustomText(
-//                                       text: "Search",
+//                                       text: context.l10n.commonSearch,
 //                                       fontSize: 16,
 //                                       fontFam: "Lato",
 //                                       fontWeight: FontWeight.normal,

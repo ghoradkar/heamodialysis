@@ -1,5 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dialysis_queue/pre_dialysis/model/pre_dialysis/edit_history/history_data.dart';
 import 'package:heamodialysis/dialysis_queue/pre_dialysis/model/pre_dialysis/pre_dialysis_data.dart';
@@ -70,8 +71,8 @@ class _PatientHistoryScreenState extends State<PatientHistoryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const CustomText(
-          text: 'History',
+        title: CustomText(
+          text: context.l10n.dqHistory,
           fontSize: 18.0,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,
@@ -113,9 +114,9 @@ class _PatientHistoryScreenState extends State<PatientHistoryScreen> {
                     title: Row(children: [
                       Image.asset("assets/pulse-line.png"),
                       const SizedBox(width: 12),
-                      const Text(
-                        "Dialysis History",
-                        style: TextStyle(
+                      Text(
+                        context.l10n.dqDialysisHistory,
+                        style: const TextStyle(
                             fontSize: 14.0,
                             color: Colors.white,
                             fontFamily: 'Lato'),
@@ -143,9 +144,9 @@ class _PatientHistoryScreenState extends State<PatientHistoryScreen> {
                     title: Row(children: [
                       Image.asset("assets/pulse-line.png"),
                       const SizedBox(width: 12),
-                      const Text(
-                        "Tube History",
-                        style: TextStyle(
+                      Text(
+                        context.l10n.dqTubeHistory,
+                        style: const TextStyle(
                             fontSize: 14.0,
                             color: Colors.white,
                             fontFamily: 'Lato'),
@@ -184,8 +185,8 @@ class _PatientHistoryScreenState extends State<PatientHistoryScreen> {
                   children: [
                     Row(
                       children: [
-                        const CustomText(
-                            text: "Dialyzer Number :",
+                        CustomText(
+                            text: "${context.l10n.clinDialyzerBarcode} : ",
                             fontSize: 14,
                             fontFam: "Lato",
                             fontWeight: FontWeight.w500,
@@ -202,8 +203,8 @@ class _PatientHistoryScreenState extends State<PatientHistoryScreen> {
                     ),
                     Row(
                       children: [
-                        const CustomText(
-                            text: "Dialyzer Date :",
+                        CustomText(
+                            text: "${context.l10n.clinDialyzerBarcode} : ",
                             fontSize: 14,
                             fontFam: "Lato",
                             fontWeight: FontWeight.w500,
@@ -220,8 +221,8 @@ class _PatientHistoryScreenState extends State<PatientHistoryScreen> {
                     ),
                     Row(
                       children: [
-                        const CustomText(
-                            text: "Counter :",
+                        CustomText(
+                            text: "${context.l10n.dqCounter} : ",
                             fontSize: 14,
                             fontFam: "Lato",
                             fontWeight: FontWeight.w500,
@@ -238,8 +239,8 @@ class _PatientHistoryScreenState extends State<PatientHistoryScreen> {
                     ),
                     Row(
                       children: [
-                        const CustomText(
-                            text: "Dialyser Remark :",
+                        CustomText(
+                            text: "${context.l10n.clinDialyzerRemark} : ",
                             fontSize: 14,
                             fontFam: "Lato",
                             fontWeight: FontWeight.w500,
@@ -256,8 +257,8 @@ class _PatientHistoryScreenState extends State<PatientHistoryScreen> {
                     ),
                     Row(
                       children: [
-                        const CustomText(
-                            text: "Discarded Remark :",
+                        CustomText(
+                            text: "${context.l10n.clinDiscardedRemarks} : ",
                             fontSize: 14,
                             fontFam: "Lato",
                             fontWeight: FontWeight.w500,
@@ -328,8 +329,8 @@ class _PatientHistoryScreenState extends State<PatientHistoryScreen> {
                   children: [
                     Row(
                       children: [
-                        const CustomText(
-                            text: "Blood Tubing Number :",
+                        CustomText(
+                            text: "${context.l10n.clinBloodTubingBarcode} : ",
                             fontSize: 14,
                             fontFam: "Lato",
                             fontWeight: FontWeight.w500,
@@ -346,8 +347,8 @@ class _PatientHistoryScreenState extends State<PatientHistoryScreen> {
                     ),
                     Row(
                       children: [
-                        const CustomText(
-                            text: "Blood Tubing Date :",
+                        CustomText(
+                            text: "${context.l10n.clinBloodTubingBarcode} : ",
                             fontSize: 14,
                             fontFam: "Lato",
                             fontWeight: FontWeight.w500,
@@ -364,8 +365,8 @@ class _PatientHistoryScreenState extends State<PatientHistoryScreen> {
                     ),
                     Row(
                       children: [
-                        const CustomText(
-                            text: "Counter :",
+                        CustomText(
+                            text: "${context.l10n.dqCounter} : ",
                             fontSize: 14,
                             fontFam: "Lato",
                             fontWeight: FontWeight.w500,
@@ -382,8 +383,8 @@ class _PatientHistoryScreenState extends State<PatientHistoryScreen> {
                     ),
                     Row(
                       children: [
-                        const CustomText(
-                            text: "Discarded Remark :",
+                        CustomText(
+                            text: "${context.l10n.clinDiscardedRemarks} : ",
                             fontSize: 14,
                             fontFam: "Lato",
                             fontWeight: FontWeight.w500,

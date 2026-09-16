@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dashboard/model/nephro_list.dart';
@@ -60,14 +61,14 @@ class _DiagnosticInvState extends State<DiagnosticInv> {
 
   bool hasInternet = true;
 
-  List<String> cardItemDetailsList = [
-    'Test Name',
-    'Consultant Name',
-    'Type',
-    'Event',
-    'Instructions',
-    'Clinical Notes'
-  ];
+  List<String> _cardItemDetailsList(BuildContext context) => [
+        context.l10n.nephroTestName,
+        context.l10n.nephroConsultantName,
+        context.l10n.colType,
+        context.l10n.nephroEvent,
+        context.l10n.nephroInstructions,
+        context.l10n.nephroClinicalNotes
+      ];
 
   List<SearchByPatient> searchByList = [
     SearchByPatient('1', 'Dialysis Center'),
@@ -159,7 +160,7 @@ class _DiagnosticInvState extends State<DiagnosticInv> {
                   Align(
                     alignment: Alignment.topRight,
                     child: CustomButton(
-                      buttonText: 'Add to Test',
+                      buttonText: context.l10n.nephroAddToTest,
                       path: 'assets/save-ro-disinfec.png',
                       callB: () {
                         groupVal = CustomRadioButtons.yes;
@@ -183,11 +184,10 @@ class _DiagnosticInvState extends State<DiagnosticInv> {
                   Expanded(
                     child: diagnosticList.isEmpty
                         ? CommonStatusScreen(
-                            title: "No Data Found",
-                            description:
-                                "We are unable to find the data that\nyou are looking for ",
+                            title: context.l10n.commonNoDataFound,
+                            description: context.l10n.commonNoDataFoundDescription,
                             img: "assets/no_Data_Found.png",
-                            buttonText: "Go Back",
+                            buttonText: context.l10n.commonGoBack,
                             onPressed: () {
                               Get.back();
                             },
@@ -199,7 +199,7 @@ class _DiagnosticInvState extends State<DiagnosticInv> {
                               return TestNameCard(
                                 patientList:
                                     controller.diagnosticInvestList?[index],
-                                cardItemDetailsList: cardItemDetailsList,
+                                cardItemDetailsList: _cardItemDetailsList(context),
                                 isSecondColumnVisiable: true,
                                 path1: "assets/send_to_tech.png",
                                 path2: "assets/ct_report.png",
@@ -241,9 +241,8 @@ class _DiagnosticInvState extends State<DiagnosticInv> {
                                 callB4: (index) {
                                   showCustomSnackBar(
                                       context: context,
-                                      topTitle: 'Delete Test',
-                                      title:
-                                          'Are you sure\nyou want to delete this Test?',
+                                      topTitle: context.l10n.nephroDeleteTest,
+                                      title: context.l10n.nephroDeleteTestConfirm,
                                       img: 'assets/delete-photo.png',
                                       onPress2: () async {
                                         controller.deleteDiagnosticIns(
@@ -258,8 +257,8 @@ class _DiagnosticInvState extends State<DiagnosticInv> {
                                       onPress1: () {
                                         Get.back();
                                       },
-                                      buttonTitle: 'No',
-                                      buttonTitle2: 'Yes');
+                                      buttonTitle: context.l10n.commonNo,
+                                      buttonTitle2: context.l10n.commonYes);
                                 },
                                 index: index,
                               );
@@ -343,8 +342,8 @@ class _DiagnosticInvState extends State<DiagnosticInv> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const CustomText(
-                          text: "Add Tests/Packages",
+                  CustomText(
+                          text: context.l10n.nephroAddTestsPackages,
                           fontSize: 16,
                           fontFam: "Lato",
                           fontWeight: FontWeight.w400,
@@ -393,8 +392,8 @@ class _DiagnosticInvState extends State<DiagnosticInv> {
                 },
                 groupVal: groupVal,
                 text: '',
-                firstRadioText: 'Choose Packages',
-                secondRadioText: 'Choose Test',
+                firstRadioText: context.l10n.nephroChoosePackages,
+                secondRadioText: context.l10n.nephroChooseTest,
               ).paddingSymmetric(vertical: 8),
               Visibility(
                 visible: CustomRadioButtons.yes == groupVal,
@@ -412,7 +411,7 @@ class _DiagnosticInvState extends State<DiagnosticInv> {
                     setState(() {});
                   },
                   selectedVal: nephroController.selectedPackage,
-                  label: "Investigation Test Scheduling Details",
+                  label: context.l10n.nephroInvestigationScheduling,
                   choosePackageListModel: nephroController.packageList,
                   onAdd: (value) {
                     nephroController.selectedPackage = value;
@@ -429,8 +428,8 @@ class _DiagnosticInvState extends State<DiagnosticInv> {
                   children: [
                     Align(
                       alignment: Alignment.centerLeft,
-                      child: const CustomText(
-                        text: 'Test Name',
+                      child: CustomText(
+                        text: context.l10n.nephroTestName,
                         fontSize: 16,
                         fontWeight: FontWeight.normal,
                         textColor: Colors.black,
@@ -458,7 +457,7 @@ class _DiagnosticInvState extends State<DiagnosticInv> {
                                 const EdgeInsets.symmetric(vertical: 14),
                             fillColor: Colors.white,
                             filled: true,
-                            hintText: "  Enter",
+                            hintText: context.l10n.regHintEnter,
                             hintStyle: TextStyle(
                               fontSize: 14.0,
                               color: AppColor.textGrey,
@@ -501,8 +500,8 @@ class _DiagnosticInvState extends State<DiagnosticInv> {
               Visibility(
                 visible: CustomRadioButtons.no == groupVal,
                 child: CustomTextField(
-                  labelText: "Instructions",
-                  hintText: "Enter",
+                  labelText: context.l10n.nephroInstructions,
+                  hintText: context.l10n.regHintEnter,
                   isRequired: false,
                   keyBoardType: TextInputType.text,
                   txtController: nephroController.instructions,
@@ -515,8 +514,8 @@ class _DiagnosticInvState extends State<DiagnosticInv> {
               Visibility(
                 visible: CustomRadioButtons.no == groupVal,
                 child: CustomTextField(
-                  labelText: "Clinical Notes",
-                  hintText: "Enter",
+                  labelText: context.l10n.nephroClinicalNotes,
+                  hintText: context.l10n.regHintEnter,
                   isRequired: false,
                   keyBoardType: TextInputType.text,
                   txtController: nephroController.clinicalNote,
@@ -534,7 +533,7 @@ class _DiagnosticInvState extends State<DiagnosticInv> {
                       selectedTests = value;
                       setState(() {});
                     },
-                    label: 'Event',
+                    label: context.l10n.nephroEvent,
                     choosePackageListModel: widget.choosePackageListModel,
                   )),
               Visibility(
@@ -550,8 +549,8 @@ class _DiagnosticInvState extends State<DiagnosticInv> {
                         updateState(() {});
                       },
                     ),
-                    const CustomText(
-                        text: "Urgent",
+                    CustomText(
+                        text: context.l10n.nephroUrgent,
                         fontSize: 16,
                         fontWeight: FontWeight.normal,
                         textColor: Colors.black,
@@ -560,7 +559,7 @@ class _DiagnosticInvState extends State<DiagnosticInv> {
                 ),
               ),
               CustomButton(
-                buttonText: 'Save',
+                buttonText: context.l10n.commonSave,
                 path: 'assets/save-ro-disinfec.png',
                 callB: () async {
                   if (CustomRadioButtons.no == groupVal) {
@@ -580,7 +579,7 @@ class _DiagnosticInvState extends State<DiagnosticInv> {
                             selectedTests!,
                             widget.choosePackageListModel!.parsedData!);
                       } else {
-                        CustomMessage.toast("Enter Test");
+                        CustomMessage.toast(context.l10n.nephroEnterTest);
                       }
                     }
 
@@ -652,7 +651,7 @@ class _DiagnosticInvState extends State<DiagnosticInv> {
                           widget.patientData?.treatmentId?.toString());
                     } else {
                       CustomMessage.toast(
-                          'This Test Already Assigned to Patient');
+                          context.l10n.nephroTestAlreadyAssigned);
                     }
                   } else if (CustomRadioButtons.yes == groupVal) {
                     //selected package
@@ -752,13 +751,13 @@ class _DiagnosticInvState extends State<DiagnosticInv> {
                               userData['user_ID'].toString(),
                               widget.patientData?.treatmentId?.toString());
                         }
-                        CustomMessage.toast("Test Added");
+                        CustomMessage.toast(context.l10n.nephroTestAdded);
                       } else {
                         CustomMessage.toast(
                             'This Test Already Assigned to Patient');
                       }
                     } else {
-                      CustomMessage.toast("Select Package");
+                      CustomMessage.toast(context.l10n.nephroSelectPackage);
                     }
                   }
                 },

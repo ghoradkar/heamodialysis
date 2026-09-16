@@ -4,6 +4,7 @@ import 'package:heamodialysis/dashboard/model/dash_info_data.dart';
 import 'package:heamodialysis/dashboard/model/event_details_id.dart';
 import 'package:heamodialysis/dashboard/model/total_dialysis_patient_model.dart';
 import 'package:heamodialysis/dashboard/screen/super_admin/total_invoice_amount_model.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:heamodialysis/utils/color_constants.dart';
 import 'package:heamodialysis/widgets/custom_text.dart';
 
@@ -51,12 +52,13 @@ class DashInfoTableAdmin extends StatelessWidget {
                           (states) => AppColor.primaryBackgroundColor),
                       columnSpacing: 20.0,
                       columns: <DataColumn>[
-                        buildHeader('Sr. No'),
-                        buildHeader(
-                            isEvent == true ? "Type" : 'Institute Name'),
+                        buildHeader(context.l10n.colSrNo),
                         buildHeader(isEvent == true
-                            ? "Count"
-                            : 'Total Patient Register'),
+                            ? context.l10n.colType
+                            : context.l10n.colInstituteName),
+                        buildHeader(isEvent == true
+                            ? context.l10n.colCount
+                            : context.l10n.colTotalPatientRegister),
                       ],
                       rows: patients.asMap().entries.map((entry) {
                         final index = entry.key + 1;
@@ -92,9 +94,9 @@ class DashInfoTableAdmin extends StatelessWidget {
                 ),
               ),
             )
-          : const Center(
+          : Center(
               child: CustomText(
-                  text: "No Data",
+                  text: context.l10n.commonNoDataFound,
                   fontSize: 16,
                   fontWeight: FontWeight.normal,
                   textColor: Colors.black,
@@ -152,9 +154,9 @@ class DashInfoTableEvent extends StatelessWidget {
                           (states) => AppColor.primaryBackgroundColor),
                       columnSpacing: 20.0,
                       columns: <DataColumn>[
-                        buildHeader('Sr. No'),
-                        buildHeader('Event Name'),
-                        buildHeader('Event Count'),
+                        buildHeader(context.l10n.colSrNo),
+                        buildHeader(context.l10n.colEventName),
+                        buildHeader(context.l10n.colEventCount),
                       ],
                       rows: patients.asMap().entries.map((entry) {
                         final index = entry.key + 1;
@@ -181,9 +183,9 @@ class DashInfoTableEvent extends StatelessWidget {
                 ),
               ),
             )
-          : const Center(
+          : Center(
               child: CustomText(
-                  text: "No Data",
+                  text: context.l10n.commonNoDataFound,
                   fontSize: 16,
                   fontWeight: FontWeight.normal,
                   textColor: Colors.black,
@@ -236,18 +238,21 @@ class DashInfoTableAbha extends StatelessWidget {
       ),
       body: patients.isNotEmpty
           ? SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: DataTable(
+              scrollDirection: Axis.horizontal,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                      minWidth: MediaQuery.of(context).size.width),
+                  child: DataTable(
                   headingRowColor: WidgetStateProperty.resolveWith(
                     (states) => AppColor.primaryBackgroundColor,
                   ),
                   columnSpacing: MediaQuery.of(context).size.width * 0.1 / 3,
                   columns: <DataColumn>[
-                    buildHeader('Sr. No'),
-                    buildHeader('Institute Name'),
-                    buildHeader('ABH No'),
+                    buildHeader(context.l10n.colSrNo),
+                    buildHeader(context.l10n.colInstituteName),
+                    buildHeader(context.l10n.colAbhaNo),
                   ],
                   rows: patients.asMap().entries.map((entry) {
                     final index = entry.key + 1;
@@ -274,11 +279,12 @@ class DashInfoTableAbha extends StatelessWidget {
                     ]);
                   }).toList(),
                 ).paddingSymmetric(vertical: 4, horizontal: 8),
+                ),
               ),
             )
-          : const Center(
+          : Center(
               child: CustomText(
-                text: "No Data",
+                text: context.l10n.commonNoDataFound,
                 fontSize: 16,
                 fontWeight: FontWeight.normal,
                 textColor: Colors.black,
@@ -358,14 +364,14 @@ class TotalDialysisPatient extends StatelessWidget {
                             (states) => AppColor.primaryBackgroundColor),
                         columnSpacing: 16.0,
                         columns: <DataColumn>[
-                          buildHeader('Sr. No'),
-                          buildHeader('Institute Name'),
-                          buildHeader('Patient ID'),
-                          buildHeader('Patient Name'),
-                          if (showTreatment) buildHeader('Treatment Id'),
-                          buildHeader('Scheme Name'),
-                          if (showAbha) buildHeader('Abha No'),
-                          buildHeader('Viral load status'),
+                          buildHeader(context.l10n.colSrNo),
+                          buildHeader(context.l10n.colInstituteName),
+                          buildHeader(context.l10n.colPatientId),
+                          buildHeader(context.l10n.colPatientName),
+                          if (showTreatment) buildHeader(context.l10n.colTreatmentId),
+                          buildHeader(context.l10n.colSchemeName),
+                          if (showAbha) buildHeader(context.l10n.colAbhaNo),
+                          buildHeader(context.l10n.colViralLoadStatus),
                           // buildHeader('Dialysis Date')
                         ],
                         rows: patients.asMap().entries.map((entry) {
@@ -396,9 +402,9 @@ class TotalDialysisPatient extends StatelessWidget {
                 )
               ],
             )
-          : const Center(
+          : Center(
               child: CustomText(
-                  text: "No Data",
+                  text: context.l10n.commonNoDataFound,
                   fontSize: 16,
                   fontWeight: FontWeight.normal,
                   textColor: Colors.black,
@@ -471,15 +477,15 @@ class TotalDialysisPatientId extends StatelessWidget {
                             (states) => AppColor.primaryBackgroundColor),
                         columnSpacing: 16.0,
                         columns: <DataColumn>[
-                          buildHeader('Sr. No'),
-                          buildHeader('Institute Name'),
-                          buildHeader('Patient ID'),
-                          buildHeader('Patient Name'),
+                          buildHeader(context.l10n.colSrNo),
+                          buildHeader(context.l10n.colInstituteName),
+                          buildHeader(context.l10n.colPatientId),
+                          buildHeader(context.l10n.colPatientName),
                           // buildHeader('Treatment Id'),
-                          buildHeader('Scheme Name'),
+                          buildHeader(context.l10n.colSchemeName),
 
-                          buildHeader('ABH No'),
-                          buildHeader('Viral load status'),
+                          buildHeader(context.l10n.colAbhaNo),
+                          buildHeader(context.l10n.colViralLoadStatus),
                           // buildHeader('Dialysis Date'),
                         ],
                         rows: patients.asMap().entries.map((entry) {
@@ -505,9 +511,9 @@ class TotalDialysisPatientId extends StatelessWidget {
                 )
               ],
             )
-          : const Center(
+          : Center(
               child: CustomText(
-                  text: "No Data",
+                  text: context.l10n.commonNoDataFound,
                   fontSize: 16,
                   fontWeight: FontWeight.normal,
                   textColor: Colors.black,
@@ -580,13 +586,13 @@ class AbhaCountIdTable extends StatelessWidget {
                             (states) => AppColor.primaryBackgroundColor),
                         columnSpacing: 16.0,
                         columns: <DataColumn>[
-                          buildHeader('Sr. No'),
-                          buildHeader('Institute Name'),
-                          buildHeader('Patient ID'),
-                          buildHeader('Patient Name'),
+                          buildHeader(context.l10n.colSrNo),
+                          buildHeader(context.l10n.colInstituteName),
+                          buildHeader(context.l10n.colPatientId),
+                          buildHeader(context.l10n.colPatientName),
                           // buildHeader('Treatment Id'),
-                          buildHeader('Scheme Name'),
-                          buildHeader('ABH No'),
+                          buildHeader(context.l10n.colSchemeName),
+                          buildHeader(context.l10n.colAbhaNo),
                         ],
                         rows: patients.asMap().entries.map((entry) {
                           final index = entry.key + 1;
@@ -599,8 +605,8 @@ class AbhaCountIdTable extends StatelessWidget {
                             // const DataCell(Text("")),
                             (patient.schemeId != null && patient.schemeId != 0)
                                 ? DataCell(Text(patient.schemeId == 10
-                                    ? "MJPJAY"
-                                    : "Non-MJPJAY"))
+                                    ? context.l10n.dashSchemeMjpjay
+                                    : context.l10n.dashSchemeNonMjpjay))
                                 : const DataCell(Text('--')),
                             // DataCell(Text(patient.abhNo ?? "")),
                             DataCell(Text(patient.abhNo ?? "")),
@@ -613,9 +619,9 @@ class AbhaCountIdTable extends StatelessWidget {
                 )
               ],
             )
-          : const Center(
+          : Center(
               child: CustomText(
-                  text: "No Data",
+                  text: context.l10n.commonNoDataFound,
                   fontSize: 16,
                   fontWeight: FontWeight.normal,
                   textColor: Colors.black,
@@ -677,9 +683,9 @@ class TotalPatientRegistration extends StatelessWidget {
                           (states) => AppColor.primaryBackgroundColor),
                       columnSpacing: 20.0,
                       columns: <DataColumn>[
-                        buildHeader('Sr. No'),
-                        buildHeader("Invoice Amount"),
-                        buildHeader('Month-Year'),
+                        buildHeader(context.l10n.colSrNo),
+                        buildHeader(context.l10n.colInvoiceAmount),
+                        buildHeader(context.l10n.colMonthYear),
                       ],
                       rows: patients.asMap().entries.map((entry) {
                         final index = entry.key + 1;
@@ -708,9 +714,9 @@ class TotalPatientRegistration extends StatelessWidget {
                 ),
               ),
             )
-          : const Center(
+          : Center(
               child: CustomText(
-                  text: "No Data",
+                  text: context.l10n.commonNoDataFound,
                   fontSize: 16,
                   fontWeight: FontWeight.normal,
                   textColor: Colors.black,

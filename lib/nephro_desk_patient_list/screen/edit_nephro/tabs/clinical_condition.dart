@@ -1,5 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dashboard/model/nephro_list.dart';
 import 'package:heamodialysis/internet/no_internet_connectivity.dart';
@@ -86,7 +87,7 @@ class _ClinicalConditionState extends State<ClinicalCondition>
                   ?  Center(child: buildShimmerLoader())
                   : Column(
                       children: [
-                        const SizedBox(
+                        SizedBox(
                           height: 10,
                         ),
                         TabBar(
@@ -139,7 +140,7 @@ class _ClinicalConditionState extends State<ClinicalCondition>
                                       "Provisional",
                                       widget.patientData?.treatmentId);
                                 } else {
-                                  CustomMessage.toast("Please select checkbox");
+                                  CustomMessage.toast(context.l10n.nephroSelectCheckbox);
                                 }
                               },
                               child: Container(
@@ -156,15 +157,15 @@ class _ClinicalConditionState extends State<ClinicalCondition>
                                         end: Alignment.bottomCenter,
                                       )),
                                   child: tabController.index == 0
-                                      ? const CustomText(
-                                          text: 'Confirmed',
+                                      ? CustomText(
+                                          text: context.l10n.nephroConfirmed,
                                           fontSize: 16,
                                           fontWeight: FontWeight.normal,
                                           textColor: Colors.white,
                                           textAlign: TextAlign.center,
                                         )
-                                      : const CustomText(
-                                          text: 'Provisional',
+                                      : CustomText(
+                                          text: context.l10n.nephroProvisional,
                                           fontSize: 16,
                                           fontWeight: FontWeight.normal,
                                           textColor: Colors.white,

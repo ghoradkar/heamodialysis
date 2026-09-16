@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/new_registration/model/institute/Institute_list.dart';
 import 'package:heamodialysis/new_registration/model/institute/institute_data.dart';
@@ -110,14 +111,14 @@ class DailyRoLogSheetController extends GetxController {
         rejectFlow.text = "";
         productPermeateFlow.text = "";
 
-        CustomMessage.toast("Saved Successfully");
+        CustomMessage.toast(l10n.roSavedSuccessfully);
 
         Get.off(const DailyRoLogSheetScreen());
       }
     } on ApiException {
       isLoading = false;
       update();
-      CustomMessage.toast('Saved Failed');
+      CustomMessage.toast(l10n.roSaveFailed);
     } catch (error) {
       isLoading = false;
       debugPrint(error.toString());

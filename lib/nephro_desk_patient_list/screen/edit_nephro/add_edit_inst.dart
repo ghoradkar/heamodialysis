@@ -1,5 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dashboard/model/nephro_list.dart';
 import 'package:heamodialysis/internet/no_internet_connectivity.dart';
@@ -119,8 +120,8 @@ class _AddEditInstState extends State<AddEditInst> {
                         child: Column(
                           children: [
                             CustomTextField(
-                              labelText: "Instruction in English",
-                              hintText: "Enter",
+                              labelText: context.l10n.nephroInstructionEnglish,
+                              hintText: context.l10n.regHintEnter,
                               isRequired: false,
                               keyBoardType: TextInputType.text,
                               txtController: controller.instEnglish,
@@ -130,8 +131,8 @@ class _AddEditInstState extends State<AddEditInst> {
                               fontSize: 16,
                             ),
                             CustomTextField(
-                              labelText: "Instruction in हिंदी",
-                              hintText: "Enter",
+                              labelText: context.l10n.nephroInstructionHindi,
+                              hintText: context.l10n.regHintEnter,
                               isRequired: false,
                               keyBoardType: TextInputType.text,
                               txtController: controller.instHindi,
@@ -141,8 +142,8 @@ class _AddEditInstState extends State<AddEditInst> {
                               fontSize: 16,
                             ),
                             CustomTextField(
-                              labelText: "Instruction in मराठी",
-                              hintText: "Enter",
+                              labelText: context.l10n.nephroInstructionMarathi,
+                              hintText: context.l10n.regHintEnter,
                               isRequired: false,
                               keyBoardType: TextInputType.text,
                               txtController: controller.instMarathi,
@@ -152,8 +153,8 @@ class _AddEditInstState extends State<AddEditInst> {
                               fontSize: 16,
                             ),
                             CustomTextField(
-                              labelText: "Other Language 1",
-                              hintText: "Enter",
+                              labelText: context.l10n.nephroOtherLanguage1,
+                              hintText: context.l10n.regHintEnter,
                               isRequired: false,
                               keyBoardType: TextInputType.text,
                               txtController: controller.instLang1,
@@ -163,8 +164,8 @@ class _AddEditInstState extends State<AddEditInst> {
                               fontSize: 16,
                             ),
                             CustomTextField(
-                              labelText: "Other Language 2",
-                              hintText: "Enter",
+                              labelText: context.l10n.nephroOtherLanguage2,
+                              hintText: context.l10n.regHintEnter,
                               isRequired: false,
                               keyBoardType: TextInputType.text,
                               txtController: controller.instLang2,
@@ -174,8 +175,8 @@ class _AddEditInstState extends State<AddEditInst> {
                               fontSize: 16,
                             ),
                             CustomTextField(
-                              labelText: "Other Language 3",
-                              hintText: "Enter",
+                              labelText: context.l10n.nephroOtherLanguage3,
+                              hintText: context.l10n.regHintEnter,
                               isRequired: false,
                               keyBoardType: TextInputType.text,
                               txtController: controller.instLang3,
@@ -189,7 +190,7 @@ class _AddEditInstState extends State<AddEditInst> {
                               children: [
                                 CustomButton(
                                   isLoading: controller.isLoading,
-                                  buttonText: 'Save',
+                                  buttonText: context.l10n.commonSave,
                                   path: 'assets/save-ro-disinfec.png',
                                   callB: controller.isLoading
                                       ? null
@@ -242,7 +243,7 @@ class _AddEditInstState extends State<AddEditInst> {
                                   iconColor: Colors.white,
                                 ),
                                 CustomButton(
-                                  buttonText: 'Cancel',
+                                  buttonText: context.l10n.commonCancel,
                                   path: 'assets/cancel.png',
                                   callB: () {
                                     Get.back();

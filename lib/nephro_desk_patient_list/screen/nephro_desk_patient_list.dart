@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dashboard/screen/nephro_second_level/nephro_second_level.dart';
@@ -44,17 +45,17 @@ class _NephroDeskPatientListState extends State<NephroDeskPatientList> {
   var userData;
   String? userType;
 
-  List<String> cardItemDetailsList = [
-    'Patient Id',
-    'Patient Name',
-    'Age',
-    'Mobile No',
-    'Treatment Id',
-    'Gender',
-    'Appointment Date',
-    'Slot',
-    'Viral Load Status'
-  ];
+  List<String> _cardItemDetailsList(BuildContext context) => [
+        context.l10n.colPatientId,
+        context.l10n.colPatientName,
+        context.l10n.commonAge,
+        context.l10n.commonMobileNo,
+        context.l10n.colTreatmentId,
+        context.l10n.commonGender,
+        context.l10n.schedAppointmentDate,
+        context.l10n.schedSlot,
+        context.l10n.colViralLoadStatus
+      ];
 
   List<PatientStatus> statusList = [
     PatientStatus('All', 'N'),
@@ -246,7 +247,7 @@ class _NephroDeskPatientListState extends State<NephroDeskPatientList> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       CustomText(
-                                              text: "Search",
+                                              text: context.l10n.commonSearch,
                                               fontSize: 16.sp,
                                               fontFam: "Lato",
                                               fontWeight: FontWeight.w400,
@@ -274,7 +275,7 @@ class _NephroDeskPatientListState extends State<NephroDeskPatientList> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       CustomText(
-                                              text: "Search By",
+                                              text: context.l10n.commonSearchBy,
                                               fontSize: 16.sp,
                                               fontFam: "Lato",
                                               fontWeight: FontWeight.normal,
@@ -295,7 +296,7 @@ class _NephroDeskPatientListState extends State<NephroDeskPatientList> {
                                         child: DropdownButton<LookupList>(
                                           isExpanded: true,
                                           value: dropDownValue,
-                                          hint: const Text("select"),
+                                          hint: Text("select"),
                                           onChanged: (LookupList? newValue) {
                                             dropDownValue = newValue!;
                                             setState(() {});
@@ -312,7 +313,7 @@ class _NephroDeskPatientListState extends State<NephroDeskPatientList> {
                                                   value.lookupDetDescEn ?? ""),
                                             );
                                           }).toList(),
-                                          underline: const SizedBox(),
+                                          underline: SizedBox(),
                                           icon: Icon(
                                             Icons.keyboard_arrow_down_outlined,
                                             color:
@@ -328,7 +329,7 @@ class _NephroDeskPatientListState extends State<NephroDeskPatientList> {
                                   Align(
                                     alignment: Alignment.centerLeft,
                                     child: CustomText(
-                                        text: "Value",
+                                        text: context.l10n.commonValue,
                                         fontSize: 16.sp,
                                         fontFam: "Lato",
                                         fontWeight: FontWeight.normal,
@@ -364,7 +365,7 @@ class _NephroDeskPatientListState extends State<NephroDeskPatientList> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       CustomText(
-                                              text: "Clinical History Status",
+                                              text: context.l10n.nephroClinicalHistoryStatus,
                                               fontSize: 16.sp,
                                               fontFam: "Lato",
                                               fontWeight: FontWeight.normal,
@@ -385,7 +386,7 @@ class _NephroDeskPatientListState extends State<NephroDeskPatientList> {
                                         child: DropdownButton<PatientStatus>(
                                           isExpanded: true,
                                           value: selectedStatus,
-                                          hint: const Text("select"),
+                                          hint: Text(context.l10n.regHintSelect),
                                           onChanged: (PatientStatus? newValue) {
                                             selectedStatus = newValue!;
                                             setState(() {});
@@ -397,10 +398,12 @@ class _NephroDeskPatientListState extends State<NephroDeskPatientList> {
                                             return DropdownMenuItem<
                                                 PatientStatus>(
                                               value: value,
-                                              child: Text(value.title ?? ""),
+                                              child: Text(value.status == 'Y'
+                                                  ? context.l10n.dashPending
+                                                  : context.l10n.commonAll),
                                             );
                                           }).toList(),
-                                          underline: const SizedBox(),
+                                          underline: SizedBox(),
                                           icon: Icon(
                                             Icons.keyboard_arrow_down_outlined,
                                             color:
@@ -439,7 +442,7 @@ class _NephroDeskPatientListState extends State<NephroDeskPatientList> {
                                                   Image.asset(
                                                       "assets/cancel.png"),
                                                   CustomText(
-                                                      text: "Cancel",
+                                                      text: context.l10n.commonCancel,
                                                       fontSize: 16.sp,
                                                       fontFam: "Lato",
                                                       fontWeight:
@@ -543,7 +546,7 @@ class _NephroDeskPatientListState extends State<NephroDeskPatientList> {
                                                     color: Colors.white,
                                                   ),
                                                   CustomText(
-                                                      text: "Search",
+                                                      text: context.l10n.commonSearch,
                                                       fontSize: 16.sp,
                                                       fontFam: "Lato",
                                                       fontWeight:
@@ -582,11 +585,11 @@ class _NephroDeskPatientListState extends State<NephroDeskPatientList> {
                 if (controller.nephroList == null ||
                     controller.nephroList!.isEmpty) {
                   return CommonStatusScreen(
-                    title: "No Data Found",
+                    title: context.l10n.commonNoDataFound,
                     description:
                         "We are unable to find the data that\nyou are looking for ",
                     img: "assets/no_Data_Found.png",
-                    buttonText: "Go Back",
+                    buttonText: context.l10n.commonGoBack,
                     onPressed: () {
                       Get.back();
                     },
@@ -631,7 +634,7 @@ class _NephroDeskPatientListState extends State<NephroDeskPatientList> {
                         });
                       },
 
-                      cardItemDetailsList: cardItemDetailsList,
+                      cardItemDetailsList: _cardItemDetailsList(context),
                     );
                   },
                 );
@@ -641,7 +644,7 @@ class _NephroDeskPatientListState extends State<NephroDeskPatientList> {
               //   builder: (controller) {
               //     return hasInternet
               //         ? controller.isLoading
-              //             ? const Center(child: CircularProgressIndicator())
+              //             ? Center(child: CircularProgressIndicator())
               //             : ListView.builder(
               //                 shrinkWrap: true,
               //                 itemCount: controller.nephroList?.length ?? 0,

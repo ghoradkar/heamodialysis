@@ -4,6 +4,7 @@ import 'package:camera/camera.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/capture_photo/screen/capture_photo.dart';
@@ -189,7 +190,7 @@ class _VisitorEntryState extends State<VisitorEntry> {
     return Scaffold(
       appBar: AppBar(
         title: CustomText(
-          text: 'Visitor Entry',
+          text: context.l10n.schedVisitorEntry,
           fontSize: 18.sp,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,
@@ -328,8 +329,8 @@ class _VisitorEntryState extends State<VisitorEntry> {
                             height: 8.h,
                           ),
                           CustomDateField(
-                            labelText: 'Visit Date',
-                            hint: 'Select',
+                            labelText: context.l10n.schedVisitDate,
+                            hint: context.l10n.regHintSelect,
                             isRequired: true,
                             callB: () {},
                             selectedDate:
@@ -341,8 +342,8 @@ class _VisitorEntryState extends State<VisitorEntry> {
                             height: 8.h,
                           ),
                           CustomDateField(
-                            labelText: 'Visit Time',
-                            hint: 'Select',
+                            labelText: context.l10n.schedVisitTime,
+                            hint: context.l10n.regHintSelect,
                             isRequired: true,
                             callB: () {
                               selectTime(context);
@@ -359,8 +360,8 @@ class _VisitorEntryState extends State<VisitorEntry> {
                               isReadOnly: true,
                               keyBoardType: TextInputType.name,
                               labelText:
-                              'Last Dialysis Session Under The Scheme',
-                              hintText: 'Select',
+                              context.l10n.schedLastSessionUnderScheme,
+                              hintText: context.l10n.regHintSelect,
                               isRequired: false,
                               txtController:
                               controller.lastDiaSession,
@@ -369,13 +370,13 @@ class _VisitorEntryState extends State<VisitorEntry> {
                           MyCustomDropdown(
                               selectedItem: selectedCurrentDiaSession,
                               labelText:
-                              'Current Dialysis Session Under The Scheme',
+                              context.l10n.schedCurrentSessionUnderScheme,
                               items: controller
                                   .schemaAdoptedModel?.data
                                   ?.map((e) => e.lookupDetDescEn)
                                   .toList() ??
                                   [],
-                              hint: 'Select',
+                              hint: context.l10n.regHintSelect,
                               isRequired: false,
                               senValue: (value) {
                                 selectedCurrentDiaSession = value;
@@ -396,8 +397,8 @@ class _VisitorEntryState extends State<VisitorEntry> {
                                   ?.pendingData?[0] ==
                                   null)
                             CustomText(
-                                text:
-                                "Pending Session ${schedularController.visitorEntryData?.pendingData?[1] ?? "NA"}",
+                                text: context.l10n.schedPendingSession(
+                                    "${schedularController.visitorEntryData?.pendingData?[1] ?? "NA"}"),
                                 fontSize: 14.sp,
                                 fontWeight: FontWeight.normal,
                                 textColor: AppColor.red,
@@ -411,8 +412,9 @@ class _VisitorEntryState extends State<VisitorEntry> {
                                   ?.pendingData?[1] !=
                                   null)
                             CustomText(
-                                text:
-                                "Effective Date ${schedularController.visitorEntryData?.pendingData?[0]} and Pending Session ${schedularController.visitorEntryData?.pendingData?[1]}",
+                                text: context.l10n.schedEffectiveDatePendingSession(
+                                    "${schedularController.visitorEntryData?.pendingData?[0]}",
+                                    "${schedularController.visitorEntryData?.pendingData?[1]}"),
                                 fontSize: 14.sp,
                                 fontWeight: FontWeight.normal,
                                 textColor: AppColor.red,
@@ -429,8 +431,8 @@ class _VisitorEntryState extends State<VisitorEntry> {
                                 isReadOnly: false,
                                 keyBoardType: TextInputType.text,
                                 labelText:
-                                'Reason for not registered on MJPJAY',
-                                hintText: 'Enter',
+                                context.l10n.schedReasonNotRegisteredMjpjay,
+                                hintText: context.l10n.regHintEnter,
                                 isRequired: true,
                                 txtController: controller.reason,
                                 fillColor: Colors.white),
@@ -441,8 +443,8 @@ class _VisitorEntryState extends State<VisitorEntry> {
                               fontSize: 16.sp,
                               isReadOnly: true,
                               keyBoardType: TextInputType.name,
-                              labelText: 'ABHA No',
-                              hintText: 'Select',
+                              labelText: context.l10n.colAbhaNo,
+                              hintText: context.l10n.regHintSelect,
                               isRequired: false,
                               txtController: controller.abhaId,
                               fillColor: Colors.white),
@@ -461,16 +463,16 @@ class _VisitorEntryState extends State<VisitorEntry> {
                           //           maxLines: 1,
                           //           isReadOnly: true,
                           //           keyBoardType: TextInputType.name,
-                          //           labelText: 'MJPJAY Enrollment Id',
-                          //           hintText: 'Enter',
+                          //           labelText: context.l10n.schedMjpjayEnrollmentId,
+                          //           hintText: context.l10n.regHintEnter,
                           //           isRequired: false,
                           //           txtController:
                           //               controller.enrollNo,
                           //           fillColor: Colors.white),
                           //       SizedBox(height: 8.h),
                           //       CustomDateField(
-                          //         labelText: 'Pre Auth Approval Date',
-                          //         hint: 'Select',
+                          //         labelText: context.l10n.schedPreAuthApprovalDate,
+                          //         hint: context.l10n.regHintSelect,
                           //         isRequired: true,
                           //         callB: () {
                           //           // selectFromDate();
@@ -486,8 +488,8 @@ class _VisitorEntryState extends State<VisitorEntry> {
                           //           maxLines: 1,
                           //           isReadOnly: true,
                           //           keyBoardType: TextInputType.text,
-                          //           labelText: 'Pre Auth Number',
-                          //           hintText: 'Enter',
+                          //           labelText: context.l10n.schedPreAuthNumber,
+                          //           hintText: context.l10n.regHintEnter,
                           //           isRequired: false,
                           //           txtController:
                           //               controller.preAuthNumber,
@@ -499,8 +501,8 @@ class _VisitorEntryState extends State<VisitorEntry> {
                           //           // mazLenght: 4,
                           //           isReadOnly: true,
                           //           keyBoardType: TextInputType.text,
-                          //           labelText: 'MJPJAY Case Number',
-                          //           hintText: 'Enter',
+                          //           labelText: context.l10n.schedMjpjayCaseNumber,
+                          //           hintText: context.l10n.regHintEnter,
                           //           isRequired: false,
                           //           txtController:
                           //               controller.caseNumber,
@@ -512,8 +514,8 @@ class _VisitorEntryState extends State<VisitorEntry> {
                           //           // mazLenght: 4,
                           //           isReadOnly: false,
                           //           keyBoardType: TextInputType.text,
-                          //           labelText: 'MJPJAY Claim Number',
-                          //           hintText: 'Enter',
+                          //           labelText: context.l10n.schedMjpjayClaimNumber,
+                          //           hintText: context.l10n.regHintEnter,
                           //           isRequired: false,
                           //           txtController:
                           //               controller.claimNumber,
@@ -526,8 +528,8 @@ class _VisitorEntryState extends State<VisitorEntry> {
                           //           // mazLenght: 4,
                           //           keyBoardType:
                           //               TextInputType.number,
-                          //           labelText: 'IP Number',
-                          //           hintText: 'Enter',
+                          //           labelText: context.l10n.schedIpNumber,
+                          //           hintText: context.l10n.regHintEnter,
                           //           isRequired: false,
                           //           txtController:
                           //               controller.ipNumber,
@@ -738,7 +740,7 @@ class _VisitorEntryState extends State<VisitorEntry> {
                                 secColor: AppColor.secondaryColor,
                                 textColor: Colors.white,
                                 iconColor: Colors.white,
-                                buttonText: 'Save & Next',
+                                buttonText: context.l10n.regSaveNext,
                                 path: 'assets/save-next.png',
                                 callB: () async {
                                   DateTime parsedDate =
@@ -776,13 +778,13 @@ class _VisitorEntryState extends State<VisitorEntry> {
                                     }
                                   }
                                 },
-                                buttonWidth: 140.w,
+                                buttonWidth: 150.w,
                               ),
                               SizedBox(
                                 width: 10.w,
                               ),
                               CustomButton(
-                                buttonText: 'Cancel',
+                                buttonText: context.l10n.commonCancel,
                                 path: 'assets/cancel.png',
                                 callB: () {
                                   Get.back();
@@ -935,7 +937,7 @@ class UploadDocumentVisitorEntry extends StatelessWidget {
           Align(
             alignment: Alignment.centerLeft,
             child: CustomText(
-                text: "Upload Document",
+                text: context.l10n.regUploadDocument,
                 fontSize: 16.sp,
                 fontWeight: FontWeight.w500,
                 textColor: Colors.black,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:heamodialysis/utils/color_constants.dart';
 import 'package:heamodialysis/widgets/custom_text.dart';
 
@@ -168,40 +169,48 @@ class DashCard extends StatelessWidget {
                       )),
                   Visibility(
                     visible: isVisiableRow == true,
-                    child: Row(
-                      children: [
-                        CustomText(
-                            text: "Pending",
-                            fontSize: 11.sp,
-                            fontWeight: FontWeight.w400,
-                            textColor:  AppColor.grey,
-                            textAlign: TextAlign.start),
-                        SizedBox(
-                          width: 4.w,
-                        ),
-                        CustomText(
-                            text: pendingCount ?? "",
-                            fontSize: 11.sp,
-                            fontWeight: FontWeight.w400,
-                            textColor:  AppColor.grey,
-                            textAlign: TextAlign.start),
-                        const Spacer(),
-                        CustomText(
-                            text: "Complete",
-                            fontSize: 11.sp,
-                            fontWeight: FontWeight.w400,
-                            textColor:  AppColor.grey,
-                            textAlign: TextAlign.start),
-                        SizedBox(
-                          width: 3.w,
-                        ),
-                        CustomText(
-                            text: complateCount ?? "",
-                            fontSize: 11.sp,
-                            fontWeight: FontWeight.w400,
-                            textColor:  AppColor.grey,
-                            textAlign: TextAlign.start),
-                      ],
+                    // Scale the whole "Pending .. Complete .." line down to fit
+                    // the card width - the labels are much wider in French /
+                    // bilingual mode and would otherwise overflow.
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerLeft,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          CustomText(
+                              text: context.l10n.dashPending,
+                              fontSize: 11.sp,
+                              fontWeight: FontWeight.w400,
+                              textColor: AppColor.grey,
+                              textAlign: TextAlign.start),
+                          SizedBox(
+                            width: 4.w,
+                          ),
+                          CustomText(
+                              text: pendingCount ?? "",
+                              fontSize: 11.sp,
+                              fontWeight: FontWeight.w400,
+                              textColor: AppColor.grey,
+                              textAlign: TextAlign.start),
+                          SizedBox(width: 14.w),
+                          CustomText(
+                              text: context.l10n.dashComplete,
+                              fontSize: 11.sp,
+                              fontWeight: FontWeight.w400,
+                              textColor: AppColor.grey,
+                              textAlign: TextAlign.start),
+                          SizedBox(
+                            width: 3.w,
+                          ),
+                          CustomText(
+                              text: complateCount ?? "",
+                              fontSize: 11.sp,
+                              fontWeight: FontWeight.w400,
+                              textColor: AppColor.grey,
+                              textAlign: TextAlign.start),
+                        ],
+                      ),
                     ),
                   ),
                   Visibility(
@@ -212,7 +221,7 @@ class DashCard extends StatelessWidget {
                   Visibility(
                     visible: isVisiableCol == true,
                     child: CustomText(
-                        text: "Total Pending",
+                        text: context.l10n.dashTotalPending,
                         fontSize: 12.sp,
                         fontWeight: FontWeight.normal,
                         textColor:  AppColor.grey,
@@ -237,7 +246,7 @@ class DashCard extends StatelessWidget {
                   Visibility(
                     visible: isVisiableCol == true,
                     child: CustomText(
-                        text: "Total Complete",
+                        text: context.l10n.dashTotalComplete,
                         fontSize: 12.sp,
                         fontWeight: FontWeight.normal,
                         textColor:  AppColor.grey,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:heamodialysis/utils/color_constants.dart';
 import 'package:heamodialysis/widgets/custom_text.dart';
 
@@ -46,10 +47,10 @@ class DashInfoTableTechnician extends StatelessWidget {
                     ),
                     columnSpacing: 14.0,
                     columns: <DataColumn>[
-                      buildHeader('Sr. No'), // New "Sr. No" column
-                      buildHeader('Scheme'),
-                      buildHeader('Session Count'),
-                      buildHeader('View Patient'),
+                      buildHeader(context.l10n.colSrNo),
+                      buildHeader(context.l10n.colScheme),
+                      buildHeader(context.l10n.colSessionCount),
+                      buildHeader(context.l10n.colViewPatient),
                     ],
                     rows: List<DataRow>.generate(
                       patients.length,
@@ -60,8 +61,8 @@ class DashInfoTableTechnician extends StatelessWidget {
                             DataCell(Text((index + 1).toString())), // Sr. No
 
                             DataCell(Text(patient.containsKey('mjpjayCount')
-                                ? 'MJPJY'
-                                : 'Non MJPJY')),
+                                ? context.l10n.dashSchemeMjpjay
+                                : context.l10n.dashSchemeNonMjpjay)),
                             DataCell(Text(patient.containsKey('mjpjayCount')
                                 ? patient['mjpjayCount'].toString()
                                 : patient['nonMjpjyCount'].toString())),
@@ -72,7 +73,7 @@ class DashInfoTableTechnician extends StatelessWidget {
                                     ? 'MJP'
                                     : 'NMJ');
                               },
-                              child: const Text("Show Data"),
+                              child: Text(context.l10n.dashShowData),
                             ))
                           ],
                         );
@@ -82,9 +83,9 @@ class DashInfoTableTechnician extends StatelessWidget {
                 ),
               ),
             )
-          : const Center(
+          : Center(
               child: CustomText(
-                text: "No Data",
+                text: context.l10n.commonNoDataFound,
                 fontSize: 16,
                 fontWeight: FontWeight.normal,
                 textColor: Colors.black,

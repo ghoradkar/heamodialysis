@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:heamodialysis/dashboard/model/bar_chart_model.dart';
 import 'package:heamodialysis/utils/color_constants.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:heamodialysis/widgets/custom_text.dart';
 
 class ImageCarouselWithIndicator extends StatefulWidget {
@@ -58,7 +59,7 @@ class ImageCarouselWithIndicatorState
                       Row(
                         children: [
                            CustomText(
-                            text: "Patient Name :",
+                            text: "${context.l10n.colPatientName} :",
                             fontSize: 14.sp,
                             fontWeight: FontWeight.normal,
                             textColor: Colors.black,
@@ -78,7 +79,7 @@ class ImageCarouselWithIndicatorState
                       Row(
                         children: [
                            CustomText(
-                            text: "ABHA Number :",
+                            text: "${context.l10n.colAbhaNumber} :",
                             fontSize: 14.sp,
                             fontWeight: FontWeight.normal,
                             textColor: Colors.black,
@@ -96,7 +97,7 @@ class ImageCarouselWithIndicatorState
                       Row(
                         children: [
                            CustomText(
-                            text: "Viral Load Status :",
+                            text: "${context.l10n.colViralLoadStatus} :",
                             fontSize: 14.sp,
                             fontWeight: FontWeight.normal,
                             textColor: Colors.black,
@@ -114,7 +115,7 @@ class ImageCarouselWithIndicatorState
                       Row(
                         children: [
                            CustomText(
-                            text: "Treatment Under Scheme :",
+                            text: "${context.l10n.colTreatmentUnderScheme} :",
                             fontSize: 14.sp,
                             fontWeight: FontWeight.normal,
                             textColor: Colors.black,

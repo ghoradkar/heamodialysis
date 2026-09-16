@@ -6,12 +6,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/internet/no_internet_connectivity.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:heamodialysis/login/controller/login_controller.dart';
 import 'package:heamodialysis/login/screen/login_navigation.dart';
 import 'package:heamodialysis/login/screen/otp_screen.dart';
 import 'package:heamodialysis/utils/color_constants.dart';
 import 'package:heamodialysis/widgets/cust_toast.dart';
 import 'package:heamodialysis/widgets/custom_text.dart';
+import 'package:heamodialysis/widgets/language_switcher.dart';
 import 'package:heamodialysis/widgets/custom_textfield.dart';
 import 'package:heamodialysis/widgets/custom_shimmer_loader.dart';
 import 'package:upgrader/upgrader.dart';
@@ -65,14 +67,14 @@ class _LoginScreenState extends State<LoginScreen> {
         return AlertDialog(
           // title: const Text("Note"),
           title: CustomText(
-            text: "Note",
+            text: context.l10n.commonNote,
             fontSize: 16.sp,
             fontWeight: FontWeight.normal,
             textColor: Colors.black,
             textAlign: TextAlign.center,
           ),
           content: CustomText(
-            text: "This app only available in Indian region",
+            text: context.l10n.loginIndiaOnlyMessage,
             fontSize: 16.sp,
             fontWeight: FontWeight.normal,
             textColor: Colors.black,
@@ -86,7 +88,7 @@ class _LoginScreenState extends State<LoginScreen> {
               },
               // child: const Text("OK"),
               child: CustomText(
-                text: "Ok",
+                text: context.l10n.commonOk,
                 fontSize: 16.sp,
                 fontWeight: FontWeight.normal,
                 textColor: Colors.black,
@@ -117,7 +119,8 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       },
       child: Scaffold(
-          body: hasInternet
+          body: SafeArea(
+            child: hasInternet
               ? GetBuilder<LoginController>(
                   init: loginController,
                   builder: (controller) {
@@ -136,9 +139,15 @@ class _LoginScreenState extends State<LoginScreen> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  SizedBox(
-                                    height: 40.h,
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                        top: 12.h, right: 12.w, left: 12.w),
+                                    child: const Align(
+                                      alignment: Alignment.centerRight,
+                                      child: LanguageSwitcher(),
+                                    ),
                                   ),
+
                                   Center(
                                     child: Image.asset(
                                       "assets/logo.png",
@@ -146,9 +155,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       alignment: Alignment.center,
                                     ),
                                   ),
-                                  SizedBox(
-                                    height: 10.h,
-                                  ),
+
                                   Expanded(
                                     child: Container(
                                       width: double.infinity,
@@ -176,7 +183,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                             padding: EdgeInsets.symmetric(
                                                 vertical: 20.h),
                                             child: CustomText(
-                                              text: 'Login',
+                                              text: context.l10n.loginTitle,
                                               fontSize: 25.sp,
                                               fontFam: 'Lato',
                                               fontWeight: FontWeight.w500,
@@ -205,7 +212,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                   borderSide: BorderSide(
                                                       color: Colors.white),
                                                 ),
-                                                labelText: "Username",
+                                                labelText: context.l10n.loginUsername,
                                                 suffixIcon: Image.asset(
                                                   'assets/user_textfield.png',
                                                   color: Colors.white,
@@ -248,7 +255,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                   borderSide: BorderSide(
                                                       color: Colors.white),
                                                 ),
-                                                labelText: "Password",
+                                                labelText: context.l10n.loginPassword,
                                                 suffixIcon: InkWell(
                                                   onTap: () {
                                                     loginController
@@ -280,7 +287,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                             child: TextButton(
                                                 onPressed: () {},
                                                 child: CustomText(
-                                                  text: 'Forgot Password?',
+                                                  text: context.l10n.loginForgotPassword,
                                                   fontSize: 14.sp,
                                                   fontFam: 'Lato',
                                                   fontWeight: FontWeight.w400,
@@ -302,7 +309,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                         ?.map((e) => e.unitName)
                                                         .toList() ??
                                                     [],
-                                                hint: 'Please Select',
+                                                hint: context.l10n.commonPleaseSelect,
                                                 isRequired: false,
                                                 senValue: (value) {
                                                   var unitN = loginController
@@ -319,7 +326,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                             padding: EdgeInsets.only(
                                                 left: 8.w,
                                                 right: 8.w,
-                                                top: 22.h,
+                                                top: 18.h,
                                                 bottom: 8.h),
                                             child: Container(
                                               padding: EdgeInsets.symmetric(
@@ -364,7 +371,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                             padding: EdgeInsets.only(
                                                 left: 8.w,
                                                 right: 8.w,
-                                                top: 18.h,
+                                                top: 14.h,
                                                 bottom: 8.h),
                                             child: TextField(
                                               style: const TextStyle(
@@ -385,7 +392,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                       color: Colors.white),
                                                 ),
                                                 labelText:
-                                                    "Enter the captcha as shown in above",
+                                                    context.l10n.loginCaptchaHint,
                                                 labelStyle: TextStyle(
                                                     color: Colors.white,
                                                     fontFamily: "Lato",
@@ -396,7 +403,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                             ),
                                           ),
                                           SizedBox(
-                                            height: 40.h,
+                                            height: 30.h,
                                           ),
                                           InkWell(
                                             child: Container(
@@ -417,7 +424,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                           child:
                                                               const CircularProgressIndicator()))
                                                   : CustomText(
-                                                      text: 'Login',
+                                                      text: context.l10n.loginButton,
                                                       fontSize: 18.sp,
                                                       fontFam: 'Lato',
                                                       fontWeight:
@@ -429,6 +436,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                             ),
                                             onTap: () async {
                                               final loginCtrl = loginController;
+                                              final l10n = context.l10n;
 
                                               // Perform login
                                               await loginCtrl.login(
@@ -481,7 +489,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                               } else {
                                                 CustomMessage.toast(
                                                     loginCtrl.status ??
-                                                        "Something went wrong");
+                                                        l10n
+                                                            .commonSomethingWentWrong);
                                               }
                                             },
                                           )
@@ -501,7 +510,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   onRetryPressed: () {
                     checkInternetAndLoadData();
                   },
-                )),
+                ),
+          )),
     );
   }
 }

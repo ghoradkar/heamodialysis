@@ -1,5 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dashboard/model/nephro_list.dart';
@@ -83,8 +84,8 @@ class _AddClinicalConditionState extends State<AddClinicalCondition> {
       appBar: AppBar(
         title: CustomText(
           text: widget.isEdit == true
-              ? "Edit Clinical Condition"
-              : 'Add Clinical Condition',
+              ? context.l10n.nephroEditClinicalCondition
+              : context.l10n.nephroAddClinicalCondition,
           fontSize: 18.0,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,
@@ -123,10 +124,10 @@ class _AddClinicalConditionState extends State<AddClinicalCondition> {
                                 firstRadioText: 'ICD10',
                                 secondRadioText: 'ICDO',
                               ),
-                              const Align(
+                              Align(
                                 alignment: Alignment.centerLeft,
                                 child: CustomText(
-                                    text: "Diagnosis",
+                                    text: context.l10n.nephroDiagnosis,
                                     fontSize: 16,
                                     fontWeight: FontWeight.normal,
                                     textColor: Colors.black,
@@ -162,7 +163,7 @@ class _AddClinicalConditionState extends State<AddClinicalCondition> {
                                               vertical: 14),
                                       fillColor: Colors.white,
                                       filled: true,
-                                      hintText: "  Diagnosis",
+                                      hintText: context.l10n.nephroDiagnosis,
                                       hintStyle: TextStyle(
                                         fontSize: 16.0,
                                         color: AppColor.textGrey,
@@ -200,8 +201,8 @@ class _AddClinicalConditionState extends State<AddClinicalCondition> {
                                 },
                               ).paddingOnly(left: 8, right: 8),
                               CustomTextField(
-                                  labelText: "Diagnosis & Description",
-                                  hintText: "Enter",
+                                  labelText: context.l10n.nephroDiagnosisDescription,
+                                  hintText: context.l10n.regHintEnter,
                                   isRequired: false,
                                   keyBoardType: TextInputType.text,
                                   txtController: controller.diagnoDes,
@@ -210,8 +211,8 @@ class _AddClinicalConditionState extends State<AddClinicalCondition> {
                                   fontSize: 16,
                                   maxLines: 1),
                               CustomTextField(
-                                labelText: "ICD10 Code",
-                                hintText: "Enter",
+                                labelText: context.l10n.nephroIcd10Code,
+                                hintText: context.l10n.regHintEnter,
                                 isRequired: false,
                                 keyBoardType: TextInputType.text,
                                 txtController: controller.icdCodeTxtField,
@@ -221,8 +222,8 @@ class _AddClinicalConditionState extends State<AddClinicalCondition> {
                                 fontSize: 16,
                               ),
                               CustomDateField(
-                                labelText: 'Date',
-                                hint: 'Select Date',
+                                labelText: context.l10n.commonDate,
+                                hint: context.l10n.dashSelectDate,
                                 isRequired: true,
                                 callB: () {
                                   pickInspectionDate(context);
@@ -233,9 +234,9 @@ class _AddClinicalConditionState extends State<AddClinicalCondition> {
                               ),
                               MyCustomDropdown(
                                 selectedItem: nephroController.diagType,
-                                labelText: 'Diagnosis Type',
+                                labelText: context.l10n.nephroDiagnosisType,
                                 items: const ['Provisional', 'Confirmed'],
-                                hint: 'Select',
+                                hint: context.l10n.regHintSelect,
                                 isRequired: true,
                                 senValue: (value) {
                                   nephroController.diagType = value;
@@ -244,8 +245,8 @@ class _AddClinicalConditionState extends State<AddClinicalCondition> {
                                 filledColor: Colors.white,
                               ),
                               CustomTextField(
-                                labelText: 'Comments',
-                                hintText: 'Enter Comments',
+                                labelText: context.l10n.commonComments,
+                                hintText: context.l10n.nephroEnterComments,
                                 isRequired: true,
                                 keyBoardType: TextInputType.text,
                                 txtController: nephroController.diagComment,
@@ -260,7 +261,7 @@ class _AddClinicalConditionState extends State<AddClinicalCondition> {
                                 children: [
                                   CustomButton(
                                     isLoading: controller.isLoading,
-                                    buttonText: 'Save',
+                                    buttonText: context.l10n.commonSave,
                                     path: 'assets/save-ro-disinfec.png',
                                     callB: controller.isLoading
                                         ? null
@@ -294,7 +295,7 @@ class _AddClinicalConditionState extends State<AddClinicalCondition> {
                                                       userData['un']);
                                             } else {
                                               CustomMessage.toast(
-                                                  "Please fill required fields");
+                                                  context.l10n.nephroFillMandatory);
                                             }
                                           },
                                     buttonWidth: 100,
@@ -304,7 +305,7 @@ class _AddClinicalConditionState extends State<AddClinicalCondition> {
                                     iconColor: Colors.white,
                                   ),
                                   CustomButton(
-                                    buttonText: 'Reset',
+                                    buttonText: context.l10n.commonReset,
                                     path: 'assets/refresh.png',
                                     callB: () {},
                                     buttonWidth: 100,
@@ -314,7 +315,7 @@ class _AddClinicalConditionState extends State<AddClinicalCondition> {
                                     iconColor: Colors.white,
                                   ),
                                   CustomButton(
-                                    buttonText: 'Cancel',
+                                    buttonText: context.l10n.commonCancel,
                                     path: 'assets/cancel.png',
                                     callB: () {
                                       Get.back();

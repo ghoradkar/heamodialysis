@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/new_registration/controller/new_registration_controller.dart';
@@ -112,7 +113,7 @@ class PatientHistorySchedularState extends State<PatientHistorySchedular> {
         ? Scaffold(
             appBar: AppBar(
               title: CustomText(
-                text: 'Patient History',
+                text: context.l10n.schedPatientHistory,
                 fontSize: 18.sp,
                 fontFam: 'Lato',
                 fontWeight: FontWeight.w400,
@@ -409,8 +410,8 @@ class PatientHistorySchedularState extends State<PatientHistorySchedular> {
                 end: Alignment.bottomCenter,
               ),
             ),
-            child: const CustomText(
-              text: 'Case History',
+            child: CustomText(
+              text: context.l10n.schedCaseHistory,
               fontSize: 12,
               fontFam: "Lato",
               fontWeight: FontWeight.w400,
@@ -432,7 +433,7 @@ class PatientHistorySchedularState extends State<PatientHistorySchedular> {
       onPressed: () {
         // Action for Nephrologist's Comment
       },
-      child: const Text("Nephrologist's Comment"),
+      child: Text(context.l10n.schedNephrologistComment),
     );
   }
 
@@ -465,8 +466,8 @@ class PatientHistorySchedularState extends State<PatientHistorySchedular> {
           end: Alignment.bottomCenter,
         ),
       ),
-      child: const CustomText(
-        text: "Dialysis Details",
+      child: CustomText(
+        text: context.l10n.schedDialysisDetails,
         fontSize: 12,
         fontFam: "Lato",
         fontWeight: FontWeight.w400,
@@ -484,32 +485,32 @@ class PatientHistorySchedularState extends State<PatientHistorySchedular> {
 
     switch (patientDet?.lookupDetValue) {
       case 'APC':
-        text = "Appointment Cancelled";
+        text = context.l10n.schedAppointmentCancelled;
         firstColor = AppColor.red;
         secondColor = AppColor.red;
         break;
       case 'EVE':
-        text = "Event";
+        text = context.l10n.nephroEvent;
         firstColor = AppColor.red;
         secondColor = AppColor.red;
         break;
       case 'DCD':
-        text = "Dietician Consultation Done";
+        text = context.l10n.schedDieticianConsultationDone;
         firstColor = Colors.green;
         secondColor = Colors.green;
         break;
       case 'CNE':
-        text = "Nephrologist's Comment";
+        text = context.l10n.schedNephrologistComment;
         firstColor = Colors.green;
         secondColor = Colors.green;
         break;
       case 'PTA':
-        text = "Patient Absent";
+        text = context.l10n.schedPatientAbsent;
         firstColor = AppColor.red;
         secondColor = AppColor.red;
         break;
       case 'BED':
-        text = "Dialysis Details";
+        text = context.l10n.schedDialysisDetails;
         firstColor = AppColor.primaryBackgroundColor;
         secondColor = AppColor.secondaryColor;
         break;
@@ -518,7 +519,7 @@ class PatientHistorySchedularState extends State<PatientHistorySchedular> {
     if (text != null && firstColor != null && secondColor != null) {
       return InkWell(
         onTap: () {
-          if (text == "Dialysis Details") {
+          if (patientDet?.lookupDetValue == 'BED') {
             Get.to(DialysisQueue(
                 treatmentId: stage?.treatmentId, patientId: stage?.patientId));
           }
@@ -626,7 +627,7 @@ class _CaseHistoryTableState extends State<CaseHistoryTable> {
         ? Scaffold(
             appBar: AppBar(
               title: CustomText(
-                text: 'Case History',
+                text: context.l10n.schedCaseHistory,
                 fontSize: 18.sp,
                 fontFam: 'Lato',
                 fontWeight: FontWeight.w400,
@@ -676,7 +677,7 @@ class _CaseHistoryTableState extends State<CaseHistoryTable> {
                         Align(
                           alignment: Alignment.centerLeft,
                           child: CustomText(
-                            text: "Patient Documents",
+                            text: context.l10n.schedPatientDocuments,
                             fontSize: 14.sp,
                             textColor: Colors.black,
                             textAlign: TextAlign.center,
@@ -697,7 +698,7 @@ class _CaseHistoryTableState extends State<CaseHistoryTable> {
                                     widget.l2[index]?.toString() ?? 'N/A';
 
                                 return patientDocumentCard(
-                                  title: 'Document Name:',
+                                  title: context.l10n.schedDocumentName,
                                   value: documentName,
                                   icon: Icons.remove_red_eye_outlined,
                                   onEyePressed: () {
@@ -733,7 +734,7 @@ class _CaseHistoryTableState extends State<CaseHistoryTable> {
                             child: Padding(
                               padding: const EdgeInsets.all(20.0),
                               child: CustomText(
-                                text: "No documents available",
+                                text: context.l10n.schedNoDocuments,
                                 fontSize: 16.sp,
                                 textColor: Colors.grey,
                                 textAlign: TextAlign.center,
@@ -755,7 +756,7 @@ class _CaseHistoryTableState extends State<CaseHistoryTable> {
                         //             ? _buildRoundedTableRow(widget.tableHeader)
                         //             : TableRow(children: [
                         //           CustomText(
-                        //             text: "Data Not available",
+                        //             text: context.l10n.commonNoDataFound,
                         //             fontSize: 16.sp,
                         //             textColor: Colors.black,
                         //             textAlign: TextAlign.center,
@@ -940,7 +941,7 @@ class _CaseHistoryTableState extends State<CaseHistoryTable> {
 //     return Scaffold(
 //       appBar: AppBar(
 //         title: const CustomText(
-//           text: 'Patient History',
+//           text: context.l10n.schedPatientHistory,
 //           fontSize: 18.0,
 //           fontFam: 'Lato',
 //           fontWeight: FontWeight.w400,
@@ -1181,7 +1182,7 @@ class _CaseHistoryTableState extends State<CaseHistoryTable> {
 //               ),
 //             ),
 //             child: const CustomText(
-//               text: 'Case History',
+//               text: context.l10n.schedCaseHistory,
 //               fontSize: 14,
 //               fontFam: "Lato",
 //               fontWeight: FontWeight.normal,
@@ -1237,7 +1238,7 @@ class _CaseHistoryTableState extends State<CaseHistoryTable> {
 //         ),
 //       ),
 //       child: const CustomText(
-//         text: "Dialysis Details",
+//         text: context.l10n.schedDialysisDetails,
 //         fontSize: 14,
 //         fontFam: "Lato",
 //         fontWeight: FontWeight.normal,
@@ -1358,7 +1359,7 @@ class _CaseHistoryTableState extends State<CaseHistoryTable> {
 //     return Scaffold(
 //       appBar: AppBar(
 //         title: const CustomText(
-//           text: 'Case History',
+//           text: context.l10n.schedCaseHistory,
 //           fontSize: 18.0,
 //           fontFam: 'Lato',
 //           fontWeight: FontWeight.w400,
@@ -1384,7 +1385,7 @@ class _CaseHistoryTableState extends State<CaseHistoryTable> {
 //                         ? _buildRoundedTableRow(widget.tableHeader)
 //                         : TableRow(children: [
 //                             const CustomText(
-//                               text: "Data Not available",
+//                               text: context.l10n.commonNoDataFound,
 //                               fontSize: 16,
 //                               textColor: Colors.black,
 //                               textAlign: TextAlign.center,

@@ -77,7 +77,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 ),
                 Center(
                   child: CustomText(
-                    text: 'Mobile App',
+                    text: 'MOBILE APP',
                     fontSize: 26.sp,
                     fontFam: 'Lato',
                     fontWeight: FontWeight.w600,

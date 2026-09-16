@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/book_appointment/screen/book_appointment.dart';
@@ -39,19 +40,19 @@ class _RegisteredPatientListState extends State<RegisteredPatientList> {
       Get.put(RegistrationController());
   bool hasInternet = true;
 
-  List<String> cardItemDetailsList = [
-    'Patient Id',
-    'Patient Name',
-    'Patient Age',
-    'ABHA Number',
-    'Scheme Adopt',
-    'Viral Load Status'
-  ];
+  List<String> _cardItemDetailsList(BuildContext context) => [
+        context.l10n.colPatientId,
+        context.l10n.colPatientName,
+        context.l10n.regPatientAge,
+        context.l10n.colAbhaNumber,
+        context.l10n.regSchemeAdopted,
+        context.l10n.colViralLoadStatus,
+      ];
 
-  List<SearchByPatient> searchByList = [
-    SearchByPatient('1', 'Dialysis Center'),
-    SearchByPatient('2', 'State')
-  ];
+  List<SearchByPatient> get searchByList => [
+        SearchByPatient('1', 'Dialysis Center'),
+        SearchByPatient('2', 'State'),
+      ];
 
   SearchedData? dropDownValue;
   SearchByPatient? dropDownValue2;
@@ -145,7 +146,7 @@ class _RegisteredPatientListState extends State<RegisteredPatientList> {
           ),
         ),
         title:  CustomText(
-          text: 'Registered Patients',
+          text: context.l10n.regRegisteredPatients,
           fontSize: 18.sp,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,
@@ -249,7 +250,7 @@ class _RegisteredPatientListState extends State<RegisteredPatientList> {
           //                   mainAxisAlignment: MainAxisAlignment.center,
           //                   children: [
           //                     CustomButton(
-          //                       buttonText: 'Cancel',
+          //                       buttonText: context.l10n.commonCancel,
           //                       path: 'assets/cancel.png',
           //                       callB: () {
           //                         Get.back();
@@ -264,7 +265,7 @@ class _RegisteredPatientListState extends State<RegisteredPatientList> {
           //                       width: 20,
           //                     ),
           //                     CustomButton(
-          //                       buttonText: 'Next',
+          //                       buttonText: context.l10n.commonNext,
           //                       path: 'assets/next.png',
           //                       callB: () {
           //                         // Get.back();
@@ -331,7 +332,7 @@ class _RegisteredPatientListState extends State<RegisteredPatientList> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                                CustomText(
-                                      text: "Search",
+                                      text: context.l10n.commonSearch,
                                       fontSize: 16.sp,
                                       fontFam: "Lato",
                                       fontWeight: FontWeight.w400,
@@ -360,7 +361,7 @@ class _RegisteredPatientListState extends State<RegisteredPatientList> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                                CustomText(
-                                      text: "Search By",
+                                      text: context.l10n.commonSearchBy,
                                       fontSize: 16.sp,
                                       fontFam: "Lato",
                                       fontWeight: FontWeight.normal,
@@ -408,7 +409,7 @@ class _RegisteredPatientListState extends State<RegisteredPatientList> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                                CustomText(
-                                      text: "Type",
+                                      text: context.l10n.colType,
                                       fontSize: 16.sp,
                                       fontFam: "Lato",
                                       fontWeight: FontWeight.normal,
@@ -452,22 +453,22 @@ class _RegisteredPatientListState extends State<RegisteredPatientList> {
                            SizedBox(
                             height: 4.h,
                           ),
-                          const Align(
+                          Align(
                             alignment: Alignment.centerLeft,
                             child: CustomText(
-                                text: "Value",
+                                text: context.l10n.commonValue,
                                 fontSize: 16,
                                 fontFam: "Lato",
                                 fontWeight: FontWeight.normal,
-                                textColor: Color(0xff515151),
+                                textColor: const Color(0xff515151),
                                 textAlign: TextAlign.start),
                           ).paddingOnly(top: 12.h, bottom: 4.h),
                           TextField(
                               inputFormatters: [UpperCaseTextFormatter()],
                               controller: dashboardController.valueController,
-                              decoration: const InputDecoration(
-                                labelText: 'Patient Id, name, mobile no etc.',
-                                labelStyle: TextStyle(color: Color(0xFFE1E1E1)),
+                              decoration: InputDecoration(
+                                labelText: context.l10n.regSearchPatientHint,
+                                labelStyle: const TextStyle(color: Color(0xFFE1E1E1)),
                                 enabledBorder: OutlineInputBorder(
                                   borderSide:
                                       BorderSide(color: Color(0xFFE1E1E1)),
@@ -505,7 +506,7 @@ class _RegisteredPatientListState extends State<RegisteredPatientList> {
                                         children: [
                                           Image.asset("assets/cancel.png"),
                                            CustomText(
-                                              text: "Cancel",
+                                              text: context.l10n.commonCancel,
                                               fontSize: 16.sp,
                                               fontFam: "Lato",
                                               fontWeight: FontWeight.normal,
@@ -557,7 +558,7 @@ class _RegisteredPatientListState extends State<RegisteredPatientList> {
                                             color: Colors.white,
                                           ),
                                           CustomText(
-                                              text: "Search",
+                                              text: context.l10n.commonSearch,
                                               fontSize: 16.sp,
                                               fontFam: "Lato",
                                               fontWeight: FontWeight.normal,
@@ -596,11 +597,11 @@ class _RegisteredPatientListState extends State<RegisteredPatientList> {
             final patientList = controller.alreadyRegisteredPatient?.data ?? [];
             if (patientList.isEmpty) {
               return CommonStatusScreen(
-                title: "No Data Found",
+                title: context.l10n.commonNoDataFound,
                 description:
                 "We are unable to find the data that\nyou are looking for ",
                 img: "assets/no_Data_Found.png",
-                buttonText: "Go Back",
+                buttonText: context.l10n.commonGoBack,
                 onPressed: () {
                   Get.back();
                 },
@@ -610,7 +611,7 @@ class _RegisteredPatientListState extends State<RegisteredPatientList> {
             return  RegisteredPatientCardList(
                         patientList:
                             controller.alreadyRegisteredPatient?.data ?? [],
-                        cardItemDetailsList: cardItemDetailsList,
+                        cardItemDetailsList: _cardItemDetailsList(context),
                         isSecondColumnVisiable: true,
                         path1: "assets/calendar.png",
                         path2: "assets/eye.png",

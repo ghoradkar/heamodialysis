@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/machine_status/model/add_machine_counter_list_model.dart';
 import 'package:heamodialysis/machine_status/model/machine_count_model.dart';

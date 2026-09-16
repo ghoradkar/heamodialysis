@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dashboard/model/nephro_list.dart';
@@ -86,7 +87,7 @@ class _ClinicalHistoryState extends State<ClinicalHistory> {
                       ),
                       CustomExpandableContainer(
                         leading: 'assets/file-info.png',
-                        text: 'General Info',
+                        text: context.l10n.nephroGeneralInfo,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: <Widget>[
@@ -101,276 +102,481 @@ class _ClinicalHistoryState extends State<ClinicalHistory> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: MyCustomDropdown(
-                                          selectedItem:
-                                              nephroController.selectedDiet,
-                                          isViewProfile: widget.isView == true
-                                              ? true
-                                              : false,
-                                          labelText: 'Diet',
-                                          items: nephroController
-                                                  .dietListClinicalHistory
-                                                  ?.map(
-                                                      (e) => e.lookupDetDescEn)
-                                                  .toList() ??
-                                              [],
-                                          hint: "Select",
-                                          isRequired: false,
-                                          senValue: (value) {
-                                            nephroController.selectedDiet =
-                                                value;
-                                          },
-                                          filledColor: Colors.white,
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: MyCustomDropdown(
-                                          selectedItem: nephroController
-                                              .selectedAlcoholCon,
-                                          isViewProfile: widget.isView == true
-                                              ? true
-                                              : false,
-                                          labelText: 'Alcohol Consumption',
-                                          items: nephroController.alcoholList,
-                                          hint: "Select",
-                                          isRequired: false,
-                                          senValue: (value) {
-                                            nephroController
-                                                .selectedAlcoholCon = value;
-                                          },
-                                          filledColor: Colors.white,
-                                        ),
-                                      ),
-                                    ],
+                                  MyCustomDropdown(
+                                    selectedItem:
+                                    nephroController.selectedDiet,
+                                    isViewProfile: widget.isView == true
+                                        ? true
+                                        : false,
+                                    labelText: context.l10n.nephroDiet,
+                                    items: nephroController
+                                        .dietListClinicalHistory
+                                        ?.map(
+                                            (e) => e.lookupDetDescEn)
+                                        .toList() ??
+                                        [],
+                                    hint: context.l10n.regHintSelect,
+                                    isRequired: false,
+                                    senValue: (value) {
+                                      nephroController.selectedDiet =
+                                          value;
+                                    },
+                                    filledColor: Colors.white,
                                   ),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: MyCustomDropdown(
-                                          selectedItem: nephroController
-                                              .selectedAlcoholCurrentStat,
-                                          isViewProfile: widget.isView == true
-                                              ? true
-                                              : false,
-                                          labelText: 'Alcohol Current Stat',
-                                          items: nephroController
-                                                  .currentStatList
-                                                  ?.map(
-                                                      (e) => e.lookupDetDescEn)
-                                                  .toList() ??
-                                              [],
-                                          hint: "Select",
-                                          isRequired: false,
-                                          senValue: (value) {
-                                            nephroController
-                                                    .selectedAlcoholCurrentStat =
-                                                value;
-                                          },
-                                          filledColor: Colors.white,
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: CustomTextField(
-                                          labelText: 'Alcohol Duration',
-                                          hintText: 'Enter',
-                                          isRequired: false,
-                                          keyBoardType: TextInputType.number,
-                                          txtController:
-                                              nephroController.alcoholDuration,
-                                          fillColor: Colors.white,
-                                          isReadOnly: false,
-                                          maxLines: 1,
-                                          fontSize: 12.sp,
-                                        ),
-                                      ),
-                                    ],
+                                  MyCustomDropdown(
+                                    selectedItem: nephroController
+                                        .selectedAlcoholCon,
+                                    isViewProfile: widget.isView == true
+                                        ? true
+                                        : false,
+                                    labelText: context.l10n.clinAlcoholConsumption,
+                                    items: nephroController.alcoholList,
+                                    hint: context.l10n.regHintSelect,
+                                    isRequired: false,
+                                    senValue: (value) {
+                                      nephroController
+                                          .selectedAlcoholCon = value;
+                                    },
+                                    filledColor: Colors.white,
                                   ),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: MyCustomDropdown(
-                                          selectedItem:
-                                              nephroController.selectedSmoking,
-                                          isViewProfile: widget.isView == true
-                                              ? true
-                                              : false,
-                                          labelText: 'Smoking',
-                                          items: nephroController.smokingList,
-                                          hint: "Select",
-                                          isRequired: false,
-                                          senValue: (value) {
-                                            nephroController.selectedSmoking =
-                                                value;
-                                          },
-                                          filledColor: Colors.white,
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: MyCustomDropdown(
-                                          selectedItem:
-                                              nephroController.selectedTobaco,
-                                          isViewProfile: widget.isView == true
-                                              ? true
-                                              : false,
-                                          labelText: 'Tobacco Consumption',
-                                          items: nephroController.tobacoList,
-                                          hint: "Select",
-                                          isRequired: false,
-                                          senValue: (value) {
-                                            nephroController.selectedTobaco =
-                                                value;
-                                          },
-                                          filledColor: Colors.white,
-                                        ),
-                                      ),
-                                    ],
+                                  // Row(
+                                  //   children: [
+                                  //     Expanded(
+                                  //       child: MyCustomDropdown(
+                                  //         selectedItem:
+                                  //             nephroController.selectedDiet,
+                                  //         isViewProfile: widget.isView == true
+                                  //             ? true
+                                  //             : false,
+                                  //         labelText: context.l10n.nephroDiet,
+                                  //         items: nephroController
+                                  //                 .dietListClinicalHistory
+                                  //                 ?.map(
+                                  //                     (e) => e.lookupDetDescEn)
+                                  //                 .toList() ??
+                                  //             [],
+                                  //         hint: context.l10n.regHintSelect,
+                                  //         isRequired: false,
+                                  //         senValue: (value) {
+                                  //           nephroController.selectedDiet =
+                                  //               value;
+                                  //         },
+                                  //         filledColor: Colors.white,
+                                  //       ),
+                                  //     ),
+                                  //     Expanded(
+                                  //       child: MyCustomDropdown(
+                                  //         selectedItem: nephroController
+                                  //             .selectedAlcoholCon,
+                                  //         isViewProfile: widget.isView == true
+                                  //             ? true
+                                  //             : false,
+                                  //         labelText: context.l10n.clinAlcoholConsumption,
+                                  //         items: nephroController.alcoholList,
+                                  //         hint: context.l10n.regHintSelect,
+                                  //         isRequired: false,
+                                  //         senValue: (value) {
+                                  //           nephroController
+                                  //               .selectedAlcoholCon = value;
+                                  //         },
+                                  //         filledColor: Colors.white,
+                                  //       ),
+                                  //     ),
+                                  //   ],
+                                  // ),
+                                  MyCustomDropdown(
+                                    selectedItem: nephroController
+                                        .selectedAlcoholCurrentStat,
+                                    isViewProfile: widget.isView == true
+                                        ? true
+                                        : false,
+                                    labelText: context.l10n.clinAlcoholCurrentStat,
+                                    items: nephroController
+                                        .currentStatList
+                                        ?.map(
+                                            (e) => e.lookupDetDescEn)
+                                        .toList() ??
+                                        [],
+                                    hint: context.l10n.regHintSelect,
+                                    isRequired: false,
+                                    senValue: (value) {
+                                      nephroController
+                                          .selectedAlcoholCurrentStat =
+                                          value;
+                                    },
+                                    filledColor: Colors.white,
                                   ),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: MyCustomDropdown(
-                                          selectedItem: nephroController
-                                              .selectedSmokingCurrentStat,
-                                          isViewProfile: widget.isView == true
-                                              ? true
-                                              : false,
-                                          labelText: 'Smoking Current Stat',
-                                          items: nephroController
-                                                  .currentStatList
-                                                  ?.map(
-                                                      (e) => e.lookupDetDescEn)
-                                                  .toList() ??
-                                              [],
-                                          hint: "Select",
-                                          isRequired: false,
-                                          senValue: (value) {
-                                            nephroController
-                                                    .selectedSmokingCurrentStat =
-                                                value;
-                                          },
-                                          filledColor: Colors.white,
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: CustomTextField(
-                                          labelText: 'Smoking Duration',
-                                          hintText: 'Enter',
-                                          isRequired: false,
-                                          keyBoardType: TextInputType.number,
-                                          txtController:
-                                              nephroController.smokingDuration,
-                                          fillColor: Colors.white,
-                                          isReadOnly: false,
-                                          maxLines: 1,
-                                          fontSize: 12.sp,
-                                        ),
-                                      ),
-                                    ],
+                                  CustomTextField(
+                                    labelText: context.l10n.clinAlcoholDuration,
+                                    hintText: context.l10n.regHintEnter,
+                                    isRequired: false,
+                                    keyBoardType: TextInputType.number,
+                                    txtController:
+                                    nephroController.alcoholDuration,
+                                    fillColor: Colors.white,
+                                    isReadOnly: false,
+                                    maxLines: 1,
+                                    fontSize: 12.sp,
                                   ),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: MyCustomDropdown(
-                                          selectedItem: nephroController
-                                              .selectedTobaccoCurrentStat,
-                                          isViewProfile: widget.isView == true
-                                              ? true
-                                              : false,
-                                          labelText: 'Tobacco Current Stat',
-                                          items: nephroController
-                                                  .currentStatList
-                                                  ?.map(
-                                                      (e) => e.lookupDetDescEn)
-                                                  .toList() ??
-                                              [],
-                                          hint: "Select",
-                                          isRequired: false,
-                                          senValue: (value) {
-                                            nephroController
-                                                    .selectedTobaccoCurrentStat =
-                                                value;
-                                          },
-                                          filledColor: Colors.white,
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: CustomTextField(
-                                          labelText: 'Tobacco Duration',
-                                          hintText: 'Enter',
-                                          isRequired: false,
-                                          keyBoardType: TextInputType.number,
-                                          txtController:
-                                              nephroController.tobaccoDuration,
-                                          fillColor: Colors.white,
-                                          isReadOnly: false,
-                                          maxLines: 1,
-                                          fontSize: 12.sp,
-                                        ),
-                                      ),
-                                    ],
+                                  // Row(
+                                  //   children: [
+                                  //     Expanded(
+                                  //       child: MyCustomDropdown(
+                                  //         selectedItem: nephroController
+                                  //             .selectedAlcoholCurrentStat,
+                                  //         isViewProfile: widget.isView == true
+                                  //             ? true
+                                  //             : false,
+                                  //         labelText: context.l10n.clinAlcoholCurrentStat,
+                                  //         items: nephroController
+                                  //                 .currentStatList
+                                  //                 ?.map(
+                                  //                     (e) => e.lookupDetDescEn)
+                                  //                 .toList() ??
+                                  //             [],
+                                  //         hint: context.l10n.regHintSelect,
+                                  //         isRequired: false,
+                                  //         senValue: (value) {
+                                  //           nephroController
+                                  //                   .selectedAlcoholCurrentStat =
+                                  //               value;
+                                  //         },
+                                  //         filledColor: Colors.white,
+                                  //       ),
+                                  //     ),
+                                  //     Expanded(
+                                  //       child: CustomTextField(
+                                  //         labelText: context.l10n.clinAlcoholDuration,
+                                  //         hintText: context.l10n.regHintEnter,
+                                  //         isRequired: false,
+                                  //         keyBoardType: TextInputType.number,
+                                  //         txtController:
+                                  //             nephroController.alcoholDuration,
+                                  //         fillColor: Colors.white,
+                                  //         isReadOnly: false,
+                                  //         maxLines: 1,
+                                  //         fontSize: 12.sp,
+                                  //       ),
+                                  //     ),
+                                  //   ],
+                                  // ),
+                                  MyCustomDropdown(
+                                    selectedItem:
+                                    nephroController.selectedSmoking,
+                                    isViewProfile: widget.isView == true
+                                        ? true
+                                        : false,
+                                    labelText: context.l10n.clinSmoking,
+                                    items: nephroController.smokingList,
+                                    hint: context.l10n.regHintSelect,
+                                    isRequired: false,
+                                    senValue: (value) {
+                                      nephroController.selectedSmoking =
+                                          value;
+                                    },
+                                    filledColor: Colors.white,
                                   ),
+                                  MyCustomDropdown(
+                                    selectedItem:
+                                    nephroController.selectedTobaco,
+                                    isViewProfile: widget.isView == true
+                                        ? true
+                                        : false,
+                                    labelText: context.l10n.clinTobaccoConsumption,
+                                    items: nephroController.tobacoList,
+                                    hint: context.l10n.regHintSelect,
+                                    isRequired: false,
+                                    senValue: (value) {
+                                      nephroController.selectedTobaco =
+                                          value;
+                                    },
+                                    filledColor: Colors.white,
+                                  ),
+                                  // Row(
+                                  //   children: [
+                                  //     Expanded(
+                                  //       child: MyCustomDropdown(
+                                  //         selectedItem:
+                                  //             nephroController.selectedSmoking,
+                                  //         isViewProfile: widget.isView == true
+                                  //             ? true
+                                  //             : false,
+                                  //         labelText: context.l10n.clinSmoking,
+                                  //         items: nephroController.smokingList,
+                                  //         hint: context.l10n.regHintSelect,
+                                  //         isRequired: false,
+                                  //         senValue: (value) {
+                                  //           nephroController.selectedSmoking =
+                                  //               value;
+                                  //         },
+                                  //         filledColor: Colors.white,
+                                  //       ),
+                                  //     ),
+                                  //     Expanded(
+                                  //       child: MyCustomDropdown(
+                                  //         selectedItem:
+                                  //             nephroController.selectedTobaco,
+                                  //         isViewProfile: widget.isView == true
+                                  //             ? true
+                                  //             : false,
+                                  //         labelText: context.l10n.clinTobaccoConsumption,
+                                  //         items: nephroController.tobacoList,
+                                  //         hint: context.l10n.regHintSelect,
+                                  //         isRequired: false,
+                                  //         senValue: (value) {
+                                  //           nephroController.selectedTobaco =
+                                  //               value;
+                                  //         },
+                                  //         filledColor: Colors.white,
+                                  //       ),
+                                  //     ),
+                                  //   ],
+                                  // ),
+                                  MyCustomDropdown(
+                                    selectedItem: nephroController
+                                        .selectedSmokingCurrentStat,
+                                    isViewProfile: widget.isView == true
+                                        ? true
+                                        : false,
+                                    labelText: context.l10n.clinSmokingCurrentStat,
+                                    items: nephroController
+                                        .currentStatList
+                                        ?.map(
+                                            (e) => e.lookupDetDescEn)
+                                        .toList() ??
+                                        [],
+                                    hint: context.l10n.regHintSelect,
+                                    isRequired: false,
+                                    senValue: (value) {
+                                      nephroController
+                                          .selectedSmokingCurrentStat =
+                                          value;
+                                    },
+                                    filledColor: Colors.white,
+                                  ),
+                                  CustomTextField(
+                                    labelText: context.l10n.clinSmokingDuration,
+                                    hintText: context.l10n.regHintEnter,
+                                    isRequired: false,
+                                    keyBoardType: TextInputType.number,
+                                    txtController:
+                                    nephroController.smokingDuration,
+                                    fillColor: Colors.white,
+                                    isReadOnly: false,
+                                    maxLines: 1,
+                                    fontSize: 12.sp,
+                                  ),
+                                  // Row(
+                                  //   children: [
+                                  //     Expanded(
+                                  //       child: MyCustomDropdown(
+                                  //         selectedItem: nephroController
+                                  //             .selectedSmokingCurrentStat,
+                                  //         isViewProfile: widget.isView == true
+                                  //             ? true
+                                  //             : false,
+                                  //         labelText: context.l10n.clinSmokingCurrentStat,
+                                  //         items: nephroController
+                                  //                 .currentStatList
+                                  //                 ?.map(
+                                  //                     (e) => e.lookupDetDescEn)
+                                  //                 .toList() ??
+                                  //             [],
+                                  //         hint: context.l10n.regHintSelect,
+                                  //         isRequired: false,
+                                  //         senValue: (value) {
+                                  //           nephroController
+                                  //                   .selectedSmokingCurrentStat =
+                                  //               value;
+                                  //         },
+                                  //         filledColor: Colors.white,
+                                  //       ),
+                                  //     ),
+                                  //     Expanded(
+                                  //       child: CustomTextField(
+                                  //         labelText: context.l10n.clinSmokingDuration,
+                                  //         hintText: context.l10n.regHintEnter,
+                                  //         isRequired: false,
+                                  //         keyBoardType: TextInputType.number,
+                                  //         txtController:
+                                  //             nephroController.smokingDuration,
+                                  //         fillColor: Colors.white,
+                                  //         isReadOnly: false,
+                                  //         maxLines: 1,
+                                  //         fontSize: 12.sp,
+                                  //       ),
+                                  //     ),
+                                  //   ],
+                                  // ),
+                                  MyCustomDropdown(
+                                    selectedItem: nephroController
+                                        .selectedTobaccoCurrentStat,
+                                    isViewProfile: widget.isView == true
+                                        ? true
+                                        : false,
+                                    labelText: context.l10n.clinTobaccoCurrentStat,
+                                    items: nephroController
+                                        .currentStatList
+                                        ?.map(
+                                            (e) => e.lookupDetDescEn)
+                                        .toList() ??
+                                        [],
+                                    hint: context.l10n.regHintSelect,
+                                    isRequired: false,
+                                    senValue: (value) {
+                                      nephroController
+                                          .selectedTobaccoCurrentStat =
+                                          value;
+                                    },
+                                    filledColor: Colors.white,
+                                  ),
+                                  CustomTextField(
+                                    labelText: context.l10n.clinTobaccoDuration,
+                                    hintText: context.l10n.regHintEnter,
+                                    isRequired: false,
+                                    keyBoardType: TextInputType.number,
+                                    txtController:
+                                    nephroController.tobaccoDuration,
+                                    fillColor: Colors.white,
+                                    isReadOnly: false,
+                                    maxLines: 1,
+                                    fontSize: 12.sp,
+                                  ),
+                                  // Row(
+                                  //   children: [
+                                  //     Expanded(
+                                  //       child: MyCustomDropdown(
+                                  //         selectedItem: nephroController
+                                  //             .selectedTobaccoCurrentStat,
+                                  //         isViewProfile: widget.isView == true
+                                  //             ? true
+                                  //             : false,
+                                  //         labelText: context.l10n.clinTobaccoCurrentStat,
+                                  //         items: nephroController
+                                  //                 .currentStatList
+                                  //                 ?.map(
+                                  //                     (e) => e.lookupDetDescEn)
+                                  //                 .toList() ??
+                                  //             [],
+                                  //         hint: context.l10n.regHintSelect,
+                                  //         isRequired: false,
+                                  //         senValue: (value) {
+                                  //           nephroController
+                                  //                   .selectedTobaccoCurrentStat =
+                                  //               value;
+                                  //         },
+                                  //         filledColor: Colors.white,
+                                  //       ),
+                                  //     ),
+                                  //     Expanded(
+                                  //       child: CustomTextField(
+                                  //         labelText: context.l10n.clinTobaccoDuration,
+                                  //         hintText: context.l10n.regHintEnter,
+                                  //         isRequired: false,
+                                  //         keyBoardType: TextInputType.number,
+                                  //         txtController:
+                                  //             nephroController.tobaccoDuration,
+                                  //         fillColor: Colors.white,
+                                  //         isReadOnly: false,
+                                  //         maxLines: 1,
+                                  //         fontSize: 12.sp,
+                                  //       ),
+                                  //     ),
+                                  //   ],
+                                  // ),
                                   MyCustomDropdown(
                                     selectedItem:
                                         nephroController.selectediLLicit,
                                     isViewProfile:
                                         widget.isView == true ? true : false,
-                                    labelText: 'Illicit Drug',
+                                    labelText: context.l10n.clinIllicitDrug,
                                     items: nephroController.illicitList,
-                                    hint: "Select",
+                                    hint: context.l10n.regHintSelect,
                                     isRequired: false,
                                     senValue: (value) {
                                       nephroController.selectediLLicit = value;
                                     },
                                     filledColor: Colors.white,
                                   ),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: MyCustomDropdown(
-                                          selectedItem: nephroController
-                                              .selectedDrugCurrentStat,
-                                          isViewProfile: widget.isView == true
-                                              ? true
-                                              : false,
-                                          labelText: 'Drug Current Stat',
-                                          items: nephroController
-                                                  .currentStatList
-                                                  ?.map(
-                                                      (e) => e.lookupDetDescEn)
-                                                  .toList() ??
-                                              [],
-                                          hint: "Select",
-                                          isRequired: false,
-                                          senValue: (value) {
-                                            nephroController
-                                                    .selectedDrugCurrentStat =
-                                                value;
-                                          },
-                                          filledColor: Colors.white,
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: CustomTextField(
-                                          labelText: 'Drug Duration',
-                                          hintText: 'Enter',
-                                          isRequired: false,
-                                          keyBoardType: TextInputType.number,
-                                          txtController:
-                                              nephroController.drugDuration,
-                                          fillColor: Colors.white,
-                                          isReadOnly: false,
-                                          maxLines: 1,
-                                          fontSize: 12.sp,
-                                        ),
-                                      ),
-                                    ],
+                                  MyCustomDropdown(
+                                    selectedItem: nephroController
+                                        .selectedDrugCurrentStat,
+                                    isViewProfile: widget.isView == true
+                                        ? true
+                                        : false,
+                                    labelText: context.l10n.clinDrugCurrentStat,
+                                    items: nephroController
+                                        .currentStatList
+                                        ?.map(
+                                            (e) => e.lookupDetDescEn)
+                                        .toList() ??
+                                        [],
+                                    hint: context.l10n.regHintSelect,
+                                    isRequired: false,
+                                    senValue: (value) {
+                                      nephroController
+                                          .selectedDrugCurrentStat =
+                                          value;
+                                    },
+                                    filledColor: Colors.white,
                                   ),
                                   CustomTextField(
-                                    labelText: 'Remark',
-                                    hintText: 'Enter',
+                                    labelText: context.l10n.clinDrugDuration,
+                                    hintText: context.l10n.regHintEnter,
+                                    isRequired: false,
+                                    keyBoardType: TextInputType.number,
+                                    txtController:
+                                    nephroController.drugDuration,
+                                    fillColor: Colors.white,
+                                    isReadOnly: false,
+                                    maxLines: 1,
+                                    fontSize: 12.sp,
+                                  ),
+                                  // Row(
+                                  //   children: [
+                                  //     Expanded(
+                                  //       child: MyCustomDropdown(
+                                  //         selectedItem: nephroController
+                                  //             .selectedDrugCurrentStat,
+                                  //         isViewProfile: widget.isView == true
+                                  //             ? true
+                                  //             : false,
+                                  //         labelText: context.l10n.clinDrugCurrentStat,
+                                  //         items: nephroController
+                                  //                 .currentStatList
+                                  //                 ?.map(
+                                  //                     (e) => e.lookupDetDescEn)
+                                  //                 .toList() ??
+                                  //             [],
+                                  //         hint: context.l10n.regHintSelect,
+                                  //         isRequired: false,
+                                  //         senValue: (value) {
+                                  //           nephroController
+                                  //                   .selectedDrugCurrentStat =
+                                  //               value;
+                                  //         },
+                                  //         filledColor: Colors.white,
+                                  //       ),
+                                  //     ),
+                                  //     Expanded(
+                                  //       child: CustomTextField(
+                                  //         labelText: context.l10n.clinDrugDuration,
+                                  //         hintText: context.l10n.regHintEnter,
+                                  //         isRequired: false,
+                                  //         keyBoardType: TextInputType.number,
+                                  //         txtController:
+                                  //             nephroController.drugDuration,
+                                  //         fillColor: Colors.white,
+                                  //         isReadOnly: false,
+                                  //         maxLines: 1,
+                                  //         fontSize: 12.sp,
+                                  //       ),
+                                  //     ),
+                                  //   ],
+                                  // ),
+                                  CustomTextField(
+                                    labelText: context.l10n.commonRemarks,
+                                    hintText: context.l10n.regHintEnter,
                                     isRequired:
                                         widget.isView == true ? true : false,
                                     keyBoardType: TextInputType.text,
@@ -391,7 +597,7 @@ class _ClinicalHistoryState extends State<ClinicalHistory> {
                       ),
                       CustomExpandableContainer(
                         leading: 'assets/file-info.png',
-                        text: 'ON EXAMINATION',
+                        text: context.l10n.nephroOnExamination,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: <Widget>[
@@ -406,45 +612,72 @@ class _ClinicalHistoryState extends State<ClinicalHistory> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: CustomTextField(
-                                          maxLines: 1,
-                                          isReadOnly: widget.isView == true
-                                              ? true
-                                              : false,
-                                          keyBoardType: TextInputType.number,
-                                          labelText: 'Temperature',
-                                          hintText: 'Enter',
-                                          isRequired: false,
-                                          txtController: nephroController.temp,
-                                          fillColor: Colors.white,
-                                          fontSize: 12.sp,
-                                        ),
-                                      ),
-                                      SizedBox(width: 8.w),
-                                      Expanded(
-                                        child: CustomTextField(
-                                          onChanged: (value) {},
-                                          maxLines: 1,
-                                          isReadOnly: widget.isView == true
-                                              ? true
-                                              : false,
-                                          keyBoardType: TextInputType.number,
-                                          labelText: 'Pulse',
-                                          hintText: 'Enter',
-                                          isRequired: false,
-                                          txtController: nephroController.pulse,
-                                          fillColor: Colors.white,
-                                          fontSize: 12.sp,
-                                        ),
-                                      ),
-                                    ],
+                                  CustomTextField(
+                                    maxLines: 1,
+                                    isReadOnly: widget.isView == true
+                                        ? true
+                                        : false,
+                                    keyBoardType: TextInputType.number,
+                                    labelText: context.l10n.clinTemperature,
+                                    hintText: context.l10n.regHintEnter,
+                                    isRequired: false,
+                                    txtController: nephroController.temp,
+                                    fillColor: Colors.white,
+                                    fontSize: 12.sp,
                                   ),
+                                  CustomTextField(
+                                    onChanged: (value) {},
+                                    maxLines: 1,
+                                    isReadOnly: widget.isView == true
+                                        ? true
+                                        : false,
+                                    keyBoardType: TextInputType.number,
+                                    labelText: context.l10n.clinPulse,
+                                    hintText: context.l10n.regHintEnter,
+                                    isRequired: false,
+                                    txtController: nephroController.pulse,
+                                    fillColor: Colors.white,
+                                    fontSize: 12.sp,
+                                  ),
+                                  // Row(
+                                  //   children: [
+                                  //     Expanded(
+                                  //       child: CustomTextField(
+                                  //         maxLines: 1,
+                                  //         isReadOnly: widget.isView == true
+                                  //             ? true
+                                  //             : false,
+                                  //         keyBoardType: TextInputType.number,
+                                  //         labelText: context.l10n.clinTemperature,
+                                  //         hintText: context.l10n.regHintEnter,
+                                  //         isRequired: false,
+                                  //         txtController: nephroController.temp,
+                                  //         fillColor: Colors.white,
+                                  //         fontSize: 12.sp,
+                                  //       ),
+                                  //     ),
+                                  //     SizedBox(width: 8.w),
+                                  //     Expanded(
+                                  //       child: CustomTextField(
+                                  //         onChanged: (value) {},
+                                  //         maxLines: 1,
+                                  //         isReadOnly: widget.isView == true
+                                  //             ? true
+                                  //             : false,
+                                  //         keyBoardType: TextInputType.number,
+                                  //         labelText: context.l10n.clinPulse,
+                                  //         hintText: context.l10n.regHintEnter,
+                                  //         isRequired: false,
+                                  //         txtController: nephroController.pulse,
+                                  //         fillColor: Colors.white,
+                                  //         fontSize: 12.sp,
+                                  //       ),
+                                  //     ),
+                                  //   ],
+                                  // ),
                                   //  SizedBox(height: 8.h),
                                   DoubleTextField(
-                                    labelText: 'Blood Pressure',
+                                    labelText: context.l10n.clinBloodPressure,
                                     hintText1: 'Bottom',
                                     hintText2: 'Top',
                                     isRequired:
@@ -465,8 +698,8 @@ class _ClinicalHistoryState extends State<ClinicalHistory> {
                                     isReadOnly:
                                         widget.isView == true ? true : false,
                                     keyBoardType: TextInputType.number,
-                                    labelText: 'Blood Glucose',
-                                    hintText: 'Enter',
+                                    labelText: context.l10n.clinBloodGlucose,
+                                    hintText: context.l10n.regHintEnter,
                                     isRequired: false,
                                     txtController:
                                         nephroController.bloodGlocuse,
@@ -478,8 +711,8 @@ class _ClinicalHistoryState extends State<ClinicalHistory> {
                                     isReadOnly:
                                         widget.isView == true ? true : false,
                                     keyBoardType: TextInputType.text,
-                                    labelText: 'Past Surgical History',
-                                    hintText: 'Enter',
+                                    labelText: context.l10n.clinPastSurgicalHistory,
+                                    hintText: context.l10n.regHintEnter,
                                     isRequired: false,
                                     txtController:
                                         nephroController.pasrSurgicalH,
@@ -494,7 +727,7 @@ class _ClinicalHistoryState extends State<ClinicalHistory> {
                                     keyBoardType: TextInputType.text,
                                     labelText:
                                         'Any allergies or adverse drug reactions?',
-                                    hintText: 'Enter',
+                                    hintText: context.l10n.regHintEnter,
                                     isRequired: false,
                                     txtController: nephroController.allergies,
                                     fillColor: Colors.white,
@@ -512,7 +745,7 @@ class _ClinicalHistoryState extends State<ClinicalHistory> {
                       ),
                       CustomExpandableContainer(
                         leading: 'assets/file-info.png',
-                        text: 'SYSTEMATIC EXAMINATIONS',
+                        text: context.l10n.nephroSystematicExaminations,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: <Widget>[
@@ -532,8 +765,8 @@ class _ClinicalHistoryState extends State<ClinicalHistory> {
                                     isReadOnly:
                                         widget.isView == true ? true : false,
                                     keyBoardType: TextInputType.text,
-                                    labelText: 'Special Instructions',
-                                    hintText: 'Enter',
+                                    labelText: context.l10n.nephroSpecialInstructions,
+                                    hintText: context.l10n.regHintEnter,
                                     isRequired: false,
                                     txtController: nephroController.specialInst,
                                     fillColor: Colors.white,
@@ -545,8 +778,8 @@ class _ClinicalHistoryState extends State<ClinicalHistory> {
                                     isReadOnly:
                                         widget.isView == true ? true : false,
                                     keyBoardType: TextInputType.text,
-                                    labelText: 'Treatment Plan',
-                                    hintText: 'Enter',
+                                    labelText: context.l10n.nephroTreatmentPlan,
+                                    hintText: context.l10n.regHintEnter,
                                     isRequired: false,
                                     txtController: nephroController.treatmentP,
                                     fillColor: Colors.white,
@@ -564,7 +797,7 @@ class _ClinicalHistoryState extends State<ClinicalHistory> {
                       ),
                       CustomExpandableContainer(
                         leading: 'assets/file-info.png',
-                        text: 'Add Details',
+                        text: context.l10n.nephroAddDetails,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: <Widget>[
@@ -612,11 +845,11 @@ class _ClinicalHistoryState extends State<ClinicalHistory> {
                                       l4: nephroController
                                               .checkBoxListClinicalHistory ??
                                           [],
-                                      tableHeader: const [
-                                        "Comorbidities",
-                                        "Duration",
-                                        "Yes/No",
-                                        "Relation"
+                                      tableHeader: [
+                                        context.l10n.colComorbidities,
+                                        context.l10n.dqDuration,
+                                        context.l10n.colYesNo,
+                                        context.l10n.regRelation
                                       ],
                                       onButtonPressed: handleButtonPress,
                                       relationList: nephroController
@@ -643,7 +876,7 @@ class _ClinicalHistoryState extends State<ClinicalHistory> {
                           secColor: AppColor.secondaryColor,
                           textColor: Colors.white,
                           iconColor: Colors.white,
-                          buttonText: 'Save',
+                          buttonText: context.l10n.commonSave,
                           path: 'assets/save-next.png',
                           callB: () async {
                             var body = {
@@ -1310,8 +1543,8 @@ class _ClinicalHistoryState extends State<ClinicalHistory> {
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
           color: Colors.green[100], borderRadius: BorderRadius.circular(4)),
-      child: const CustomText(
-        text: 'Active',
+      child: CustomText(
+        text: context.l10n.commonActive,
         fontSize: 12,
         fontFam: 'Lato',
         fontWeight: FontWeight.w400,

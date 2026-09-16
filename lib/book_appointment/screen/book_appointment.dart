@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:easy_date_timeline/easy_date_timeline.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
@@ -108,7 +109,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
       appBar: AppBar(
         title: CustomText(
          // text: widget.isFromSchedular ? 'Bed Selection"' : 'Book Appointment',
-         text: 'Book Appointment',
+         text: context.l10n.schedBookAppointment,
           fontSize: 18.sp,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,
@@ -128,7 +129,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
           builder: (controller) {
             return hasInternet
                 ? (controller.isLoading)
-                    ?  const Center(child: BookAppointmentShimmer())
+                    ?  Center(child: BookAppointmentShimmer())
                     : SingleChildScrollView(
                         child: Padding(
                           padding:  EdgeInsets.symmetric(horizontal: 8.w),
@@ -269,7 +270,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                               Align(
                                 alignment: Alignment.centerLeft,
                                 child:  CustomText(
-                                  text: 'Select Institute',
+                                  text: context.l10n.bookSelectInstitute,
                                   fontSize: 15.sp,
                                   fontFam: '',
                                   fontWeight: FontWeight.normal,
@@ -286,7 +287,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                                   color: AppColor.primaryBackgroundColor,
                                 ),
                                 decoration: InputDecoration(
-                                  hintText: "select",
+                                  hintText: context.l10n.regHintSelect,
                                   filled: true,
                                   fillColor: Colors.white,
                                   hintStyle:  TextStyle(
@@ -368,7 +369,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                                         child: Align(
                                           alignment: Alignment.topLeft,
                                           child: CustomText(
-                                            text: 'Choose Slot',
+                                            text: context.l10n.bookChooseSlot,
                                             fontSize: 14.sp,
                                             fontFam: 'Lato',
                                             fontWeight: FontWeight.bold,
@@ -502,7 +503,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                                       ),
                                     ),
                                      CustomText(
-                                      text: 'Beds Allocated',
+                                      text: context.l10n.schedBedsAllocated,
                                       fontSize: 14.sp,
                                       fontFam: 'Lato',
                                       fontWeight: FontWeight.normal,
@@ -523,7 +524,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                                       ),
                                     ),
                                      CustomText(
-                                      text: 'HIV+',
+                                      text: context.l10n.bookHivPositive,
                                       fontSize: 14.sp,
                                       fontFam: 'Lato',
                                       fontWeight: FontWeight.normal,
@@ -544,7 +545,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                                       ),
                                     ),
                                      CustomText(
-                                      text: 'Hepatitis C+',
+                                      text: context.l10n.bookHepatitisCPositive,
                                       fontSize: 14.sp,
                                       fontFam: 'Lato',
                                       fontWeight: FontWeight.normal,
@@ -574,7 +575,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                                       ),
                                     ),
                                      CustomText(
-                                      text: 'Hepatitis C+',
+                                      text: context.l10n.bookHepatitisCPositive,
                                       fontSize: 14.sp,
                                       fontFam: 'Lato',
                                       fontWeight: FontWeight.normal,
@@ -595,7 +596,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                                       ),
                                     ),
                                      CustomText(
-                                      text: 'Negative',
+                                      text: context.l10n.bookNegative,
                                       fontSize: 14.sp,
                                       fontFam: 'Lato',
                                       fontWeight: FontWeight.normal,
@@ -715,7 +716,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                                                 ),
                                               ),
                                                CustomText(
-                                                text: 'Bed No.',
+                                                text: context.l10n.schedBedNo,
                                                 fontSize: 14.sp,
                                                 fontFam: 'Lato',
                                                 fontWeight: FontWeight.normal,
@@ -745,7 +746,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
 
                               CustomButton(
                                 iconColor: Colors.white,
-                                buttonText: "Book Appointment",
+                                buttonText: context.l10n.schedBookAppointment,
                                 path: "assets/check.png",
                                 callB: () {
                                   CustomPopup.showConfirmationDialog(() {
@@ -788,10 +789,10 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                                               "Please Select Bed");
                                         }
                                       } else {
-                                        CustomMessage.toast("Choose Slot");
+                                        CustomMessage.toast(context.l10n.bookChooseSlot);
                                       }
                                     } else {
-                                      CustomMessage.toast("Select Institute");
+                                      CustomMessage.toast(context.l10n.bookSelectInstitute);
                                     }
                                   },
                                       "",

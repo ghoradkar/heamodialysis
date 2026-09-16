@@ -1,9 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:heamodialysis/widgets/custom_text.dart';
 
-import '../utils/status_update_screen.dart';
 import 'custom_shimmer_loader.dart';
+
+/// Column sizing shared by the tables below.
+///
+/// The table is fit to the available width instead of scrolling horizontally:
+///  - column 0 (Sr. No) stays intrinsic - it only holds a short index
+///  - the last column (action button / status chip) stays intrinsic - its
+///    child already has a fixed size
+///  - every column in between flexes to share the remaining width and lets
+///    long bilingual (EN / FR / EN+FR) text wrap onto multiple lines.
+Map<int, TableColumnWidth> fitTableColumnWidths(int columnCount) {
+  final widths = <int, TableColumnWidth>{};
+  for (var i = 0; i < columnCount; i++) {
+    final isFirst = i == 0;
+    final isLast = i == columnCount - 1;
+    widths[i] = (isFirst || isLast)
+        ? const IntrinsicColumnWidth()
+        : const FlexColumnWidth();
+  }
+  // With only 1-2 columns there is no "middle" column to flex; fall back to
+  // intrinsic sizing so nothing is forced to zero width.
+  if (columnCount <= 2) {
+    for (var i = 0; i < columnCount; i++) {
+      widths[i] = const IntrinsicColumnWidth();
+    }
+  }
+  return widths;
+}
+
+/// French copy runs noticeably longer than English, so trim a point off the
+/// body / header text when the active locale is French to buy wrapping room.
+double localeScaledFontSize(BuildContext context, double base) {
+  final code = Localizations.maybeLocaleOf(context)?.languageCode;
+  return code == 'fr' ? base - 1 : base;
+}
 
 class RoundedCornerTable extends StatefulWidget {
   final List<String> l1;
@@ -42,49 +76,29 @@ class _RoundedCornerTableState extends State<RoundedCornerTable> {
 
   @override
   Widget build(BuildContext context) {
-    return isLoading
-        ? Center(child: buildShimmerLoader())
-        : Table(
-            defaultColumnWidth: const IntrinsicColumnWidth(),
-            children: [
-              widget.l1.isNotEmpty
-                  ? _buildRoundedTableRow(widget.tableHeader)
-                  : TableRow(children: [
-                      // CommonStatusScreen(
-                      //   title: "No Data Found",
-                      //   description:
-                      //       "We are unable to find the data that\nyou are looking for ",
-                      //   img: "assets/no_Data_Found.png",
-                      //   buttonText: "Go Back",
-                      //   onPressed: () {
-                      //     Get.back();
-                      //   },
-                      // ),
-                      const CustomText(
-                        text: "Data Not available",
-                        fontSize: 16,
-                        textColor: Colors.black,
-                        textAlign: TextAlign.center,
-                        fontFam: "Lato",
-                        fontWeight: FontWeight.normal,
-                      ).paddingOnly(left: 8, bottom: 4)
-                    ]),
-              for (int i = 0; i < widget.l1.length; i++)
-                widget.l1.isNotEmpty
-                    // ? _buildTableRow([widget.l1[i], widget.l2[i], widget.l3[i],widget.lastColumnWidgets[i]])
-                    ? _buildTableRow(i)
-                    : TableRow(children: [
-                        const CustomText(
-                          text: "",
-                          fontSize: 2.0,
-                          textColor: Colors.black,
-                          textAlign: TextAlign.start,
-                          fontWeight: FontWeight.normal,
-                          fontFam: 'Lato',
-                        ).paddingOnly(left: 8, bottom: 4)
-                      ]),
-            ],
-          );
+    if (isLoading) return Center(child: buildShimmerLoader());
+
+    return Table(
+      defaultColumnWidth: const FlexColumnWidth(),
+      columnWidths: fitTableColumnWidths(widget.tableHeader.length),
+      defaultVerticalAlignment: TableCellVerticalAlignment.intrinsicHeight,
+      children: [
+        widget.l1.isNotEmpty
+            ? _buildRoundedTableRow(widget.tableHeader)
+            : TableRow(children: [
+                CustomText(
+                  text: context.l10n.commonNoDataFound,
+                  fontSize: 16,
+                  textColor: Colors.black,
+                  textAlign: TextAlign.center,
+                  fontFam: "Lato",
+                  fontWeight: FontWeight.normal,
+                ).paddingOnly(left: 8, bottom: 4)
+              ]),
+        for (int i = 0; i < widget.l1.length; i++)
+          if (widget.l1.isNotEmpty) _buildTableRow(i),
+      ],
+    );
   }
 
   shwProgressIndicator() async {
@@ -99,8 +113,8 @@ class _RoundedCornerTableState extends State<RoundedCornerTable> {
       children: List.generate(
         data.length,
         (index) {
-          debugPrint("Cell: ${data[index]}");
           return TableCell(
+            verticalAlignment: TableCellVerticalAlignment.intrinsicHeight,
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.grey[300],
@@ -113,15 +127,18 @@ class _RoundedCornerTableState extends State<RoundedCornerTable> {
                 ),
               ),
               child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4.0,vertical: 6),
-                  child: CustomText(
-                    text: data[index],
-                    fontSize: 10,
-                    textColor: Colors.black,
-                    textAlign: TextAlign.center,
-                    fontWeight: FontWeight.normal,
-                    fontFam: 'Lato',
-                  )),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 4.0, vertical: 6),
+                child: CustomText(
+                  text: data[index],
+                  fontSize: localeScaledFontSize(context, 10),
+                  textColor: Colors.black,
+                  textAlign: TextAlign.center,
+                  fontWeight: FontWeight.w600,
+                  fontFam: 'Lato',
+                  softWrap: true,
+                ),
+              ),
             ),
           );
         },
@@ -130,6 +147,15 @@ class _RoundedCornerTableState extends State<RoundedCornerTable> {
   }
 
   TableRow _buildTableRow(int index) {
+    final lastCol = widget.tableHeader.length - 1;
+    final values = <dynamic>[
+      widget.l1[index],
+      widget.l2[index],
+      if (widget.l3 != null) widget.l3?[index],
+      if (widget.l4 != null) widget.l4?[index],
+      if (widget.l5 != null) widget.l5?[index],
+    ];
+
     return TableRow(
       key: UniqueKey(),
       children: List.generate(
@@ -146,41 +172,20 @@ class _RoundedCornerTableState extends State<RoundedCornerTable> {
                 decoration: BoxDecoration(
                   border: Border.all(color: const Color(0xFFE0E0E0)),
                 ),
-                child: i == (widget.tableHeader.length - 1)
-                    ? Container(
-                        constraints: BoxConstraints(
-                            minWidth: 150), // Minimum width for the button
-                        child: GestureDetector(
-                          onTap: () {
-                            if (widget.onButtonPressed != null) {
-                              widget.onButtonPressed!(index);
-                            }
-                          },
-                          child:
-                              widget.lastColumnWidgets?[index] ?? Container(),
-                        ),
+                child: i == lastCol
+                    ? GestureDetector(
+                        onTap: () => widget.onButtonPressed?.call(index),
+                        child: widget.lastColumnWidgets?[index] ??
+                            const SizedBox.shrink(),
                       )
-                    : Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Flexible(
-                            child: CustomText(
-                              text: [
-                                widget.l1[index],
-                                widget.l2[index],
-                                if (widget.l3 != null) widget.l3?[index],
-                                if (widget.l4 != null) widget.l4?[index],
-                                if (widget.l5 != null) widget.l5?[index],
-                              ][i]
-                                  .toString(),
-                              fontSize: 10,
-                              textColor: Colors.black,
-                              textAlign: TextAlign.center,
-                              fontWeight: FontWeight.normal,
-                              fontFam: 'Lato',
-                            ),
-                          ),
-                        ],
+                    : CustomText(
+                        text: (i < values.length ? values[i] : '').toString(),
+                        fontSize: localeScaledFontSize(context, 10),
+                        textColor: Colors.black,
+                        textAlign: TextAlign.center,
+                        fontWeight: FontWeight.normal,
+                        fontFam: 'Lato',
+                        softWrap: true,
                       ),
               ),
             ),
@@ -225,39 +230,29 @@ class _PrescriptionTableDataState extends State<PrescriptionTableData> {
 
   @override
   Widget build(BuildContext context) {
-    return isLoading
-        ? Center(child: buildShimmerLoader())
-        : Table(
-            defaultColumnWidth: const IntrinsicColumnWidth(),
-            children: [
-              widget.l1.isNotEmpty
-                  ? _buildRoundedTableRow(widget.tableHeader)
-                  : TableRow(children: [
-                      const CustomText(
-                        text: "Data Not available",
-                        fontSize: 16,
-                        textColor: Colors.black,
-                        textAlign: TextAlign.center,
-                        fontFam: "Lato",
-                        fontWeight: FontWeight.normal,
-                      ).paddingOnly(left: 8, bottom: 4)
-                    ]),
-              for (int i = 0; i < widget.l1.length; i++)
-                widget.l1.isNotEmpty
-                    // ? _buildTableRow([widget.l1[i], widget.l2[i], widget.l3[i],widget.lastColumnWidgets[i]])
-                    ? _buildTableRow(i)
-                    : TableRow(children: [
-                        const CustomText(
-                          text: "",
-                          fontSize: 2.0,
-                          textColor: Colors.black,
-                          textAlign: TextAlign.start,
-                          fontWeight: FontWeight.normal,
-                          fontFam: 'Lato',
-                        ).paddingOnly(left: 8, bottom: 4)
-                      ]),
-            ],
-          );
+    if (isLoading) return Center(child: buildShimmerLoader());
+
+    return Table(
+      defaultColumnWidth: const FlexColumnWidth(),
+      columnWidths: fitTableColumnWidths(widget.tableHeader.length),
+      defaultVerticalAlignment: TableCellVerticalAlignment.intrinsicHeight,
+      children: [
+        widget.l1.isNotEmpty
+            ? _buildRoundedTableRow(widget.tableHeader)
+            : TableRow(children: [
+                CustomText(
+                  text: context.l10n.commonNoDataFound,
+                  fontSize: 16,
+                  textColor: Colors.black,
+                  textAlign: TextAlign.center,
+                  fontFam: "Lato",
+                  fontWeight: FontWeight.normal,
+                ).paddingOnly(left: 8, bottom: 4)
+              ]),
+        for (int i = 0; i < widget.l1.length; i++)
+          if (widget.l1.isNotEmpty) _buildTableRow(i),
+      ],
+    );
   }
 
   shwProgressIndicator() async {
@@ -272,7 +267,6 @@ class _PrescriptionTableDataState extends State<PrescriptionTableData> {
       children: List.generate(
         data.length,
         (index) {
-          debugPrint("Cell: ${data[index]}");
           return TableCell(
             child: Container(
               decoration: BoxDecoration(
@@ -286,14 +280,16 @@ class _PrescriptionTableDataState extends State<PrescriptionTableData> {
                 ),
               ),
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 4.0, vertical: 8),
                 child: CustomText(
                   text: data[index],
-                  fontSize: 12,
+                  fontSize: localeScaledFontSize(context, 12),
                   textColor: Colors.black,
                   textAlign: TextAlign.center,
-                  fontWeight: FontWeight.normal,
+                  fontWeight: FontWeight.w600,
                   fontFam: 'Lato',
+                  softWrap: true,
                 ),
               ),
             ),
@@ -304,21 +300,19 @@ class _PrescriptionTableDataState extends State<PrescriptionTableData> {
   }
 
   TableRow _buildTableRow(int index) {
+    final lastCol = widget.tableHeader.length - 1;
+    final values = <dynamic>[
+      widget.l1[index],
+      widget.l2[index],
+      if (widget.l3 != null) widget.l3?[index],
+      if (widget.l4 != null) widget.l4?[index],
+    ];
+
     return TableRow(
       key: UniqueKey(),
       children: List.generate(
         widget.tableHeader.length,
         (i) {
-          if (i == (widget.tableHeader.length - 1)) {
-            debugPrint("Cell Len: ${widget.tableHeader}");
-            debugPrint("Cell Data:  ${[
-              widget.l1[index],
-              widget.l2[index],
-              if (widget.l3 != null) widget.l3?[index],
-              if (widget.l4 != null) widget.l4?[index]
-            ][i].toString()}");
-          }
-          // debugPrint("Cell Data:  ${widget.l1}  ${widget.l2}  ${widget.l3} ${widget.l4} - Len: ${widget.tableHeader}");
           return TableCell(
             key: UniqueKey(),
             verticalAlignment: TableCellVerticalAlignment.intrinsicHeight,
@@ -330,44 +324,26 @@ class _PrescriptionTableDataState extends State<PrescriptionTableData> {
                 decoration: BoxDecoration(
                   border: Border.all(color: const Color(0xFFE0E0E0)),
                 ),
-                child: i == (widget.tableHeader.length - 1)
+                child: i == lastCol
                     ? GestureDetector(
-                        onTap: () {
-                          // Trigger the callback with the index
-                          if (widget.onButtonPressed != null) {
-                            widget.onButtonPressed!(index);
-                          }
-                        },
+                        onTap: () => widget.onButtonPressed?.call(index),
                         child: widget.lastColumnWidgets?[index] ??
-                            Container(), // Use widget directly
+                            const SizedBox.shrink(),
                       )
-                    : Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Flexible(
-                              child: CustomText(
-                            text: [
-                              widget.l1[index],
-                              widget.l2[index],
-                              if (widget.l3 != null) widget.l3?[index],
-                              if (widget.l4 != null) widget.l4?[index]
-                            ][i]
-                                .toString(),
-                            fontSize: 12,
-                            textColor: Colors.black,
-                            textAlign: TextAlign.center,
-                            fontWeight: FontWeight.normal,
-                            fontFam: 'Lato',
-                          )),
-                        ],
+                    : CustomText(
+                        text: (i < values.length ? values[i] : '').toString(),
+                        fontSize: localeScaledFontSize(context, 12),
+                        textColor: Colors.black,
+                        textAlign: TextAlign.center,
+                        fontWeight: FontWeight.normal,
+                        fontFam: 'Lato',
+                        softWrap: true,
                       ),
               ),
             ),
           );
         },
       ),
-      // decoration: BoxDecoration(color: getColor(isPastDate)
-      // ),
     );
   }
 }

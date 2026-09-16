@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:heamodialysis/utils/color_constants.dart';
 import 'package:heamodialysis/widgets/custom_text.dart';
 import 'package:heamodialysis/widgets/custom_textfield.dart';
@@ -29,13 +30,15 @@ class CustomPopup {
                         fontWeight: FontWeight.w400,
                         textColor: Colors.black,
                         textAlign: TextAlign.center),
-                    CustomText(
-                        text: dialogText,
-                        fontSize: 18,
-                        fontFam: "Lato",
-                        fontWeight: FontWeight.w400,
-                        textColor: Colors.black,
-                        textAlign: TextAlign.center),
+                    Flexible(
+                      child: CustomText(
+                          text: dialogText,
+                          fontSize: 18,
+                          fontFam: "Lato",
+                          fontWeight: FontWeight.w400,
+                          textColor: Colors.black,
+                          textAlign: TextAlign.center),
+                    ),
                     InkWell(
                         onTap: () {
                           callB();
@@ -73,7 +76,7 @@ class CustomPopup {
                       CustomButton(
                         primColor: AppColor.primaryBackgroundColor,
                         secColor: AppColor.secondaryColor,
-                        buttonText: 'Ok',
+                        buttonText: l10n.commonOk,
                         path: 'assets/check.png',
                         callB: () {
                           callB();
@@ -115,13 +118,15 @@ class CustomPopup {
                       fontWeight: FontWeight.w400,
                       textColor: Colors.black,
                       textAlign: TextAlign.center),
-                  CustomText(
-                      text: dialogText,
-                      fontSize: 16,
-                      fontFam: "Lato",
-                      fontWeight: FontWeight.w400,
-                      textColor: Colors.black,
-                      textAlign: TextAlign.center),
+                  Flexible(
+                    child: CustomText(
+                        text: dialogText,
+                        fontSize: 16,
+                        fontFam: "Lato",
+                        fontWeight: FontWeight.w400,
+                        textColor: Colors.black,
+                        textAlign: TextAlign.center),
+                  ),
                 ],
               ).paddingSymmetric(horizontal: 6, vertical: 8),
               Image.asset(
@@ -150,7 +155,7 @@ class CustomPopup {
                         CustomButton(
                           primColor: AppColor.borderColor,
                           secColor: AppColor.borderColor,
-                          buttonText: 'No',
+                          buttonText: l10n.commonNo,
                           path: 'assets/cancel.png',
                           callB: () {
                             noCallBack();
@@ -166,7 +171,7 @@ class CustomPopup {
                         CustomButton(
                           primColor: AppColor.primaryBackgroundColor,
                           secColor: AppColor.secondaryColor,
-                          buttonText: 'Yes',
+                          buttonText: l10n.commonYes,
                           path: 'assets/check.png',
                           callB: () {
                             yesCallB();
@@ -209,13 +214,15 @@ class CustomPopup {
                       fontWeight: FontWeight.w400,
                       textColor: Colors.black,
                       textAlign: TextAlign.center),
-                  CustomText(
-                      text: dialogText,
-                      fontSize: 16,
-                      fontFam: "Lato",
-                      fontWeight: FontWeight.w400,
-                      textColor: Colors.black,
-                      textAlign: TextAlign.center),
+                  Flexible(
+                    child: CustomText(
+                        text: dialogText,
+                        fontSize: 16,
+                        fontFam: "Lato",
+                        fontWeight: FontWeight.w400,
+                        textColor: Colors.black,
+                        textAlign: TextAlign.center),
+                  ),
                   InkWell(
                       onTap: () {
                         cancelCallB();
@@ -269,7 +276,7 @@ class CustomPopup {
                           child: CustomButton(
                             primColor: AppColor.borderColor,
                             secColor: AppColor.borderColor,
-                            buttonText: 'No',
+                            buttonText: l10n.commonNo,
                             path: 'assets/cancel.png',
                             callB: () {
                               noCallB!();

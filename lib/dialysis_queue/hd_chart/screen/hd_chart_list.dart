@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dashboard/screen/technician/institutewise_dashboard_screen.dart';
@@ -35,15 +36,15 @@ class HdChartListState extends State<HdChartList> {
   StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
   bool hasInternet = true;
 
-  List<String> cardItemDetailsList = [
-    'Patient Id',
-    'Patient Name',
-    'Patient Age',
-    'Mobile Number',
-    'Treatment Id',
-    'Dialysis Date',
-    'Hd Treatment Count'
-  ];
+  List<String> _cardItemDetailsList(BuildContext context) => [
+        context.l10n.colPatientId,
+        context.l10n.colPatientName,
+        context.l10n.regPatientAge,
+        context.l10n.commonMobileNo,
+        context.l10n.colTreatmentId,
+        context.l10n.dischDialysisDate,
+        context.l10n.dqHdTreatmentCount
+      ];
 
   SearchedData? dropDownValue;
 
@@ -108,7 +109,7 @@ class HdChartListState extends State<HdChartList> {
         ? Scaffold(
             appBar: AppBar(
               title: CustomText(
-                text: 'HD Chart List',
+                text: context.l10n.dqHdChartList,
                 fontSize: 18.sp,
                 fontFam: 'Lato',
                 fontWeight: FontWeight.w400,
@@ -156,7 +157,7 @@ class HdChartListState extends State<HdChartList> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       CustomText(
-                                        text: "Search",
+                                        text: context.l10n.commonSearch,
                                         fontSize: 16.sp,
                                         fontFam: "Lato",
                                         fontWeight: FontWeight.w400,
@@ -189,7 +190,7 @@ class HdChartListState extends State<HdChartList> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       CustomText(
-                                        text: "Search By",
+                                        text: context.l10n.commonSearchBy,
                                         fontSize: 16.sp,
                                         fontFam: "Lato",
                                         fontWeight: FontWeight.normal,
@@ -208,7 +209,7 @@ class HdChartListState extends State<HdChartList> {
                                         child: DropdownButton<SearchedData>(
                                           isExpanded: true,
                                           value: dropDownValue,
-                                          hint: const Text("select"),
+                                          hint: Text("select"),
                                           onChanged: (SearchedData? newValue) {
                                             setModalState(() {
                                               dropDownValue = newValue;
@@ -243,7 +244,7 @@ class HdChartListState extends State<HdChartList> {
                                   Align(
                                     alignment: Alignment.centerLeft,
                                     child: CustomText(
-                                      text: "Value",
+                                      text: context.l10n.commonValue,
                                       fontSize: 16.sp,
                                       fontFam: "Lato",
                                       fontWeight: FontWeight.normal,
@@ -308,7 +309,8 @@ class HdChartListState extends State<HdChartList> {
                                                 Image.asset(
                                                     "assets/cancel.png"),
                                                 CustomText(
-                                                  text: "Cancel",
+                                                  text:
+                                                      context.l10n.commonCancel,
                                                   fontSize: 16.sp,
                                                   fontFam: "Lato",
                                                   fontWeight: FontWeight.normal,
@@ -365,7 +367,8 @@ class HdChartListState extends State<HdChartList> {
                                                 const Icon(Icons.search,
                                                     color: Colors.white),
                                                 CustomText(
-                                                  text: "Search",
+                                                  text:
+                                                      context.l10n.commonSearch,
                                                   fontSize: 16.sp,
                                                   fontFam: "Lato",
                                                   fontWeight: FontWeight.normal,
@@ -399,16 +402,16 @@ class HdChartListState extends State<HdChartList> {
             ),
             body: GetBuilder<HdChartController>(builder: (controller) {
               if (controller.isLoading) {
-                return const Center(child: SessionEndPatientsShimmer());
+                return Center(child: SessionEndPatientsShimmer());
               }
               final hdChartList = controller.hdChartList;
-              if (hdChartList == null || hdChartList.isEmpty){
-
+              if (hdChartList == null || hdChartList.isEmpty) {
                 return CommonStatusScreen(
-                  title: "No Data Found",
-                  description: "We are unable to find the data that\nyou are looking for ",
+                  title: context.l10n.commonNoDataFound,
+                  description:
+                      "We are unable to find the data that\nyou are looking for ",
                   img: "assets/no_Data_Found.png",
-                  buttonText: "Go Back",
+                  buttonText: context.l10n.commonGoBack,
                   onPressed: () {
                     Get.back();
                   },
@@ -418,35 +421,33 @@ class HdChartListState extends State<HdChartList> {
                   // },
                 );
               }
-              return
-              HdChartCardList(
-                      patientList: controller.hdChartList ?? [],
-                      cardItemDetailsList: cardItemDetailsList,
-                      isSecondColumnVisiable: false,
-                      isfromPredialysis: true,
-                      path1: "assets/file-list.png",
-                      path3: "assets/eye.png",
-                      // path5: controller.hdChartList[index].hdChartTreatCount == 0
-                      //     ? "assets/add-pre-dialysis.png"
-                      //     : "assets/edit.png",
-                      callB1: (index) {
-                        PatientData patientData = PatientData(
-                          patientId: controller.hdChartList![index].patientId,
-                          patientName: controller.hdChartList![index].fName,
-                          treatmentId:
-                              controller.hdChartList![index].treatmentId,
-                          age: controller.hdChartList![index].age,
-                        );
-                        Get.to(() => PatientHistorySchedular(
-                              patientData: patientData,
-                            ));
-                      },
-                      callB5: (index) {
-                        Get.to(() => AddEditHdChartScreen(
-                              hdChartListModel: controller.hdChartList![index],
-                            ));
-                      },
-                    );
+              return HdChartCardList(
+                patientList: controller.hdChartList ?? [],
+                cardItemDetailsList: _cardItemDetailsList(context),
+                isSecondColumnVisiable: false,
+                isfromPredialysis: true,
+                path1: "assets/file-list.png",
+                path3: "assets/eye.png",
+                // path5: controller.hdChartList[index].hdChartTreatCount == 0
+                //     ? "assets/add-pre-dialysis.png"
+                //     : "assets/edit.png",
+                callB1: (index) {
+                  PatientData patientData = PatientData(
+                    patientId: controller.hdChartList![index].patientId,
+                    patientName: controller.hdChartList![index].fName,
+                    treatmentId: controller.hdChartList![index].treatmentId,
+                    age: controller.hdChartList![index].age,
+                  );
+                  Get.to(() => PatientHistorySchedular(
+                        patientData: patientData,
+                      ));
+                },
+                callB5: (index) {
+                  Get.to(() => AddEditHdChartScreen(
+                        hdChartListModel: controller.hdChartList![index],
+                      ));
+                },
+              );
             }),
           )
         : InternetIssue(
@@ -509,55 +510,35 @@ class HdChartCardList extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            patientDetailsCard(cardItemDetailsList[0],
-                                patientList[index].patientId.toString()),
-                            //SizedBox(width: 2,),
-                            patientDetailsCard(cardItemDetailsList[4],
-                                patientList[index].treatmentId.toString()),
-                            SizedBox(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  patientCardActions(path1!, () {
-                                    callB1(index);
-                                  }, null),
-                                  Visibility(
-                                    visible: isSecondColumnVisiable,
-                                    child: SizedBox(
-                                        // width: 12.w,
-                                        ),
-                                  ),
-                                  Visibility(
-                                    visible: isSecondColumnVisiable,
-                                    child: SizedBox(
-                                        // width: 12.w,
-                                        ),
-                                  ),
+                            Expanded(
+                              child: patientDetailsCard(cardItemDetailsList[0],
+                                  patientList[index].patientId.toString()),
+                            ),
+                            SizedBox(width: 6.w),
+                            Expanded(
+                              child: patientDetailsCard(cardItemDetailsList[4],
+                                  patientList[index].treatmentId.toString()),
+                            ),
+                            SizedBox(width: 6.w),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                patientCardActions(path1!, () {
+                                  callB1(index);
+                                }, null),
+                                if (isfromPredialysis == true) ...[
                                   SizedBox(width: 8.w),
-                                  Visibility(
-                                    visible: isfromPredialysis == true,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        patientCardActions(
-                                                patientList[index]
-                                                            .hdChartTreatCount ==
-                                                        0
-                                                    ? "assets/add-pre-dialysis.png"
-                                                    : "assets/edit.png", () {
-                                          callB5(index);
-                                        }, null)
-                                            .paddingOnly(left: 5, right: 2.w),
-                                      ],
-                                    ),
-                                  ),
+                                  patientCardActions(
+                                      patientList[index].hdChartTreatCount == 0
+                                          ? "assets/add-pre-dialysis.png"
+                                          : "assets/edit.png", () {
+                                    callB5(index);
+                                  }, null),
                                 ],
-                              ),
-                            )
+                              ],
+                            ),
                           ],
                         ),
                         patientDetailsCard(

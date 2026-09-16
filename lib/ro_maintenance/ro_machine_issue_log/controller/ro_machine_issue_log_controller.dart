@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dialysis_queue/consumable_entry/model/add_consumable_entry_model.dart';
 import 'package:heamodialysis/dialysis_queue/consumable_entry/model/consumable_list_model.dart';
@@ -81,7 +82,7 @@ class RoMachineIssueLogController extends GetxController {
 
     try {
       await _repository.saveAddConsumableEntry(addConsumableEntryModel);
-      CustomMessage.toast("Success");
+      CustomMessage.toast(l10n.commonSuccess);
       await roMachineIssueController.getConsumableList(patientId);
       isLoading = false;
       Get.back();
@@ -121,12 +122,12 @@ class RoMachineIssueLogController extends GetxController {
       infoDateController.text = "";
       callAttendedByController.text = "";
       correctionActionController.text = "";
-      CustomMessage.toast("Saved Successfully");
+      CustomMessage.toast(l10n.roSavedSuccessfully);
       Get.off(const RoMachineIssueLogs());
     } on ApiException catch (e) {
       debugPrint(e.body);
       isLoading = false;
-      CustomMessage.toast("Save Fail");
+      CustomMessage.toast(l10n.roSaveFailed);
     }
     update();
   }

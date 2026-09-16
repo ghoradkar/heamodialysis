@@ -1,5 +1,7 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dashboard/screen/technician/institutewise_dashboard_screen.dart';
 import 'package:heamodialysis/discharge_form/controller/session_end_controller.dart';
@@ -32,15 +34,15 @@ class _SessionEndListState extends State<SessionEndList> {
   // final DashboardController dashboardController =
   // Get.put(DashboardController());
 
-  List<String> cardItemDetailsList = [
-    'Patient Id',
-    'Patient Name',
-    'Patient Age',
-    'Mobile No',
-    'Dialysis Date',
-    'Scheme Adopt',
-    'Treatment Id',
-  ];
+  List<String> _cardItemDetailsList(BuildContext context) => [
+        context.l10n.colPatientId,
+        context.l10n.colPatientName,
+        context.l10n.regPatientAge,
+        context.l10n.commonMobileNo,
+        context.l10n.dischDialysisDate,
+        context.l10n.regSchemeAdopted,
+        context.l10n.colTreatmentId,
+      ];
 
   // 🔹 Selected Type
   String? selectedType;
@@ -128,8 +130,8 @@ class _SessionEndListState extends State<SessionEndList> {
             bottomRight: Radius.circular(30), // adjust as needed
           ),
         ),
-        title: const CustomText(
-          text: 'Session End Patient List',
+        title: CustomText(
+          text: context.l10n.dischSessionEndPatientList,
           fontSize: 18.0,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,
@@ -175,8 +177,8 @@ class _SessionEndListState extends State<SessionEndList> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const CustomText(
-                                    text: "Search",
+                            CustomText(
+                                    text: context.l10n.commonSearch,
                                     fontSize: 16,
                                     fontFam: "Lato",
                                     fontWeight: FontWeight.w400,
@@ -198,9 +200,9 @@ class _SessionEndListState extends State<SessionEndList> {
                         //Type Dropdown
                         MyCustomDropdown(
                           selectedItem: dischargeController.selectedType,
-                          labelText: 'Type',
+                          labelText: context.l10n.colType,
                           items: dischargeController.typeList,
-                          hint: 'Select',
+                          hint: context.l10n.regHintSelect,
                           isRequired: true,
                           senValue: (value) {
                             dischargeController.selectedType = value;
@@ -209,10 +211,10 @@ class _SessionEndListState extends State<SessionEndList> {
                           filledColor: Colors.white,
                         ),
                         //value Entry filed
-                        const Align(
+                        Align(
                           alignment: Alignment.centerLeft,
                           child: CustomText(
-                              text: "Value",
+                              text: context.l10n.commonValue,
                               fontSize: 16,
                               fontFam: "Lato",
                               fontWeight: FontWeight.normal,
@@ -226,8 +228,8 @@ class _SessionEndListState extends State<SessionEndList> {
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: TextField(
                               controller: valueController,
-                              decoration: const InputDecoration(
-                                labelText: 'Patient Id, name, mobile no etc.',
+                              decoration: InputDecoration(
+                                labelText: context.l10n.regSearchPatientHint,
                                 labelStyle: TextStyle(color: Color(0xFFE1E1E1)),
                                 enabledBorder: OutlineInputBorder(
                                   borderSide:
@@ -247,9 +249,9 @@ class _SessionEndListState extends State<SessionEndList> {
                         MyCustomDropdown(
                           selectedItem:
                               dischargeController.selectedApprovalStatus,
-                          labelText: 'Approval Status',
+                          labelText: context.l10n.dischApprovalStatus,
                           items: ['Approved', 'Pending', 'Rejected'],
-                          hint: 'Select',
+                          hint: context.l10n.regHintSelect,
                           isRequired: true,
                           senValue: (value) {
                             setState(() {
@@ -283,8 +285,8 @@ class _SessionEndListState extends State<SessionEndList> {
                                           MainAxisAlignment.center,
                                       children: [
                                         Image.asset("assets/cancel.png"),
-                                        const CustomText(
-                                            text: "Cancel",
+                                        CustomText(
+                                            text: context.l10n.commonCancel,
                                             fontSize: 16,
                                             fontFam: "Lato",
                                             fontWeight: FontWeight.normal,
@@ -294,7 +296,7 @@ class _SessionEndListState extends State<SessionEndList> {
                                     )),
                               ),
                             ).paddingOnly(top: 20),
-                            const SizedBox(
+                            SizedBox(
                               width: 14,
                             ),
                             Align(
@@ -309,7 +311,7 @@ class _SessionEndListState extends State<SessionEndList> {
                                     padding:
                                         const EdgeInsets.symmetric(vertical: 8),
                                     alignment: Alignment.center,
-                                    width: 100,
+                                    width: 130.w,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
                                       gradient: LinearGradient(
@@ -321,7 +323,7 @@ class _SessionEndListState extends State<SessionEndList> {
                                         end: Alignment.bottomCenter,
                                       ),
                                     ),
-                                    child: const Row(
+                                    child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
@@ -330,7 +332,7 @@ class _SessionEndListState extends State<SessionEndList> {
                                           color: Colors.white,
                                         ),
                                         CustomText(
-                                            text: "Search",
+                                            text: context.l10n.commonSearch,
                                             fontSize: 16,
                                             fontFam: "Lato",
                                             fontWeight: FontWeight.normal,
@@ -359,7 +361,7 @@ class _SessionEndListState extends State<SessionEndList> {
               ),
             ),
           ),
-          const SizedBox(
+          SizedBox(
             width: 2,
           ),
         ],
@@ -369,16 +371,16 @@ class _SessionEndListState extends State<SessionEndList> {
           builder: (controller) {
             return controller.hasInternet
                 ? controller.isLoading
-                    ? const Center(child: SessionEndPatientsShimmer())
+                    ? Center(child: SessionEndPatientsShimmer())
                     : (controller.filteredDialysisEventList != null
                             ? controller.filteredDialysisEventList!.isEmpty
                             : controller.dischargeList.isEmpty)
                         ? CommonStatusScreen(
-                            title: "No Data Found",
+                            title: context.l10n.commonNoDataFound,
                             description:
                                 "We are unable to find the data that\nyou are looking for ",
                             img: "assets/no_Data_Found.png",
-                            buttonText: "Go Back",
+                            buttonText: context.l10n.commonGoBack,
                             onPressed: () {
                               Get.back();
                             },
@@ -439,7 +441,7 @@ class _SessionEndListState extends State<SessionEndList> {
                                             .filteredDialysisEventList![index]
                                         : controller.dischargeList[index],
                                 // patientList: controller.dischargeList[index],
-                                cardItemDetailsList: cardItemDetailsList,
+                                cardItemDetailsList: _cardItemDetailsList(context),
                                 path1: "assets/discharge.png",
                                 path2: "assets/file-list.png",
                                 callB1: () {

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dashboard/screen/technician/institutewise_dashboard_screen.dart';
 import 'package:heamodialysis/dialysis_queue/post_dialysis/screen/edit_post_dialysis_screen.dart';
@@ -38,15 +39,14 @@ class _PostDialysisScreenState extends State<PostDialysisScreen> {
 
   bool hasInternet = true;
 
-  List<String> cardItemDetailsList = [
-    'Patient Id',
-    'Patient Name',
-    'Patient Age',
-    'Mobile Number',
-    'Last Dialysis Session Under Scheme',
-    'Viral Load Status'
-
-  ];
+  List<String> _cardItemDetailsList(BuildContext context) => [
+        context.l10n.colPatientId,
+        context.l10n.colPatientName,
+        context.l10n.regPatientAge,
+        context.l10n.commonMobileNo,
+        context.l10n.schedLastSessionUnderScheme,
+        context.l10n.colViralLoadStatus
+      ];
 
   SearchedData? dropDownValue;
   SearchedData? dropDownValue2;
@@ -119,8 +119,8 @@ class _PostDialysisScreenState extends State<PostDialysisScreen> {
   Widget build(BuildContext context) {
     return _isNetworkAvailable ?  Scaffold(
       appBar: AppBar(
-        title: const CustomText(
-          text: 'Post Dialysis Patient List',
+        title: CustomText(
+          text: context.l10n.dqPostDialysisPatientList,
           fontSize: 18.0,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,
@@ -164,8 +164,8 @@ class _PostDialysisScreenState extends State<PostDialysisScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const CustomText(
-                                text: "Search",
+                            CustomText(
+                                text: context.l10n.commonSearch,
                                 fontSize: 16,
                                 fontFam: "Lato",
                                 fontWeight: FontWeight.w400,
@@ -189,12 +189,12 @@ class _PostDialysisScreenState extends State<PostDialysisScreen> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const CustomText(
-                                text: "Search By",
+                            CustomText(
+                                text: context.l10n.commonSearchBy,
                                 fontSize: 16,
                                 fontFam: "Lato",
                                 fontWeight: FontWeight.normal,
-                                textColor: Color(0xff515151),
+                                textColor: const Color(0xff515151),
                                 textAlign: TextAlign.start)
                                 .paddingOnly(top: 10, bottom: 4),
                             Container(
@@ -231,28 +231,28 @@ class _PostDialysisScreenState extends State<PostDialysisScreen> {
                             ),
                           ],
                         ),
-                        const Align(
+                        Align(
                           alignment: Alignment.centerLeft,
                           child: CustomText(
-                              text: "Value",
+                              text: context.l10n.commonValue,
                               fontSize: 16,
                               fontFam: "Lato",
                               fontWeight: FontWeight.normal,
-                              textColor: Color(0xff515151),
+                              textColor: const Color(0xff515151),
                               textAlign: TextAlign.start),
                         ).paddingOnly(top: 10, bottom: 4),
                         TextField(
                             controller: postDialysisController.valueController,
-                            decoration: const InputDecoration(
-                              labelText: 'Patient Id, name, mobile no etc.',
-                              labelStyle: TextStyle(color: Color(0xFFE1E1E1)),
-                              enabledBorder: OutlineInputBorder(
+                            decoration: InputDecoration(
+                              labelText: context.l10n.regSearchPatientHint,
+                              labelStyle: const TextStyle(color: Color(0xFFE1E1E1)),
+                              enabledBorder: const OutlineInputBorder(
                                 borderSide:
                                 BorderSide(color: Color(0xFFE1E1E1)),
                                 borderRadius:
                                 BorderRadius.all(Radius.circular(10.0)),
                               ),
-                              focusedBorder: OutlineInputBorder(
+                              focusedBorder: const OutlineInputBorder(
                                 borderSide:
                                 BorderSide(color: Color(0xFFE1E1E1)),
                                 borderRadius:
@@ -282,8 +282,8 @@ class _PostDialysisScreenState extends State<PostDialysisScreen> {
                                       MainAxisAlignment.center,
                                       children: [
                                         Image.asset("assets/cancel.png"),
-                                        const CustomText(
-                                            text: "Cancel",
+                                        CustomText(
+                                            text: context.l10n.commonCancel,
                                             fontSize: 16,
                                             fontFam: "Lato",
                                             fontWeight: FontWeight.normal,
@@ -311,7 +311,7 @@ class _PostDialysisScreenState extends State<PostDialysisScreen> {
                                     padding:
                                     const EdgeInsets.symmetric(vertical: 8),
                                     alignment: Alignment.center,
-                                    width: 100,
+                                    width: 130,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
                                       gradient: LinearGradient(
@@ -323,16 +323,16 @@ class _PostDialysisScreenState extends State<PostDialysisScreen> {
                                         end: Alignment.bottomCenter,
                                       ),
                                     ),
-                                    child: const Row(
+                                    child: Row(
                                       mainAxisAlignment:
                                       MainAxisAlignment.center,
                                       children: [
-                                        Icon(
+                                        const Icon(
                                           Icons.search,
                                           color: Colors.white,
                                         ),
                                         CustomText(
-                                            text: "Search",
+                                            text: context.l10n.commonSearch,
                                             fontSize: 16,
                                             fontFam: "Lato",
                                             fontWeight: FontWeight.normal,
@@ -364,18 +364,18 @@ class _PostDialysisScreenState extends State<PostDialysisScreen> {
           init: PostDialysisController(),
           builder: (controller) {
             if (controller.isLoading) {
-              return Center(child: SessionEndPatientsShimmer());
+              return const Center(child: SessionEndPatientsShimmer());
             }
             final postDialysisList =
                 controller.postDialysisListModel?.data ?? [];
             // 3️⃣ No Data Found state
             if (postDialysisList.isEmpty) {
               return CommonStatusScreen(
-                title: "No Data Found",
+                title: context.l10n.commonNoDataFound,
                 description:
                 "We are unable to find the data that\nyou are looking for ",
                 img: "assets/no_Data_Found.png",
-                buttonText: "Go Back",
+                buttonText: context.l10n.commonGoBack,
                 onPressed: () {
                   Get.back();
                 },
@@ -385,7 +385,7 @@ class _PostDialysisScreenState extends State<PostDialysisScreen> {
             return PreDialysisCardList(
               patientList:
               controller.postDialysisListModel?.data ?? [],
-              cardItemDetailsList: cardItemDetailsList,
+              cardItemDetailsList: _cardItemDetailsList(context),
               isSecondColumnVisiable: false,
               isfromPredialysis: true,
               path1: "assets/file-list.png",

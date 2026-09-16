@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:heamodialysis/dashboard/widget/dash_info_table_total.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:heamodialysis/utils/color_constants.dart';
 
 class TableBillGeneration extends StatelessWidget {
@@ -18,7 +19,7 @@ class TableBillGeneration extends StatelessWidget {
     final double screenWidth = MediaQuery.of(context).size.width;
 
     return invoiceData.isEmpty
-        ? const Center(child: Text('No data available'))
+        ? Center(child: Text(context.l10n.commonNoDataFound))
         : Container(
       decoration:  BoxDecoration(
         border: Border(
@@ -30,8 +31,10 @@ class TableBillGeneration extends StatelessWidget {
       child: SizedBox(
         height: 300, // Specify the height for the table
         child: SingleChildScrollView(
-          scrollDirection: Axis.vertical, // Enable vertical scrolling
-          child: DataTable(
+          scrollDirection: Axis.horizontal,
+          child: SingleChildScrollView(
+            scrollDirection: Axis.vertical, // Enable vertical scrolling
+            child: DataTable(
             headingRowColor: WidgetStateProperty.resolveWith(
                   (states) => AppColor.primaryBackgroundColor,
             ),
@@ -96,6 +99,7 @@ class TableBillGeneration extends StatelessWidget {
                   ],
                 );
               },
+            ),
             ),
           ),
         ),

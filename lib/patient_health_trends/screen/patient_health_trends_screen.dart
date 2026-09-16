@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/patient_health_trends/screen/patient_hemoglobin_tracking/patient_hemoglobin_list_screen.dart';
 import 'package:heamodialysis/patient_health_trends/screen/dialysis_investigation_report/patient_dialysis_invest_screen.dart';
@@ -31,26 +32,26 @@ class _PatientHealthTrendsScreenState extends State<PatientHealthTrendsScreen> {
     });
   }
 
-  final List<Map<String, dynamic>> menuItems = [
-    {
-      "icon": "assets/Dialysis.png",
-      "label": "Dialysis Vital Chart",
-      "color": Color(0xffD4F1F4),
-      "page": () => const PatientDialysisVitalScreen(),
-    },
-    {
-      "icon": "assets/DialysisInvestigationResultChart.png",
-      "label": "Dialysis Investigation Result Chart",
-      "color": Color(0xffFFE3E3),
-      "page": () => const PatientDialysisInvestScreen(),
-    },
-    {
-      "icon": "assets/Hemoglobin.png",
-      "label": "Hemoglobin Tracking Report",
-      "color": Color(0xffFFF4CC),
-      "page": () => const PatientHemoglobinScreen(),
-    }
-  ];
+  List<Map<String, dynamic>> _menuItems(BuildContext context) => [
+        {
+          "icon": "assets/Dialysis.png",
+          "label": context.l10n.phtMenuVitalChart,
+          "color": const Color(0xffD4F1F4),
+          "page": () => const PatientDialysisVitalScreen(),
+        },
+        {
+          "icon": "assets/DialysisInvestigationResultChart.png",
+          "label": context.l10n.phtMenuInvestChart,
+          "color": const Color(0xffFFE3E3),
+          "page": () => const PatientDialysisInvestScreen(),
+        },
+        {
+          "icon": "assets/Hemoglobin.png",
+          "label": context.l10n.phtHaemoglobinTracking,
+          "color": const Color(0xffFFF4CC),
+          "page": () => const PatientHemoglobinScreen(),
+        }
+      ];
 
 
   @override
@@ -61,8 +62,8 @@ class _PatientHealthTrendsScreenState extends State<PatientHealthTrendsScreen> {
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(bottomRight: Radius.circular(30)),
         ),
-        title: const CustomText(
-          text: 'Patient Health Trends',
+        title: CustomText(
+          text: context.l10n.phtPatientHealthTrends,
           fontSize: 18.0,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,
@@ -81,7 +82,7 @@ class _PatientHealthTrendsScreenState extends State<PatientHealthTrendsScreen> {
         child: LayoutBuilder(
           builder: (context, constraints) {
             return GridView.builder(
-              itemCount: menuItems.length,
+              itemCount: _menuItems(context).length,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
                 crossAxisSpacing: 8,
@@ -90,7 +91,7 @@ class _PatientHealthTrendsScreenState extends State<PatientHealthTrendsScreen> {
               ),
 
               itemBuilder: (context, index) {
-                final item = menuItems[index];
+                final item = _menuItems(context)[index];
 
                 if (isLoading) {
                   return PatientHealthTrendsShimmer();
@@ -115,7 +116,7 @@ class _PatientHealthTrendsScreenState extends State<PatientHealthTrendsScreen> {
                             fit: BoxFit.contain,
                           ),
                         ),
-                        const SizedBox(height: 6),
+                        SizedBox(height: 6),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 4),
                           child: CustomText(

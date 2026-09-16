@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/new_registration/model/blood_group/blood_data.dart';
 import 'package:heamodialysis/new_registration/model/blood_group/blood_group_model.dart';
@@ -517,11 +518,12 @@ class NewRegistrationController extends GetxController {
         await getPatientReport(patientId.toString(), userId);
 
         if (pageTitle == "Edit Patient Details") {
-          CustomMessage.toast('Updated Successfully');
+          CustomMessage.toast(l10n.regUpdatedSuccessfully);
           CustomPopup.showSuccessDialog(() {
             clearAllFields();
             Get.off(const RegisteredPatientList());
-          }, "Updated Successfully", "Please Note Patient Id $patientId");
+          }, l10n.regUpdatedSuccessfully,
+              l10n.regPleaseNotePatientId(patientId.toString()));
         } else {
           CustomPopup.showSuccessDialog(() {
             CustomPopup.showConfirmationDialog(() {
@@ -536,12 +538,12 @@ class NewRegistrationController extends GetxController {
               if (patientReportFile != null && patientReportFile!.existsSync()) {
                 await OpenFile.open(patientReportFile?.path);
               }
-            }, "Print Report?", '', "assets/success-popup.png");
-          }, "Registration Completed\nSuccessfully",
-              "Please Note Patient Id $patientId");
+            }, l10n.regPrintReport, '', "assets/success-popup.png");
+          }, l10n.regRegistrationCompleted,
+              l10n.regPleaseNotePatientId(patientId.toString()));
         }
       } else {
-        CustomMessage.toast('Upload failed');
+        CustomMessage.toast(l10n.regUploadFailed);
       }
     } catch (error) {
       debugPrint(error.toString());

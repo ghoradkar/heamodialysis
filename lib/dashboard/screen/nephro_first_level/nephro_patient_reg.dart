@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dashboard/model/dash_info_data.dart';
 import 'package:heamodialysis/utils/color_constants.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:heamodialysis/widgets/custom_text.dart';
 
 class DashInfoTableNephro extends StatelessWidget {
@@ -86,7 +87,7 @@ class DashInfoTableNephro extends StatelessWidget {
       )
           :  Center(
         child: CustomText(
-            text: "No Data",
+            text: context.l10n.commonNoDataFound,
             fontSize: 16.sp,
             fontWeight: FontWeight.normal,
             textColor: Colors.black,

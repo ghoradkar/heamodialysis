@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/internet/no_internet_connectivity.dart';
@@ -93,7 +94,7 @@ class UploadDocumentState extends State<UploadDocument>
                   height: 20.h,
                 ),
                 CustomExpandableContainer(
-                  text: 'Upload Document',
+                  text: context.l10n.regUploadDocument,
                   leading: "assets/file-text.png",
                   child: Column(
                     children: <Widget>[
@@ -465,7 +466,7 @@ class UploadDocumentState extends State<UploadDocument>
                     secColor: AppColor.secondaryColor,
                     textColor: Colors.white,
                     iconColor: Colors.white,
-                    buttonText: 'Save',
+                    buttonText: context.l10n.commonSave,
                     path: 'assets/save-next.png',
                     callB: newRegistrationController.isLoading
                         ? null
@@ -473,19 +474,19 @@ class UploadDocumentState extends State<UploadDocument>
                       // Check if all required documents are uploaded
                       // First validate Personal Info Tab
                       if (!validatePersonalInfoTab()) {
-                        CustomMessage.toast("Please complete Personal Information first");
+                        CustomMessage.toast(context.l10n.regCompletePersonalFirst);
                         return;
                       }
 
                       // Validate Demographic Info Tab
                       if (!validateDemographicInfoTab()) {
-                        CustomMessage.toast("Please complete Demographic Information first");
+                        CustomMessage.toast(context.l10n.regCompleteDemographicFirst);
                         return;
                       }
 
                       // Validate History of Dialysis Tab
                       if (!validateHistoryOfDialysisTab()) {
-                        CustomMessage.toast("Please complete History of Dialysis first");
+                        CustomMessage.toast(context.l10n.regCompleteHistoryFirst);
                         return;
                       }
                       bool allRequiredDocsUploaded =
@@ -496,7 +497,7 @@ class UploadDocumentState extends State<UploadDocument>
 
                       if (!allRequiredDocsUploaded) {
                         CustomMessage.toast(
-                            "Please upload Required Documents");
+                            context.l10n.regUploadRequiredDocuments);
                         return;
                       }
 
@@ -640,10 +641,10 @@ class UploadDocumentState extends State<UploadDocument>
                       //   }
                       // } else {
                       //   CustomMessage.toast(
-                      //       "Please upload Required Documents");
+                      //       context.l10n.regUploadRequiredDocuments);
                       // }
                     },
-                    buttonWidth: 140.w,
+                    buttonWidth: 150.w,
                   ),
                 ),
                 SizedBox(

@@ -1,5 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dialysis_queue/dialysis_event/screen/add_dialysis_event.dart';
@@ -91,7 +92,7 @@ class _DialysisEventDetailsState extends State<DialysisEventDetails> {
     return Scaffold(
       appBar: AppBar(
         title:  CustomText(
-          text: 'Dialysis Event Details',
+          text: context.l10n.dqDialysisEventDetails,
           fontSize: 18.sp,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,
@@ -526,7 +527,7 @@ class _DialysisEventDetailsState extends State<DialysisEventDetails> {
                                 )
                               :  Center(
                                   child: CustomText(
-                                      text: "No Data Found",
+                                      text: context.l10n.commonNoDataFound,
                                       fontSize: 16.sp,
                                       fontWeight: FontWeight.w500,
                                       textColor: Colors.black,

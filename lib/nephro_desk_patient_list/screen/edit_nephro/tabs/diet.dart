@@ -1,5 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dashboard/model/nephro_list.dart';
 import 'package:heamodialysis/internet/no_internet_connectivity.dart';
@@ -103,7 +104,7 @@ class _DietScreenState extends State<DietScreen> {
                                 },
                                 child:
                                     Image.asset("assets/add-pre-dialysis.png")),
-                            const SizedBox(
+                            SizedBox(
                               width: 8,
                             ),
                             // Image.asset("assets/download.png")
@@ -112,11 +113,11 @@ class _DietScreenState extends State<DietScreen> {
                         Expanded(
                           child: (controller.dietList ?? []).isEmpty
                               ? CommonStatusScreen(
-                                  title: "No Data Found",
+                                  title: context.l10n.commonNoDataFound,
                                   description:
                                       "We are unable to find the data that\nyou are looking for ",
                                   img: "assets/no_Data_Found.png",
-                                  buttonText: "Go Back",
+                                  buttonText: context.l10n.commonGoBack,
                                   onPressed: () {
                                     Get.back();
                                   },

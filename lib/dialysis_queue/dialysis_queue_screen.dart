@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dialysis_queue/post_dialysis/screen/post_dialysis_screen.dart';
 import 'package:heamodialysis/dialysis_queue/pre_dialysis/pre_dialysis_list/screen/pre_dialysis_screen.dart';
@@ -34,14 +35,14 @@ class _DialysisQueueScreenState extends State<DialysisQueueScreen> {
     );
   }
 
-  final List<Map<String, dynamic>> options = [
-    {"title": "Pre Dialysis", "icon": "assets/preDialysis.png", "color": const Color(0xFFDDF5FF)},
-    {"title": "Post Dialysis", "icon": "assets/postDialysis.png", "color": const Color(0xFFFFE7E7)},
-    {"title": "Dialysis Event", "icon": "assets/dialysisEvent.png", "color": const Color(0xFFFFF9D7)},
-    {"title": "Investigation", "icon": "assets/Investigation.png", "color": const Color(0xFFedfff5)},
-    {"title": "Consumable Entry", "icon": "assets/Consumable.png", "color": const Color(0xFFE3EDFF)},
-    {"title": "HD Chart", "icon": "assets/HD Chart.png", "color": const Color(0xFFF8EFFA)},
-  ];
+  List<Map<String, dynamic>> _options(BuildContext context) => [
+        {"title": context.l10n.dqPreDialysis, "icon": "assets/preDialysis.png", "color": const Color(0xFFDDF5FF)},
+        {"title": context.l10n.dqPostDialysis, "icon": "assets/postDialysis.png", "color": const Color(0xFFFFE7E7)},
+        {"title": context.l10n.dqDialysisEvent, "icon": "assets/dialysisEvent.png", "color": const Color(0xFFFFF9D7)},
+        {"title": context.l10n.dqInvestigation, "icon": "assets/Investigation.png", "color": const Color(0xFFedfff5)},
+        {"title": context.l10n.dqConsumableEntry, "icon": "assets/Consumable.png", "color": const Color(0xFFE3EDFF)},
+        {"title": context.l10n.dqHdChart, "icon": "assets/HD Chart.png", "color": const Color(0xFFF8EFFA)},
+      ];
 
   @override
   Widget build(BuildContext context) {
@@ -54,8 +55,8 @@ class _DialysisQueueScreenState extends State<DialysisQueueScreen> {
             bottomRight: Radius.circular(30),
           ),
         ),
-        title: const CustomText(
-          text: 'Dialysis Queue',
+        title: CustomText(
+          text: context.l10n.drawerDialysisQueue,
           fontSize: 18.0,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,
@@ -81,18 +82,18 @@ class _DialysisQueueScreenState extends State<DialysisQueueScreen> {
           child: GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: isLoading ? 6 : options.length,
+            itemCount: isLoading ? 6 : _options(context).length,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,
               mainAxisSpacing: 8,
               crossAxisSpacing: 8,
-              childAspectRatio: 0.83,
+              childAspectRatio: 0.78,
             ),
             itemBuilder: (context, index) {
               if (isLoading) {
                 return DialysisShimmer();
               }
-              return buildOptionCard(options[index],index);
+              return buildOptionCard(_options(context)[index], index);
             },
           ),
         ),
@@ -131,23 +132,28 @@ class _DialysisQueueScreenState extends State<DialysisQueueScreen> {
           //   ),
           // ],
         ),
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Image.asset(
               data["icon"],
-              width: 45,
-              height: 45,
+              width: 42,
+              height: 42,
             ),
-            const SizedBox(height: 12),
-            Text(
-              data["title"],
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
+            const SizedBox(height: 8),
+            Flexible(
+              child: Text(
+                data["title"],
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
               ),
             )
           ],

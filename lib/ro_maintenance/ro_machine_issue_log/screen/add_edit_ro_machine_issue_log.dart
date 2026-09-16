@@ -1,5 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/internet/no_internet_connectivity.dart';
 import 'package:heamodialysis/new_registration/model/institute/institute_data.dart';
@@ -179,8 +180,8 @@ class AddRoMachineIssueLogState extends State<AddRoMachineIssueLog> {
       appBar: AppBar(
         title: CustomText(
           text: widget.isEdit == true
-              ? "Edit RO Machine Issue Logs"
-              : 'Add RO Machine Issue Logs',
+              ? context.l10n.roEditMachineIssueLog
+              : context.l10n.roAddMachineIssueLog,
           fontSize: 18.0,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,
@@ -215,7 +216,7 @@ class AddRoMachineIssueLogState extends State<AddRoMachineIssueLog> {
                         child: Column(
                           children: [
                             MyCustomDropdown(
-                              labelText: 'Institute Name',
+                              labelText: context.l10n.colInstituteName,
                               isViewProfile:
                                  userData['unitId'] == 1
                                       ? false
@@ -224,7 +225,7 @@ class AddRoMachineIssueLogState extends State<AddRoMachineIssueLog> {
                                       ?.map((e) => e.unitName)
                                       .toList() ??
                                   [],
-                              hint: 'Select',
+                              hint: context.l10n.regHintSelect,
                               isRequired: false,
                               senValue: (value) {
                                 roMachineIssueController.selectedInsti =
@@ -242,12 +243,12 @@ class AddRoMachineIssueLogState extends State<AddRoMachineIssueLog> {
                             MyCustomDropdown(
                               selectedItem:
                                   roMachineIssueController.initialMachine,
-                              labelText: 'Machine Name',
+                              labelText: context.l10n.machMachineName,
                               items: controller.getMachineNameModel?.data
                                       ?.map((e) => e.machineName)
                                       .toList() ??
                                   [],
-                              hint: 'Select',
+                              hint: context.l10n.regHintSelect,
                               isRequired: false,
                               senValue: (value) {
                                 roMachineIssueController.selectedMachine =
@@ -262,8 +263,8 @@ class AddRoMachineIssueLogState extends State<AddRoMachineIssueLog> {
                               filledColor: Colors.white,
                             ),
                             CustomDateField(
-                              labelText: 'Issue Date',
-                              hint: 'Select Date',
+                              labelText: context.l10n.roIssueDate,
+                              hint: context.l10n.dashSelectDate,
                               isRequired: false,
                               callB: () {
                                 pickInspectionDate(context);
@@ -275,8 +276,8 @@ class AddRoMachineIssueLogState extends State<AddRoMachineIssueLog> {
                             ),
                             CustomTextField(
                               fontSize: 16,
-                              labelText: 'Issue Description',
-                              hintText: 'Enter',
+                              labelText: context.l10n.roIssueDescription,
+                              hintText: context.l10n.regHintEnter,
                               isRequired: false,
                               keyBoardType: TextInputType.text,
                               txtController:
@@ -287,8 +288,8 @@ class AddRoMachineIssueLogState extends State<AddRoMachineIssueLog> {
                             ),
                             CustomTextField(
                               fontSize: 16,
-                              labelText: 'Informed To',
-                              hintText: 'Enter',
+                              labelText: context.l10n.roInformedTo,
+                              hintText: context.l10n.regHintEnter,
                               isRequired: false,
                               keyBoardType: TextInputType.text,
                               txtController:
@@ -299,8 +300,8 @@ class AddRoMachineIssueLogState extends State<AddRoMachineIssueLog> {
                             ),
                             CustomTextField(
                               fontSize: 16,
-                              labelText: 'Informed By',
-                              hintText: 'Enter',
+                              labelText: context.l10n.roInformedBy,
+                              hintText: context.l10n.regHintEnter,
                               isRequired: false,
                               keyBoardType: TextInputType.text,
                               txtController:
@@ -310,8 +311,8 @@ class AddRoMachineIssueLogState extends State<AddRoMachineIssueLog> {
                               maxLines: 1,
                             ),
                             CustomDateField(
-                              labelText: 'Information Date',
-                              hint: 'Select Date',
+                              labelText: context.l10n.roInformationDate,
+                              hint: context.l10n.dashSelectDate,
                               isRequired: false,
                               callB: () {
                                 pickNextInspecDate(context);
@@ -323,8 +324,8 @@ class AddRoMachineIssueLogState extends State<AddRoMachineIssueLog> {
                             ),
                             CustomTextField(
                               fontSize: 16,
-                              labelText: 'Call Attended By',
-                              hintText: 'Enter',
+                              labelText: context.l10n.roCallAttendedBy,
+                              hintText: context.l10n.regHintEnter,
                               isRequired: false,
                               keyBoardType: TextInputType.text,
                               txtController: roMachineIssueController
@@ -335,8 +336,8 @@ class AddRoMachineIssueLogState extends State<AddRoMachineIssueLog> {
                             ),
                             CustomTextField(
                               fontSize: 16,
-                              labelText: 'Correction Action',
-                              hintText: 'Enter',
+                              labelText: context.l10n.roCorrectionAction,
+                              hintText: context.l10n.regHintEnter,
                               isRequired: false,
                               keyBoardType: TextInputType.text,
                               txtController: roMachineIssueController
@@ -348,13 +349,13 @@ class AddRoMachineIssueLogState extends State<AddRoMachineIssueLog> {
                             MyCustomDropdown(
                               selectedItem:
                                   roMachineIssueController.initialProblemSolved,
-                              labelText: 'Problem Resolved',
+                              labelText: context.l10n.roProblemResolved,
                               items: roMachineIssueController
                                       .problemResolvedModel?.data
                                       ?.map((e) => e.lookupDetDescEn)
                                       .toList() ??
                                   [],
-                              hint: 'Select',
+                              hint: context.l10n.regHintSelect,
                               isRequired: false,
                               senValue: (value) {
                                 roMachineIssueController.initialProblemSolved =
@@ -370,8 +371,8 @@ class AddRoMachineIssueLogState extends State<AddRoMachineIssueLog> {
                             ),
                             CustomTextField(
                               fontSize: 16,
-                              labelText: 'Comments',
-                              hintText: 'Enter Comments',
+                              labelText: context.l10n.commonComments,
+                              hintText: context.l10n.nephroEnterComments,
                               isRequired: false,
                               keyBoardType: TextInputType.text,
                               txtController:
@@ -385,7 +386,7 @@ class AddRoMachineIssueLogState extends State<AddRoMachineIssueLog> {
                               children: [
                                 CustomButton(
                                   isLoading: controller.isLoading,
-                                  buttonText: 'Save',
+                                  buttonText: context.l10n.commonSave,
                                   path: 'assets/save-ro-disinfec.png',
                                   callB: controller.isLoading
                                       ? null
@@ -565,7 +566,7 @@ class AddRoMachineIssueLogState extends State<AddRoMachineIssueLog> {
                                   iconColor: Colors.white,
                                 ),
                                 CustomButton(
-                                  buttonText: 'Reset',
+                                  buttonText: context.l10n.commonReset,
                                   path: 'assets/refresh.png',
                                   callB: () {
                                     roMachineIssueController.selectedInsti =
@@ -601,7 +602,7 @@ class AddRoMachineIssueLogState extends State<AddRoMachineIssueLog> {
                                   iconColor: Colors.white,
                                 ),
                                 CustomButton(
-                                  buttonText: 'Cancel',
+                                  buttonText: context.l10n.commonCancel,
                                   path: 'assets/cancel.png',
                                   callB: () {
                                     Get.back();

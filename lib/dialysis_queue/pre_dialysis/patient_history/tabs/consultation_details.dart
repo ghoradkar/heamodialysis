@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/utils/color_constants.dart';
 import 'package:heamodialysis/widgets/custom_text.dart';
@@ -24,10 +25,10 @@ class _ConsultationDetailsState extends State<ConsultationDetails> {
       child:   Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Row(
+          Row(
             children: [
               CustomText(
-                  text: "Patient ID : ",
+                  text: "${context.l10n.colPatientId} : ",
                   fontSize: 14,
                   fontFam: "Lato",
                   fontWeight: FontWeight.w400,
@@ -42,7 +43,7 @@ class _ConsultationDetailsState extends State<ConsultationDetails> {
                   textAlign: TextAlign.start),
              SizedBox(width: 20,),
               CustomText(
-                  text: "Treatment ID : ",
+                  text: "${context.l10n.colTreatmentId} : ",
                   fontSize: 14,
                   fontFam: "Lato",
                   fontWeight: FontWeight.w400,
@@ -57,10 +58,10 @@ class _ConsultationDetailsState extends State<ConsultationDetails> {
                   textAlign: TextAlign.start),
             ],
           ).paddingSymmetric(vertical: 2),
-          const Row(
+          Row(
             children: [
               CustomText(
-                  text: "Institute Name : ",
+                  text: "${context.l10n.colInstituteName} : ",
                   fontSize: 14,
                   fontFam: "Lato",
                   fontWeight: FontWeight.w400,
@@ -78,10 +79,10 @@ class _ConsultationDetailsState extends State<ConsultationDetails> {
 
             ],
           ).paddingSymmetric(vertical: 2),
-          const Row(
+          Row(
             children: [
               CustomText(
-                  text: "Appointment Date : ",
+                  text: "${context.l10n.schedAppointmentDate} : ",
                   fontSize: 14,
                   fontFam: "Lato",
                   fontWeight: FontWeight.w400,
@@ -97,10 +98,10 @@ class _ConsultationDetailsState extends State<ConsultationDetails> {
 
             ],
           ).paddingSymmetric(vertical: 2),
-          const Row(
+          Row(
             children: [
               CustomText(
-                  text: "Slot Time : ",
+                  text: "${context.l10n.schedSlotTime} : ",
                   fontSize: 14,
                   fontFam: "Lato",
                   fontWeight: FontWeight.w400,
@@ -116,10 +117,10 @@ class _ConsultationDetailsState extends State<ConsultationDetails> {
 
             ],
           ).paddingSymmetric(vertical: 2),
-          const Row(
+          Row(
             children: [
               CustomText(
-                  text: "Bed No : ",
+                  text: "${context.l10n.schedBedNo} : ",
                   fontSize: 14,
                   fontFam: "Lato",
                   fontWeight: FontWeight.w400,

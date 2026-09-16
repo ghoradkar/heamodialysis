@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dialysis_queue/pre_dialysis/patient_history/tabs/coversheet.dart';
 import 'package:heamodialysis/internet/no_internet_connectivity.dart';
@@ -166,8 +167,8 @@ class _DialysisQueueState extends State<DialysisQueue>
     return _isNetworkAvailable
         ? Scaffold(
             appBar: AppBar(
-              title: const CustomText(
-                text: 'Patient History',
+              title: CustomText(
+                text: context.l10n.schedPatientHistory,
                 fontSize: 18.0,
                 fontFam: 'Lato',
                 fontWeight: FontWeight.w400,
@@ -188,11 +189,11 @@ class _DialysisQueueState extends State<DialysisQueue>
                   (controller.schedularPreDialysisHistory == null ||
                       controller.postDialysisSchedular == null)) {
                 return CommonStatusScreen(
-                  title: "No Data Found",
+                  title: context.l10n.commonNoDataFound,
                   description:
                       "We are unable to find the data you are looking for.",
                   img: "assets/no_Data_Found.png",
-                  buttonText: "Go Back",
+                  buttonText: context.l10n.commonGoBack,
                   onPressed: () {
                     Get.back();
                   },

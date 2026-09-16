@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/patient_health_trends/model/Investigation_chart_report_model.dart';
 import 'package:heamodialysis/patient_health_trends/model/dialysis_invest_patient_list_model.dart';

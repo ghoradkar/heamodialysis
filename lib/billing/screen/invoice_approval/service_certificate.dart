@@ -1,5 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/billing/controller/invoice_approval_controller.dart';
@@ -75,7 +76,7 @@ class ServiceCertificateScreenState extends State<ServiceCertificateScreen> {
     return Scaffold(
       appBar: AppBar(
         title:  CustomText(
-          text: "Service Certificate's Details",
+          text: context.l10n.billServiceCertificateDetails,
           fontSize: 18.sp,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,
@@ -119,7 +120,7 @@ class ServiceCertificateScreenState extends State<ServiceCertificateScreen> {
                               Get.to(Scaffold(
                                 appBar: AppBar(
                                   title:  CustomText(
-                                      text: "View Service Certificate",
+                                      text: context.l10n.billViewServiceCertificate,
                                       fontSize: 16.sp,
                                       fontWeight: FontWeight.normal,
                                       textColor: Colors.black,
@@ -210,7 +211,7 @@ class ServiceCertificateScreenState extends State<ServiceCertificateScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                    CustomText(
-                          text: "Filter Invoice",
+                          text: context.l10n.billFilterInvoice,
                           fontSize: 16.sp,
                           fontFam: "Lato",
                           fontWeight: FontWeight.w400,
@@ -231,8 +232,8 @@ class ServiceCertificateScreenState extends State<ServiceCertificateScreen> {
               ),
               CustomTextField(
                 txtController: invoiceApprovalController.searchController,
-                labelText: "Search",
-                hintText: 'Search',
+                labelText: context.l10n.commonSearch,
+                hintText: context.l10n.commonSearch,
                 isRequired: false,
                 keyBoardType: TextInputType.text,
                 fillColor: Colors.white,
@@ -265,7 +266,7 @@ class ServiceCertificateScreenState extends State<ServiceCertificateScreen> {
                             children: [
                               Image.asset("assets/cancel.png"),
                                CustomText(
-                                  text: "Cancel",
+                                  text: context.l10n.commonCancel,
                                   fontSize: 16.sp,
                                   fontFam: "Lato",
                                   fontWeight: FontWeight.normal,
@@ -315,7 +316,7 @@ class ServiceCertificateScreenState extends State<ServiceCertificateScreen> {
                                 color: Colors.white,
                               ),
                               CustomText(
-                                  text: "Search",
+                                  text: context.l10n.commonSearch,
                                   fontSize: 16.sp,
                                   fontFam: "Lato",
                                   fontWeight: FontWeight.normal,

@@ -107,7 +107,10 @@ void showCustomSnackBar({
                         child: ElevatedButton(
                           onPressed: onPress1,
                           style: _buttonStyle(), // blue / safe
-                          child: Text(buttonTitle!),
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(buttonTitle!),
+                          ),
                         ),
                       ),
 
@@ -128,7 +131,10 @@ void showCustomSnackBar({
                             ),
                             // elevation: 3,
                           ),
-                          child: Text(buttonTitle2!),
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(buttonTitle2!),
+                          ),
                         ),
                       ),
                   ],

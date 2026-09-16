@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/new_registration/controller/new_registration_controller.dart';
@@ -67,7 +68,7 @@ class _HistoryOfDialysisState extends State<HistoryOfDialysis>
                    Align(
                     alignment: Alignment.centerLeft,
                     child: CustomText(
-                        text: 'First Time Dialysis ?',
+                        text: context.l10n.regFirstTimeDialysis,
                         fontSize: 16.sp,
                         fontFam: "Lato",
                         fontWeight: FontWeight.w400,
@@ -86,8 +87,8 @@ class _HistoryOfDialysisState extends State<HistoryOfDialysis>
                     },
                     groupVal: newRegistrationController.groupVal,
                     text: '',
-                    firstRadioText: 'Yes',
-                    secondRadioText: 'No',
+                    firstRadioText: context.l10n.commonYes,
+                    secondRadioText: context.l10n.commonNo,
                   ),
                   Visibility(
                     visible: newRegistrationController.groupVal ==
@@ -96,8 +97,8 @@ class _HistoryOfDialysisState extends State<HistoryOfDialysis>
                       children: [
                         CustomDateField(
                           isViewProfile: widget.isViewPatient,
-                          labelText: 'First Dialysis Session Date',
-                          hint: 'Select',
+                          labelText: context.l10n.regFirstDialysisSessionDate,
+                          hint: context.l10n.regHintSelect,
                           isRequired: true,
                           callB: () {
                             _selectDate(context);
@@ -110,8 +111,8 @@ class _HistoryOfDialysisState extends State<HistoryOfDialysis>
                           maxLines: 1,
                           isReadOnly: widget.isViewPatient ? true : false,
                           keyBoardType: TextInputType.streetAddress,
-                          labelText: 'Last Dialysis Hospital Name',
-                          hintText: 'Enter',
+                          labelText: context.l10n.regLastDialysisHospitalName,
+                          hintText: context.l10n.regHintEnter,
                           isRequired: true,
                           txtController: newRegistrationController.hospitalName,
                           fillColor: Colors.white,
@@ -119,8 +120,8 @@ class _HistoryOfDialysisState extends State<HistoryOfDialysis>
                         ),
                         CustomDateField(
                           isViewProfile: widget.isViewPatient,
-                          labelText: 'Last Dialysis Session Date',
-                          hint: 'Select',
+                          labelText: context.l10n.regLastDialysisSessionDate,
+                          hint: context.l10n.regHintSelect,
                           isRequired: true,
                           callB: () {
                             _selectDate1(context);
@@ -164,8 +165,8 @@ class _HistoryOfDialysisState extends State<HistoryOfDialysis>
                         ).paddingOnly(bottom: 8.h, left: 5.w, right: 5.w, top: 8.h),
 
                         // CustomDocUploadField(
-                        //   labelText: 'Upload Document',
-                        //   hint: 'Select',
+                        //   labelText: context.l10n.regUploadDocument,
+                        //   hint: context.l10n.regHintSelect,
                         //   isRequired: true,
                         //   callB: () {
                         //     pickFile();
@@ -189,7 +190,7 @@ class _HistoryOfDialysisState extends State<HistoryOfDialysis>
                 secColor: AppColor.secondaryColor,
                 textColor: Colors.white,
                 iconColor: Colors.white,
-                buttonText: 'Save & Next',
+                buttonText: context.l10n.regSaveNext,
                 path: 'assets/save-next.png',
                 callB: () {
 
@@ -203,12 +204,12 @@ class _HistoryOfDialysisState extends State<HistoryOfDialysis>
                         CustomRadioButtons.yes) {
                       widget.callB();
                     } else {
-                      CustomMessage.toast("Please select document");
+                      CustomMessage.toast(context.l10n.regSelectDocument);
                     }
                   }
 
                 },
-                buttonWidth: 160.w,
+                buttonWidth: 170.w,
               ),
             ),
              SizedBox(

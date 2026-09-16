@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/schedular/model/consultation_model.dart';
 import 'package:heamodialysis/utils/color_constants.dart';
@@ -37,8 +38,8 @@ class _SchedularConsultationDetailsState
           Row(
             children: [
 
-              const CustomText(
-                  text: "Patient ID : ",
+              CustomText(
+                  text: "${context.l10n.colPatientId} : ",
                   fontSize: 12,
                   fontFam: "Lato",
                   fontWeight: FontWeight.w400,
@@ -58,8 +59,8 @@ class _SchedularConsultationDetailsState
               const SizedBox(
                 width: 20,
               ),
-              const CustomText(
-                  text: "Treatment ID : ",
+              CustomText(
+                  text: "${context.l10n.colTreatmentId} : ",
                   fontSize: 12,
                   fontFam: "Lato",
                   fontWeight: FontWeight.w400,
@@ -79,8 +80,8 @@ class _SchedularConsultationDetailsState
           ).paddingSymmetric(vertical: 2),
           Row(
             children: [
-              const CustomText(
-                  text: "Institute Name : ",
+              CustomText(
+                  text: "${context.l10n.colInstituteName} : ",
                   fontSize: 12,
                   fontFam: "Lato",
                   fontWeight: FontWeight.w400,
@@ -99,8 +100,8 @@ class _SchedularConsultationDetailsState
           ).paddingSymmetric(vertical: 2),
           Row(
             children: [
-              const CustomText(
-                  text: "Appointment Date : ",
+              CustomText(
+                  text: "${context.l10n.schedAppointmentDate} : ",
                   fontSize: 12,
                   fontFam: "Lato",
                   fontWeight: FontWeight.w400,
@@ -119,8 +120,8 @@ class _SchedularConsultationDetailsState
           ).paddingSymmetric(vertical: 2),
           Row(
             children: [
-              const CustomText(
-                  text: "Slot Time : ",
+              CustomText(
+                  text: "${context.l10n.schedSlotTime} : ",
                   fontSize: 12,
                   fontFam: "Lato",
                   fontWeight: FontWeight.w400,
@@ -139,8 +140,8 @@ class _SchedularConsultationDetailsState
           ).paddingSymmetric(vertical: 2),
           Row(
             children: [
-              const CustomText(
-                  text: "Bed No : ",
+              CustomText(
+                  text: "${context.l10n.schedBedNo} : ",
                   fontSize: 12,
                   fontFam: "Lato",
                   fontWeight: FontWeight.w400,

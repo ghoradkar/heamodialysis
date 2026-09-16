@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dashboard/model/nephro_list.dart';
 import 'package:heamodialysis/dialysis_queue/dialysis_event/model/dialysis_event_detaisl_model.dart';
@@ -287,7 +288,7 @@ class NephroController extends GetxController {
       } else {
         isLoading = false;
         update();
-        CustomMessage.toast('Upload failed');
+        CustomMessage.toast(l10n.regUploadFailed);
       }
     } catch (error) {
       isLoading = false;
@@ -438,7 +439,7 @@ class NephroController extends GetxController {
             patientId.toString(), treatmentId.toString());
         checkBoxListClinicalHistory =
             List.generate(addDetailsList?.length ?? 0 + 1, (_) => false);
-        CustomMessage.toast("Clinical Condition Saved");
+        CustomMessage.toast(l10n.nephroClinicalConditionSaved);
         CustomPopup.showAlertDialog(
             () {
               Get.back();
@@ -836,7 +837,7 @@ class NephroController extends GetxController {
       await _repository.deleteClinicalCondi(id);
       isLoading = false;
       await getClinicaConditionProvisionalList(treatmentid.toString());
-      CustomMessage.toast('Diagonosis Deleted SuccessFully');
+      CustomMessage.toast(l10n.nephroDiagnosisDeleted);
     } on ApiException {
       isLoading = false;
       debugPrint('Failed getting tempList');
@@ -853,7 +854,7 @@ class NephroController extends GetxController {
       isLoading = false;
       if (responseBody == '1') {
         await getDiagnosticInvList(treatmentid);
-        CustomMessage.toast('Diagonosis Deleted SuccessFully');
+        CustomMessage.toast(l10n.nephroDiagnosisDeleted);
       }
     } on ApiException {
       isLoading = false;
@@ -871,7 +872,7 @@ class NephroController extends GetxController {
       isLoading = false;
       if (responseBody.contains("Records Deleted Sucessfully")) {
         await getPrescriptionList(treatmentid.toString(), unitid);
-        CustomMessage.toast('Records Deleted Sucessfully');
+        CustomMessage.toast(l10n.nephroRecordsDeleted);
       }
     } on ApiException {
       isLoading = false;
@@ -889,7 +890,7 @@ class NephroController extends GetxController {
       isLoading = false;
       if (responseBody == '1') {
         await getInstructions(treatmentid, patientId);
-        CustomMessage.toast('Records Deleted Sucessfully');
+        CustomMessage.toast(l10n.nephroRecordsDeleted);
       }
     } on ApiException {
       isLoading = false;
@@ -941,7 +942,7 @@ class NephroController extends GetxController {
     try {
       await _repository.deleteUploadedImage(documentId, userId);
       isLoading = false;
-      CustomMessage.toast("Document Deleted");
+      CustomMessage.toast(l10n.nephroDocumentDeleted);
 
       await getUploadedDocNephro(patientId, treatmentId, unitId);
       Get.back();
@@ -1238,17 +1239,17 @@ class NephroController extends GetxController {
         final responseData = jsonDecode(finalResp.body);
         if (responseData == 1) {
           await getDiagnosticInvList(treatmentId);
-          CustomMessage.toast("Test Added");
+          CustomMessage.toast(l10n.nephroTestAdded);
           Get.back();
         }
         debugPrint("Response: $responseData");
       } else {
-        CustomMessage.toast("Test Adding Fail");
+        CustomMessage.toast(l10n.nephroTestAddFail);
 
         debugPrint("Error: ${finalResp.statusCode} - ${finalResp.body}");
       }
     } catch (error) {
-      CustomMessage.toast("Test Adding Fail");
+      CustomMessage.toast(l10n.nephroTestAddFail);
 
       debugPrint("Exception: $error");
       testPackageList.clear();
@@ -1278,12 +1279,12 @@ class NephroController extends GetxController {
         }
         debugPrint("Response: $responseData");
       } else {
-        CustomMessage.toast("Test Adding Fail");
+        CustomMessage.toast(l10n.nephroTestAddFail);
 
         debugPrint("Error: ${finalResp.statusCode} - ${finalResp.body}");
       }
     } catch (error) {
-      CustomMessage.toast("Test Adding Fail");
+      CustomMessage.toast(l10n.nephroTestAddFail);
 
       debugPrint("Exception: $error");
     } finally {
@@ -1431,15 +1432,15 @@ class NephroController extends GetxController {
       return true;
     } on ApiException catch (e) {
       if (e.statusCode == 401) {
-        CustomMessage.toast('Unauthorized request');
+        CustomMessage.toast(l10n.nephroUnauthorized);
         update();
         return false;
       }
-      CustomMessage.toast('Failed to save diet');
+      CustomMessage.toast(l10n.nephroFailedSaveDiet);
       throw Exception('Failed saving diet: ${e.statusCode}');
     } catch (e) {
       debugPrint("Error in saveTemplate: $e");
-      CustomMessage.toast('Error saving diet');
+      CustomMessage.toast(l10n.nephroErrorSavingDiet);
       return false;
     } finally {
       isLoading = false;
@@ -1455,7 +1456,7 @@ class NephroController extends GetxController {
       final responseBody = await _repository.updateCondtion(id, userId, condtion);
       isLoading = false;
       if (responseBody.contains("Record Updated Sucessfully")) {
-        CustomMessage.toast("Record Updated Sucessfully");
+        CustomMessage.toast(l10n.nephroRecordUpdated);
         await getClinicaConditionProvisionalList(treatmentId.toString());
       }
     } on ApiException {
@@ -1639,7 +1640,7 @@ class NephroController extends GetxController {
       isLoading = false;
       await getDiagnosticInvList(treatId);
       if (responseBody == "1") {
-        CustomMessage.toast("Assigned To Technician");
+        CustomMessage.toast(l10n.nephroAssignedToTechnician);
       }
     } on ApiException {
       isLoading = false;
@@ -1658,7 +1659,7 @@ class NephroController extends GetxController {
       if (resp['Status'] == "Success") {
         await getInstructions(treatmentId, patientId);
         showCustomSnackBar(
-            topTitle: 'Save Instructions',
+            topTitle: l10n.nephroSaveInstructions,
             context: context,
             title: '${resp['Message']}',
             img: 'assets/check 1.png');

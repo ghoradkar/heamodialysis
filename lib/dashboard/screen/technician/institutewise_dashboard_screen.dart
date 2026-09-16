@@ -11,6 +11,7 @@ import 'package:heamodialysis/dashboard/controller/dashboard_controller.dart';
 import 'package:heamodialysis/dashboard/widget/dialysis_session_technician.dart';
 import 'package:heamodialysis/dashboard/widget/drawer_screen.dart';
 import 'package:heamodialysis/internet/no_internet_connectivity.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:heamodialysis/new_registration/controller/new_registration_controller.dart';
 import 'package:heamodialysis/utils/color_constants.dart';
 import 'package:heamodialysis/utils/custom_shimmer_loader.dart';
@@ -193,8 +194,8 @@ class _InstituteWiseDashboardScreenState
               title: Padding(
                 padding: const EdgeInsets.only(bottom: 8.0),
                 child: CustomText(
-                  text: 'Dashboard',
-                  fontSize: 18.0.sp,
+                  text: context.l10n.drawerDashboard,
+                  fontSize: 16.0.sp,
                   fontFam: 'Lato',
                   fontWeight: FontWeight.w400,
                   textColor: Colors.white,
@@ -216,64 +217,6 @@ class _InstituteWiseDashboardScreenState
                 },
               ),
               actions: [
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
-                  child: InkWell(
-                    onTap: () async {
-                      DateTime now = DateTime.now();
-                      String fromDate = DateFormat('yyyy/MM/dd').format(now);
-                      String toDate = DateFormat('yyyy/MM/dd')
-                          .format(now.add(const Duration(days: 1)));
-                      String unitId = userData['unitId'].toString();
-                      String mulSelunit = userData['mulSelunit'].toString();
-
-                      dashboardController.labtestDetails?.clear();
-
-                      await Future.wait(<Future>[
-                        dashboardController.getDash(unitId, fromDate, toDate),
-                        dashboardController.getLaboratoryAss(
-                            unitId, fromDate, toDate),
-                        dashboardController.getRadialChart(
-                            unitId, fromDate, toDate),
-                        dashboardController.getSchemePerformance(
-                            fromDate, toDate, unitId),
-                        dashboardController.getOnGoingDialysisSession(
-                            fromDate, toDate, unitId),
-                        dashboardController.getPatientRegTechnician(
-                            unitId, fromDate, toDate),
-                        dashboardController.getAbhaPatientTechnician(
-                            unitId, fromDate, toDate),
-                        dashboardController.getDialysisSession(
-                            unitId, fromDate, toDate),
-                        dashboardController.getDialysisSessionCancelled(
-                            unitId, fromDate, toDate),
-                        dashboardController.getEventForIdTech(
-                            fromDate, toDate, unitId),
-                        dashboardController.getMachineCount(
-                            mulSelunit, fromDate, toDate),
-                        dashboardController.getComplaintTechnician(
-                            unitId, fromDate, toDate),
-                        dashboardController.getTicketTechnician(
-                            unitId, fromDate, toDate),
-                      ]);
-
-                      dashboardController.fDateController.text = '';
-                      dashboardController.tDateController.text = '';
-                      dashboardController.isCustomCalender = false;
-                      dashboardController.isTodaysDate = true;
-                      dashboardController.update();
-                    },
-                    child: CustomText(
-                        text: "Today",
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.bold,
-                        textColor: Colors.white,
-                        textAlign: TextAlign.start),
-                  ),
-                ),
-                SizedBox(
-                  width: 10.w,
-                ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8.0, right: 8),
                   child: InkWell(
@@ -346,9 +289,13 @@ class _InstituteWiseDashboardScreenState
                                           color: AppColor.borderColor)),
                                   child: Column(
                                     children: [
+                                      // Align(
+                                      //   alignment: Alignment.centerRight,
+                                      //   child: _todayResetButton(context),
+                                      // ),
                                       CustomDateField(
-                                        labelText: 'From Date',
-                                        hint: 'Select Date',
+                                        labelText: context.l10n.dashFromDate,
+                                        hint: context.l10n.dashSelectDate,
                                         isRequired: false,
                                         callB: () {
                                           selectFromDate();
@@ -359,8 +306,8 @@ class _InstituteWiseDashboardScreenState
                                         dontDhowPrefix: false,
                                       ),
                                       CustomDateField(
-                                        labelText: 'To Date',
-                                        hint: 'Select Date',
+                                        labelText: context.l10n.dashToDate,
+                                        hint: context.l10n.dashSelectDate,
                                         isRequired: false,
                                         callB: () {
                                           selectToDate();
@@ -508,9 +455,12 @@ class _InstituteWiseDashboardScreenState
                                           },
                                           child: Container(
                                               padding: EdgeInsets.symmetric(
-                                                  vertical: 8.h),
-                                              alignment: Alignment.center,
-                                              width: 100.w,
+                                                  vertical: 8.h,
+                                                  horizontal: 20.w),
+                                              // No fixed width - the button
+                                              // hugs its content, so it grows /
+                                              // shrinks with the label length
+                                              // in every language.
                                               decoration: BoxDecoration(
                                                 borderRadius:
                                                     BorderRadius.circular(10),
@@ -525,6 +475,7 @@ class _InstituteWiseDashboardScreenState
                                                 ),
                                               ),
                                               child: Row(
+                                                mainAxisSize: MainAxisSize.min,
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
                                                 children: [
@@ -532,8 +483,9 @@ class _InstituteWiseDashboardScreenState
                                                     Icons.search,
                                                     color: Colors.white,
                                                   ),
+                                                  SizedBox(width: 6.w),
                                                   CustomText(
-                                                      text: "Search",
+                                                      text: context.l10n.commonSearch,
                                                       fontSize: 16.sp,
                                                       fontFam: "Lato",
                                                       fontWeight:
@@ -560,8 +512,8 @@ class _InstituteWiseDashboardScreenState
                                     visible: isDPR == true,
                                     child: Expanded(
                                         child: DashCard(
-                                      title: 'Patient Registration',
-                                      firstCountText: "Till Date",
+                                      title: context.l10n.dashPatientRegistration,
+                                      firstCountText: context.l10n.dashTillDate,
                                       firstCount: controller.newCountModel
                                                   ?.patientAdded !=
                                               null
@@ -578,8 +530,8 @@ class _InstituteWiseDashboardScreenState
                                           : '',
                                       secondCountText:
                                           dashboardController.isTodaysDate
-                                              ? "Current Date"
-                                              : "Date Wise",
+                                              ? context.l10n.dashCurrentDate
+                                              : context.l10n.dashDateWise,
                                       iconPath: 'assets/total_patient.png',
                                       isSecondCount: true,
                                       isInfoVisible: false,
@@ -588,7 +540,7 @@ class _InstituteWiseDashboardScreenState
                                           patients: dashboardController
                                                   .dashInfoData ??
                                               [],
-                                          pageTitle: 'Patient Added List',
+                                          pageTitle: context.l10n.dashPatientAddedList,
                                         ));
                                       },
                                       cardHeight: 100.h,
@@ -606,7 +558,7 @@ class _InstituteWiseDashboardScreenState
                                     visible: isDAR == true,
                                     child: Expanded(
                                         child: DashCard(
-                                      title: 'ABHA Registration',
+                                      title: context.l10n.dashAbhaRegistration,
                                       firstCount: controller.newCountModel
                                                   ?.abhaRegistration !=
                                               null
@@ -614,7 +566,7 @@ class _InstituteWiseDashboardScreenState
                                               .newCountModel?.abhaRegistration
                                               .toString()
                                           : '',
-                                      firstCountText: "Till Date",
+                                      firstCountText: context.l10n.dashTillDate,
                                       secondCount: controller.newCountModel
                                                   ?.currentDateAbhaReg !=
                                               null
@@ -624,8 +576,8 @@ class _InstituteWiseDashboardScreenState
                                           : '',
                                       secondCountText:
                                           dashboardController.isTodaysDate
-                                              ? "Current Date"
-                                              : "Date Wise",
+                                              ? context.l10n.dashCurrentDate
+                                              : context.l10n.dashDateWise,
                                       iconPath: 'assets/abha_registration.png',
                                       isSecondCount: true,
                                       isInfoVisible: false,
@@ -634,7 +586,7 @@ class _InstituteWiseDashboardScreenState
                                           patients: dashboardController
                                                   .dashInfoDataAdmin ??
                                               [],
-                                          pageTitle: 'Patient Added List',
+                                          pageTitle: context.l10n.dashPatientAddedList,
                                         ));
                                         // showPatientTableDialog(context, dashboardController.dashInfoData);
                                       },
@@ -657,7 +609,7 @@ class _InstituteWiseDashboardScreenState
                                     visible: isDCS == true,
                                     child: Expanded(
                                         child: DashCard(
-                                      title: 'Dialysis Sessions',
+                                      title: context.l10n.dashDialysisSessions,
                                       firstCount: controller.newCountModel
                                                   ?.totalDialysisSession !=
                                               null
@@ -665,7 +617,7 @@ class _InstituteWiseDashboardScreenState
                                               ?.totalDialysisSession
                                               .toString()
                                           : '',
-                                      firstCountText: "Till Date",
+                                      firstCountText: context.l10n.dashTillDate,
                                       secondCount: controller.newCountModel
                                                   ?.currentDateDialysisSession !=
                                               null
@@ -675,8 +627,8 @@ class _InstituteWiseDashboardScreenState
                                           : '',
                                       secondCountText:
                                           dashboardController.isTodaysDate
-                                              ? "Current Day"
-                                              : "Date Wise",
+                                              ? context.l10n.dashCurrentDay
+                                              : context.l10n.dashDateWise,
                                       iconPath: 'assets/dialysis_session.png',
                                       isSecondCount: true,
                                       isInfoVisible: false,
@@ -696,8 +648,9 @@ class _InstituteWiseDashboardScreenState
 
                                         Get.to(DashInfoTableTechnician(
                                           patients: patients,
-                                          pageTitle: 'Dialysis Session',
+                                          pageTitle: context.l10n.dashDialysisSession,
                                           showData: (scheme) async {
+                                            final l10n = context.l10n;
                                             DateTime now = DateTime.now();
                                             String fromDate =
                                                 DateFormat('yyyy/MM/dd')
@@ -744,7 +697,7 @@ class _InstituteWiseDashboardScreenState
                                               patients: controller
                                                       .dialysisSessionId ??
                                                   [],
-                                              pageTitle: 'Dialysis Session',
+                                              pageTitle: l10n.dashDialysisSession,
                                               pageTitleSecond: "",
                                               showAbha: false,
                                             ));
@@ -772,7 +725,7 @@ class _InstituteWiseDashboardScreenState
                                     visible: isDDC == true,
                                     child: Expanded(
                                         child: DashCard(
-                                      title: 'Dialysis Cancelled',
+                                      title: context.l10n.dashDialysisCancelled,
                                       firstCount: controller.newCountModel
                                                   ?.totalDialysisCnacel !=
                                               null
@@ -780,7 +733,7 @@ class _InstituteWiseDashboardScreenState
                                               ?.totalDialysisCnacel
                                               .toString()
                                           : '',
-                                      firstCountText: "Total",
+                                      firstCountText: context.l10n.colTotal,
                                       secondCount: controller.newCountModel
                                                   ?.currentdialCancel !=
                                               null
@@ -790,8 +743,8 @@ class _InstituteWiseDashboardScreenState
                                           : '',
                                       secondCountText:
                                           dashboardController.isTodaysDate
-                                              ? "Current Day"
-                                              : "Date Wise",
+                                              ? context.l10n.dashCurrentDay
+                                              : context.l10n.dashDateWise,
                                       iconPath: 'assets/dialysis_cancelled.png',
                                       isSecondCount: true,
                                       isInfoVisible: false,
@@ -813,8 +766,9 @@ class _InstituteWiseDashboardScreenState
 
                                         Get.to(DashInfoTableTechnician(
                                           patients: patients,
-                                          pageTitle: 'Total Dialysis Cancelled',
+                                          pageTitle: context.l10n.dashTotalDialysisCancelled,
                                           showData: (scheme) async {
+                                            final l10n = context.l10n;
                                             DateTime now = DateTime.now();
                                             String fromDate =
                                                 DateFormat('yyyy/MM/dd')
@@ -862,7 +816,7 @@ class _InstituteWiseDashboardScreenState
                                               patients:
                                                   controller.dialysisCancelId ??
                                                       [],
-                                              pageTitle: 'Dialysis Cancel',
+                                              pageTitle: l10n.dashDialysisCancel,
                                               pageTitleSecond: "",
                                             ));
                                           },
@@ -886,7 +840,7 @@ class _InstituteWiseDashboardScreenState
                                     child: Visibility(
                                       visible: isDCC == true,
                                       child: DashCard(
-                                        title: 'Online Complaints',
+                                        title: context.l10n.dashOnlineComplaints,
                                         firstCount: controller.newCountModel
                                                     ?.totalComplaint !=
                                                 null
@@ -894,7 +848,7 @@ class _InstituteWiseDashboardScreenState
                                                 .newCountModel?.totalComplaint
                                                 .toString()
                                             : '',
-                                        firstCountText: "Till Date",
+                                        firstCountText: context.l10n.dashTillDate,
                                         secondCount: controller.newCountModel
                                                     ?.currentDateFeedback !=
                                                 null
@@ -902,7 +856,7 @@ class _InstituteWiseDashboardScreenState
                                                 ?.currentDateFeedback
                                                 .toString()
                                             : '',
-                                        secondCountText: "Current Day",
+                                        secondCountText: context.l10n.dashCurrentDay,
                                         pendingCount: controller.newCountModel
                                                     ?.pendingComplaint !=
                                                 null
@@ -926,14 +880,18 @@ class _InstituteWiseDashboardScreenState
                                             context: context,
                                             builder: (BuildContext context) {
                                               return DashInfoTable1(
-                                                pageTitle:
-                                                    "Total Online Complaints",
+                                                pageTitle: context
+                                                    .l10n.dashTotalOnlineComplaints,
                                                 l1: const ['1', '2', '3', '4'],
-                                                l2: const [
-                                                  'Dashboard Down',
-                                                  'Machine Not Working',
-                                                  'Denial of Services',
-                                                  'Money taken against treatment'
+                                                l2: [
+                                                  context.l10n
+                                                      .dashComplaintDashboardDown,
+                                                  context.l10n
+                                                      .dashComplaintMachineNotWorking,
+                                                  context.l10n
+                                                      .dashComplaintDenialOfServices,
+                                                  context.l10n
+                                                      .dashComplaintMoneyTaken
                                                 ],
                                                 l3: [
                                                   dashboardController
@@ -949,10 +907,10 @@ class _InstituteWiseDashboardScreenState
                                                       .complaintTechnician
                                                       ?.complaintDashDown
                                                 ],
-                                                tableHeader: const [
-                                                  "Sr. No",
-                                                  "Type\n",
-                                                  "Count\n"
+                                                tableHeader: [
+                                                  context.l10n.colSrNo,
+                                                  "${context.l10n.colType}\n",
+                                                  "${context.l10n.colCount}\n"
                                                 ],
                                                 onButtonPressed:
                                                     handleButtonPress,
@@ -975,14 +933,14 @@ class _InstituteWiseDashboardScreenState
                                     child: Visibility(
                                       visible: isDTS == true,
                                       child: DashCard(
-                                        title: 'Online Tickets',
+                                        title: context.l10n.dashOnlineTickets,
                                         firstCount: controller
                                                     .newCountModel?.ticket !=
                                                 null
                                             ? controller.newCountModel?.ticket
                                                 .toString()
                                             : '',
-                                        firstCountText: "Till Date",
+                                        firstCountText: context.l10n.dashTillDate,
                                         secondCount: controller.newCountModel
                                                     ?.currentDateTicket !=
                                                 null
@@ -990,7 +948,7 @@ class _InstituteWiseDashboardScreenState
                                                 ?.currentDateTicket
                                                 .toString()
                                             : '',
-                                        secondCountText: "Current Day",
+                                        secondCountText: context.l10n.dashCurrentDay,
                                         pendingCount: controller.newCountModel
                                                     ?.pendingTickets !=
                                                 null
@@ -1008,8 +966,8 @@ class _InstituteWiseDashboardScreenState
                                             context: context,
                                             builder: (BuildContext context) {
                                               return DashInfoTable1(
-                                                pageTitle:
-                                                    "Total Online Complaints",
+                                                pageTitle: context
+                                                    .l10n.dashTotalOnlineComplaints,
                                                 l1: const [
                                                   '1',
                                                   '2',
@@ -1018,13 +976,18 @@ class _InstituteWiseDashboardScreenState
                                                   '5',
                                                   '6'
                                                 ],
-                                                l2: const [
-                                                  'Data Correction',
-                                                  'New Requirement',
-                                                  'Operator Issue',
-                                                  'Software Services',
-                                                  'Bug',
-                                                  'Inhancement'
+                                                l2: [
+                                                  context.l10n
+                                                      .dashTicketDataCorrection,
+                                                  context.l10n
+                                                      .dashTicketNewRequirement,
+                                                  context.l10n
+                                                      .dashTicketOperatorIssue,
+                                                  context.l10n
+                                                      .dashTicketSoftwareServices,
+                                                  context.l10n.dashTicketBug,
+                                                  context.l10n
+                                                      .dashTicketEnhancement
                                                 ],
                                                 l3: [
                                                   dashboardController
@@ -1046,10 +1009,10 @@ class _InstituteWiseDashboardScreenState
                                                       .ticketTechnician
                                                       ?.inhancementTicketCount
                                                 ],
-                                                tableHeader: const [
-                                                  "Sr. No",
-                                                  "Type",
-                                                  "Count"
+                                                tableHeader: [
+                                                  context.l10n.colSrNo,
+                                                  context.l10n.colType,
+                                                  context.l10n.colCount
                                                 ],
                                                 onButtonPressed:
                                                     handleButtonPress,
@@ -1076,14 +1039,14 @@ class _InstituteWiseDashboardScreenState
                                     child: Visibility(
                                       visible: isDFC == true,
                                       child: DashCard(
-                                        title: 'Feedback',
+                                        title: context.l10n.dashFeedbackTitle,
                                         firstCount: controller
                                                     .newCountModel?.feedback !=
                                                 null
                                             ? controller.newCountModel?.feedback
                                                 .toString()
                                             : '',
-                                        firstCountText: "Total",
+                                        firstCountText: context.l10n.colTotal,
                                         secondCount: controller.newCountModel
                                                     ?.currentDateFeedback !=
                                                 null
@@ -1093,8 +1056,8 @@ class _InstituteWiseDashboardScreenState
                                             : '',
                                         secondCountText:
                                             dashboardController.isTodaysDate
-                                                ? "Current Day"
-                                                : "Date Wise Feedback",
+                                                ? context.l10n.dashCurrentDay
+                                                : context.l10n.dashDateWiseFeedback,
                                         iconPath: 'assets/feedback.png',
                                         isSecondCount: true,
                                         cardHeight: 100.h,
@@ -1112,7 +1075,7 @@ class _InstituteWiseDashboardScreenState
                                     child: Visibility(
                                       visible: isDLT == true,
                                       child: DashCard(
-                                        title: 'Laboratory Test Assigned',
+                                        title: context.l10n.dashLabTestAssigned,
                                         firstCount: controller.newCountModel
                                                     ?.totalLbTest !=
                                                 null
@@ -1120,7 +1083,7 @@ class _InstituteWiseDashboardScreenState
                                                 .newCountModel?.totalLbTest
                                                 .toString()
                                             : '',
-                                        firstCountText: "Till Date",
+                                        firstCountText: context.l10n.dashTillDate,
                                         secondCount: controller.newCountModel
                                                     ?.currentDateLabTest !=
                                                 null
@@ -1130,8 +1093,8 @@ class _InstituteWiseDashboardScreenState
                                             : '',
                                         secondCountText: dashboardController
                                                 .isTodaysDate
-                                            ? "Current Day"
-                                            : "Date Wise Laboratory Test Assigned",
+                                            ? context.l10n.dashCurrentDay
+                                            : context.l10n.dashDateWiseLabTest,
                                         pendingCount: controller.newCountModel
                                                     ?.totalLbTest !=
                                                 null
@@ -1171,14 +1134,14 @@ class _InstituteWiseDashboardScreenState
                                     visible: isDAE == true,
                                     child: Expanded(
                                         child: DashCard(
-                                      title: 'Event Occurred',
+                                      title: context.l10n.dashEventOccurred,
                                       firstCount: controller
                                                   .newCountModel?.totalEvent !=
                                               null
                                           ? controller.newCountModel?.totalEvent
                                               .toString()
                                           : '',
-                                      firstCountText: "Till Date",
+                                      firstCountText: context.l10n.dashTillDate,
                                       secondCount: controller.newCountModel
                                                   ?.currentDateEvent !=
                                               null
@@ -1188,8 +1151,8 @@ class _InstituteWiseDashboardScreenState
                                           : '',
                                       secondCountText:
                                           dashboardController.isTodaysDate
-                                              ? "Current Day"
-                                              : "Date Wise Events",
+                                              ? context.l10n.dashCurrentDay
+                                              : context.l10n.dashDateWiseEvents,
                                       iconPath: 'assets/event.png',
                                       isSecondCount: true,
                                       isInfoVisible: false,
@@ -1198,7 +1161,7 @@ class _InstituteWiseDashboardScreenState
                                           patients:
                                               controller.eventDetIdListTech ??
                                                   [],
-                                          pageTitle: 'Total Adverse Event',
+                                          pageTitle: context.l10n.dashTotalAdverseEvent,
                                         ));
                                       },
                                       cardHeight: 100.h,
@@ -1214,7 +1177,7 @@ class _InstituteWiseDashboardScreenState
                                     visible: isDMC == true,
                                     child: Expanded(
                                         child: DashCard(
-                                      title: 'Machine Count',
+                                      title: context.l10n.colMachineCount,
                                       firstCount: controller.newCountModel
                                                   ?.totalMachine !=
                                               null
@@ -1222,7 +1185,7 @@ class _InstituteWiseDashboardScreenState
                                               .newCountModel?.totalMachine
                                               .toString()
                                           : '',
-                                      firstCountText: "Total",
+                                      firstCountText: context.l10n.colTotal,
                                       secondCount: controller.newCountModel
                                                   ?.machineWorking !=
                                               null
@@ -1230,7 +1193,7 @@ class _InstituteWiseDashboardScreenState
                                               .newCountModel?.machineWorking
                                               .toString()
                                           : '',
-                                      secondCountText: "Working",
+                                      secondCountText: context.l10n.dashWorking,
                                       iconPath: 'assets/machine.png',
                                       isSecondCount: true,
                                       isInfoVisible: false,
@@ -1240,7 +1203,7 @@ class _InstituteWiseDashboardScreenState
                                           dataList: dashboardController
                                                   .machineCountInfo ??
                                               [],
-                                          pageTitle: 'Machine Count',
+                                          pageTitle: context.l10n.colMachineCount,
                                           showData: () {},
                                         ));
                                       },
@@ -1269,8 +1232,8 @@ class _InstituteWiseDashboardScreenState
                                   indicatorPadding: EdgeInsets.zero,
                                   labelPadding: EdgeInsets.zero,
                                   tabs: [
-                                    buildTab(0, "Scheme Performance"),
-                                    buildTab(1, "Viral Load Status")
+                                    buildTab(0, context.l10n.dashSchemePerformance),
+                                    buildTab(1, context.l10n.colViralLoadStatus)
                                   ],
                                 ),
                               ),
@@ -1339,10 +1302,13 @@ class _InstituteWiseDashboardScreenState
   Widget buildTab(int index, String text) {
     bool isSelected = tabController.index == index;
     return Container(
-      width: 150,
+      // No fixed width - the tab grows to fit its label so the text stays fully
+      // visible in every language (the TabBar is isScrollable, so wider tabs
+      // just scroll horizontally).
+      constraints: const BoxConstraints(minWidth: 110),
       height: 40,
       alignment: Alignment.center,
-      padding: const EdgeInsets.symmetric(horizontal: 0.8, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
       decoration: BoxDecoration(
           // color: isSelected ? Colors.blue.shade200 : Colors.transparent,
           gradient: isSelected
@@ -1415,6 +1381,69 @@ class _InstituteWiseDashboardScreenState
       // Refresh the UI
       setState(() {});
     }
+  }
+
+  /// Compact "back to today" link shown inside the custom date-range panel.
+  /// (Replaces the old "Today" text button that used to sit in the AppBar.)
+  Widget _todayResetButton(BuildContext context) {
+    return InkWell(
+      onTap: _loadTodayData,
+      borderRadius: BorderRadius.circular(6),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 4.h),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.today,
+                size: 16.sp, color: AppColor.primaryBackgroundColor),
+            SizedBox(width: 4.w),
+            CustomText(
+              text: context.l10n.dashToday,
+              fontSize: 13.sp,
+              fontFam: 'Lato',
+              fontWeight: FontWeight.w600,
+              textColor: AppColor.primaryBackgroundColor,
+              textAlign: TextAlign.start,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Reloads every dashboard card for today's date and clears the custom
+  /// date filter.
+  Future<void> _loadTodayData() async {
+    final now = DateTime.now();
+    final fromDate = DateFormat('yyyy/MM/dd').format(now);
+    final toDate =
+        DateFormat('yyyy/MM/dd').format(now.add(const Duration(days: 1)));
+    final unitId = userData['unitId'].toString();
+    final mulSelunit = userData['mulSelunit'].toString();
+
+    dashboardController.labtestDetails?.clear();
+
+    await Future.wait(<Future>[
+      dashboardController.getDash(unitId, fromDate, toDate),
+      dashboardController.getLaboratoryAss(unitId, fromDate, toDate),
+      dashboardController.getRadialChart(unitId, fromDate, toDate),
+      dashboardController.getSchemePerformance(fromDate, toDate, unitId),
+      dashboardController.getOnGoingDialysisSession(fromDate, toDate, unitId),
+      dashboardController.getPatientRegTechnician(unitId, fromDate, toDate),
+      dashboardController.getAbhaPatientTechnician(unitId, fromDate, toDate),
+      dashboardController.getDialysisSession(unitId, fromDate, toDate),
+      dashboardController.getDialysisSessionCancelled(unitId, fromDate, toDate),
+      dashboardController.getEventForIdTech(fromDate, toDate, unitId),
+      dashboardController.getMachineCount(mulSelunit, fromDate, toDate),
+      dashboardController.getComplaintTechnician(unitId, fromDate, toDate),
+      dashboardController.getTicketTechnician(unitId, fromDate, toDate),
+    ]);
+
+    dashboardController.fDateController.text = '';
+    dashboardController.tDateController.text = '';
+    dashboardController.isCustomCalender = false;
+    dashboardController.isTodaysDate = true;
+    dashboardController.update();
   }
 }
 
@@ -1900,7 +1929,7 @@ class _InstituteWiseDashboardScreenState
 //        isInfoVisible: false,
 //         onInfoClick: () => Get.to(DashInfoTable(
 //           patients: _dashboardController.dashInfoData ?? [],
-//           pageTitle: 'Patient Added List',
+//           pageTitle: context.l10n.dashPatientAddedList,
 //         )),
 //         cardHeight: 100.h,
 //       ),
@@ -1921,7 +1950,7 @@ class _InstituteWiseDashboardScreenState
 //         isInfoVisible: false,
 //         onInfoClick: () => Get.to(DashInfoTable(
 //           patients: _dashboardController.dashInfoDataAdmin ?? [],
-//           pageTitle: 'Patient Added List',
+//           pageTitle: context.l10n.dashPatientAddedList,
 //         )),
 //         cardHeight: 100.h,
 //       ),
@@ -1981,7 +2010,7 @@ class _InstituteWiseDashboardScreenState
 //      isInfoVisible: false,
 //       onInfoClick: () => Get.to(DashInfoTableSubHeaderTestDet(
 //         dataList: _dashboardController.labtestDetails ?? [],
-//         pageTitle: 'Total Laboratory Test Assigned',
+//         pageTitle: context.l10n.dashTotalLabTestAssigned,
 //       )),
 //       cardHeight: 100.h,
 //     );
@@ -2001,7 +2030,7 @@ class _InstituteWiseDashboardScreenState
 //       isInfoVisible: false,
 //         onInfoClick: () => Get.to(DashInfoTableEvent(
 //           patients: controller.eventDetIdListTech ?? [],
-//           pageTitle: 'Total Adverse Event',
+//           pageTitle: context.l10n.dashTotalAdverseEvent,
 //         )),
 //         cardHeight: 100.h,
 //       ),
@@ -2021,7 +2050,7 @@ class _InstituteWiseDashboardScreenState
 //         onInfoClick: () => Get.to(DashInfoTableTotal(
 //           isShowButton: false,
 //           dataList: _dashboardController.machineCountInfo ?? [],
-//           pageTitle: 'Machine Count',
+//           pageTitle: context.l10n.colMachineCount,
 //           showData: () {},
 //         )),
 //         cardHeight: 100.h,
@@ -2181,7 +2210,7 @@ class _InstituteWiseDashboardScreenState
 //
 //     Get.to(DashInfoTableTechnician(
 //       patients: patients,
-//       pageTitle: 'Dialysis Session',
+//       pageTitle: context.l10n.dashDialysisSession,
 //       showData: (scheme) => _showDialysisSessionDetails(controller, scheme),
 //     ));
 //   }
@@ -2199,7 +2228,7 @@ class _InstituteWiseDashboardScreenState
 //     Get.to(TotalDialysisPatient(
 //       showTreatment: true,
 //       patients: controller.dialysisSessionId ?? [],
-//       pageTitle: 'Dialysis Session',
+//       pageTitle: context.l10n.dashDialysisSession,
 //       pageTitleSecond: "",
 //       showAbha: false,
 //     ));
@@ -2213,7 +2242,7 @@ class _InstituteWiseDashboardScreenState
 //
 //     Get.to(DashInfoTableTechnician(
 //       patients: patients,
-//       pageTitle: 'Total Dialysis Cancelled',
+//       pageTitle: context.l10n.dashTotalDialysisCancelled,
 //       showData: (scheme) => _showDialysisCancelledDetails(controller, scheme),
 //     ));
 //   }
@@ -2232,7 +2261,7 @@ class _InstituteWiseDashboardScreenState
 //       showTreatment: true,
 //       showAbha: false,
 //       patients: controller.dialysisCancelId ?? [],
-//       pageTitle: 'Dialysis Cancel',
+//       pageTitle: context.l10n.dashDialysisCancel,
 //       pageTitleSecond: "",
 //     ));
 //   }

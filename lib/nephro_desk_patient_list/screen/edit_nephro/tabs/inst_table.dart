@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/utils/color_constants.dart';
 import 'package:heamodialysis/widgets/custom_text.dart';
@@ -59,8 +60,8 @@ class _InstTableState extends State<InstTable> {
                         widget.l2.isNotEmpty
                             ? _buildRoundedTableRow(widget.tableHeader)
                             : TableRow(children: [
-                                const CustomText(
-                                  text: "Data Not available",
+                                CustomText(
+                                  text: context.l10n.commonNoDataFound,
                                   fontSize: 12.0,
                                   textColor: Colors.black,
                                   textAlign: TextAlign.start,
@@ -72,7 +73,7 @@ class _InstTableState extends State<InstTable> {
                           widget.l2.isNotEmpty
                               ? _buildTableRow(i)
                               : TableRow(children: [
-                                  const CustomText(
+                                  CustomText(
                                     text: "",
                                     fontSize: 2.0,
                                     textColor: Colors.black,
@@ -193,7 +194,7 @@ class _InstTableState extends State<InstTable> {
               ),
             );
           } else {
-            cellContent = const Text(
+            cellContent = Text(
               "N/A",
               textAlign: TextAlign.center,
             );
@@ -262,8 +263,8 @@ class InstructionsTableState extends State<InstructionsTable> {
                         widget.l2.isNotEmpty
                             ? _buildRoundedTableRow(widget.tableHeader)
                             : TableRow(children: [
-                                const CustomText(
-                                  text: "Data Not available",
+                                CustomText(
+                                  text: context.l10n.commonNoDataFound,
                                   fontSize: 12.0,
                                   textColor: Colors.black,
                                   textAlign: TextAlign.start,
@@ -275,7 +276,7 @@ class InstructionsTableState extends State<InstructionsTable> {
                           widget.l2.isNotEmpty
                               ? _buildTableRow(i)
                               : TableRow(children: [
-                                  const CustomText(
+                                  CustomText(
                                     text: "",
                                     fontSize: 2.0,
                                     textColor: Colors.black,
@@ -366,7 +367,7 @@ class InstructionsTableState extends State<InstructionsTable> {
               },
             );
           } else {
-            cellContent = const Text(
+            cellContent = Text(
               "N/A",
               textAlign: TextAlign.center,
             );

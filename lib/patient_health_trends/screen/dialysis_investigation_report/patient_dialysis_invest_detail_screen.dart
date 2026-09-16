@@ -1,5 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/new_registration/controller/new_registration_controller.dart';
 import 'package:heamodialysis/patient_health_trends/screen/dialysis_investigation_report/Invest_chart_screen.dart';
@@ -86,8 +87,8 @@ class _PatientDialysisInvestDetailsScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const CustomText(
-          text: 'Patient Dialysisd Investigation Result Chart',
+        title: CustomText(
+          text: context.l10n.phtInvestigationResultChart,
           fontSize: 18.0,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,
@@ -134,8 +135,8 @@ class _PatientDialysisInvestDetailsScreenState
                       Expanded(
                         child: CustomDateField(
                           selectedDate: patientController.fromDateInvest,
-                          labelText: "From Date",
-                          hint: "From Date",
+                          labelText: context.l10n.dashFromDate,
+                          hint: context.l10n.dashFromDate,
                           isRequired: true,
                           callB: () {
                             selectFrom();
@@ -148,8 +149,8 @@ class _PatientDialysisInvestDetailsScreenState
                       Expanded(
                         child: CustomDateField(
                             selectedDate: patientController.toDateInvest,
-                            labelText: "To Date",
-                            hint: "To Date",
+                            labelText: context.l10n.dashToDate,
+                            hint: context.l10n.dashToDate,
                             isRequired: true,
                             callB: () {
                               selectTo();
@@ -184,8 +185,8 @@ class _PatientDialysisInvestDetailsScreenState
                             end: Alignment.bottomCenter,
                           ),
                           borderRadius: BorderRadius.circular(6)),
-                      child: const CustomText(
-                          text: "Show Record",
+                      child: CustomText(
+                          text: context.l10n.phtShowRecord,
                           fontSize: 14,
                           fontWeight: FontWeight.normal,
                           textColor: Colors.white,
@@ -202,8 +203,8 @@ class _PatientDialysisInvestDetailsScreenState
                   color: AppColor.primaryBackgroundColor,
                   width: 40,
                 ).paddingOnly(right: 6),
-                const CustomText(
-                  text: "Vital Parameters",
+                CustomText(
+                  text: context.l10n.phtVitalParameters,
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
                   textColor: Colors.black,
@@ -274,7 +275,7 @@ class _PatientDialysisInvestDetailsScreenState
                                         ),
                                         if (latest != null)
                                           CustomText(
-                                              text: "Latest Value: $latest",
+                                              text: context.l10n.phtLatestValue(latest.toString()),
                                               fontSize: 12,
                                               fontWeight: FontWeight.normal,
                                               textColor: Colors.grey,
@@ -301,10 +302,10 @@ class _PatientDialysisInvestDetailsScreenState
                           ).paddingSymmetric(vertical: 6);
                         }),
                   )
-                : const Expanded(
+                : Expanded(
                     child: Center(
                       child: CustomText(
-                          text: "Data Not Found",
+                          text: context.l10n.phtDataNotFound,
                           fontSize: 16,
                           fontWeight: FontWeight.normal,
                           textColor: Colors.grey,
@@ -349,8 +350,8 @@ class _PatientDialysisInvestDetailsScreenState
                         begin: Alignment.topLeft,
                         end: Alignment.bottomCenter,
                       )),
-                  child: const CustomText(
-                      text: "Generate Report",
+                  child: CustomText(
+                      text: context.l10n.phtGenerateReport,
                       fontSize: 14,
                       fontWeight: FontWeight.normal,
                       textColor: Colors.white,

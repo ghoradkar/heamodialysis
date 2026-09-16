@@ -1,5 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/billing/controller/invoice_approval_controller.dart';
@@ -103,7 +104,7 @@ class InvoiceGenerationState extends State<InvoiceGeneration> {
     return Scaffold(
       appBar: AppBar(
         title:  CustomText(
-          text: "INVOICE Generation",
+          text: context.l10n.billInvoiceGeneration,
           fontSize: 18.sp,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,
@@ -159,7 +160,7 @@ class InvoiceGenerationState extends State<InvoiceGeneration> {
               }
             },
             child: CustomText(
-                text: "Generate",
+                text: context.l10n.commonGenerate,
                 fontSize: 16.sp,
                 fontWeight: FontWeight.bold,
                 textColor: AppColor.primaryBackgroundColor,
@@ -273,7 +274,7 @@ class InvoiceGenerationState extends State<InvoiceGeneration> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                    CustomText(
-                          text: "Filter Invoice",
+                          text: context.l10n.billFilterInvoice,
                           fontSize: 16.sp,
                           fontFam: "Lato",
                           fontWeight: FontWeight.w400,
@@ -294,8 +295,8 @@ class InvoiceGenerationState extends State<InvoiceGeneration> {
               ),
               MyCustomDropdown(
                 items: monthList,
-                labelText: 'Month',
-                hint: 'Month',
+                labelText: context.l10n.billMonth,
+                hint: context.l10n.billMonth,
                 isRequired: false,
                 senValue: (value) {
                   selectedMonth = value;
@@ -305,8 +306,8 @@ class InvoiceGenerationState extends State<InvoiceGeneration> {
               ),
               MyCustomDropdown(
                 items: yearList ?? [],
-                labelText: 'Year',
-                hint: 'Year',
+                labelText: context.l10n.billYear,
+                hint: context.l10n.billYear,
                 isRequired: false,
                 senValue: (value) {
                   selectedYear = value;
@@ -336,7 +337,7 @@ class InvoiceGenerationState extends State<InvoiceGeneration> {
                             children: [
                               Image.asset("assets/cancel.png"),
                                CustomText(
-                                  text: "Cancel",
+                                  text: context.l10n.commonCancel,
                                   fontSize: 16.sp,
                                   fontFam: "Lato",
                                   fontWeight: FontWeight.normal,
@@ -386,7 +387,7 @@ class InvoiceGenerationState extends State<InvoiceGeneration> {
                                 color: Colors.white,
                               ),
                               CustomText(
-                                  text: "Search",
+                                  text: context.l10n.commonSearch,
                                   fontSize: 16.sp,
                                   fontFam: "Lato",
                                   fontWeight: FontWeight.normal,

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dashboard/model/nephro_list.dart';
@@ -308,28 +309,36 @@ class _EditNephroDeskState extends State<EditNephroDesk> {
 
                 return Column(
                   children: [
-                    // Patient Info Card
-                    ExpandableCardDetails(
-                      patientData: nephroController.patientDet?.first,
-                      isExpand: (value) {
-                        if (mounted) {
-                          setState(() {
-                            isExpanded = value;
-                          });
-                        }
-                      },
-                      isExpanded: isExpanded,
-                      currentStat: nephroController.currentStat,
+                    // Patient Info Card - capped so an expanded bilingual card
+                    // scrolls internally instead of pushing the page.
+                    ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxHeight: MediaQuery.of(context).size.height * 0.42,
+                      ),
+                      child: SingleChildScrollView(
+                        child: ExpandableCardDetails(
+                          patientData: nephroController.patientDet?.first,
+                          isExpand: (value) {
+                            if (mounted) {
+                              setState(() {
+                                isExpanded = value;
+                              });
+                            }
+                          },
+                          isExpanded: isExpanded,
+                          currentStat: nephroController.currentStat,
+                        ),
+                      ),
                     ).paddingSymmetric(vertical: 10.h),
 
                     // Tab Buttons - Row 1
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        _buildButton(0, 'Cover Sheet'),
-                        _buildButton(1, 'Clinical History'),
-                        _buildButton(2, 'Clinical Condition'),
-                        _buildButton(3, 'Diagnostic Inv'),
+                        _buildButton(0, context.l10n.dqCoverSheet),
+                        _buildButton(1, context.l10n.dqClinicalHistory),
+                        _buildButton(2, context.l10n.dqClinicalCondition),
+                        _buildButton(3, context.l10n.dqDiagnosticInv),
                       ],
                     ),
                     SizedBox(height: 10.h),
@@ -338,10 +347,10 @@ class _EditNephroDeskState extends State<EditNephroDesk> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        _buildButton(4, 'Prescription'),
-                        _buildButton(5, 'Instruction'),
-                        _buildButton(6, 'Diet'),
-                        _buildButton(7, 'Upload Document'),
+                        _buildButton(4, context.l10n.dqPrescription),
+                        _buildButton(5, context.l10n.dqInstruction),
+                        _buildButton(6, context.l10n.dqDiet),
+                        _buildButton(7, context.l10n.regUploadDocument),
                       ],
                     ),
                     SizedBox(height: 10.h),

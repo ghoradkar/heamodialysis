@@ -1,5 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dashboard/screen/technician/institutewise_dashboard_screen.dart';
 import 'package:heamodialysis/internet/no_internet_connectivity.dart';
@@ -25,15 +26,15 @@ class _RoMachineIssueLogsState extends State<RoMachineIssueLogs> {
   final RoMachineIssueLogController roMachineIssueLogController =
       Get.put(RoMachineIssueLogController());
 
-  List<String> cardItemDetailsList = [
-    "RO Machine Name",
-    "Unit",
-    "Informed To",
-    "Informed By",
-    "Issue Date",
-    "information Date",
-    "Comments"
-  ];
+  List<String> _cardItemDetailsList(BuildContext context) => [
+        context.l10n.roMachineName,
+        context.l10n.commonUnit,
+        context.l10n.roInformedTo,
+        context.l10n.roInformedBy,
+        context.l10n.roIssueDate,
+        context.l10n.roInformationDate,
+        context.l10n.commonComments
+      ];
   bool hasInternet = true;
 
   var userData;
@@ -76,8 +77,8 @@ class _RoMachineIssueLogsState extends State<RoMachineIssueLogs> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const CustomText(
-          text: 'RO Machine Issue Logs',
+        title: CustomText(
+          text: context.l10n.roMachineIssueLogs,
           fontSize: 18.0,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,
@@ -99,7 +100,7 @@ class _RoMachineIssueLogsState extends State<RoMachineIssueLogs> {
               child: Image.asset("assets/add-pre-dialysis.png"),
             ),
           ),
-          const SizedBox(
+          SizedBox(
             width: 4,
           ),
           InkWell(
@@ -135,8 +136,8 @@ class _RoMachineIssueLogsState extends State<RoMachineIssueLogs> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const CustomText(
-                                      text: "Search",
+                              CustomText(
+                                      text: context.l10n.commonSearch,
                                       fontSize: 16,
                                       fontFam: "Lato",
                                       fontWeight: FontWeight.w500,
@@ -162,8 +163,8 @@ class _RoMachineIssueLogsState extends State<RoMachineIssueLogs> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const CustomText(
-                                      text: "Institute Name",
+                              CustomText(
+                                      text: context.l10n.colInstituteName,
                                       fontSize: 16,
                                       fontFam: "Lato",
                                       fontWeight: FontWeight.normal,
@@ -183,7 +184,7 @@ class _RoMachineIssueLogsState extends State<RoMachineIssueLogs> {
                                   isExpanded: true,
                                   value:
                                       roMachineIssueLogController.dropDownValue,
-                                  hint: const Text("select"),
+                                  hint: Text("select"),
                                   onChanged:  int.parse(userData['unitId']) == 1
                                       ?(InstituteDataModel? newValue) {
 
@@ -203,7 +204,7 @@ class _RoMachineIssueLogsState extends State<RoMachineIssueLogs> {
                                       child: Text(value.unitName ?? ""),
                                     );
                                   }).toList(),
-                                  underline: const SizedBox(),
+                                  underline: SizedBox(),
                                   icon: Icon(
                                     Icons.keyboard_arrow_down_outlined,
                                     color: AppColor.primaryBackgroundColor,
@@ -212,10 +213,10 @@ class _RoMachineIssueLogsState extends State<RoMachineIssueLogs> {
                               ),
                             ],
                           ),
-                          const Align(
+                          Align(
                             alignment: Alignment.centerLeft,
                             child: CustomText(
-                                text: "Machine Name",
+                                text: context.l10n.machMachineName,
                                 fontSize: 16,
                                 fontFam: "Lato",
                                 fontWeight: FontWeight.normal,
@@ -225,8 +226,8 @@ class _RoMachineIssueLogsState extends State<RoMachineIssueLogs> {
                           TextField(
                               controller:
                                   roMachineIssueLogController.valueController,
-                              decoration: const InputDecoration(
-                                labelText: 'Please enter special no.',
+                              decoration: InputDecoration(
+                                labelText: context.l10n.roSpecialNo,
                                 labelStyle: TextStyle(color: Color(0xFFE1E1E1)),
                                 enabledBorder: OutlineInputBorder(
                                   borderSide:
@@ -264,8 +265,8 @@ class _RoMachineIssueLogsState extends State<RoMachineIssueLogs> {
                                             MainAxisAlignment.center,
                                         children: [
                                           Image.asset("assets/cancel.png"),
-                                          const CustomText(
-                                              text: "Cancel",
+                                          CustomText(
+                                              text: context.l10n.commonCancel,
                                               fontSize: 16,
                                               fontFam: "Lato",
                                               fontWeight: FontWeight.normal,
@@ -275,7 +276,7 @@ class _RoMachineIssueLogsState extends State<RoMachineIssueLogs> {
                                       )),
                                 ),
                               ).paddingOnly(top: 20),
-                              const SizedBox(
+                              SizedBox(
                                 width: 14,
                               ),
                               Align(
@@ -311,7 +312,7 @@ class _RoMachineIssueLogsState extends State<RoMachineIssueLogs> {
                                           end: Alignment.bottomCenter,
                                         ),
                                       ),
-                                      child: const Row(
+                                      child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
@@ -320,7 +321,7 @@ class _RoMachineIssueLogsState extends State<RoMachineIssueLogs> {
                                             color: Colors.white,
                                           ),
                                           CustomText(
-                                              text: "Search",
+                                              text: context.l10n.commonSearch,
                                               fontSize: 16,
                                               fontFam: "Lato",
                                               fontWeight: FontWeight.normal,
@@ -344,7 +345,7 @@ class _RoMachineIssueLogsState extends State<RoMachineIssueLogs> {
               child: Image.asset("assets/filter-line.png"),
             ),
           ),
-          const SizedBox(
+          SizedBox(
             width: 2,
           ),
         ],
@@ -357,7 +358,7 @@ class _RoMachineIssueLogsState extends State<RoMachineIssueLogs> {
                 ?  Center(child: buildShimmerLoader())
                     : RoMaintenanceCardList(
                         roList: controller.roMachineIssueLogModel?.data ?? [],
-                        cardItemDetailsList: cardItemDetailsList,
+                        cardItemDetailsList: _cardItemDetailsList(context),
                         path1: "assets/edit.png",
                         path2: "assets/delete-bin.png",
                         callB1: (index) {

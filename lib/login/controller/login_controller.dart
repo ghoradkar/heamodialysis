@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:heamodialysis/login/model/get_captcha_model.dart';
 import 'package:heamodialysis/login/model/login_model.dart';
 import 'package:heamodialysis/login/model/unit_name_model.dart';
@@ -74,7 +75,7 @@ class LoginController extends GetxController {
       isLoading = false;
       SessionManager().setLoggedIn(false);
       if (e.statusCode == 401) {
-        status = "Something went wrong";
+        status = l10n.commonSomethingWentWrong;
       } else {
         throw Exception('Failed to sign in');
       }
@@ -120,7 +121,7 @@ class LoginController extends GetxController {
       isLoading = false;
       SessionManager().setLoggedIn(false);
       if (e.statusCode == 401) {
-        status = "Something went wrong";
+        status = l10n.commonSomethingWentWrong;
       } else {
         throw Exception('Failed to verify OTP');
       }

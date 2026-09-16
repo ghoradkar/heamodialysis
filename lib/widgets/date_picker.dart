@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:heamodialysis/utils/color_constants.dart';
 import 'package:intl/intl.dart';
 
@@ -88,9 +89,9 @@ class DatePickerHelper {
         return AlertDialog(
           shape:
           RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          title: const Text(
-            "Select Time",
-            style: TextStyle(fontWeight: FontWeight.w500,fontSize: 22),
+          title: Text(
+            context.l10n.selectTime,
+            style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 22),
             textAlign: TextAlign.center,
           ),
           content: Padding(
@@ -134,8 +135,8 @@ class DatePickerHelper {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context, null),
-              child:  Text(
-                "Cancel",
+              child: Text(
+                context.l10n.commonCancel,
                 style: TextStyle(color: AppColor.primaryBackgroundColor),
               ),
             ),
@@ -151,7 +152,8 @@ class DatePickerHelper {
 
                 Navigator.pop(context, formatted);
               },
-              child:  Text("OK",style: TextStyle(color: AppColor.primaryBackgroundColor),),
+              child: Text(context.l10n.commonOk,
+                  style: TextStyle(color: AppColor.primaryBackgroundColor)),
             ),
           ],
         );

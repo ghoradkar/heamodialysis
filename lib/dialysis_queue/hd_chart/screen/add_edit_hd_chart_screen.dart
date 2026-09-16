@@ -1,5 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -107,27 +108,27 @@ class _AddEditHdChartScreenState extends State<AddEditHdChartScreen> {
       hdChartController.demoRows.addAll([
         DialysisRow(
           pre: DialysisCell(
-              'Pre-Dialysis Weight (kgs)',
+              l10n.clinPreDialysisWeightKgs,
               hdChartController.hdChartTableData?.preDialysisWeight
                       .toString() ??
                   '-'),
-          post: DialysisCell('UF Target Achieved (Ltrs)',
+          post: DialysisCell(l10n.clinUfTargetAchieved,
               hdChartController.hdChartTableData?.ufTarget.toString() ?? '-'),
-          safety: DialysisCell('Air Detector / Line Clamp', null,
+          safety: DialysisCell(l10n.clinAirDetectorLineClamp, null,
               showTextField: true,
               enabled: true,
               controller: hdChartController.airDetLineClampController,
               placeholder: 'jj'),
         ),
         DialysisRow(
-          pre: DialysisCell('Dry Weight (kgs)',
+          pre: DialysisCell(l10n.clinDryWeightKgs,
               hdChartController.hdChartTableData?.dryWeight.toString() ?? '-'),
           post: DialysisCell(
-              'Post Dialysis Weight (kgs)',
+              l10n.clinPostDialysisWeightKgs,
               hdChartController.hdChartTableData?.postDialysisWeight
                       .toString() ??
                   '-'),
-          safety: DialysisCell('Alarm Limit Set', null,
+          safety: DialysisCell(l10n.clinAlarmLimitSet, null,
               showTextField: true,
               enabled: true,
               controller: hdChartController.alarmLimSet,
@@ -135,29 +136,29 @@ class _AddEditHdChartScreenState extends State<AddEditHdChartScreen> {
         ),
         DialysisRow(
           pre: DialysisCell(
-              'Intradialytic Weight (kgs)',
+              l10n.clinIntradialyticWeightKgs,
               hdChartController.hdChartTableData?.intraDialyticWeight
                       .toString() ??
                   '-'),
           post: DialysisCell(
-              'Weight Loss',
+              l10n.clinWeightLoss,
               hdChartController.hdChartTableData?.weightDifference.toString() ??
                   '-'),
-          safety: DialysisCell('Heparin Pump on', null,
+          safety: DialysisCell(l10n.clinHeparinPumpOn, null,
               showTextField: true,
               enabled: true,
               controller: hdChartController.hepPumpOn,
               placeholder: ''),
         ),
         DialysisRow(
-          pre: DialysisCell('UF Target (Ltrs)',
+          pre: DialysisCell(l10n.clinUfTarget,
               hdChartController.hdChartTableData?.ufTarget.toString() ?? '-'),
-          post: DialysisCell('kt / v', null,
+          post: DialysisCell(l10n.clinKtv, null,
               showTextField: true,
               enabled: true,
               controller: hdChartController.ctrlKtV,
               placeholder: ''),
-          safety: DialysisCell('Dialysate Flow (ml/min)', null,
+          safety: DialysisCell(l10n.clinDialysateFlowMlMin, null,
               showTextField: true,
               enabled: true,
               controller: hdChartController.dialysateFlow,
@@ -167,15 +168,15 @@ class _AddEditHdChartScreenState extends State<AddEditHdChartScreen> {
 
         // ——— thick divider ———
         DialysisRow(
-          pre: DialysisCell('Pulse (bpm)',
+          pre: DialysisCell(l10n.clinPulseBpm,
               hdChartController.hdChartTableData?.prePulse.toString() ?? '-'),
-          post: DialysisCell('Injection EPO / Iron', null,
+          post: DialysisCell(l10n.clinInjectionEpoIron, null,
               showTextField: true,
               enabled: true,
               controller: hdChartController.injection,
               placeholder: ''),
           safety: DialysisCell(
-              'Dialysate Temp (°C)',
+              l10n.clinDialysateTempC,
               showTextField: true,
               null,
               enabled: true,
@@ -185,13 +186,13 @@ class _AddEditHdChartScreenState extends State<AddEditHdChartScreen> {
         ),
         DialysisRow(
           pre: DialysisCell(
-              'Respiratory Rate (rpm)',
+              l10n.clinRespiratoryRateRpm,
               hdChartController.hdChartTableData?.respiratoryRate.toString() ??
                   '-'),
-          post: DialysisCell('BP (mmHg)',
+          post: DialysisCell(l10n.clinBpMmhg,
               '${hdChartController.hdChartTableData?.postBloodPressureH.toString() ?? '-'}/${hdChartController.hdChartTableData?.postBloodPressureL.toString()}'),
           safety: DialysisCell(
-              'Concentrate Na+ (mmol / L)',
+              l10n.clinConcentrateNa,
               showTextField: true,
               null,
               enabled: true,
@@ -200,14 +201,14 @@ class _AddEditHdChartScreenState extends State<AddEditHdChartScreen> {
               keyboardType: TextInputType.number),
         ),
         DialysisRow(
-          pre: DialysisCell('BP (mmHg)',
+          pre: DialysisCell(l10n.clinBpMmhg,
               '${hdChartController.hdChartTableData?.preBloodPressureH.toString() ?? '-'}/${hdChartController.hdChartTableData?.preBloodPressureL.toString()}'),
           post: DialysisCell(
-              'Temperature (°F)',
+              l10n.clinTemperatureF,
               hdChartController.hdChartTableData?.postDialysisTemperature
                       .toString() ??
                   '-'),
-          safety: DialysisCell('Conductivity (mho)', null,
+          safety: DialysisCell(l10n.clinConductivityMho, null,
               showTextField: true,
               enabled: true,
               controller: hdChartController.conductivity,
@@ -216,18 +217,18 @@ class _AddEditHdChartScreenState extends State<AddEditHdChartScreen> {
         ),
         DialysisRow(
           pre: DialysisCell(
-              'Pt. Temperature (°F)',
+              l10n.clinPtTemperatureF,
               hdChartController.hdChartTableData?.preDialysisTemperature
                       .toString() ??
                   '-'),
-          post: DialysisCell('Pulse (bpm)',
+          post: DialysisCell(l10n.clinPulseBpm,
               hdChartController.hdChartTableData?.postPulse.toString() ?? '-'),
           safety: const DialysisCell('', null, enabled: false),
         ),
         DialysisRow(
-          pre: DialysisCell('HD Started By',
+          pre: DialysisCell(l10n.clinHdStartedBy,
               hdChartController.hdChartTableData?.hdStartedBy ?? '-'),
-          post: DialysisCell('HD Completed By',
+          post: DialysisCell(l10n.clinHdCompletedBy,
               hdChartController.hdChartTableData?.hdCompletedBy ?? '-'),
           safety: const DialysisCell('', null, enabled: false),
         ),
@@ -272,7 +273,7 @@ class _AddEditHdChartScreenState extends State<AddEditHdChartScreen> {
     return Scaffold(
       appBar: AppBar(
         title: CustomText(
-          text: 'HD Chart',
+          text: context.l10n.dqHdChart,
           fontSize: 18.sp,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,
@@ -324,8 +325,8 @@ class _AddEditHdChartScreenState extends State<AddEditHdChartScreen> {
                         //           maxLines: 1,
                         //           isReadOnly: false,
                         //           keyBoardType: TextInputType.text,
-                        //           labelText: 'Bolus Dose',
-                        //           hintText: 'Enter',
+                        //           labelText: context.l10n.clinBolusDose,
+                        //           hintText: context.l10n.regHintEnter,
                         //           isRequired: false,
                         //           txtController: hdChartController.bolusDose,
                         //           fillColor: Colors.white,
@@ -336,8 +337,8 @@ class _AddEditHdChartScreenState extends State<AddEditHdChartScreen> {
                         //           maxLines: 1,
                         //           isReadOnly: false,
                         //           keyBoardType: TextInputType.text,
-                        //           labelText: 'Infusion Dose',
-                        //           hintText: 'Enter',
+                        //           labelText: context.l10n.clinInfusionDose,
+                        //           hintText: context.l10n.regHintEnter,
                         //           isRequired: false,
                         //           txtController: hdChartController.infusionDose,
                         //           fillColor: Colors.white,
@@ -533,7 +534,7 @@ class _AddEditHdChartScreenState extends State<AddEditHdChartScreen> {
 
                                   hdChartController.update();
                                   Get.defaultDialog(
-                                    title: "Success",
+                                    title: context.l10n.commonSuccess,
                                     middleText: "Data Saved Successfully!",
                                     textConfirm: "OK",
                                     onConfirm: () {
@@ -574,7 +575,7 @@ class _AddEditHdChartScreenState extends State<AddEditHdChartScreen> {
                                           width: 10.w,
                                         ),
                                         CustomText(
-                                            text: "Save",
+                                            text: context.l10n.commonSave,
                                             fontSize: 16.sp,
                                             fontFam: "Lato",
                                             fontWeight: FontWeight.normal,
@@ -734,8 +735,8 @@ class HDCardDataState extends State<HDCardData> {
                   child: CustomDateField(
                     // if CustomDateField supports controller:
                     selectedDate: timeCtrl,
-                    labelText: 'Time',
-                    hint: 'Select',
+                    labelText: context.l10n.commonTime,
+                    hint: context.l10n.regHintSelect,
                     isRequired: false,
                     callB: () async {
                       final picked = await DatePickerHelper.selectTime(context);
@@ -750,7 +751,7 @@ class HDCardDataState extends State<HDCardData> {
                 ),
                 Expanded(
                   child: DoubleTextField(
-                    labelText: 'BP(mmHg)',
+                    labelText: context.l10n.clinBpMmhg,
                     hintText1: 'Bottom',
                     hintText2: 'Top',
                     isRequired: false,
@@ -782,8 +783,8 @@ class HDCardDataState extends State<HDCardData> {
                   maxLines: 1,
                   isReadOnly: false,
                   keyBoardType: TextInputType.number,
-                  labelText: 'Pulse',
-                  hintText: 'Enter',
+                  labelText: context.l10n.clinPulse,
+                  hintText: context.l10n.regHintEnter,
                   isRequired: false,
                   txtController: pulseCtrl,
                   fillColor: Colors.white,
@@ -794,8 +795,8 @@ class HDCardDataState extends State<HDCardData> {
                   maxLines: 1,
                   isReadOnly: false,
                   keyBoardType: TextInputType.number,
-                  labelText: 'AP',
-                  hintText: 'Enter',
+                  labelText: context.l10n.clinAp,
+                  hintText: context.l10n.regHintEnter,
                   isRequired: false,
                   txtController: apCtrl,
                   fillColor: Colors.white,
@@ -811,8 +812,8 @@ class HDCardDataState extends State<HDCardData> {
                   maxLines: 1,
                   isReadOnly: false,
                   keyBoardType: TextInputType.number,
-                  labelText: 'VP',
-                  hintText: 'Enter',
+                  labelText: context.l10n.clinVp,
+                  hintText: context.l10n.regHintEnter,
                   isRequired: false,
                   txtController: vpCtrl,
                   fillColor: Colors.white,
@@ -823,8 +824,8 @@ class HDCardDataState extends State<HDCardData> {
                   maxLines: 1,
                   isReadOnly: false,
                   keyBoardType: TextInputType.number,
-                  labelText: 'TMP',
-                  hintText: 'Enter',
+                  labelText: context.l10n.clinTmp,
+                  hintText: context.l10n.regHintEnter,
                   isRequired: false,
                   txtController: tmpCtrl,
                   fillColor: Colors.white,
@@ -840,8 +841,8 @@ class HDCardDataState extends State<HDCardData> {
                   maxLines: 1,
                   isReadOnly: false,
                   keyBoardType: TextInputType.number,
-                  labelText: 'UFR',
-                  hintText: 'Enter',
+                  labelText: context.l10n.clinUfr,
+                  hintText: context.l10n.regHintEnter,
                   isRequired: false,
                   txtController: ufrCtrl,
                   fillColor: Colors.white,
@@ -852,8 +853,8 @@ class HDCardDataState extends State<HDCardData> {
                   maxLines: 1,
                   isReadOnly: false,
                   keyBoardType: TextInputType.text,
-                  labelText: 'UF Achieved',
-                  hintText: 'Enter',
+                  labelText: context.l10n.clinUfAchieved,
+                  hintText: context.l10n.regHintEnter,
                   isRequired: false,
                   txtController: ufAchievedCtrl,
                   fillColor: Colors.white,
@@ -869,8 +870,8 @@ class HDCardDataState extends State<HDCardData> {
                   maxLines: 1,
                   isReadOnly: false,
                   keyBoardType: TextInputType.number,
-                  labelText: 'BFR',
-                  hintText: 'Enter',
+                  labelText: context.l10n.clinBfr,
+                  hintText: context.l10n.regHintEnter,
                   isRequired: false,
                   txtController: bfrCtrl,
                   fillColor: Colors.white,
@@ -881,8 +882,8 @@ class HDCardDataState extends State<HDCardData> {
                   maxLines: 1,
                   isReadOnly: false,
                   keyBoardType: TextInputType.number,
-                  labelText: 'Cond',
-                  hintText: 'Enter',
+                  labelText: context.l10n.clinCond,
+                  hintText: context.l10n.regHintEnter,
                   isRequired: false,
                   txtController: condCtrl,
                   fillColor: Colors.white,
@@ -898,8 +899,8 @@ class HDCardDataState extends State<HDCardData> {
                   maxLines: 1,
                   isReadOnly: false,
                   keyBoardType: TextInputType.number,
-                  labelText: 'CBV',
-                  hintText: 'Enter',
+                  labelText: context.l10n.clinCbv,
+                  hintText: context.l10n.regHintEnter,
                   isRequired: false,
                   txtController: cbvCtrl,
                   fillColor: Colors.white,
@@ -910,8 +911,8 @@ class HDCardDataState extends State<HDCardData> {
                   maxLines: 1,
                   isReadOnly: false,
                   keyBoardType: TextInputType.number,
-                  labelText: 'kt/v',
-                  hintText: 'Enter',
+                  labelText: context.l10n.clinKtv,
+                  hintText: context.l10n.regHintEnter,
                   isRequired: false,
                   txtController: ktvCtrl,
                   fillColor: Colors.white,
@@ -924,8 +925,8 @@ class HDCardDataState extends State<HDCardData> {
               maxLines: 3,
               isReadOnly: false,
               keyBoardType: TextInputType.text,
-              labelText: 'Remark',
-              hintText: 'Enter',
+              labelText: context.l10n.commonRemarks,
+              hintText: context.l10n.regHintEnter,
               isRequired: false,
               txtController: remarkCtrl,
               fillColor: Colors.white,
@@ -997,8 +998,8 @@ class HDCardDataState extends State<HDCardData> {
 //                 Expanded(
 //                   child: CustomDateField(
 //                     key: UniqueKey(),
-//                     labelText: 'Time',
-//                     hint: 'Select',
+//                     labelText: context.l10n.commonTime,
+//                     hint: context.l10n.regHintSelect,
 //                     isRequired: false,
 //                     callB: () {
 //                       widget.selectTime!();
@@ -1011,7 +1012,7 @@ class HDCardDataState extends State<HDCardData> {
 //                 Expanded(
 //                   child: DoubleTextField(
 //                     key: UniqueKey(),
-//                     labelText: 'Blood Pressure\n(mmHg)',
+//                     labelText: context.l10n.clinBloodPressureMmhg,
 //                     hintText1: 'Bottom',
 //                     hintText2: 'Top',
 //                     isRequired: true,
@@ -1044,8 +1045,8 @@ class HDCardDataState extends State<HDCardData> {
 //                     },
 //                     isReadOnly: false,
 //                     keyBoardType: TextInputType.text,
-//                     labelText: 'Pulse',
-//                     hintText: 'Enter',
+//                     labelText: context.l10n.clinPulse,
+//                     hintText: context.l10n.regHintEnter,
 //                     isRequired: false,
 //                     initialValue: widget.hdChartRow.hdPulse != null
 //                         ? widget.hdChartRow.hdPulse.toString()
@@ -1063,8 +1064,8 @@ class HDCardDataState extends State<HDCardData> {
 //                     },
 //                     isReadOnly: false,
 //                     keyBoardType: TextInputType.text,
-//                     labelText: 'AP',
-//                     hintText: 'Enter',
+//                     labelText: context.l10n.clinAp,
+//                     hintText: context.l10n.regHintEnter,
 //                     isRequired: false,
 //                     initialValue: widget.hdChartRow.hdAp != null
 //                         ? widget.hdChartRow.hdAp.toString()
@@ -1087,8 +1088,8 @@ class HDCardDataState extends State<HDCardData> {
 //                     },
 //                     isReadOnly: false,
 //                     keyBoardType: TextInputType.text,
-//                     labelText: 'VP',
-//                     hintText: 'Enter',
+//                     labelText: context.l10n.clinVp,
+//                     hintText: context.l10n.regHintEnter,
 //                     isRequired: false,
 //                     initialValue: widget.hdChartRow.hdVp != null
 //                         ? widget.hdChartRow.hdVp.toString()
@@ -1107,8 +1108,8 @@ class HDCardDataState extends State<HDCardData> {
 //                     },
 //                     isReadOnly: false,
 //                     keyBoardType: TextInputType.text,
-//                     labelText: 'TMP',
-//                     hintText: 'Enter',
+//                     labelText: context.l10n.clinTmp,
+//                     hintText: context.l10n.regHintEnter,
 //                     isRequired: false,
 //                     initialValue: widget.hdChartRow.hdTmp != null
 //                         ? widget.hdChartRow.hdTmp.toString()
@@ -1131,8 +1132,8 @@ class HDCardDataState extends State<HDCardData> {
 //                     },
 //                     isReadOnly: false,
 //                     keyBoardType: TextInputType.text,
-//                     labelText: 'UFR',
-//                     hintText: 'Enter',
+//                     labelText: context.l10n.clinUfr,
+//                     hintText: context.l10n.regHintEnter,
 //                     isRequired: false,
 //                     initialValue: widget.hdChartRow.hdUfr != null
 //                         ? widget.hdChartRow.hdUfr.toString()
@@ -1151,8 +1152,8 @@ class HDCardDataState extends State<HDCardData> {
 //                     },
 //                     isReadOnly: false,
 //                     keyBoardType: TextInputType.text,
-//                     labelText: 'UF Achieved',
-//                     hintText: 'Enter',
+//                     labelText: context.l10n.clinUfAchieved,
+//                     hintText: context.l10n.regHintEnter,
 //                     isRequired: false,
 //                     initialValue: widget.hdChartRow.hdAchieved,
 //                     fillColor: Colors.white,
@@ -1172,8 +1173,8 @@ class HDCardDataState extends State<HDCardData> {
 //                     },
 //                     isReadOnly: false,
 //                     keyBoardType: TextInputType.text,
-//                     labelText: 'BFR',
-//                     hintText: 'Enter',
+//                     labelText: context.l10n.clinBfr,
+//                     hintText: context.l10n.regHintEnter,
 //                     isRequired: false,
 //                     initialValue: widget.hdChartRow.hdBfr != null
 //                         ? widget.hdChartRow.hdBfr.toString()
@@ -1191,8 +1192,8 @@ class HDCardDataState extends State<HDCardData> {
 //                     },
 //                     isReadOnly: false,
 //                     keyBoardType: TextInputType.text,
-//                     labelText: 'Cond',
-//                     hintText: 'Enter',
+//                     labelText: context.l10n.clinCond,
+//                     hintText: context.l10n.regHintEnter,
 //                     isRequired: false,
 //                     initialValue: widget.hdChartRow.hdCond != null
 //                         ? widget.hdChartRow.hdCond.toString()
@@ -1215,8 +1216,8 @@ class HDCardDataState extends State<HDCardData> {
 //                     },
 //                     isReadOnly: false,
 //                     keyBoardType: TextInputType.text,
-//                     labelText: 'CBV',
-//                     hintText: 'Enter',
+//                     labelText: context.l10n.clinCbv,
+//                     hintText: context.l10n.regHintEnter,
 //                     isRequired: false,
 //                     initialValue: widget.hdChartRow.hdCbv != null
 //                         ? widget.hdChartRow.hdCbv.toString()
@@ -1234,8 +1235,8 @@ class HDCardDataState extends State<HDCardData> {
 //                     },
 //                     isReadOnly: false,
 //                     keyBoardType: TextInputType.text,
-//                     labelText: 'kt/v  ',
-//                     hintText: 'Enter',
+//                     labelText: context.l10n.clinKtv,
+//                     hintText: context.l10n.regHintEnter,
 //                     isRequired: false,
 //                     initialValue: widget.hdChartRow.hdKtv != null
 //                         ? widget.hdChartRow.hdKtv.toString()
@@ -1255,8 +1256,8 @@ class HDCardDataState extends State<HDCardData> {
 //               },
 //               isReadOnly: false,
 //               keyBoardType: TextInputType.text,
-//               labelText: 'Remark',
-//               hintText: 'Enter',
+//               labelText: context.l10n.commonRemarks,
+//               hintText: context.l10n.regHintEnter,
 //               isRequired: false,
 //               initialValue: widget.hdChartRow.hdRemark,
 //               fillColor: Colors.white,
@@ -1386,11 +1387,11 @@ class DialysisSummaryTable extends StatelessWidget {
             Container(
               color: const Color(0xFF257BAB),
               padding: EdgeInsets.symmetric(vertical: 9.h, horizontal: 8.w),
-              child: const Row(
+              child: Row(
                 children: [
-                  HeaderCell(text: 'Pre-dialysis'),
-                  HeaderCell(text: 'Post-dialysis'),
-                  HeaderCell(text: 'Safety Checks'),
+                  HeaderCell(text: context.l10n.dqPreDialysisTab),
+                  HeaderCell(text: context.l10n.dqPostDialysisTab),
+                  HeaderCell(text: context.l10n.dqSafetyChecks),
                 ],
               ),
             ),

@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:camera/camera.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/capture_photo/screen/capture_photo.dart';
@@ -72,13 +73,13 @@ class PersonalInfoScreenState extends State<PersonalInfoScreen>
             SizedBox(height: 20.h),
             // CustomExpandableContainer()
             CustomExpandableContainer(
-              text: 'Personal Info',
+              text: context.l10n.tabPersonalInfo,
               leading: "assets/user_textfield.png",
               child:Column(
                 children: <Widget>[
                   Container(
 
-                    padding: const EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(4),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(10),
@@ -140,7 +141,7 @@ class PersonalInfoScreenState extends State<PersonalInfoScreen>
                         //     ],
                         //   ),
                         // ),
-                        SizedBox(height: 16.h),
+                        SizedBox(height: 14.h),
                         Container(
                           decoration: BoxDecoration(
                               color: Colors.grey[50],
@@ -152,7 +153,7 @@ class PersonalInfoScreenState extends State<PersonalInfoScreen>
                               CustomTextField(
                                 maxLines: 1,
                                 isReadOnly: true,
-                                labelText: 'ABHA NO',
+                                labelText: context.l10n.regAbhaNo,
                                 hintText: '',
                                 isRequired: false,
                                 keyBoardType: TextInputType.number,
@@ -161,31 +162,31 @@ class PersonalInfoScreenState extends State<PersonalInfoScreen>
                                 fillColor: Colors.white,
                                 fontSize: 14,
                               ),
-                              SizedBox(height: 8.h),
+                              SizedBox(height: 4.h),
                               CustomTextField(
                                 maxLines: 1,
                                 isReadOnly: true,
-                                labelText: 'ABHA Address',
+                                labelText: context.l10n.regAbhaAddress,
                                 hintText: '',
                                 isRequired: false,
                                 keyBoardType: TextInputType.number,
                                 txtController: newRegistrationController
                                     .abhaAddressController,
                                 fillColor: Colors.white,
-                                fontSize: 16.sp,
+                                fontSize: 14.sp,
                               ),
-                               SizedBox(height: 8.h),
+                               SizedBox(height: 4.h),
                               MyCustomDropdown(
                                 isViewProfile: widget.isViewPatient,
                                 selectedItem:
                                 newRegistrationController.prefixVal,
-                                labelText: 'Prefix',
+                                labelText: context.l10n.regPrefix,
                                 items: newRegistrationController
                                     .predixList?.data
                                     ?.map((e) => e.title)
                                     .toList() ??
                                     [],
-                                hint: "Select Title",
+                                hint: context.l10n.regHintSelectTitle,
                                 isRequired: true,
                                 senValue: (value) {
                                   if (widget.isViewPatient == false) {
@@ -196,373 +197,693 @@ class PersonalInfoScreenState extends State<PersonalInfoScreen>
                                 },
                                 filledColor: Colors.white,
                               ),
-                              SizedBox(height: 8.h),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: CustomTextField(
-                                      maxLines: 1,
-                                      isReadOnly:
-                                      widget.isViewPatient ? true : false,
-                                      labelText: 'First Name',
-                                      hintText: 'Enter first name',
-                                      isRequired: true,
-                                      keyBoardType: TextInputType.name,
-                                      txtController: newRegistrationController
-                                          .firstNameController,
-                                      fillColor: Colors.white,
-                                      fontSize: 16,
-                                    ),
-                                  ),
+                              SizedBox(height: 4.h),
+                              CustomTextField(
+                                maxLines: 1,
+                                isReadOnly:
+                                widget.isViewPatient ? true : false,
+                                labelText: context.l10n.regFirstName,
+                                hintText: context.l10n.regHintEnterFirstName,
+                                isRequired: true,
+                                keyBoardType: TextInputType.name,
+                                txtController: newRegistrationController
+                                    .firstNameController,
+                                fillColor: Colors.white,
+                                fontSize: 14,
+                              ),
+                              SizedBox(height: 4.h),
 
-                                  SizedBox(height: 8.h),
-                                  Expanded(
-                                    child: CustomTextField(
-                                      maxLines: 1,
-                                      isReadOnly: false,
-                                      keyBoardType: TextInputType.name,
-                                      labelText: 'Middle Name',
-                                      hintText: 'Enter middle name',
-                                      isRequired: false,
-                                      txtController: newRegistrationController
-                                          .middleNameController,
-                                      fillColor: Colors.white,
-                                      fontSize: 16.sp,
-                                    ),
-                                  ),
-                                ],
+                              // Row(
+                              //   children: [
+                              //     Expanded(
+                              //       child: CustomTextField(
+                              //         maxLines: 1,
+                              //         isReadOnly:
+                              //         widget.isViewPatient ? true : false,
+                              //         labelText: context.l10n.regFirstName,
+                              //         hintText: context.l10n.regHintEnterFirstName,
+                              //         isRequired: true,
+                              //         keyBoardType: TextInputType.name,
+                              //         txtController: newRegistrationController
+                              //             .firstNameController,
+                              //         fillColor: Colors.white,
+                              //         fontSize: 14,
+                              //       ),
+                              //     ),
+                              //
+                              //     SizedBox(height: 4.h),
+                              //     Expanded(
+                              //       child: CustomTextField(
+                              //         maxLines: 1,
+                              //         isReadOnly: false,
+                              //         keyBoardType: TextInputType.name,
+                              //         labelText: context.l10n.regMiddleName,
+                              //         hintText: context.l10n.regHintEnterMiddleName,
+                              //         isRequired: false,
+                              //         txtController: newRegistrationController
+                              //             .middleNameController,
+                              //         fillColor: Colors.white,
+                              //         fontSize: 14.sp,
+                              //       ),
+                              //     ),
+                              //   ],
+                              // ),
+                              CustomTextField(
+                                maxLines: 1,
+                                isReadOnly: false,
+                                keyBoardType: TextInputType.name,
+                                labelText: context.l10n.regMiddleName,
+                                hintText: context.l10n.regHintEnterMiddleName,
+                                isRequired: false,
+                                txtController: newRegistrationController
+                                    .middleNameController,
+                                fillColor: Colors.white,
+                                fontSize: 14.sp,
                               ),
-                              SizedBox(height: 8.h),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: CustomTextField(
-                                      maxLines: 1,
-                                      isReadOnly:
-                                      widget.isViewPatient ? true : false,
-                                      keyBoardType: TextInputType.name,
-                                      labelText: 'Last Name',
-                                      hintText: 'Enter last name',
-                                      isRequired: true,
-                                      txtController: newRegistrationController
-                                          .lastNameController,
-                                      fillColor: Colors.white,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: MyCustomDropdown(
-                                        isViewProfile: widget.isViewPatient,
-                                        selectedItem:
-                                        newRegistrationController
-                                            .selectedGender,
-                                        labelText: 'Gender',
-                                        items: (newRegistrationController.genderList?.data != null &&
-                                                newRegistrationController.genderList!.data!.isNotEmpty)
-                                            ? newRegistrationController.genderList!.data!
-                                                .map((e) => e.lookupDetDescEn ?? '')
-                                                .toList()
-                                            : const [
-                                                'Male',
-                                                'Female',
-                                                'Transgender',
-                                                'Other'
-                                              ],
-                                        hint: 'Select',
-                                        isRequired: true,
-                                        senValue: (value) {
-                                          if (widget.isViewPatient ==
-                                              false) {
-                                            newRegistrationController
-                                                .selectedGender = value;
-                                            newRegistrationController
-                                                .refreshUi();
-                                          }
-                                        },
-                                        filledColor: Colors.white),
-                                  ),
-                                ],
+                              SizedBox(height: 4.h),
+                              CustomTextField(
+                                maxLines: 1,
+                                isReadOnly:
+                                widget.isViewPatient ? true : false,
+                                keyBoardType: TextInputType.name,
+                                labelText: context.l10n.regLastName,
+                                hintText: context.l10n.regHintEnterLastName,
+                                isRequired: true,
+                                txtController: newRegistrationController
+                                    .lastNameController,
+                                fillColor: Colors.white,
+                                fontSize: 14,
                               ),
-                              SizedBox(height: 6.h),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: MyCustomDropdown(
-                                        isViewProfile: widget.isViewPatient,
-                                        selectedItem:
+                              SizedBox(height: 4.h),
+
+                              // Row(
+                              //   children: [
+                              //     Expanded(
+                              //       child: CustomTextField(
+                              //         maxLines: 1,
+                              //         isReadOnly:
+                              //         widget.isViewPatient ? true : false,
+                              //         keyBoardType: TextInputType.name,
+                              //         labelText: context.l10n.regLastName,
+                              //         hintText: context.l10n.regHintEnterLastName,
+                              //         isRequired: true,
+                              //         txtController: newRegistrationController
+                              //             .lastNameController,
+                              //         fillColor: Colors.white,
+                              //         fontSize: 14,
+                              //       ),
+                              //     ),
+                              //     Expanded(
+                              //       child: MyCustomDropdown(
+                              //           isViewProfile: widget.isViewPatient,
+                              //           selectedItem:
+                              //           newRegistrationController
+                              //               .selectedGender,
+                              //           labelText: context.l10n.commonGender,
+                              //           items: (newRegistrationController.genderList?.data != null &&
+                              //                   newRegistrationController.genderList!.data!.isNotEmpty)
+                              //               ? newRegistrationController.genderList!.data!
+                              //                   .map((e) => e.lookupDetDescEn ?? '')
+                              //                   .toList()
+                              //               : const [
+                              //                   'Male',
+                              //                   'Female',
+                              //                   'Transgender',
+                              //                   'Other'
+                              //                 ],
+                              //           hint: context.l10n.regHintSelect,
+                              //           isRequired: true,
+                              //           senValue: (value) {
+                              //             if (widget.isViewPatient ==
+                              //                 false) {
+                              //               newRegistrationController
+                              //                   .selectedGender = value;
+                              //               newRegistrationController
+                              //                   .refreshUi();
+                              //             }
+                              //           },
+                              //           filledColor: Colors.white),
+                              //     ),
+                              //   ],
+                              // ),
+
+                              MyCustomDropdown(
+                                  isViewProfile: widget.isViewPatient,
+                                  selectedItem:
+                                  newRegistrationController
+                                      .selectedGender,
+                                  labelText: context.l10n.commonGender,
+                                  items: (newRegistrationController.genderList?.data != null &&
+                                      newRegistrationController.genderList!.data!.isNotEmpty)
+                                      ? newRegistrationController.genderList!.data!
+                                      .map((e) => e.lookupDetDescEn ?? '')
+                                      .toList()
+                                      : const [
+                                    'Male',
+                                    'Female',
+                                    'Transgender',
+                                    'Other'
+                                  ],
+                                  hint: context.l10n.regHintSelect,
+                                  isRequired: true,
+                                  senValue: (value) {
+                                    if (widget.isViewPatient ==
+                                        false) {
+                                      newRegistrationController
+                                          .selectedGender = value;
+                                      newRegistrationController
+                                          .refreshUi();
+                                    }
+                                  },
+                                  filledColor: Colors.white),
+                              SizedBox(height: 4.h),
+                              MyCustomDropdown(
+                                  isViewProfile: widget.isViewPatient,
+                                  selectedItem:
+                                  newRegistrationController
+                                      .selectedMaritalVal,
+                                  labelText: context.l10n.regMaritalStatus,
+                                  items: newRegistrationController
+                                      .maritalStatusModel?.data
+                                      ?.map((e) =>
+                                  e.lookupDetDescEn)
+                                      .toList() ??
+                                      [],
+                                  hint: context.l10n.regHintSelect,
+                                  isRequired: true,
+                                  senValue: (value) {
+                                    newRegistrationController
+                                        .selectedMarriedObj =
                                         newRegistrationController
-                                            .selectedMaritalVal,
-                                        labelText: 'Marital Status',
-                                        items: newRegistrationController
                                             .maritalStatusModel?.data
-                                            ?.map((e) =>
-                                        e.lookupDetDescEn)
-                                            .toList() ??
-                                            [],
-                                        hint: 'Select',
-                                        isRequired: true,
-                                        senValue: (value) {
-                                          newRegistrationController
-                                              .selectedMarriedObj =
-                                              newRegistrationController
-                                                  .maritalStatusModel?.data
-                                                  ?.firstWhere((e) =>
-                                              e.lookupDetDescEn ==
-                                                  value);
-                                          newRegistrationController
-                                              .selectedMaritalVal = value;
-                                          newRegistrationController
-                                              .refreshUi();
-                                        },
-                                        filledColor: Colors.white),
-                                  ),
-                                  Expanded(
-                                    child: CustomTextField(
-                                      maxLines: 1,
-                                      isReadOnly: widget.isViewPatient
-                                          ? true
-                                          : false,
-                                      keyBoardType: TextInputType.phone,
-                                      labelText: 'Contact Number',
-                                      hintText: 'Enter Contact Number',
-                                      isRequired: true,
-                                      txtController:
-                                      newRegistrationController
-                                          .mobileController,
-                                      fillColor: Colors.white,
-                                      fontSize: 16.sp,
-                                      onChanged: (value) {},
-                                      mazLenght:10,
-                                    ),
-                                  ),
-                                ],
+                                            ?.firstWhere((e) =>
+                                        e.lookupDetDescEn ==
+                                            value);
+                                    newRegistrationController
+                                        .selectedMaritalVal = value;
+                                    newRegistrationController
+                                        .refreshUi();
+                                  },
+                                  filledColor: Colors.white),
+                              SizedBox(height: 4.h),
+
+                              // Row(
+                              //   children: [
+                              //     Expanded(
+                              //       child: MyCustomDropdown(
+                              //           isViewProfile: widget.isViewPatient,
+                              //           selectedItem:
+                              //           newRegistrationController
+                              //               .selectedMaritalVal,
+                              //           labelText: context.l10n.regMaritalStatus,
+                              //           items: newRegistrationController
+                              //               .maritalStatusModel?.data
+                              //               ?.map((e) =>
+                              //           e.lookupDetDescEn)
+                              //               .toList() ??
+                              //               [],
+                              //           hint: context.l10n.regHintSelect,
+                              //           isRequired: true,
+                              //           senValue: (value) {
+                              //             newRegistrationController
+                              //                 .selectedMarriedObj =
+                              //                 newRegistrationController
+                              //                     .maritalStatusModel?.data
+                              //                     ?.firstWhere((e) =>
+                              //                 e.lookupDetDescEn ==
+                              //                     value);
+                              //             newRegistrationController
+                              //                 .selectedMaritalVal = value;
+                              //             newRegistrationController
+                              //                 .refreshUi();
+                              //           },
+                              //           filledColor: Colors.white),
+                              //     ),
+                              //     Expanded(
+                              //       child: CustomTextField(
+                              //         maxLines: 1,
+                              //         isReadOnly: widget.isViewPatient
+                              //             ? true
+                              //             : false,
+                              //         keyBoardType: TextInputType.phone,
+                              //         labelText: context.l10n.regContactNumber,
+                              //         hintText: context.l10n.regHintEnterContactNumber,
+                              //         isRequired: true,
+                              //         txtController:
+                              //         newRegistrationController
+                              //             .mobileController,
+                              //         fillColor: Colors.white,
+                              //         fontSize: 14.sp,
+                              //         onChanged: (value) {},
+                              //         mazLenght:10,
+                              //       ),
+                              //     ),
+                              //   ],
+                              // ),
+                              CustomTextField(
+                                maxLines: 1,
+                                isReadOnly: widget.isViewPatient
+                                    ? true
+                                    : false,
+                                keyBoardType: TextInputType.phone,
+                                labelText: context.l10n.regContactNumber,
+                                hintText: context.l10n.regHintEnterContactNumber,
+                                isRequired: true,
+                                txtController:
+                                newRegistrationController
+                                    .mobileController,
+                                fillColor: Colors.white,
+                                fontSize: 14.sp,
+                                onChanged: (value) {},
+                                mazLenght:10,
+                              ),
+                              SizedBox(height: 4.h),
+                              CustomTextField(
+                                maxLines: 1,
+                                isReadOnly: widget.isViewPatient
+                                    ? true
+                                    : false,
+                                keyBoardType:
+                                TextInputType.emailAddress,
+                                labelText: context.l10n.regEmailId,
+                                hintText: context.l10n.regHintEnterEmail,
+                                isRequired: false,
+                                txtController:
+                                newRegistrationController
+                                    .emailController,
+                                fillColor: Colors.white,
+                                fontSize: 14.sp,
+                              ),
+                              SizedBox(height: 4.h),
+
+                              // Row(
+                              //   children: [
+                              //     Expanded(
+                              //       child: CustomTextField(
+                              //         maxLines: 1,
+                              //         isReadOnly: widget.isViewPatient
+                              //             ? true
+                              //             : false,
+                              //         keyBoardType:
+                              //         TextInputType.emailAddress,
+                              //         labelText: context.l10n.regEmailId,
+                              //         hintText: context.l10n.regHintEnterEmail,
+                              //         isRequired: false,
+                              //         txtController:
+                              //         newRegistrationController
+                              //             .emailController,
+                              //         fillColor: Colors.white,
+                              //         fontSize: 14.sp,
+                              //       ),
+                              //     ),
+                              //     Expanded(
+                              //       child: CustomDOBField(
+                              //         labelText: context.l10n.regDob,
+                              //         hint: context.l10n.regHintSelect,
+                              //         isRequired: true,
+                              //         callB: () {
+                              //           if (widget.isViewPatient == false) {
+                              //             _selectDate(context);
+                              //           }
+                              //         },
+                              //         selectedDate:
+                              //         newRegistrationController.dboController,
+                              //         filledColor: Colors.white,
+                              //         dontDhowPrefix: false,
+                              //       ),
+                              //     ),
+                              //   ],
+                              // ),
+
+                              CustomDOBField(
+                                labelText: context.l10n.regDob,
+                                hint: context.l10n.regHintSelect,
+                                isRequired: true,
+                                callB: () {
+                                  if (widget.isViewPatient == false) {
+                                    _selectDate(context);
+                                  }
+                                },
+                                selectedDate:
+                                newRegistrationController.dboController,
+                                filledColor: Colors.white,
+                                dontDhowPrefix: false,
                               ),
                               SizedBox(height: 8.h),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: CustomTextField(
-                                      maxLines: 1,
-                                      isReadOnly: widget.isViewPatient
-                                          ? true
-                                          : false,
-                                      keyBoardType:
-                                      TextInputType.emailAddress,
-                                      labelText: 'Email Id',
-                                      hintText: 'Enter Email address',
-                                      isRequired: false,
-                                      txtController:
-                                      newRegistrationController
-                                          .emailController,
-                                      fillColor: Colors.white,
-                                      fontSize: 16.sp,
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: CustomDOBField(
-                                      labelText: 'DOB',
-                                      hint: 'Select',
-                                      isRequired: true,
-                                      callB: () {
-                                        if (widget.isViewPatient == false) {
-                                          _selectDate(context);
-                                        }
-                                      },
-                                      selectedDate:
-                                      newRegistrationController.dboController,
-                                      filledColor: Colors.white,
-                                      dontDhowPrefix: false,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 16.h),
-                              Row(
-                                children: [
-                                  Expanded(
-                                      child: MyCustomDropdown(
-                                          isViewProfile:
-                                              widget.isViewPatient,
-                                          selectedItem:
-                                              newRegistrationController
-                                                   .selectedEdu,
-                                          labelText: 'Education',
-                                          items: newRegistrationController
-                                                  .commomDropdownList
-                                                  ?.educationList
-                                                  .map((e) =>
-                                                      e.lookupDetDescEn)
-                                                  .toList() ??
-                                              [],
-                                          hint: 'Select',
-                                          isRequired: true,
-                                          senValue: (value) {
+                              MyCustomDropdown(
+                                  isViewProfile:
+                                  widget.isViewPatient,
+                                  selectedItem:
+                                  newRegistrationController
+                                      .selectedEdu,
+                                  labelText: context.l10n.regEducation,
+                                  items: newRegistrationController
+                                      .commomDropdownList
+                                      ?.educationList
+                                      .map((e) =>
+                                  e.lookupDetDescEn)
+                                      .toList() ??
+                                      [],
+                                  hint: context.l10n.regHintSelect,
+                                  isRequired: true,
+                                  senValue: (value) {
+                                    newRegistrationController
+                                        .selectedEduObj =
+                                        newRegistrationController
+                                            .commomDropdownList
+                                            ?.educationList
+                                            .firstWhere((e) =>
+                                        e.lookupDetDescEn ==
+                                            value);
+                                    newRegistrationController
+                                        .selectedEdu = value;
+                                    newRegistrationController
+                                        .socEcoStat =
+                                        newRegistrationController.getEconomicStatus(
+                                            educationText:
                                             newRegistrationController
-                                                    .selectedEduObj =
-                                                newRegistrationController
-                                                    .commomDropdownList
-                                                    ?.educationList
-                                                    .firstWhere((e) =>
-                                                        e.lookupDetDescEn ==
-                                                        value);
-                                            newRegistrationController
-                                                .selectedEdu = value;
-                                            newRegistrationController
-                                                    .socEcoStat =
-                                                newRegistrationController.getEconomicStatus(
-                                                    educationText:
-                                                        newRegistrationController
-                                                            .selectedEdu,
-                                                    occupationText:
-                                                        newRegistrationController
-                                                            .selectedOccu,
-                                                    monthlyIncomeText:
-                                                        newRegistrationController
-                                                            .selectedMonthlyIncome);
-                                            setState(() {});
-                                            // newRegistrationController
-                                            //     .refreshUi();
-                                          },
-                                          filledColor: Colors.white)),
-                                  Expanded(
-                                    child: MyCustomDropdown(
-                                        isViewProfile: widget.isViewPatient,
-                                        selectedItem:
+                                                .selectedEdu,
+                                            occupationText:
                                             newRegistrationController
                                                 .selectedOccu,
-                                        labelText: 'Occupation',
-                                        items: newRegistrationController
-                                                .commomDropdownList
-                                                ?.occupationList
-                                                .map((e) =>
-                                                    e.lookupDetDescEn)
-                                                .toList() ??
-                                            [],
-                                        hint: 'Select',
-                                        isRequired: true,
-                                        senValue: (value) {
-                                          newRegistrationController
-                                                  .selectedOccuObj =
-                                              newRegistrationController
-                                                  .commomDropdownList
-                                                  ?.occupationList
-                                                  .firstWhere((e) =>
-                                                      e.lookupDetDescEn ==
-                                                      value);
-                                          newRegistrationController
-                                              .selectedOccu = value;
-                                          newRegistrationController
-                                                  .socEcoStat =
-                                              newRegistrationController.getEconomicStatus(
-                                                  educationText:
-                                                      newRegistrationController
-                                                          .selectedEdu,
-                                                  occupationText:
-                                                      newRegistrationController
-                                                          .selectedOccu,
-                                                  monthlyIncomeText:
-                                                      newRegistrationController
-                                                          .selectedMonthlyIncome);
-                                          setState(() {});
-                                          // newRegistrationController
-                                          //     .refreshUi();
-                                        },
-                                        filledColor: Colors.white),
-                                  )
-                                ],
-                              ),
-                              SizedBox(height: 16.h),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: MyCustomDropdown(
-                                        isViewProfile: widget.isViewPatient,
-                                        selectedItem:
+                                            monthlyIncomeText:
                                             newRegistrationController
-                                                .selectedMonthlyIncome,
-                                        labelText: 'Monthly Income',
-                                        items: newRegistrationController
-                                                .getMonthyIncomeList
-                                                ?.monthlyIncomeList
-                                                .map((e) => e.lookupDescEn)
-                                                .toList() ??
-                                            [],
-                                        hint: 'Select',
-                                        isRequired: true,
-                                        senValue: (value) {
-                                          newRegistrationController
-                                                  .selectedMonthlyIncomeObj =
-                                              newRegistrationController
-                                                  .getMonthyIncomeList
-                                                  ?.monthlyIncomeList
-                                                  .firstWhere((e) =>
-                                                      e.lookupDescEn ==
-                                                      value);
-                                          newRegistrationController
-                                                  .selectedMonthlyIncome =
-                                              value;
-                                          newRegistrationController
-                                                  .socEcoStat =
-                                              newRegistrationController.getEconomicStatus(
-                                                  educationText:
-                                                      newRegistrationController
-                                                          .selectedEdu,
-                                                  occupationText:
-                                                      newRegistrationController
-                                                          .selectedOccu,
-                                                  monthlyIncomeText:
-                                                      newRegistrationController
-                                                          .selectedMonthlyIncome);
-                                          // newRegistrationController
-                                          //     .refreshUi();
-                                          debugPrint(
-                                              "social eco stat ${newRegistrationController.socEcoStat}");
-                                          setState(() {});
-                                        },
-                                        filledColor: Colors.white),
-                                  ),
-                                  Expanded(
-                                    child: MyCustomDropdown(
-                                        isViewProfile: widget.isViewPatient,
-                                        selectedItem:
+                                                .selectedMonthlyIncome);
+                                    setState(() {});
+                                    // newRegistrationController
+                                    //     .refreshUi();
+                                  },
+                                  filledColor: Colors.white),
+                              SizedBox(height: 8.h),
+
+                              // Row(
+                              //   children: [
+                              //     Expanded(
+                              //         child: MyCustomDropdown(
+                              //             isViewProfile:
+                              //                 widget.isViewPatient,
+                              //             selectedItem:
+                              //                 newRegistrationController
+                              //                      .selectedEdu,
+                              //             labelText: context.l10n.regEducation,
+                              //             items: newRegistrationController
+                              //                     .commomDropdownList
+                              //                     ?.educationList
+                              //                     .map((e) =>
+                              //                         e.lookupDetDescEn)
+                              //                     .toList() ??
+                              //                 [],
+                              //             hint: context.l10n.regHintSelect,
+                              //             isRequired: true,
+                              //             senValue: (value) {
+                              //               newRegistrationController
+                              //                       .selectedEduObj =
+                              //                   newRegistrationController
+                              //                       .commomDropdownList
+                              //                       ?.educationList
+                              //                       .firstWhere((e) =>
+                              //                           e.lookupDetDescEn ==
+                              //                           value);
+                              //               newRegistrationController
+                              //                   .selectedEdu = value;
+                              //               newRegistrationController
+                              //                       .socEcoStat =
+                              //                   newRegistrationController.getEconomicStatus(
+                              //                       educationText:
+                              //                           newRegistrationController
+                              //                               .selectedEdu,
+                              //                       occupationText:
+                              //                           newRegistrationController
+                              //                               .selectedOccu,
+                              //                       monthlyIncomeText:
+                              //                           newRegistrationController
+                              //                               .selectedMonthlyIncome);
+                              //               setState(() {});
+                              //               // newRegistrationController
+                              //               //     .refreshUi();
+                              //             },
+                              //             filledColor: Colors.white)),
+                              //     Expanded(
+                              //       child: MyCustomDropdown(
+                              //           isViewProfile: widget.isViewPatient,
+                              //           selectedItem:
+                              //               newRegistrationController
+                              //                   .selectedOccu,
+                              //           labelText: context.l10n.regOccupation,
+                              //           items: newRegistrationController
+                              //                   .commomDropdownList
+                              //                   ?.occupationList
+                              //                   .map((e) =>
+                              //                       e.lookupDetDescEn)
+                              //                   .toList() ??
+                              //               [],
+                              //           hint: context.l10n.regHintSelect,
+                              //           isRequired: true,
+                              //           senValue: (value) {
+                              //             newRegistrationController
+                              //                     .selectedOccuObj =
+                              //                 newRegistrationController
+                              //                     .commomDropdownList
+                              //                     ?.occupationList
+                              //                     .firstWhere((e) =>
+                              //                         e.lookupDetDescEn ==
+                              //                         value);
+                              //             newRegistrationController
+                              //                 .selectedOccu = value;
+                              //             newRegistrationController
+                              //                     .socEcoStat =
+                              //                 newRegistrationController.getEconomicStatus(
+                              //                     educationText:
+                              //                         newRegistrationController
+                              //                             .selectedEdu,
+                              //                     occupationText:
+                              //                         newRegistrationController
+                              //                             .selectedOccu,
+                              //                     monthlyIncomeText:
+                              //                         newRegistrationController
+                              //                             .selectedMonthlyIncome);
+                              //             setState(() {});
+                              //             // newRegistrationController
+                              //             //     .refreshUi();
+                              //           },
+                              //           filledColor: Colors.white),
+                              //     )
+                              //   ],
+                              // ),
+
+                              MyCustomDropdown(
+                                  isViewProfile: widget.isViewPatient,
+                                  selectedItem:
+                                  newRegistrationController
+                                      .selectedOccu,
+                                  labelText: context.l10n.regOccupation,
+                                  items: newRegistrationController
+                                      .commomDropdownList
+                                      ?.occupationList
+                                      .map((e) =>
+                                  e.lookupDetDescEn)
+                                      .toList() ??
+                                      [],
+                                  hint: context.l10n.regHintSelect,
+                                  isRequired: true,
+                                  senValue: (value) {
+                                    newRegistrationController
+                                        .selectedOccuObj =
+                                        newRegistrationController
+                                            .commomDropdownList
+                                            ?.occupationList
+                                            .firstWhere((e) =>
+                                        e.lookupDetDescEn ==
+                                            value);
+                                    newRegistrationController
+                                        .selectedOccu = value;
+                                    newRegistrationController
+                                        .socEcoStat =
+                                        newRegistrationController.getEconomicStatus(
+                                            educationText:
                                             newRegistrationController
-                                                .selectedReligion,
-                                        labelText: 'Religion',
-                                        items: newRegistrationController
-                                                .commomDropdownList
-                                                ?.religionList
-                                                .map((e) =>
-                                                    e.lookupDetDescEn)
-                                                .toList() ??
-                                            [],
-                                        hint: 'Select',
-                                        isRequired: true,
-                                        senValue: (value) {
-                                          newRegistrationController
-                                                  .selectedRelifionObj =
-                                              newRegistrationController
-                                                  .commomDropdownList
-                                                  ?.religionList
-                                                  .firstWhere((e) =>
-                                                      e.lookupDetDescEn ==
-                                                      value);
-                                          newRegistrationController
-                                              .selectedReligion = value;
-                                          newRegistrationController
-                                              .refreshUi();
-                                        },
-                                        filledColor: Colors.white),
-                                  )
-                                ],
-                              ),
-                              SizedBox(height: 16.h),
+                                                .selectedEdu,
+                                            occupationText:
+                                            newRegistrationController
+                                                .selectedOccu,
+                                            monthlyIncomeText:
+                                            newRegistrationController
+                                                .selectedMonthlyIncome);
+                                    setState(() {});
+                                    // newRegistrationController
+                                    //     .refreshUi();
+                                  },
+                                  filledColor: Colors.white),
+                              SizedBox(height: 8.h),
+                              MyCustomDropdown(
+                                  isViewProfile: widget.isViewPatient,
+                                  selectedItem:
+                                  newRegistrationController
+                                      .selectedMonthlyIncome,
+                                  labelText: context.l10n.regMonthlyIncome,
+                                  items: newRegistrationController
+                                      .getMonthyIncomeList
+                                      ?.monthlyIncomeList
+                                      .map((e) => e.lookupDescEn)
+                                      .toList() ??
+                                      [],
+                                  hint: context.l10n.regHintSelect,
+                                  isRequired: true,
+                                  senValue: (value) {
+                                    newRegistrationController
+                                        .selectedMonthlyIncomeObj =
+                                        newRegistrationController
+                                            .getMonthyIncomeList
+                                            ?.monthlyIncomeList
+                                            .firstWhere((e) =>
+                                        e.lookupDescEn ==
+                                            value);
+                                    newRegistrationController
+                                        .selectedMonthlyIncome =
+                                        value;
+                                    newRegistrationController
+                                        .socEcoStat =
+                                        newRegistrationController.getEconomicStatus(
+                                            educationText:
+                                            newRegistrationController
+                                                .selectedEdu,
+                                            occupationText:
+                                            newRegistrationController
+                                                .selectedOccu,
+                                            monthlyIncomeText:
+                                            newRegistrationController
+                                                .selectedMonthlyIncome);
+                                    // newRegistrationController
+                                    //     .refreshUi();
+                                    debugPrint(
+                                        "social eco stat ${newRegistrationController.socEcoStat}");
+                                    setState(() {});
+                                  },
+                                  filledColor: Colors.white),
+                              SizedBox(height: 8.h),
+
+                              // Row(
+                              //   children: [
+                              //     Expanded(
+                              //       child: MyCustomDropdown(
+                              //           isViewProfile: widget.isViewPatient,
+                              //           selectedItem:
+                              //               newRegistrationController
+                              //                   .selectedMonthlyIncome,
+                              //           labelText: context.l10n.regMonthlyIncome,
+                              //           items: newRegistrationController
+                              //                   .getMonthyIncomeList
+                              //                   ?.monthlyIncomeList
+                              //                   .map((e) => e.lookupDescEn)
+                              //                   .toList() ??
+                              //               [],
+                              //           hint: context.l10n.regHintSelect,
+                              //           isRequired: true,
+                              //           senValue: (value) {
+                              //             newRegistrationController
+                              //                     .selectedMonthlyIncomeObj =
+                              //                 newRegistrationController
+                              //                     .getMonthyIncomeList
+                              //                     ?.monthlyIncomeList
+                              //                     .firstWhere((e) =>
+                              //                         e.lookupDescEn ==
+                              //                         value);
+                              //             newRegistrationController
+                              //                     .selectedMonthlyIncome =
+                              //                 value;
+                              //             newRegistrationController
+                              //                     .socEcoStat =
+                              //                 newRegistrationController.getEconomicStatus(
+                              //                     educationText:
+                              //                         newRegistrationController
+                              //                             .selectedEdu,
+                              //                     occupationText:
+                              //                         newRegistrationController
+                              //                             .selectedOccu,
+                              //                     monthlyIncomeText:
+                              //                         newRegistrationController
+                              //                             .selectedMonthlyIncome);
+                              //             // newRegistrationController
+                              //             //     .refreshUi();
+                              //             debugPrint(
+                              //                 "social eco stat ${newRegistrationController.socEcoStat}");
+                              //             setState(() {});
+                              //           },
+                              //           filledColor: Colors.white),
+                              //     ),
+                              //     Expanded(
+                              //       child: MyCustomDropdown(
+                              //           isViewProfile: widget.isViewPatient,
+                              //           selectedItem:
+                              //               newRegistrationController
+                              //                   .selectedReligion,
+                              //           labelText: context.l10n.regReligion,
+                              //           items: newRegistrationController
+                              //                   .commomDropdownList
+                              //                   ?.religionList
+                              //                   .map((e) =>
+                              //                       e.lookupDetDescEn)
+                              //                   .toList() ??
+                              //               [],
+                              //           hint: context.l10n.regHintSelect,
+                              //           isRequired: true,
+                              //           senValue: (value) {
+                              //             newRegistrationController
+                              //                     .selectedRelifionObj =
+                              //                 newRegistrationController
+                              //                     .commomDropdownList
+                              //                     ?.religionList
+                              //                     .firstWhere((e) =>
+                              //                         e.lookupDetDescEn ==
+                              //                         value);
+                              //             newRegistrationController
+                              //                 .selectedReligion = value;
+                              //             newRegistrationController
+                              //                 .refreshUi();
+                              //           },
+                              //           filledColor: Colors.white),
+                              //     )
+                              //   ],
+                              // ),
+
+                              MyCustomDropdown(
+                                  isViewProfile: widget.isViewPatient,
+                                  selectedItem:
+                                  newRegistrationController
+                                      .selectedReligion,
+                                  labelText: context.l10n.regReligion,
+                                  items: newRegistrationController
+                                      .commomDropdownList
+                                      ?.religionList
+                                      .map((e) =>
+                                  e.lookupDetDescEn)
+                                      .toList() ??
+                                      [],
+                                  hint: context.l10n.regHintSelect,
+                                  isRequired: true,
+                                  senValue: (value) {
+                                    newRegistrationController
+                                        .selectedRelifionObj =
+                                        newRegistrationController
+                                            .commomDropdownList
+                                            ?.religionList
+                                            .firstWhere((e) =>
+                                        e.lookupDetDescEn ==
+                                            value);
+                                    newRegistrationController
+                                        .selectedReligion = value;
+                                    newRegistrationController
+                                        .refreshUi();
+                                  },
+                                  filledColor: Colors.white),
+                              SizedBox(height: 8.h),
                               Column(
                                 children: [
-                                  const Align(
+                                  Align(
                                     alignment: Alignment.centerLeft,
                                     child: CustomText(
-                                        text: 'Socio-Eco Status',
-                                        fontSize: 16,
+                                        text: context.l10n.regSocioEcoStatus,
+                                        fontSize: 14,
                                         fontWeight: FontWeight.normal,
                                         textColor: Colors.black,
                                         textAlign: TextAlign.start),
@@ -582,7 +903,7 @@ class PersonalInfoScreenState extends State<PersonalInfoScreen>
                                         text: newRegistrationController
                                                 .socEcoStat ??
                                             '',
-                                        fontSize: 16.sp,
+                                        fontSize: 14.sp,
                                         fontWeight: FontWeight.w500,
                                         textColor: Colors.black,
                                         textAlign: TextAlign.start),
@@ -602,561 +923,12 @@ class PersonalInfoScreenState extends State<PersonalInfoScreen>
                 ],
               ),
             ),
-            // Theme(
-            //     data: ThemeData().copyWith(dividerColor: Colors.transparent),
-            //     child: Container(
-            //       decoration: BoxDecoration(
-            //           color: AppColor.darkBlue,
-            //           borderRadius: BorderRadius.circular(10)),
-            //       child: ExpansionTile(
-            //         maintainState: true,
-            //         collapsedIconColor: Colors.white,
-            //         iconColor: Colors.white,
-            //         title: Row(children: [
-            //           Image.asset("assets/user_textfield.png"),
-            //           SizedBox(
-            //             width: 12.w,
-            //           ),
-            //           CustomText(
-            //             text: "Personal Info",
-            //             fontSize: 14.0.sp,
-            //             fontFam: 'Lato',
-            //             fontWeight: FontWeight.normal,
-            //             textColor: Colors.white,
-            //             textAlign: TextAlign.center,
-            //           )
-            //         ]),
-            //         children: <Widget>[
-            //           Container(
-            //             padding: const EdgeInsets.all(8),
-            //             decoration: BoxDecoration(
-            //               color: Colors.white,
-            //               borderRadius: BorderRadius.circular(10),
-            //             ),
-            //             child: Column(
-            //               crossAxisAlignment: CrossAxisAlignment.stretch,
-            //               children: [
-            //                 SizedBox(height: 8.h),
-            //                 Center(
-            //                   child: buildProfileImage(),
-            //                 ),
-            //                 SizedBox(height: 8.h),
-            //                 Center(
-            //                   child: Text(
-            //                     newRegistrationController
-            //                             .firstNameController.text.isNotEmpty
-            //                         ? '${newRegistrationController.firstNameController.text} ${newRegistrationController.lastNameController.text}'
-            //                         : 'Patient Name',
-            //                     style: TextStyle(
-            //                       fontSize: 14.sp,
-            //                       fontWeight: FontWeight.bold,
-            //                     ),
-            //                   ),
-            //                 ),
-            //                 // Visibility(
-            //                 //   visible: widget.isViewPatient == false,
-            //                 //   child: Row(
-            //                 //     mainAxisAlignment: MainAxisAlignment.center,
-            //                 //     children: [
-            //                 //       Container(
-            //                 //         width: 35.w,
-            //                 //         height: 35.h,
-            //                 //         decoration: BoxDecoration(
-            //                 //           shape: BoxShape.circle,
-            //                 //           gradient: LinearGradient(
-            //                 //             colors: [
-            //                 //               AppColor.primaryBackgroundColor,
-            //                 //               AppColor.secondaryColor
-            //                 //             ],
-            //                 //             begin: Alignment.topLeft,
-            //                 //             end: Alignment.bottomCenter,
-            //                 //           ),
-            //                 //         ),
-            //                 //         child: IconButton(
-            //                 //           icon: const Icon(
-            //                 //             Icons.edit,
-            //                 //             size: 15,
-            //                 //             color: Colors.white,
-            //                 //           ),
-            //                 //           onPressed: () {
-            //                 //             _pickImageFromDevice();
-            //                 //           },
-            //                 //         ),
-            //                 //       ),
-            //                 //       SizedBox(
-            //                 //         width: 6.w,
-            //                 //       ),
-            //                 //
-            //                 //
-            //                 //     ],
-            //                 //   ),
-            //                 // ),
-            //                 SizedBox(height: 16.h),
-            //                 Container(
-            //                   decoration: BoxDecoration(
-            //                       color: Colors.grey[50],
-            //                       borderRadius: BorderRadius.circular(10),
-            //                       border:
-            //                           Border.all(color: AppColor.borderColor)),
-            //                   child: Column(
-            //                     children: [
-            //                       CustomTextField(
-            //                         maxLines: 1,
-            //                         isReadOnly: true,
-            //                         labelText: 'ABHA ID',
-            //                         hintText: '',
-            //                         isRequired: false,
-            //                         keyBoardType: TextInputType.number,
-            //                         txtController: newRegistrationController
-            //                             .abhaNoController,
-            //                         fillColor: Colors.white,
-            //                         fontSize: 14,
-            //                       ),
-            //                       SizedBox(height: 8.h),
-            //                       // CustomTextField(
-            //                       //   maxLines: 1,
-            //                       //   isReadOnly: true,
-            //                       //   labelText: 'ABHA Address',
-            //                       //   hintText: '',
-            //                       //   isRequired: false,
-            //                       //   keyBoardType: TextInputType.number,
-            //                       //   txtController: newRegistrationController
-            //                       //       .abhaAddressController,
-            //                       //   fillColor: Colors.white,
-            //                       //   fontSize: 16.sp,
-            //                       // ),
-            //                       //  SizedBox(height: 8.h),
-            //                       MyCustomDropdown(
-            //                         isViewProfile: widget.isViewPatient,
-            //                         selectedItem:
-            //                             newRegistrationController.prefixVal,
-            //                         labelText: 'Prefix',
-            //                         items: newRegistrationController
-            //                                 .predixList?.data
-            //                                 ?.map((e) => e.title)
-            //                                 .toList() ??
-            //                             [],
-            //                         hint: "Select Title",
-            //                         isRequired: true,
-            //                         senValue: (value) {
-            //                           if (widget.isViewPatient == false) {
-            //                             newRegistrationController.prefixVal =
-            //                                 value;
-            //                             newRegistrationController.refreshUi();
-            //                           }
-            //                         },
-            //                         filledColor: Colors.white,
-            //                       ),
-            //                       SizedBox(height: 8.h),
-            //                       Row(
-            //                         children: [
-            //                           Expanded(
-            //                             child: CustomTextField(
-            //                               maxLines: 1,
-            //                               isReadOnly: widget.isViewPatient
-            //                                   ? true
-            //                                   : false,
-            //                               labelText: 'First Name',
-            //                               hintText: 'Enter first name',
-            //                               isRequired: true,
-            //                               keyBoardType: TextInputType.name,
-            //                               txtController:
-            //                                   newRegistrationController
-            //                                       .firstNameController,
-            //                               fillColor: Colors.white,
-            //                               fontSize: 16,
-            //                             ),
-            //                           ),
-            //                           SizedBox(height: 8.h),
-            //                           Expanded(
-            //                             child: CustomTextField(
-            //                               maxLines: 1,
-            //                               isReadOnly: false,
-            //                               keyBoardType: TextInputType.name,
-            //                               labelText: 'Middle Name',
-            //                               hintText: 'Enter middle name',
-            //                               isRequired: false,
-            //                               txtController:
-            //                                   newRegistrationController
-            //                                       .middleNameController,
-            //                               fillColor: Colors.white,
-            //                               fontSize: 16.sp,
-            //                             ),
-            //                           ),
-            //                         ],
-            //                       ),
-            //                       SizedBox(height: 8.h),
-            //                       Row(
-            //                         children: [
-            //                           Expanded(
-            //                             child: CustomTextField(
-            //                               maxLines: 1,
-            //                               isReadOnly: widget.isViewPatient
-            //                                   ? true
-            //                                   : false,
-            //                               keyBoardType: TextInputType.name,
-            //                               labelText: 'Last Name',
-            //                               hintText: 'Enter last name',
-            //                               isRequired: true,
-            //                               txtController:
-            //                                   newRegistrationController
-            //                                       .lastNameController,
-            //                               fillColor: Colors.white,
-            //                               fontSize: 16,
-            //                             ),
-            //                           ),
-            //                           Expanded(
-            //                             child: MyCustomDropdown(
-            //                                 isViewProfile: widget.isViewPatient,
-            //                                 selectedItem:
-            //                                     newRegistrationController
-            //                                         .selectedGender,
-            //                                 labelText: 'Gender',
-            //                                 items: const [
-            //                                   'Male',
-            //                                   'Female',
-            //                                   'Other'
-            //                                 ],
-            //                                 hint: 'Select',
-            //                                 isRequired: true,
-            //                                 senValue: (value) {
-            //                                   if (widget.isViewPatient ==
-            //                                       false) {
-            //                                     newRegistrationController
-            //                                         .selectedGender = value;
-            //                                     newRegistrationController
-            //                                         .refreshUi();
-            //                                   }
-            //                                 },
-            //                                 filledColor: Colors.white),
-            //                           ),
-            //                         ],
-            //                       ),
-            //                       SizedBox(height: 6.h),
-            //                       Row(
-            //                         children: [
-            //                           Expanded(
-            //                             child: MyCustomDropdown(
-            //                                 isViewProfile: widget.isViewPatient,
-            //                                 selectedItem:
-            //                                     newRegistrationController
-            //                                         .selectedMaritalVal,
-            //                                 labelText: 'Marital Status',
-            //                                 items: newRegistrationController
-            //                                         .maritalStatusModel?.data
-            //                                         ?.map((e) =>
-            //                                             e.lookupDetDescEn)
-            //                                         .toList() ??
-            //                                     [],
-            //                                 hint: 'Select',
-            //                                 isRequired: true,
-            //                                 senValue: (value) {
-            //                                   newRegistrationController
-            //                                           .selectedMarriedObj =
-            //                                       newRegistrationController
-            //                                           .maritalStatusModel?.data
-            //                                           ?.firstWhere((e) =>
-            //                                               e.lookupDetDescEn ==
-            //                                               value);
-            //                                   newRegistrationController
-            //                                       .selectedMaritalVal = value;
-            //                                   newRegistrationController
-            //                                       .refreshUi();
-            //                                 },
-            //                                 filledColor: Colors.white),
-            //                           ),
-            //                           Expanded(
-            //                             child: CustomTextField(
-            //                               maxLines: 1,
-            //                               isReadOnly: widget.isViewPatient
-            //                                   ? true
-            //                                   : false,
-            //                               keyBoardType: TextInputType.phone,
-            //                               labelText: 'Contact Number',
-            //                               hintText: 'Enter Contact Number',
-            //                               isRequired: true,
-            //                               txtController:
-            //                                   newRegistrationController
-            //                                       .mobileController,
-            //                               fillColor: Colors.white,
-            //                               fontSize: 16.sp,
-            //                               onChanged: (value) {},
-            //                               mazLenght: 10,
-            //                             ),
-            //                           ),
-            //                         ],
-            //                       ),
-            //                       SizedBox(height: 8.h),
-            //                       Row(
-            //                         children: [
-            //                           Expanded(
-            //                             child: CustomTextField(
-            //                               maxLines: 1,
-            //                               isReadOnly: widget.isViewPatient
-            //                                   ? true
-            //                                   : false,
-            //                               keyBoardType:
-            //                                   TextInputType.emailAddress,
-            //                               labelText: 'Email Id',
-            //                               hintText: 'Enter Email address',
-            //                               isRequired: false,
-            //                               txtController:
-            //                                   newRegistrationController
-            //                                       .emailController,
-            //                               fillColor: Colors.white,
-            //                               fontSize: 16.sp,
-            //                             ),
-            //                           ),
-            //                           Expanded(
-            //                             child: CustomDOBField(
-            //                               labelText: 'DOB',
-            //                               hint: 'Select',
-            //                               isRequired: true,
-            //                               callB: () {
-            //                                 if (widget.isViewPatient == false) {
-            //                                   _selectDate(context);
-            //                                 }
-            //                               },
-            //                               selectedDate:
-            //                                   newRegistrationController
-            //                                       .dboController,
-            //                               filledColor: Colors.white,
-            //                               dontDhowPrefix: false,
-            //                             ),
-            //                           ),
-            //                         ],
-            //                       ),
-            //                       // SizedBox(height: 16.h),
-            //                       // Row(
-            //                       //   children: [
-            //                       //     Expanded(
-            //                       //         child: MyCustomDropdown(
-            //                       //             isViewProfile:
-            //                       //                 widget.isViewPatient,
-            //                       //             selectedItem:
-            //                       //                 newRegistrationController
-            //                       //                     .selectedEdu,
-            //                       //             labelText: 'Education',
-            //                       //             items: newRegistrationController
-            //                       //                     .commomDropdownList
-            //                       //                     ?.educationList
-            //                       //                     .map((e) =>
-            //                       //                         e.lookupDetDescEn)
-            //                       //                     .toList() ??
-            //                       //                 [],
-            //                       //             hint: 'Select',
-            //                       //             isRequired: true,
-            //                       //             senValue: (value) {
-            //                       //               newRegistrationController
-            //                       //                       .selectedEduObj =
-            //                       //                   newRegistrationController
-            //                       //                       .commomDropdownList
-            //                       //                       ?.educationList
-            //                       //                       .firstWhere((e) =>
-            //                       //                           e.lookupDetDescEn ==
-            //                       //                           value);
-            //                       //               newRegistrationController
-            //                       //                   .selectedEdu = value;
-            //                       //               newRegistrationController
-            //                       //                       .socEcoStat =
-            //                       //                   newRegistrationController.getEconomicStatus(
-            //                       //                       educationText:
-            //                       //                           newRegistrationController
-            //                       //                               .selectedEdu,
-            //                       //                       occupationText:
-            //                       //                           newRegistrationController
-            //                       //                               .selectedOccu,
-            //                       //                       monthlyIncomeText:
-            //                       //                           newRegistrationController
-            //                       //                               .selectedMonthlyIncome);
-            //                       //               setState(() {});
-            //                       //               // newRegistrationController
-            //                       //               //     .refreshUi();
-            //                       //             },
-            //                       //             filledColor: Colors.white)),
-            //                       //     Expanded(
-            //                       //       child: MyCustomDropdown(
-            //                       //           isViewProfile: widget.isViewPatient,
-            //                       //           selectedItem:
-            //                       //               newRegistrationController
-            //                       //                   .selectedOccu,
-            //                       //           labelText: 'Occupation',
-            //                       //           items: newRegistrationController
-            //                       //                   .commomDropdownList
-            //                       //                   ?.occupationList
-            //                       //                   .map((e) =>
-            //                       //                       e.lookupDetDescEn)
-            //                       //                   .toList() ??
-            //                       //               [],
-            //                       //           hint: 'Select',
-            //                       //           isRequired: true,
-            //                       //           senValue: (value) {
-            //                       //             newRegistrationController
-            //                       //                     .selectedOccuObj =
-            //                       //                 newRegistrationController
-            //                       //                     .commomDropdownList
-            //                       //                     ?.occupationList
-            //                       //                     .firstWhere((e) =>
-            //                       //                         e.lookupDetDescEn ==
-            //                       //                         value);
-            //                       //             newRegistrationController
-            //                       //                 .selectedOccu = value;
-            //                       //             newRegistrationController
-            //                       //                     .socEcoStat =
-            //                       //                 newRegistrationController.getEconomicStatus(
-            //                       //                     educationText:
-            //                       //                         newRegistrationController
-            //                       //                             .selectedEdu,
-            //                       //                     occupationText:
-            //                       //                         newRegistrationController
-            //                       //                             .selectedOccu,
-            //                       //                     monthlyIncomeText:
-            //                       //                         newRegistrationController
-            //                       //                             .selectedMonthlyIncome);
-            //                       //             setState(() {});
-            //                       //             // newRegistrationController
-            //                       //             //     .refreshUi();
-            //                       //           },
-            //                       //           filledColor: Colors.white),
-            //                       //     )
-            //                       //   ],
-            //                       // ),
-            //                       // SizedBox(height: 16.h),
-            //                       // Row(
-            //                       //   children: [
-            //                       //     Expanded(
-            //                       //       child: MyCustomDropdown(
-            //                       //           isViewProfile: widget.isViewPatient,
-            //                       //           selectedItem:
-            //                       //               newRegistrationController
-            //                       //                   .selectedMonthlyIncome,
-            //                       //           labelText: 'Monthly Income',
-            //                       //           items: newRegistrationController
-            //                       //                   .getMonthyIncomeList
-            //                       //                   ?.monthlyIncomeList
-            //                       //                   .map((e) => e.lookupDescEn)
-            //                       //                   .toList() ??
-            //                       //               [],
-            //                       //           hint: 'Select',
-            //                       //           isRequired: true,
-            //                       //           senValue: (value) {
-            //                       //             newRegistrationController
-            //                       //                     .selectedMonthlyIncomeObj =
-            //                       //                 newRegistrationController
-            //                       //                     .getMonthyIncomeList
-            //                       //                     ?.monthlyIncomeList
-            //                       //                     .firstWhere((e) =>
-            //                       //                         e.lookupDescEn ==
-            //                       //                         value);
-            //                       //             newRegistrationController
-            //                       //                     .selectedMonthlyIncome =
-            //                       //                 value;
-            //                       //             newRegistrationController
-            //                       //                     .socEcoStat =
-            //                       //                 newRegistrationController.getEconomicStatus(
-            //                       //                     educationText:
-            //                       //                         newRegistrationController
-            //                       //                             .selectedEdu,
-            //                       //                     occupationText:
-            //                       //                         newRegistrationController
-            //                       //                             .selectedOccu,
-            //                       //                     monthlyIncomeText:
-            //                       //                         newRegistrationController
-            //                       //                             .selectedMonthlyIncome);
-            //                       //             // newRegistrationController
-            //                       //             //     .refreshUi();
-            //                       //             debugPrint(
-            //                       //                 "social eco stat ${newRegistrationController.socEcoStat}");
-            //                       //             setState(() {});
-            //                       //           },
-            //                       //           filledColor: Colors.white),
-            //                       //     ),
-            //                       //     Expanded(
-            //                       //       child: MyCustomDropdown(
-            //                       //           isViewProfile: widget.isViewPatient,
-            //                       //           selectedItem:
-            //                       //               newRegistrationController
-            //                       //                   .selectedReligion,
-            //                       //           labelText: 'Religion',
-            //                       //           items: newRegistrationController
-            //                       //                   .commomDropdownList
-            //                       //                   ?.religionList
-            //                       //                   .map((e) =>
-            //                       //                       e.lookupDetDescEn)
-            //                       //                   .toList() ??
-            //                       //               [],
-            //                       //           hint: 'Select',
-            //                       //           isRequired: true,
-            //                       //           senValue: (value) {
-            //                       //             newRegistrationController
-            //                       //                     .selectedRelifionObj =
-            //                       //                 newRegistrationController
-            //                       //                     .commomDropdownList
-            //                       //                     ?.religionList
-            //                       //                     .firstWhere((e) =>
-            //                       //                         e.lookupDetDescEn ==
-            //                       //                         value);
-            //                       //             newRegistrationController
-            //                       //                 .selectedReligion = value;
-            //                       //             newRegistrationController
-            //                       //                 .refreshUi();
-            //                       //           },
-            //                       //           filledColor: Colors.white),
-            //                       //     )
-            //                       //   ],
-            //                       // ),
-            //                       // SizedBox(height: 16.h),
-            //                       // Column(
-            //                       //   children: [
-            //                       //     const Align(
-            //                       //       alignment: Alignment.centerLeft,
-            //                       //       child: CustomText(
-            //                       //           text: 'Socio-Eco Status',
-            //                       //           fontSize: 16,
-            //                       //           fontWeight: FontWeight.normal,
-            //                       //           textColor: Colors.black,
-            //                       //           textAlign: TextAlign.start),
-            //                       //     ).paddingOnly(left: 6.w, bottom: 4.h),
-            //                       //     Container(
-            //                       //       padding: EdgeInsets.symmetric(
-            //                       //           vertical: 14.h, horizontal: 6.w),
-            //                       //       width: double.infinity,
-            //                       //       decoration: BoxDecoration(
-            //                       //           borderRadius:
-            //                       //               const BorderRadius.all(
-            //                       //                   Radius.circular(12)),
-            //                       //           color: Colors.white,
-            //                       //           border: Border.all(
-            //                       //               color: AppColor.borderColor)),
-            //                       //       child: CustomText(
-            //                       //           text: newRegistrationController
-            //                       //                   .socEcoStat ??
-            //                       //               '',
-            //                       //           fontSize: 16.sp,
-            //                       //           fontWeight: FontWeight.w500,
-            //                       //           textColor: Colors.black,
-            //                       //           textAlign: TextAlign.start),
-            //                       //     ).paddingOnly(
-            //                       //         top: 0,
-            //                       //         bottom: 12.h,
-            //                       //         left: 4.w,
-            //                       //         right: 4.w),
-            //                       //   ],
-            //                       // ),
-            //                     ],
-            //                   ),
-            //                 )
-            //               ],
-            //             ),
-            //           ),
-            //         ],
-            //       ),
-            //     )),
+
             SizedBox(
               height: 10.h,
             ),
             CustomExpandableContainer(
-              text: 'Residential Address',
+              text: context.l10n.regResidentialAddress,
               leading: "assets/home.png",
               child:Column(
                 children: <Widget>[
@@ -1169,316 +941,581 @@ class PersonalInfoScreenState extends State<PersonalInfoScreen>
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        SizedBox(height: 16.h),
+                        SizedBox(height: 4.h),
                         CustomTextField(
                           maxLines: 3,
                           isReadOnly: widget.isViewPatient ? true : false,
                           keyBoardType: TextInputType.streetAddress,
-                          labelText: 'Address',
-                          hintText: 'Enter address',
+                          labelText: context.l10n.regAddress,
+                          hintText: context.l10n.regHintEnterAddress,
                           isRequired: true,
                           txtController:
                           newRegistrationController.addressController,
                           fillColor: Colors.white,
-                          fontSize: 16.sp,
+                          fontSize: 14.sp,
                         ),
-                        SizedBox(height: 8.h),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: CustomTextField(
-                                onChanged: (value) async {
-                                  if (widget.isViewPatient == false) {
-                                    await newRegistrationController
-                                        .getAddressDataFromPinCode(value);
-                                    newRegistrationController
-                                        .selectedTownObj =
-                                        newRegistrationController
-                                            .townModel?.data
-                                            ?.firstWhere((e) =>
-                                        e.cityId ==
-                                            newRegistrationController
-                                                .pincodeAdressModel
-                                                ?.data
-                                                ?.cityId);
-                                    newRegistrationController
-                                        .selectedTownVal =
-                                        newRegistrationController
-                                            .selectedTownObj?.cityName;
+                        SizedBox(height: 4.h),
+                        CustomTextField(
+                          onChanged: (value) async {
+                            if (widget.isViewPatient == false) {
+                              await newRegistrationController
+                                  .getAddressDataFromPinCode(value);
+                              newRegistrationController
+                                  .selectedTownObj =
+                                  newRegistrationController
+                                      .townModel?.data
+                                      ?.firstWhere((e) =>
+                                  e.cityId ==
+                                      newRegistrationController
+                                          .pincodeAdressModel
+                                          ?.data
+                                          ?.cityId);
+                              newRegistrationController
+                                  .selectedTownVal =
+                                  newRegistrationController
+                                      .selectedTownObj?.cityName;
 
-                                    newRegistrationController
-                                        .selectedTalukaObject =
-                                        newRegistrationController
-                                            .talukaModel?.data
-                                            ?.firstWhere((e) =>
-                                        e.talukaID ==
-                                            newRegistrationController
-                                                .pincodeAdressModel
-                                                ?.data
-                                                ?.talukaID);
-                                    newRegistrationController
-                                        .selectedTalukaVal =
-                                        newRegistrationController
-                                            .selectedTalukaObject
-                                            ?.talukaName;
+                              newRegistrationController
+                                  .selectedTalukaObject =
+                                  newRegistrationController
+                                      .talukaModel?.data
+                                      ?.firstWhere((e) =>
+                                  e.talukaID ==
+                                      newRegistrationController
+                                          .pincodeAdressModel
+                                          ?.data
+                                          ?.talukaID);
+                              newRegistrationController
+                                  .selectedTalukaVal =
+                                  newRegistrationController
+                                      .selectedTalukaObject
+                                      ?.talukaName;
 
-                                    newRegistrationController
-                                        .selectedDistObj =
-                                        newRegistrationController
-                                            .districtModel?.data
-                                            ?.firstWhere((e) =>
-                                        e.districtID ==
-                                            newRegistrationController
-                                                .pincodeAdressModel
-                                                ?.data
-                                                ?.districtID);
-                                    newRegistrationController
-                                        .selectedDistVal =
-                                        newRegistrationController
-                                            .selectedDistObj
-                                            ?.districtName;
+                              newRegistrationController
+                                  .selectedDistObj =
+                                  newRegistrationController
+                                      .districtModel?.data
+                                      ?.firstWhere((e) =>
+                                  e.districtID ==
+                                      newRegistrationController
+                                          .pincodeAdressModel
+                                          ?.data
+                                          ?.districtID);
+                              newRegistrationController
+                                  .selectedDistVal =
+                                  newRegistrationController
+                                      .selectedDistObj
+                                      ?.districtName;
 
-                                    newRegistrationController
-                                        .selectedDivisionObj =
-                                        newRegistrationController
-                                            .divisionModel?.data
-                                            ?.firstWhere((e) =>
-                                        e.divId ==
-                                            newRegistrationController
-                                                .pincodeAdressModel
-                                                ?.data
-                                                ?.divID);
-                                    newRegistrationController
-                                        .selectedDivVal =
-                                        newRegistrationController
-                                            .selectedDivisionObj?.divName;
+                              newRegistrationController
+                                  .selectedDivisionObj =
+                                  newRegistrationController
+                                      .divisionModel?.data
+                                      ?.firstWhere((e) =>
+                                  e.divId ==
+                                      newRegistrationController
+                                          .pincodeAdressModel
+                                          ?.data
+                                          ?.divID);
+                              newRegistrationController
+                                  .selectedDivVal =
+                                  newRegistrationController
+                                      .selectedDivisionObj?.divName;
 
-                                    newRegistrationController
-                                        .selectedStateObj =
-                                        newRegistrationController
-                                            .stateModel?.data
-                                            ?.firstWhere((e) =>
-                                        e.stateID ==
-                                            newRegistrationController
-                                                .pincodeAdressModel
-                                                ?.data
-                                                ?.stateID);
-                                    newRegistrationController
-                                        .selectedStateVal =
-                                        newRegistrationController
-                                            .selectedStateObj?.stateName;
-                                    newRegistrationController
-                                        .selectedCountryVal =
-                                    newRegistrationController
-                                        .selectedCountry[0];
+                              newRegistrationController
+                                  .selectedStateObj =
+                                  newRegistrationController
+                                      .stateModel?.data
+                                      ?.firstWhere((e) =>
+                                  e.stateID ==
+                                      newRegistrationController
+                                          .pincodeAdressModel
+                                          ?.data
+                                          ?.stateID);
+                              newRegistrationController
+                                  .selectedStateVal =
+                                  newRegistrationController
+                                      .selectedStateObj?.stateName;
+                              newRegistrationController
+                                  .selectedCountryVal =
+                              newRegistrationController
+                                  .selectedCountry[0];
 
-                                    newRegistrationController.refreshUi();
-                                  }
-                                },
-                                maxLines: 1,
-                                isReadOnly:
-                                widget.isViewPatient ? true : false,
-                                keyBoardType: TextInputType.number,
-                                labelText: 'Pin Code',
-                                hintText: 'Enter pin code',
-                                isRequired: true,
-                                txtController: newRegistrationController
-                                    .pincodeController,
-                                fillColor: Colors.white,
-                                fontSize: 16.sp,
-                              ),
-                            ),
-                            SizedBox(height: 8.h),
-                            Expanded(
-                              child: SearchableDropDown(
-                                selectedItem: newRegistrationController
-                                    .selectedTownVal,
-                                isViewPatient:
-                                widget.isViewPatient == false
-                                    ? true
-                                    : false,
-                                list: newRegistrationController
+                              newRegistrationController.refreshUi();
+                            }
+                          },
+                          maxLines: 1,
+                          isReadOnly:
+                          widget.isViewPatient ? true : false,
+                          keyBoardType: TextInputType.number,
+                          labelText: context.l10n.regPinCode,
+                          hintText: context.l10n.regHintEnterPinCode,
+                          isRequired: true,
+                          txtController: newRegistrationController
+                              .pincodeController,
+                          fillColor: Colors.white,
+                          fontSize: 14.sp,
+                        ),
+                        SizedBox(height: 4.h),
+
+                        // Row(
+                        //   children: [
+                        //     Expanded(
+                        //       child: CustomTextField(
+                        //         onChanged: (value) async {
+                        //           if (widget.isViewPatient == false) {
+                        //             await newRegistrationController
+                        //                 .getAddressDataFromPinCode(value);
+                        //             newRegistrationController
+                        //                 .selectedTownObj =
+                        //                 newRegistrationController
+                        //                     .townModel?.data
+                        //                     ?.firstWhere((e) =>
+                        //                 e.cityId ==
+                        //                     newRegistrationController
+                        //                         .pincodeAdressModel
+                        //                         ?.data
+                        //                         ?.cityId);
+                        //             newRegistrationController
+                        //                 .selectedTownVal =
+                        //                 newRegistrationController
+                        //                     .selectedTownObj?.cityName;
+                        //
+                        //             newRegistrationController
+                        //                 .selectedTalukaObject =
+                        //                 newRegistrationController
+                        //                     .talukaModel?.data
+                        //                     ?.firstWhere((e) =>
+                        //                 e.talukaID ==
+                        //                     newRegistrationController
+                        //                         .pincodeAdressModel
+                        //                         ?.data
+                        //                         ?.talukaID);
+                        //             newRegistrationController
+                        //                 .selectedTalukaVal =
+                        //                 newRegistrationController
+                        //                     .selectedTalukaObject
+                        //                     ?.talukaName;
+                        //
+                        //             newRegistrationController
+                        //                 .selectedDistObj =
+                        //                 newRegistrationController
+                        //                     .districtModel?.data
+                        //                     ?.firstWhere((e) =>
+                        //                 e.districtID ==
+                        //                     newRegistrationController
+                        //                         .pincodeAdressModel
+                        //                         ?.data
+                        //                         ?.districtID);
+                        //             newRegistrationController
+                        //                 .selectedDistVal =
+                        //                 newRegistrationController
+                        //                     .selectedDistObj
+                        //                     ?.districtName;
+                        //
+                        //             newRegistrationController
+                        //                 .selectedDivisionObj =
+                        //                 newRegistrationController
+                        //                     .divisionModel?.data
+                        //                     ?.firstWhere((e) =>
+                        //                 e.divId ==
+                        //                     newRegistrationController
+                        //                         .pincodeAdressModel
+                        //                         ?.data
+                        //                         ?.divID);
+                        //             newRegistrationController
+                        //                 .selectedDivVal =
+                        //                 newRegistrationController
+                        //                     .selectedDivisionObj?.divName;
+                        //
+                        //             newRegistrationController
+                        //                 .selectedStateObj =
+                        //                 newRegistrationController
+                        //                     .stateModel?.data
+                        //                     ?.firstWhere((e) =>
+                        //                 e.stateID ==
+                        //                     newRegistrationController
+                        //                         .pincodeAdressModel
+                        //                         ?.data
+                        //                         ?.stateID);
+                        //             newRegistrationController
+                        //                 .selectedStateVal =
+                        //                 newRegistrationController
+                        //                     .selectedStateObj?.stateName;
+                        //             newRegistrationController
+                        //                 .selectedCountryVal =
+                        //             newRegistrationController
+                        //                 .selectedCountry[0];
+                        //
+                        //             newRegistrationController.refreshUi();
+                        //           }
+                        //         },
+                        //         maxLines: 1,
+                        //         isReadOnly:
+                        //         widget.isViewPatient ? true : false,
+                        //         keyBoardType: TextInputType.number,
+                        //         labelText: context.l10n.regPinCode,
+                        //         hintText: context.l10n.regHintEnterPinCode,
+                        //         isRequired: true,
+                        //         txtController: newRegistrationController
+                        //             .pincodeController,
+                        //         fillColor: Colors.white,
+                        //         fontSize: 14.sp,
+                        //       ),
+                        //     ),
+                        //     SizedBox(height: 4.h),
+                        //     Expanded(
+                        //       child: SearchableDropDown(
+                        //         selectedItem: newRegistrationController
+                        //             .selectedTownVal,
+                        //         isViewPatient:
+                        //         widget.isViewPatient == false
+                        //             ? true
+                        //             : false,
+                        //         list: newRegistrationController
+                        //             .townModel?.data
+                        //             ?.map((e) => e.cityName)
+                        //             .toList() ??
+                        //             [],
+                        //         onChanged: (value) {
+                        //           newRegistrationController
+                        //               .selectedTownObj =
+                        //               newRegistrationController
+                        //                   .townModel?.data
+                        //                   ?.firstWhere(
+                        //                       (e) => e.cityName == value);
+                        //           newRegistrationController
+                        //               .selectedTownVal =
+                        //               newRegistrationController
+                        //                   .selectedTownObj?.cityName;
+                        //
+                        //           newRegistrationController.refreshUi();
+                        //           debugPrint('changing value to: $value');
+                        //         },
+                        //         onSearched: (searchdText) {
+                        //           return searchTown(searchdText);
+                        //         },
+                        //         hintText: context.l10n.regTown,
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
+                        SearchableDropDown(
+                          selectedItem: newRegistrationController
+                              .selectedTownVal,
+                          isViewPatient:
+                          widget.isViewPatient == false
+                              ? true
+                              : false,
+                          list: newRegistrationController
+                              .townModel?.data
+                              ?.map((e) => e.cityName)
+                              .toList() ??
+                              [],
+                          onChanged: (value) {
+                            newRegistrationController
+                                .selectedTownObj =
+                                newRegistrationController
                                     .townModel?.data
-                                    ?.map((e) => e.cityName)
-                                    .toList() ??
-                                    [],
-                                onChanged: (value) {
-                                  newRegistrationController
-                                      .selectedTownObj =
-                                      newRegistrationController
-                                          .townModel?.data
-                                          ?.firstWhere(
-                                              (e) => e.cityName == value);
-                                  newRegistrationController
-                                      .selectedTownVal =
-                                      newRegistrationController
-                                          .selectedTownObj?.cityName;
+                                    ?.firstWhere(
+                                        (e) => e.cityName == value);
+                            newRegistrationController
+                                .selectedTownVal =
+                                newRegistrationController
+                                    .selectedTownObj?.cityName;
 
-                                  newRegistrationController.refreshUi();
-                                  debugPrint('changing value to: $value');
-                                },
-                                onSearched: (searchdText) {
-                                  return searchTown(searchdText);
-                                },
-                                hintText: 'Town',
-                              ),
-                            ),
-                          ],
+                            newRegistrationController.refreshUi();
+                            debugPrint('changing value to: $value');
+                          },
+                          onSearched: (searchdText) {
+                            return searchTown(searchdText);
+                          },
+                          hintText: context.l10n.regTown,
                         ),
-                        SizedBox(height: 8.h),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: SearchableDropDown(
-                                selectedItem: newRegistrationController
-                                    .selectedTalukaVal,
-                                isViewPatient:
-                                widget.isViewPatient == false
-                                    ? true
-                                    : false,
-                                list: newRegistrationController
+                        SizedBox(height: 4.h),
+                        SearchableDropDown(
+                          selectedItem: newRegistrationController
+                              .selectedTalukaVal,
+                          isViewPatient:
+                          widget.isViewPatient == false
+                              ? true
+                              : false,
+                          list: newRegistrationController
+                              .talukaModel?.data
+                              ?.map((e) => e.talukaName)
+                              .toList() ??
+                              [],
+                          onChanged: (value) {
+                            newRegistrationController
+                                .selectedTalukaObject =
+                                newRegistrationController
                                     .talukaModel?.data
-                                    ?.map((e) => e.talukaName)
-                                    .toList() ??
-                                    [],
-                                onChanged: (value) {
-                                  newRegistrationController
-                                      .selectedTalukaObject =
-                                      newRegistrationController
-                                          .talukaModel?.data
-                                          ?.firstWhere((e) =>
-                                      e.talukaName == value);
-                                  newRegistrationController
-                                      .selectedTalukaVal =
-                                      newRegistrationController
-                                          .selectedTalukaObject
-                                          ?.talukaName;
-                                  newRegistrationController.refreshUi();
-                                  debugPrint('changing value to: $value');
-                                },
-                                onSearched: (searchdText) {
-                                  return searchTaluka(searchdText);
-                                },
-                                hintText: 'Taluka',
-                              ),
-                            ),
-                            SizedBox(height: 8.h),
-                            Expanded(
-                              child: SearchableDropDown(
-                                selectedItem: newRegistrationController
-                                    .selectedDistVal,
-                                isViewPatient:
-                                widget.isViewPatient == false
-                                    ? true
-                                    : false,
-                                list: newRegistrationController
+                                    ?.firstWhere((e) =>
+                                e.talukaName == value);
+                            newRegistrationController
+                                .selectedTalukaVal =
+                                newRegistrationController
+                                    .selectedTalukaObject
+                                    ?.talukaName;
+                            newRegistrationController.refreshUi();
+                            debugPrint('changing value to: $value');
+                          },
+                          onSearched: (searchdText) {
+                            return searchTaluka(searchdText);
+                          },
+                          hintText: context.l10n.regTaluka,
+                        ),
+                        SizedBox(height: 4.h),
+
+                        // Row(
+                        //   children: [
+                        //     Expanded(
+                        //       child: SearchableDropDown(
+                        //         selectedItem: newRegistrationController
+                        //             .selectedTalukaVal,
+                        //         isViewPatient:
+                        //         widget.isViewPatient == false
+                        //             ? true
+                        //             : false,
+                        //         list: newRegistrationController
+                        //             .talukaModel?.data
+                        //             ?.map((e) => e.talukaName)
+                        //             .toList() ??
+                        //             [],
+                        //         onChanged: (value) {
+                        //           newRegistrationController
+                        //               .selectedTalukaObject =
+                        //               newRegistrationController
+                        //                   .talukaModel?.data
+                        //                   ?.firstWhere((e) =>
+                        //               e.talukaName == value);
+                        //           newRegistrationController
+                        //               .selectedTalukaVal =
+                        //               newRegistrationController
+                        //                   .selectedTalukaObject
+                        //                   ?.talukaName;
+                        //           newRegistrationController.refreshUi();
+                        //           debugPrint('changing value to: $value');
+                        //         },
+                        //         onSearched: (searchdText) {
+                        //           return searchTaluka(searchdText);
+                        //         },
+                        //         hintText: context.l10n.regTaluka,
+                        //       ),
+                        //     ),
+                        //     SizedBox(height: 4.h),
+                        //     Expanded(
+                        //       child: SearchableDropDown(
+                        //         selectedItem: newRegistrationController
+                        //             .selectedDistVal,
+                        //         isViewPatient:
+                        //         widget.isViewPatient == false
+                        //             ? true
+                        //             : false,
+                        //         list: newRegistrationController
+                        //             .districtModel?.data
+                        //             ?.map((e) => e.districtName)
+                        //             .toList() ??
+                        //             [],
+                        //         onChanged: (value) {
+                        //           newRegistrationController
+                        //               .selectedDistObj =
+                        //               newRegistrationController
+                        //                   .districtModel?.data
+                        //                   ?.firstWhere((e) =>
+                        //               e.districtName == value);
+                        //           newRegistrationController
+                        //               .selectedDistVal =
+                        //               newRegistrationController
+                        //                   .selectedDistObj?.districtName;
+                        //           newRegistrationController.refreshUi();
+                        //           debugPrint('changing value to: $value');
+                        //         },
+                        //         onSearched: (searchdText) {
+                        //           return searchDistrict(searchdText);
+                        //         },
+                        //         hintText: context.l10n.regDistrict,
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
+                        SearchableDropDown(
+                          selectedItem: newRegistrationController
+                              .selectedDistVal,
+                          isViewPatient:
+                          widget.isViewPatient == false
+                              ? true
+                              : false,
+                          list: newRegistrationController
+                              .districtModel?.data
+                              ?.map((e) => e.districtName)
+                              .toList() ??
+                              [],
+                          onChanged: (value) {
+                            newRegistrationController
+                                .selectedDistObj =
+                                newRegistrationController
                                     .districtModel?.data
-                                    ?.map((e) => e.districtName)
-                                    .toList() ??
-                                    [],
-                                onChanged: (value) {
-                                  newRegistrationController
-                                      .selectedDistObj =
-                                      newRegistrationController
-                                          .districtModel?.data
-                                          ?.firstWhere((e) =>
-                                      e.districtName == value);
-                                  newRegistrationController
-                                      .selectedDistVal =
-                                      newRegistrationController
-                                          .selectedDistObj?.districtName;
-                                  newRegistrationController.refreshUi();
-                                  debugPrint('changing value to: $value');
-                                },
-                                onSearched: (searchdText) {
-                                  return searchDistrict(searchdText);
-                                },
-                                hintText: 'District',
-                              ),
-                            ),
-                          ],
+                                    ?.firstWhere((e) =>
+                                e.districtName == value);
+                            newRegistrationController
+                                .selectedDistVal =
+                                newRegistrationController
+                                    .selectedDistObj?.districtName;
+                            newRegistrationController.refreshUi();
+                            debugPrint('changing value to: $value');
+                          },
+                          onSearched: (searchdText) {
+                            return searchDistrict(searchdText);
+                          },
+                          hintText: context.l10n.regDistrict,
                         ),
-                        SizedBox(height: 8.h),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: SearchableDropDown(
-                                selectedItem: newRegistrationController
-                                    .selectedDivVal,
-                                isViewPatient:
-                                widget.isViewPatient == false
-                                    ? true
-                                    : false,
-                                list: newRegistrationController
+                        SizedBox(height: 4.h),
+                        SearchableDropDown(
+                          selectedItem: newRegistrationController
+                              .selectedDivVal,
+                          isViewPatient:
+                          widget.isViewPatient == false
+                              ? true
+                              : false,
+                          list: newRegistrationController
+                              .divisionModel?.data
+                              ?.map((e) => e.divName)
+                              .toList() ??
+                              [],
+                          onChanged: (value) {
+                            newRegistrationController
+                                .selectedDivisionObj =
+                                newRegistrationController
                                     .divisionModel?.data
-                                    ?.map((e) => e.divName)
-                                    .toList() ??
-                                    [],
-                                onChanged: (value) {
-                                  newRegistrationController
-                                      .selectedDivisionObj =
-                                      newRegistrationController
-                                          .divisionModel?.data
-                                          ?.firstWhere(
-                                              (e) => e.divName == value);
-                                  newRegistrationController
-                                      .selectedDivVal =
-                                      newRegistrationController
-                                          .selectedDivisionObj?.divName;
-                                  newRegistrationController.refreshUi();
-                                  debugPrint('changing value to: $value');
-                                },
-                                onSearched: (searchdText) {
-                                  return searchDivision(searchdText);
-                                },
-                                hintText: 'Division',
-                              ),
-                            ),
-                            SizedBox(height: 8.h),
-                            Expanded(
-                              child: SearchableDropDown(
-                                selectedItem: newRegistrationController
-                                    .selectedStateVal,
-                                isViewPatient:
-                                widget.isViewPatient == false
-                                    ? true
-                                    : false,
-                                list: newRegistrationController
-                                    .stateModel?.data
-                                    ?.map((e) => e.stateName)
-                                    .toList() ??
-                                    [],
-                                onChanged: (value) {
-                                  newRegistrationController
-                                      .selectedStateObj =
-                                      newRegistrationController
-                                          .stateModel?.data
-                                          ?.firstWhere((e) =>
-                                      e.stateName == value);
-                                  newRegistrationController
-                                      .selectedStateVal =
-                                      newRegistrationController
-                                          .selectedStateObj?.stateName;
-                                  newRegistrationController.refreshUi();
-                                  debugPrint('changing value to: $value');
-                                },
-                                onSearched: (searchdText) {
-                                  return searchState(searchdText);
-                                },
-                                hintText: 'State',
-                              ),
-                            ),
-                          ],
+                                    ?.firstWhere(
+                                        (e) => e.divName == value);
+                            newRegistrationController
+                                .selectedDivVal =
+                                newRegistrationController
+                                    .selectedDivisionObj?.divName;
+                            newRegistrationController.refreshUi();
+                            debugPrint('changing value to: $value');
+                          },
+                          onSearched: (searchdText) {
+                            return searchDivision(searchdText);
+                          },
+                          hintText: context.l10n.regDivision,
                         ),
-                        SizedBox(height: 8.h),
+                        SizedBox(height: 4.h),
+
+
+                        // Row(
+                        //   children: [
+                        //     Expanded(
+                        //       child: SearchableDropDown(
+                        //         selectedItem: newRegistrationController
+                        //             .selectedDivVal,
+                        //         isViewPatient:
+                        //         widget.isViewPatient == false
+                        //             ? true
+                        //             : false,
+                        //         list: newRegistrationController
+                        //             .divisionModel?.data
+                        //             ?.map((e) => e.divName)
+                        //             .toList() ??
+                        //             [],
+                        //         onChanged: (value) {
+                        //           newRegistrationController
+                        //               .selectedDivisionObj =
+                        //               newRegistrationController
+                        //                   .divisionModel?.data
+                        //                   ?.firstWhere(
+                        //                       (e) => e.divName == value);
+                        //           newRegistrationController
+                        //               .selectedDivVal =
+                        //               newRegistrationController
+                        //                   .selectedDivisionObj?.divName;
+                        //           newRegistrationController.refreshUi();
+                        //           debugPrint('changing value to: $value');
+                        //         },
+                        //         onSearched: (searchdText) {
+                        //           return searchDivision(searchdText);
+                        //         },
+                        //         hintText: context.l10n.regDivision,
+                        //       ),
+                        //     ),
+                        //     SizedBox(height: 4.h),
+                        //     Expanded(
+                        //       child: SearchableDropDown(
+                        //         selectedItem: newRegistrationController
+                        //             .selectedStateVal,
+                        //         isViewPatient:
+                        //         widget.isViewPatient == false
+                        //             ? true
+                        //             : false,
+                        //         list: newRegistrationController
+                        //             .stateModel?.data
+                        //             ?.map((e) => e.stateName)
+                        //             .toList() ??
+                        //             [],
+                        //         onChanged: (value) {
+                        //           newRegistrationController
+                        //               .selectedStateObj =
+                        //               newRegistrationController
+                        //                   .stateModel?.data
+                        //                   ?.firstWhere((e) =>
+                        //               e.stateName == value);
+                        //           newRegistrationController
+                        //               .selectedStateVal =
+                        //               newRegistrationController
+                        //                   .selectedStateObj?.stateName;
+                        //           newRegistrationController.refreshUi();
+                        //           debugPrint('changing value to: $value');
+                        //         },
+                        //         onSearched: (searchdText) {
+                        //           return searchState(searchdText);
+                        //         },
+                        //         hintText: context.l10n.regState,
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
+                        SearchableDropDown(
+                          selectedItem: newRegistrationController
+                              .selectedStateVal,
+                          isViewPatient:
+                          widget.isViewPatient == false
+                              ? true
+                              : false,
+                          list: newRegistrationController
+                              .stateModel?.data
+                              ?.map((e) => e.stateName)
+                              .toList() ??
+                              [],
+                          onChanged: (value) {
+                            newRegistrationController
+                                .selectedStateObj =
+                                newRegistrationController
+                                    .stateModel?.data
+                                    ?.firstWhere((e) =>
+                                e.stateName == value);
+                            newRegistrationController
+                                .selectedStateVal =
+                                newRegistrationController
+                                    .selectedStateObj?.stateName;
+                            newRegistrationController.refreshUi();
+                            debugPrint('changing value to: $value');
+                          },
+                          onSearched: (searchdText) {
+                            return searchState(searchdText);
+                          },
+                          hintText: context.l10n.regState,
+                        ),
+                        SizedBox(height: 4.h),
                         MyCustomDropdown(
                             isViewProfile: widget.isViewPatient,
                             selectedItem: newRegistrationController
                                 .selectedCountryVal,
-                            labelText: 'Country',
+                            labelText: context.l10n.regCountry,
                             items:
                             newRegistrationController.selectedCountry,
-                            hint: 'Select',
+                            hint: context.l10n.regHintSelect,
                             isRequired: false,
                             senValue: (value) {
                               newRegistrationController
@@ -1486,7 +1523,7 @@ class PersonalInfoScreenState extends State<PersonalInfoScreen>
                               newRegistrationController.refreshUi();
                             },
                             filledColor: Colors.white),
-                        SizedBox(height: 16.h),
+                        SizedBox(height: 10.h),
                       ],
                     ),
                   ),
@@ -1526,18 +1563,18 @@ class PersonalInfoScreenState extends State<PersonalInfoScreen>
             //               child: Column(
             //                 crossAxisAlignment: CrossAxisAlignment.stretch,
             //                 children: [
-            //                   SizedBox(height: 16.h),
+            //                   SizedBox(height: 14.h),
             //                   CustomTextField(
             //                     maxLines: 3,
             //                     isReadOnly: widget.isViewPatient ? true : false,
             //                     keyBoardType: TextInputType.streetAddress,
-            //                     labelText: 'Address',
-            //                     hintText: 'Enter address',
+            //                     labelText: context.l10n.regAddress,
+            //                     hintText: context.l10n.regHintEnterAddress,
             //                     isRequired: true,
             //                     txtController:
             //                         newRegistrationController.addressController,
             //                     fillColor: Colors.white,
-            //                     fontSize: 16.sp,
+            //                     fontSize: 14.sp,
             //                   ),
             //                   SizedBox(height: 8.h),
             //                   Row(
@@ -1636,13 +1673,13 @@ class PersonalInfoScreenState extends State<PersonalInfoScreen>
             //                           isReadOnly:
             //                               widget.isViewPatient ? true : false,
             //                           keyBoardType: TextInputType.number,
-            //                           labelText: 'Pin Code',
-            //                           hintText: 'Enter pin code',
+            //                           labelText: context.l10n.regPinCode,
+            //                           hintText: context.l10n.regHintEnterPinCode,
             //                           isRequired: true,
             //                           txtController: newRegistrationController
             //                               .pincodeController,
             //                           fillColor: Colors.white,
-            //                           fontSize: 16.sp,
+            //                           fontSize: 14.sp,
             //                         ),
             //                       ),
             //                       SizedBox(height: 8.h),
@@ -1677,7 +1714,7 @@ class PersonalInfoScreenState extends State<PersonalInfoScreen>
             //                           onSearched: (searchdText) {
             //                             return searchTown(searchdText);
             //                           },
-            //                           hintText: 'Town',
+            //                           hintText: context.l10n.regTown,
             //                         ),
             //                       ),
             //                     ],
@@ -1716,7 +1753,7 @@ class PersonalInfoScreenState extends State<PersonalInfoScreen>
             //                           onSearched: (searchdText) {
             //                             return searchTaluka(searchdText);
             //                           },
-            //                           hintText: 'Taluka',
+            //                           hintText: context.l10n.regTaluka,
             //                         ),
             //                       ),
             //                       SizedBox(height: 8.h),
@@ -1750,7 +1787,7 @@ class PersonalInfoScreenState extends State<PersonalInfoScreen>
             //                           onSearched: (searchdText) {
             //                             return searchDistrict(searchdText);
             //                           },
-            //                           hintText: 'District',
+            //                           hintText: context.l10n.regDistrict,
             //                         ),
             //                       ),
             //                     ],
@@ -1788,7 +1825,7 @@ class PersonalInfoScreenState extends State<PersonalInfoScreen>
             //                           onSearched: (searchdText) {
             //                             return searchDivision(searchdText);
             //                           },
-            //                           hintText: 'Division',
+            //                           hintText: context.l10n.regDivision,
             //                         ),
             //                       ),
             //                       SizedBox(height: 8.h),
@@ -1822,7 +1859,7 @@ class PersonalInfoScreenState extends State<PersonalInfoScreen>
             //                           onSearched: (searchdText) {
             //                             return searchState(searchdText);
             //                           },
-            //                           hintText: 'State',
+            //                           hintText: context.l10n.regState,
             //                         ),
             //                       ),
             //                     ],
@@ -1832,10 +1869,10 @@ class PersonalInfoScreenState extends State<PersonalInfoScreen>
             //                       isViewProfile: widget.isViewPatient,
             //                       selectedItem: newRegistrationController
             //                           .selectedCountryVal,
-            //                       labelText: 'Country',
+            //                       labelText: context.l10n.regCountry,
             //                       items:
             //                           newRegistrationController.selectedCountry,
-            //                       hint: 'Select',
+            //                       hint: context.l10n.regHintSelect,
             //                       isRequired: false,
             //                       senValue: (value) {
             //                         newRegistrationController
@@ -1843,7 +1880,7 @@ class PersonalInfoScreenState extends State<PersonalInfoScreen>
             //                         newRegistrationController.refreshUi();
             //                       },
             //                       filledColor: Colors.white),
-            //                   SizedBox(height: 16.h),
+            //                   SizedBox(height: 14.h),
             //                 ],
             //               ),
             //             ),
@@ -1853,7 +1890,7 @@ class PersonalInfoScreenState extends State<PersonalInfoScreen>
               height: 10.h,
             ),
             CustomExpandableContainer(
-              text: 'Permanent Address',
+              text: context.l10n.regPermanentAddress,
               leading: "assets/permanent-address.png",
               child:Column(
                 children: <Widget>[
@@ -1905,321 +1942,584 @@ class PersonalInfoScreenState extends State<PersonalInfoScreen>
                             ),
                           ),
                         ),
-                        SizedBox(height: 16.h),
+                        SizedBox(height: 8.h),
                         CustomTextField(
                           maxLines: 3,
                           isReadOnly: false,
                           keyBoardType: TextInputType.streetAddress,
-                          labelText: 'Address',
-                          hintText: 'Enter address',
+                          labelText: context.l10n.regAddress,
+                          hintText: context.l10n.regHintEnterAddress,
                           isRequired: false,
                           txtController: newRegistrationController
                               .perAddressController,
                           fillColor: Colors.white,
-                          fontSize: 16.sp,
+                          fontSize: 14.sp,
                         ),
-                        SizedBox(height: 8.h),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: CustomTextField(
-                                maxLines: 1,
-                                isReadOnly: false,
-                                keyBoardType: TextInputType.number,
-                                labelText: 'Pin Code',
-                                hintText: 'Enter pin code',
-                                isRequired: false,
-                                txtController: newRegistrationController
-                                    .perPincodeController,
-                                fillColor: Colors.white,
-                                fontSize: 16.sp,
-                                onChanged: (value) async {
-                                  await newRegistrationController
-                                      .getAddressDataFromPinCode(value);
-                                  newRegistrationController
-                                      .perSelectedTownObj =
-                                      newRegistrationController
-                                          .townModel?.data
-                                          ?.firstWhere((e) =>
-                                      e.cityId ==
-                                          newRegistrationController
-                                              .pincodeAdressModel
-                                              ?.data
-                                              ?.cityId);
-                                  newRegistrationController
-                                      .selectedPerTown =
-                                      newRegistrationController
-                                          .perSelectedTownObj?.cityName;
-
-                                  newRegistrationController
-                                      .perSelectedTalukaObject =
-                                      newRegistrationController
-                                          .talukaModel?.data
-                                          ?.firstWhere((e) =>
-                                      e.talukaID ==
-                                          newRegistrationController
-                                              .pincodeAdressModel
-                                              ?.data
-                                              ?.talukaID);
-                                  newRegistrationController
-                                      .selectedPerTaluka =
-                                      newRegistrationController
-                                          .perSelectedTalukaObject
-                                          ?.talukaName;
-
-                                  newRegistrationController
-                                      .perSelectedDistObj =
-                                      newRegistrationController
-                                          .districtModel?.data
-                                          ?.firstWhere((e) =>
-                                      e.districtID ==
-                                          newRegistrationController
-                                              .pincodeAdressModel
-                                              ?.data
-                                              ?.districtID);
-                                  newRegistrationController
-                                      .selectedPerDist =
-                                      newRegistrationController
-                                          .perSelectedDistObj
-                                          ?.districtName;
-
-                                  newRegistrationController
-                                      .perSelectedDivisionObj =
-                                      newRegistrationController
-                                          .divisionModel?.data
-                                          ?.firstWhere((e) =>
-                                      e.divId ==
-                                          newRegistrationController
-                                              .pincodeAdressModel
-                                              ?.data
-                                              ?.divID);
-                                  newRegistrationController
-                                      .selectedPerDivision =
-                                      newRegistrationController
-                                          .perSelectedDivisionObj
-                                          ?.divName;
-
-                                  newRegistrationController
-                                      .perSelectedStateObj =
-                                      newRegistrationController
-                                          .stateModel?.data
-                                          ?.firstWhere((e) =>
-                                      e.stateID ==
-                                          newRegistrationController
-                                              .pincodeAdressModel
-                                              ?.data
-                                              ?.stateID);
-                                  newRegistrationController
-                                      .selectedPerState =
-                                      newRegistrationController
-                                          .perSelectedStateObj?.stateName;
-                                  newRegistrationController
-                                      .selectedPerCountry =
-                                  newRegistrationController
-                                      .perSelectedCountry[0];
-
-                                  newRegistrationController.refreshUi();
-                                },
-                              ),
-                            ),
-                            SizedBox(height: 8.h),
-                            Expanded(
-                              child: SearchableDropDown(
-                                selectedItem: newRegistrationController
-                                    .selectedPerTown,
-                                isViewPatient:
-                                widget.isViewPatient == false
-                                    ? true
-                                    : false,
-                                list: newRegistrationController
+                        SizedBox(height: 4.h),
+                        CustomTextField(
+                          maxLines: 1,
+                          isReadOnly: false,
+                          keyBoardType: TextInputType.number,
+                          labelText: context.l10n.regPinCode,
+                          hintText: context.l10n.regHintEnterPinCode,
+                          isRequired: false,
+                          txtController: newRegistrationController
+                              .perPincodeController,
+                          fillColor: Colors.white,
+                          fontSize: 14.sp,
+                          onChanged: (value) async {
+                            await newRegistrationController
+                                .getAddressDataFromPinCode(value);
+                            newRegistrationController
+                                .perSelectedTownObj =
+                                newRegistrationController
                                     .townModel?.data
-                                    ?.map((e) => e.cityName)
-                                    .toList() ??
-                                    [],
-                                onChanged: (value) {
-                                  newRegistrationController
-                                      .perSelectedTownObj =
-                                      newRegistrationController
-                                          .townModel?.data
-                                          ?.firstWhere(
-                                              (e) => e.cityName == value);
-                                  newRegistrationController
-                                      .selectedPerTown =
-                                      newRegistrationController
-                                          .perSelectedTownObj?.cityName;
-                                  debugPrint('changing value to: $value');
-                                },
-                                onSearched: (searchdText) {
-                                  return searchTown(searchdText);
-                                },
-                                hintText: 'Town',
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 8.h),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: SearchableDropDown(
-                                selectedItem: newRegistrationController
-                                    .selectedPerTaluka,
-                                isViewPatient:
-                                widget.isViewPatient == false
-                                    ? true
-                                    : false,
-                                list: newRegistrationController
+                                    ?.firstWhere((e) =>
+                                e.cityId ==
+                                    newRegistrationController
+                                        .pincodeAdressModel
+                                        ?.data
+                                        ?.cityId);
+                            newRegistrationController
+                                .selectedPerTown =
+                                newRegistrationController
+                                    .perSelectedTownObj?.cityName;
+
+                            newRegistrationController
+                                .perSelectedTalukaObject =
+                                newRegistrationController
                                     .talukaModel?.data
-                                    ?.map((e) => e.talukaName)
-                                    .toList() ??
-                                    [],
-                                onChanged: (value) {
-                                  newRegistrationController
-                                      .perSelectedTalukaObject =
-                                      newRegistrationController
-                                          .talukaModel?.data
-                                          ?.firstWhere((e) =>
-                                      e.talukaName == value);
-                                  newRegistrationController
-                                      .selectedPerTaluka =
-                                      newRegistrationController
-                                          .perSelectedTalukaObject
-                                          ?.talukaName;
-                                  newRegistrationController.refreshUi();
-                                  debugPrint('changing value to: $value');
-                                },
-                                onSearched: (searchdText) {
-                                  return searchTaluka(searchdText);
-                                },
-                                hintText: 'Taluka',
-                              ),
-                            ),
-                            SizedBox(height: 8.h),
-                            Expanded(
-                              child: SearchableDropDown(
-                                selectedItem: newRegistrationController
-                                    .selectedPerDist,
-                                isViewPatient:
-                                widget.isViewPatient == false
-                                    ? true
-                                    : false,
-                                list: newRegistrationController
+                                    ?.firstWhere((e) =>
+                                e.talukaID ==
+                                    newRegistrationController
+                                        .pincodeAdressModel
+                                        ?.data
+                                        ?.talukaID);
+                            newRegistrationController
+                                .selectedPerTaluka =
+                                newRegistrationController
+                                    .perSelectedTalukaObject
+                                    ?.talukaName;
+
+                            newRegistrationController
+                                .perSelectedDistObj =
+                                newRegistrationController
                                     .districtModel?.data
-                                    ?.map((e) => e.districtName)
-                                    .toList() ??
-                                    [],
-                                onChanged: (value) {
-                                  newRegistrationController
-                                      .perSelectedDistObj =
-                                      newRegistrationController
-                                          .districtModel?.data
-                                          ?.firstWhere((e) =>
-                                      e.districtName == value);
-                                  newRegistrationController
-                                      .selectedPerDist =
-                                      newRegistrationController
-                                          .perSelectedDistObj
-                                          ?.districtName;
-                                  newRegistrationController.refreshUi();
-                                  debugPrint('changing value to: $value');
-                                },
-                                onSearched: (searchdText) {
-                                  return searchDistrict(searchdText);
-                                },
-                                hintText: 'District',
-                              ),
-                            ),
-                          ],
+                                    ?.firstWhere((e) =>
+                                e.districtID ==
+                                    newRegistrationController
+                                        .pincodeAdressModel
+                                        ?.data
+                                        ?.districtID);
+                            newRegistrationController
+                                .selectedPerDist =
+                                newRegistrationController
+                                    .perSelectedDistObj
+                                    ?.districtName;
+
+                            newRegistrationController
+                                .perSelectedDivisionObj =
+                                newRegistrationController
+                                    .divisionModel?.data
+                                    ?.firstWhere((e) =>
+                                e.divId ==
+                                    newRegistrationController
+                                        .pincodeAdressModel
+                                        ?.data
+                                        ?.divID);
+                            newRegistrationController
+                                .selectedPerDivision =
+                                newRegistrationController
+                                    .perSelectedDivisionObj
+                                    ?.divName;
+
+                            newRegistrationController
+                                .perSelectedStateObj =
+                                newRegistrationController
+                                    .stateModel?.data
+                                    ?.firstWhere((e) =>
+                                e.stateID ==
+                                    newRegistrationController
+                                        .pincodeAdressModel
+                                        ?.data
+                                        ?.stateID);
+                            newRegistrationController
+                                .selectedPerState =
+                                newRegistrationController
+                                    .perSelectedStateObj?.stateName;
+                            newRegistrationController
+                                .selectedPerCountry =
+                            newRegistrationController
+                                .perSelectedCountry[0];
+
+                            newRegistrationController.refreshUi();
+                          },
                         ),
-                        SizedBox(height: 8.h),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: SearchableDropDown(
-                                selectedItem: newRegistrationController
-                                    .selectedPerDivision,
-                                isViewPatient:
-                                widget.isViewPatient == false
-                                    ? true
-                                    : false,
-                                list: newRegistrationController
-                                    .districtModel?.data
-                                    ?.map((e) => e.districtName)
-                                    .toList() ??
-                                    [],
-                                onChanged: (value) {
-                                  newRegistrationController
-                                      .perSelectedDivisionObj =
-                                      newRegistrationController
-                                          .divisionModel?.data
-                                          ?.firstWhere(
-                                              (e) => e.divName == value);
-                                  newRegistrationController
-                                      .selectedPerDivision =
-                                      newRegistrationController
-                                          .perSelectedDivisionObj
-                                          ?.divName;
-                                  newRegistrationController.refreshUi();
-                                  debugPrint('changing value to: $value');
-                                },
-                                onSearched: (searchdText) {
-                                  return searchDivision(searchdText);
-                                },
-                                hintText: 'Division',
-                              ),
-                            ),
-                            SizedBox(height: 8.h),
-                            Expanded(
-                              child: SearchableDropDown(
-                                selectedItem: newRegistrationController
-                                    .selectedPerState,
-                                isViewPatient:
-                                widget.isViewPatient == false
-                                    ? true
-                                    : false,
-                                list: newRegistrationController
-                                    .districtModel?.data
-                                    ?.map((e) => e.districtName)
-                                    .toList() ??
-                                    [],
-                                onChanged: (value) {
-                                  newRegistrationController
-                                      .perSelectedStateObj =
-                                      newRegistrationController
-                                          .stateModel?.data
-                                          ?.firstWhere((e) =>
-                                      e.stateName == value);
-                                  newRegistrationController
-                                      .selectedPerState =
-                                      newRegistrationController
-                                          .perSelectedStateObj?.stateName;
-                                  newRegistrationController.refreshUi();
-                                  debugPrint('changing value to: $value');
-                                },
-                                onSearched: (searchdText) {
-                                  return searchState(searchdText);
-                                },
-                                hintText: 'State',
-                              ),
-                            ),
-                          ],
+                        SizedBox(height: 4.h),
+
+                        // Row(
+                        //   children: [
+                        //     Expanded(
+                        //       child: CustomTextField(
+                        //         maxLines: 1,
+                        //         isReadOnly: false,
+                        //         keyBoardType: TextInputType.number,
+                        //         labelText: context.l10n.regPinCode,
+                        //         hintText: context.l10n.regHintEnterPinCode,
+                        //         isRequired: false,
+                        //         txtController: newRegistrationController
+                        //             .perPincodeController,
+                        //         fillColor: Colors.white,
+                        //         fontSize: 14.sp,
+                        //         onChanged: (value) async {
+                        //           await newRegistrationController
+                        //               .getAddressDataFromPinCode(value);
+                        //           newRegistrationController
+                        //               .perSelectedTownObj =
+                        //               newRegistrationController
+                        //                   .townModel?.data
+                        //                   ?.firstWhere((e) =>
+                        //               e.cityId ==
+                        //                   newRegistrationController
+                        //                       .pincodeAdressModel
+                        //                       ?.data
+                        //                       ?.cityId);
+                        //           newRegistrationController
+                        //               .selectedPerTown =
+                        //               newRegistrationController
+                        //                   .perSelectedTownObj?.cityName;
+                        //
+                        //           newRegistrationController
+                        //               .perSelectedTalukaObject =
+                        //               newRegistrationController
+                        //                   .talukaModel?.data
+                        //                   ?.firstWhere((e) =>
+                        //               e.talukaID ==
+                        //                   newRegistrationController
+                        //                       .pincodeAdressModel
+                        //                       ?.data
+                        //                       ?.talukaID);
+                        //           newRegistrationController
+                        //               .selectedPerTaluka =
+                        //               newRegistrationController
+                        //                   .perSelectedTalukaObject
+                        //                   ?.talukaName;
+                        //
+                        //           newRegistrationController
+                        //               .perSelectedDistObj =
+                        //               newRegistrationController
+                        //                   .districtModel?.data
+                        //                   ?.firstWhere((e) =>
+                        //               e.districtID ==
+                        //                   newRegistrationController
+                        //                       .pincodeAdressModel
+                        //                       ?.data
+                        //                       ?.districtID);
+                        //           newRegistrationController
+                        //               .selectedPerDist =
+                        //               newRegistrationController
+                        //                   .perSelectedDistObj
+                        //                   ?.districtName;
+                        //
+                        //           newRegistrationController
+                        //               .perSelectedDivisionObj =
+                        //               newRegistrationController
+                        //                   .divisionModel?.data
+                        //                   ?.firstWhere((e) =>
+                        //               e.divId ==
+                        //                   newRegistrationController
+                        //                       .pincodeAdressModel
+                        //                       ?.data
+                        //                       ?.divID);
+                        //           newRegistrationController
+                        //               .selectedPerDivision =
+                        //               newRegistrationController
+                        //                   .perSelectedDivisionObj
+                        //                   ?.divName;
+                        //
+                        //           newRegistrationController
+                        //               .perSelectedStateObj =
+                        //               newRegistrationController
+                        //                   .stateModel?.data
+                        //                   ?.firstWhere((e) =>
+                        //               e.stateID ==
+                        //                   newRegistrationController
+                        //                       .pincodeAdressModel
+                        //                       ?.data
+                        //                       ?.stateID);
+                        //           newRegistrationController
+                        //               .selectedPerState =
+                        //               newRegistrationController
+                        //                   .perSelectedStateObj?.stateName;
+                        //           newRegistrationController
+                        //               .selectedPerCountry =
+                        //           newRegistrationController
+                        //               .perSelectedCountry[0];
+                        //
+                        //           newRegistrationController.refreshUi();
+                        //         },
+                        //       ),
+                        //     ),
+                        //     SizedBox(height: 4.h),
+                        //     Expanded(
+                        //       child: SearchableDropDown(
+                        //         selectedItem: newRegistrationController
+                        //             .selectedPerTown,
+                        //         isViewPatient:
+                        //         widget.isViewPatient == false
+                        //             ? true
+                        //             : false,
+                        //         list: newRegistrationController
+                        //             .townModel?.data
+                        //             ?.map((e) => e.cityName)
+                        //             .toList() ??
+                        //             [],
+                        //         onChanged: (value) {
+                        //           newRegistrationController
+                        //               .perSelectedTownObj =
+                        //               newRegistrationController
+                        //                   .townModel?.data
+                        //                   ?.firstWhere(
+                        //                       (e) => e.cityName == value);
+                        //           newRegistrationController
+                        //               .selectedPerTown =
+                        //               newRegistrationController
+                        //                   .perSelectedTownObj?.cityName;
+                        //           debugPrint('changing value to: $value');
+                        //         },
+                        //         onSearched: (searchdText) {
+                        //           return searchTown(searchdText);
+                        //         },
+                        //         hintText: context.l10n.regTown,
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
+                        SearchableDropDown(
+                          selectedItem: newRegistrationController
+                              .selectedPerTown,
+                          isViewPatient:
+                          widget.isViewPatient == false
+                              ? true
+                              : false,
+                          list: newRegistrationController
+                              .townModel?.data
+                              ?.map((e) => e.cityName)
+                              .toList() ??
+                              [],
+                          onChanged: (value) {
+                            newRegistrationController
+                                .perSelectedTownObj =
+                                newRegistrationController
+                                    .townModel?.data
+                                    ?.firstWhere(
+                                        (e) => e.cityName == value);
+                            newRegistrationController
+                                .selectedPerTown =
+                                newRegistrationController
+                                    .perSelectedTownObj?.cityName;
+                            debugPrint('changing value to: $value');
+                          },
+                          onSearched: (searchdText) {
+                            return searchTown(searchdText);
+                          },
+                          hintText: context.l10n.regTown,
                         ),
-                        SizedBox(height: 8.h),
+                        SizedBox(height: 4.h),
+                        SearchableDropDown(
+                          selectedItem: newRegistrationController
+                              .selectedPerTaluka,
+                          isViewPatient:
+                          widget.isViewPatient == false
+                              ? true
+                              : false,
+                          list: newRegistrationController
+                              .talukaModel?.data
+                              ?.map((e) => e.talukaName)
+                              .toList() ??
+                              [],
+                          onChanged: (value) {
+                            newRegistrationController
+                                .perSelectedTalukaObject =
+                                newRegistrationController
+                                    .talukaModel?.data
+                                    ?.firstWhere((e) =>
+                                e.talukaName == value);
+                            newRegistrationController
+                                .selectedPerTaluka =
+                                newRegistrationController
+                                    .perSelectedTalukaObject
+                                    ?.talukaName;
+                            newRegistrationController.refreshUi();
+                            debugPrint('changing value to: $value');
+                          },
+                          onSearched: (searchdText) {
+                            return searchTaluka(searchdText);
+                          },
+                          hintText: context.l10n.regTaluka,
+                        ),
+                        SizedBox(height: 4.h),
+
+                        // Row(
+                        //   children: [
+                        //     Expanded(
+                        //       child: SearchableDropDown(
+                        //         selectedItem: newRegistrationController
+                        //             .selectedPerTaluka,
+                        //         isViewPatient:
+                        //         widget.isViewPatient == false
+                        //             ? true
+                        //             : false,
+                        //         list: newRegistrationController
+                        //             .talukaModel?.data
+                        //             ?.map((e) => e.talukaName)
+                        //             .toList() ??
+                        //             [],
+                        //         onChanged: (value) {
+                        //           newRegistrationController
+                        //               .perSelectedTalukaObject =
+                        //               newRegistrationController
+                        //                   .talukaModel?.data
+                        //                   ?.firstWhere((e) =>
+                        //               e.talukaName == value);
+                        //           newRegistrationController
+                        //               .selectedPerTaluka =
+                        //               newRegistrationController
+                        //                   .perSelectedTalukaObject
+                        //                   ?.talukaName;
+                        //           newRegistrationController.refreshUi();
+                        //           debugPrint('changing value to: $value');
+                        //         },
+                        //         onSearched: (searchdText) {
+                        //           return searchTaluka(searchdText);
+                        //         },
+                        //         hintText: context.l10n.regTaluka,
+                        //       ),
+                        //     ),
+                        //     SizedBox(height: 4.h),
+                        //     Expanded(
+                        //       child: SearchableDropDown(
+                        //         selectedItem: newRegistrationController
+                        //             .selectedPerDist,
+                        //         isViewPatient:
+                        //         widget.isViewPatient == false
+                        //             ? true
+                        //             : false,
+                        //         list: newRegistrationController
+                        //             .districtModel?.data
+                        //             ?.map((e) => e.districtName)
+                        //             .toList() ??
+                        //             [],
+                        //         onChanged: (value) {
+                        //           newRegistrationController
+                        //               .perSelectedDistObj =
+                        //               newRegistrationController
+                        //                   .districtModel?.data
+                        //                   ?.firstWhere((e) =>
+                        //               e.districtName == value);
+                        //           newRegistrationController
+                        //               .selectedPerDist =
+                        //               newRegistrationController
+                        //                   .perSelectedDistObj
+                        //                   ?.districtName;
+                        //           newRegistrationController.refreshUi();
+                        //           debugPrint('changing value to: $value');
+                        //         },
+                        //         onSearched: (searchdText) {
+                        //           return searchDistrict(searchdText);
+                        //         },
+                        //         hintText: context.l10n.regDistrict,
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
+                        SearchableDropDown(
+                          selectedItem: newRegistrationController
+                              .selectedPerDist,
+                          isViewPatient:
+                          widget.isViewPatient == false
+                              ? true
+                              : false,
+                          list: newRegistrationController
+                              .districtModel?.data
+                              ?.map((e) => e.districtName)
+                              .toList() ??
+                              [],
+                          onChanged: (value) {
+                            newRegistrationController
+                                .perSelectedDistObj =
+                                newRegistrationController
+                                    .districtModel?.data
+                                    ?.firstWhere((e) =>
+                                e.districtName == value);
+                            newRegistrationController
+                                .selectedPerDist =
+                                newRegistrationController
+                                    .perSelectedDistObj
+                                    ?.districtName;
+                            newRegistrationController.refreshUi();
+                            debugPrint('changing value to: $value');
+                          },
+                          onSearched: (searchdText) {
+                            return searchDistrict(searchdText);
+                          },
+                          hintText: context.l10n.regDistrict,
+                        ),
+                        SizedBox(height: 4.h),
+
+
+                        SearchableDropDown(
+                          selectedItem: newRegistrationController
+                              .selectedPerDivision,
+                          isViewPatient:
+                          widget.isViewPatient == false
+                              ? true
+                              : false,
+                          list: newRegistrationController
+                              .districtModel?.data
+                              ?.map((e) => e.districtName)
+                              .toList() ??
+                              [],
+                          onChanged: (value) {
+                            newRegistrationController
+                                .perSelectedDivisionObj =
+                                newRegistrationController
+                                    .divisionModel?.data
+                                    ?.firstWhere(
+                                        (e) => e.divName == value);
+                            newRegistrationController
+                                .selectedPerDivision =
+                                newRegistrationController
+                                    .perSelectedDivisionObj
+                                    ?.divName;
+                            newRegistrationController.refreshUi();
+                            debugPrint('changing value to: $value');
+                          },
+                          onSearched: (searchdText) {
+                            return searchDivision(searchdText);
+                          },
+                          hintText: context.l10n.regDivision,
+                        ),
+                        SizedBox(height: 4.h),
+                        // Row(
+                        //   children: [
+                        //     Expanded(
+                        //       child: SearchableDropDown(
+                        //         selectedItem: newRegistrationController
+                        //             .selectedPerDivision,
+                        //         isViewPatient:
+                        //         widget.isViewPatient == false
+                        //             ? true
+                        //             : false,
+                        //         list: newRegistrationController
+                        //             .districtModel?.data
+                        //             ?.map((e) => e.districtName)
+                        //             .toList() ??
+                        //             [],
+                        //         onChanged: (value) {
+                        //           newRegistrationController
+                        //               .perSelectedDivisionObj =
+                        //               newRegistrationController
+                        //                   .divisionModel?.data
+                        //                   ?.firstWhere(
+                        //                       (e) => e.divName == value);
+                        //           newRegistrationController
+                        //               .selectedPerDivision =
+                        //               newRegistrationController
+                        //                   .perSelectedDivisionObj
+                        //                   ?.divName;
+                        //           newRegistrationController.refreshUi();
+                        //           debugPrint('changing value to: $value');
+                        //         },
+                        //         onSearched: (searchdText) {
+                        //           return searchDivision(searchdText);
+                        //         },
+                        //         hintText: context.l10n.regDivision,
+                        //       ),
+                        //     ),
+                        //     SizedBox(height: 4.h),
+                        //     Expanded(
+                        //       child: SearchableDropDown(
+                        //         selectedItem: newRegistrationController
+                        //             .selectedPerState,
+                        //         isViewPatient:
+                        //         widget.isViewPatient == false
+                        //             ? true
+                        //             : false,
+                        //         list: newRegistrationController
+                        //             .districtModel?.data
+                        //             ?.map((e) => e.districtName)
+                        //             .toList() ??
+                        //             [],
+                        //         onChanged: (value) {
+                        //           newRegistrationController
+                        //               .perSelectedStateObj =
+                        //               newRegistrationController
+                        //                   .stateModel?.data
+                        //                   ?.firstWhere((e) =>
+                        //               e.stateName == value);
+                        //           newRegistrationController
+                        //               .selectedPerState =
+                        //               newRegistrationController
+                        //                   .perSelectedStateObj?.stateName;
+                        //           newRegistrationController.refreshUi();
+                        //           debugPrint('changing value to: $value');
+                        //         },
+                        //         onSearched: (searchdText) {
+                        //           return searchState(searchdText);
+                        //         },
+                        //         hintText: context.l10n.regState,
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
+                        SearchableDropDown(
+                          selectedItem: newRegistrationController
+                              .selectedPerState,
+                          isViewPatient:
+                          widget.isViewPatient == false
+                              ? true
+                              : false,
+                          list: newRegistrationController
+                              .districtModel?.data
+                              ?.map((e) => e.districtName)
+                              .toList() ??
+                              [],
+                          onChanged: (value) {
+                            newRegistrationController
+                                .perSelectedStateObj =
+                                newRegistrationController
+                                    .stateModel?.data
+                                    ?.firstWhere((e) =>
+                                e.stateName == value);
+                            newRegistrationController
+                                .selectedPerState =
+                                newRegistrationController
+                                    .perSelectedStateObj?.stateName;
+                            newRegistrationController.refreshUi();
+                            debugPrint('changing value to: $value');
+                          },
+                          onSearched: (searchdText) {
+                            return searchState(searchdText);
+                          },
+                          hintText: context.l10n.regState,
+                        ),
+                        SizedBox(height: 4.h),
                         MyCustomDropdown(
                             isViewProfile: widget.isViewPatient,
                             selectedItem: newRegistrationController
                                 .selectedPerCountry,
-                            labelText: 'Country',
+                            labelText: context.l10n.regCountry,
                             items: newRegistrationController
                                 .perSelectedCountry,
-                            hint: 'Select',
+                            hint: context.l10n.regHintSelect,
                             isRequired: false,
                             senValue: (value) {
                               newRegistrationController
                                   .selectedPerCountry = value;
                             },
                             filledColor: Colors.white),
-                        SizedBox(height: 16.h),
+                        SizedBox(height: 10.h),
                       ],
                     ),
                   ),
@@ -2296,18 +2596,18 @@ class PersonalInfoScreenState extends State<PersonalInfoScreen>
             //                       ),
             //                     ),
             //                   ),
-            //                   SizedBox(height: 16.h),
+            //                   SizedBox(height: 14.h),
             //                   CustomTextField(
             //                     maxLines: 3,
             //                     isReadOnly: false,
             //                     keyBoardType: TextInputType.streetAddress,
-            //                     labelText: 'Address',
-            //                     hintText: 'Enter address',
+            //                     labelText: context.l10n.regAddress,
+            //                     hintText: context.l10n.regHintEnterAddress,
             //                     isRequired: false,
             //                     txtController: newRegistrationController
             //                         .perAddressController,
             //                     fillColor: Colors.white,
-            //                     fontSize: 16.sp,
+            //                     fontSize: 14.sp,
             //                   ),
             //                   SizedBox(height: 8.h),
             //                   Row(
@@ -2317,13 +2617,13 @@ class PersonalInfoScreenState extends State<PersonalInfoScreen>
             //                           maxLines: 1,
             //                           isReadOnly: false,
             //                           keyBoardType: TextInputType.number,
-            //                           labelText: 'Pin Code',
-            //                           hintText: 'Enter pin code',
+            //                           labelText: context.l10n.regPinCode,
+            //                           hintText: context.l10n.regHintEnterPinCode,
             //                           isRequired: false,
             //                           txtController: newRegistrationController
             //                               .perPincodeController,
             //                           fillColor: Colors.white,
-            //                           fontSize: 16.sp,
+            //                           fontSize: 14.sp,
             //                           onChanged: (value) async {
             //                             await newRegistrationController
             //                                 .getAddressDataFromPinCode(value);
@@ -2443,7 +2743,7 @@ class PersonalInfoScreenState extends State<PersonalInfoScreen>
             //                           onSearched: (searchdText) {
             //                             return searchTown(searchdText);
             //                           },
-            //                           hintText: 'Town',
+            //                           hintText: context.l10n.regTown,
             //                         ),
             //                       ),
             //                     ],
@@ -2482,7 +2782,7 @@ class PersonalInfoScreenState extends State<PersonalInfoScreen>
             //                           onSearched: (searchdText) {
             //                             return searchTaluka(searchdText);
             //                           },
-            //                           hintText: 'Taluka',
+            //                           hintText: context.l10n.regTaluka,
             //                         ),
             //                       ),
             //                       SizedBox(height: 8.h),
@@ -2517,7 +2817,7 @@ class PersonalInfoScreenState extends State<PersonalInfoScreen>
             //                           onSearched: (searchdText) {
             //                             return searchDistrict(searchdText);
             //                           },
-            //                           hintText: 'District',
+            //                           hintText: context.l10n.regDistrict,
             //                         ),
             //                       ),
             //                     ],
@@ -2556,7 +2856,7 @@ class PersonalInfoScreenState extends State<PersonalInfoScreen>
             //                           onSearched: (searchdText) {
             //                             return searchDivision(searchdText);
             //                           },
-            //                           hintText: 'Division',
+            //                           hintText: context.l10n.regDivision,
             //                         ),
             //                       ),
             //                       SizedBox(height: 8.h),
@@ -2590,7 +2890,7 @@ class PersonalInfoScreenState extends State<PersonalInfoScreen>
             //                           onSearched: (searchdText) {
             //                             return searchState(searchdText);
             //                           },
-            //                           hintText: 'State',
+            //                           hintText: context.l10n.regState,
             //                         ),
             //                       ),
             //                     ],
@@ -2600,17 +2900,17 @@ class PersonalInfoScreenState extends State<PersonalInfoScreen>
             //                       isViewProfile: widget.isViewPatient,
             //                       selectedItem: newRegistrationController
             //                           .selectedPerCountry,
-            //                       labelText: 'Country',
+            //                       labelText: context.l10n.regCountry,
             //                       items: newRegistrationController
             //                           .perSelectedCountry,
-            //                       hint: 'Select',
+            //                       hint: context.l10n.regHintSelect,
             //                       isRequired: false,
             //                       senValue: (value) {
             //                         newRegistrationController
             //                             .selectedPerCountry = value;
             //                       },
             //                       filledColor: Colors.white),
-            //                   SizedBox(height: 16.h),
+            //                   SizedBox(height: 14.h),
             //                 ],
             //               ),
             //             ),
@@ -2626,7 +2926,7 @@ class PersonalInfoScreenState extends State<PersonalInfoScreen>
                 secColor: AppColor.secondaryColor,
                 textColor: Colors.white,
                 iconColor: Colors.white,
-                buttonText: 'Save & Next',
+                buttonText: context.l10n.regSaveNext,
                 path: 'assets/save-next.png',
                 callB: () {
                   if (formKey.currentState?.validate() ?? false) {
@@ -2637,7 +2937,7 @@ class PersonalInfoScreenState extends State<PersonalInfoScreen>
                     debugPrint('Form is valid');
                   }
                 },
-                buttonWidth: 140.w,
+                buttonWidth: 170.w,
               ),
             ),
             SizedBox(
@@ -2813,7 +3113,7 @@ class PersonalInfoScreenState extends State<PersonalInfoScreen>
     return Stack(
       children: [
         CircleAvatar(
-          radius: 50,
+          radius: 40,
           backgroundImage: imageProvider,
           onBackgroundImageError: (error, stackTrace) {
             debugPrint("Failed to load image: $error");
@@ -2883,7 +3183,7 @@ class PersonalInfoScreenState extends State<PersonalInfoScreen>
       if (fileSize > 500 * 1024) {
         // Show message to the user
 
-        CustomMessage.toast("Upload photo below 500KB");
+        CustomMessage.toast(l10n.regUploadPhotoSize);
 
         // Reset the selected image to null
         newRegistrationController.image = null;
@@ -2910,7 +3210,7 @@ class PersonalInfoScreenState extends State<PersonalInfoScreen>
       // Check if file size exceeds 500 KB
       if (fileSize > 500 * 1024) {
         // Show message to the user
-        CustomMessage.toast("Upload photo below 500KB");
+        CustomMessage.toast(l10n.regUploadPhotoSize);
 
         // Reset the selected image to null
         newRegistrationController.image = null;

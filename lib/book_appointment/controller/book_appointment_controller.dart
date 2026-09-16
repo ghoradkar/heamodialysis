@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:heamodialysis/book_appointment/model/bedAvailable/bed_available_model.dart';
 import 'package:heamodialysis/book_appointment/repository/book_appointment_repository.dart';
 import 'package:heamodialysis/registered_patient_list/model/already_regidtered_patient/patient_data.dart';
@@ -106,7 +107,7 @@ class BookAppointmentController extends GetxController {
       return true;
     } on ApiException catch (e) {
       isLoading = false;
-      CustomMessage.toast("Booked fail");
+      CustomMessage.toast(l10n.bookBookingFailed);
       update();
 
       if (e.statusCode == 401) return false;

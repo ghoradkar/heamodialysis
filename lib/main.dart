@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:get/get.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:heamodialysis/splash/splash_screen.dart';
 import 'package:heamodialysis/utils/image_ssl.dart';
 // import 'package:media_kit/media_kit.dart';
@@ -25,6 +27,11 @@ void main() async {
   // }
   HttpOverrides.global = MyHttpOverrides();
 
+  // Register the locale controller before the first frame and apply any
+  // previously persisted language choice.
+  final localeController = Get.put(LocaleController(), permanent: true);
+  await localeController.loadSavedLocale();
+
   runApp(
     DevicePreview(
       enabled: false,
@@ -45,12 +52,24 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const SafeArea(
+    final localeController = Get.find<LocaleController>();
+    return SafeArea(
       top: false,
-      child: GetMaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'MahaDialysis',
-        home: SplashScreen(),
+      child: Obx(
+        () => GetMaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'MahaDialysis',
+          locale: localeController.locale.value,
+          fallbackLocale: LocaleController.english,
+          supportedLocales: AppLocalizations.supportedLocales,
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          home: const SplashScreen(),
+        ),
       ),
     );
   }

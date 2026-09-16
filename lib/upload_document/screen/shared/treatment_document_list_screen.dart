@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -190,7 +191,7 @@ class _TreatmentDocumentListScreenState<T extends DocumentListController>
                               MainAxisAlignment.spaceBetween,
                               children: [
                                 CustomText(
-                                  text: "Search",
+                                  text: context.l10n.commonSearch,
                                   fontSize: 16.sp,
                                   fontFam: "Lato",
                                   fontWeight: FontWeight.w400,
@@ -223,7 +224,7 @@ class _TreatmentDocumentListScreenState<T extends DocumentListController>
                               CrossAxisAlignment.start,
                               children: [
                                 CustomText(
-                                  text: "Type",
+                                  text: context.l10n.colType,
                                   fontSize: 16.sp,
                                   fontFam: "Lato",
                                   fontWeight: FontWeight.normal,
@@ -242,7 +243,7 @@ class _TreatmentDocumentListScreenState<T extends DocumentListController>
                                   child: DropdownButton<String>(
                                     isExpanded: true,
                                     value: dropDownValue,
-                                    hint: const Text("select"),
+                                    hint: Text("select"),
                                     onChanged: (String? newValue) {
                                       setModalState(() {
                                         dropDownValue = newValue;
@@ -256,7 +257,7 @@ class _TreatmentDocumentListScreenState<T extends DocumentListController>
                                             child: Text(value),
                                           );
                                         }).toList(),
-                                    underline: const SizedBox(),
+                                    underline: SizedBox(),
                                     icon: Icon(
                                       Icons.keyboard_arrow_down_outlined,
                                       color:
@@ -271,7 +272,7 @@ class _TreatmentDocumentListScreenState<T extends DocumentListController>
                             Align(
                               alignment: Alignment.centerLeft,
                               child: CustomText(
-                                text: "Value",
+                                text: context.l10n.commonValue,
                                 fontSize: 16.sp,
                                 fontFam: "Lato",
                                 fontWeight: FontWeight.normal,
@@ -307,8 +308,8 @@ class _TreatmentDocumentListScreenState<T extends DocumentListController>
                                 Expanded(
                                   child: CustomDateField(
                                     selectedDate: fromDateController,
-                                    labelText: "From Date",
-                                    hint: "From Date",
+                                    labelText: context.l10n.dashFromDate,
+                                    hint: context.l10n.dashFromDate,
                                     isRequired: false,
                                     callB: () async {
                                       await selectFrom();
@@ -322,8 +323,8 @@ class _TreatmentDocumentListScreenState<T extends DocumentListController>
                                 Expanded(
                                   child: CustomDateField(
                                       selectedDate: toDateController,
-                                      labelText: "To Date",
-                                      hint: "To Date",
+                                      labelText: context.l10n.dashToDate,
+                                      hint: context.l10n.dashToDate,
                                       isRequired: false,
                                       callB: () async {
                                         await selectTo();
@@ -369,7 +370,7 @@ class _TreatmentDocumentListScreenState<T extends DocumentListController>
                                           Image.asset(
                                               "assets/cancel.png"),
                                           CustomText(
-                                            text: "Cancel",
+                                            text: context.l10n.commonCancel,
                                             fontSize: 16.sp,
                                             fontFam: "Lato",
                                             fontWeight: FontWeight.normal,
@@ -442,7 +443,7 @@ class _TreatmentDocumentListScreenState<T extends DocumentListController>
                                           const Icon(Icons.search,
                                               color: Colors.white),
                                           CustomText(
-                                            text: "Search",
+                                            text: context.l10n.commonSearch,
                                             fontSize: 16.sp,
                                             fontFam: "Lato",
                                             fontWeight: FontWeight.normal,
@@ -483,11 +484,11 @@ class _TreatmentDocumentListScreenState<T extends DocumentListController>
         }
         if (controller.documentList.isEmpty) {
           return CommonStatusScreen(
-            title: "No Data Found",
+            title: context.l10n.commonNoDataFound,
             description:
             "We are unable to find the data that\nyou are looking for ",
             img: "assets/no_Data_Found.png",
-            buttonText: "Go Back",
+            buttonText: context.l10n.commonGoBack,
             onPressed: () {
               Get.back();
             },
@@ -708,7 +709,7 @@ class _TreatmentDocumentListScreenState<T extends DocumentListController>
                       text: TextSpan(
                         children: [
                           TextSpan(
-                            text: 'Treatment Date : ',
+                            text: "${context.l10n.uploadTreatmentDate} : ",
                             style: TextStyle(
                               fontSize: 13.sp,
                               fontFamily: 'Lato',
@@ -726,7 +727,7 @@ class _TreatmentDocumentListScreenState<T extends DocumentListController>
                             ),
                           ),
                           TextSpan(
-                            text: 'Treatment ID : ',
+                            text: "${context.l10n.colTreatmentId} : ",
                             style: TextStyle(
                               fontSize: 13.sp,
                               fontFamily: 'Lato',

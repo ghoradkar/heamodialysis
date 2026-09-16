@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/nephro_desk_patient_list/model/cover_sheet_nephro.dart';
@@ -10,7 +11,6 @@ import '../../../../nephro_desk_patient_list/controller/nephro_controller.dart';
 
 class TabularAnalysisBlood extends StatefulWidget {
   final List<BloodPressureTrendAnalysisList>? blooad;
-
 
   const TabularAnalysisBlood({super.key, this.blooad});
 
@@ -26,8 +26,8 @@ class _TabularAnalysisBloodState extends State<TabularAnalysisBlood> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const CustomText(
-          text: 'Trend Analysis',
+        title: CustomText(
+          text: context.l10n.dqTrendAnalysis,
           fontSize: 18.0,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,
@@ -40,7 +40,6 @@ class _TabularAnalysisBloodState extends State<TabularAnalysisBlood> {
             },
             child: Image.asset('assets/arrow-left.png')),
       ),
-
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -50,28 +49,26 @@ class _TabularAnalysisBloodState extends State<TabularAnalysisBlood> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-
-
-        ExpandableCardDetails(
-        patientData: nephroController.patientDet?.first,
-        isExpand: (value) {
-          isExpanded = value;
-          setState(() {});
-        },
-        isExpanded: isExpanded,
-        currentStat: nephroController.currentStat,
-      ).paddingSymmetric(vertical: 10.h),
-                const Row(
+                ExpandableCardDetails(
+                  patientData: nephroController.patientDet?.first,
+                  isExpand: (value) {
+                    isExpanded = value;
+                    setState(() {});
+                  },
+                  isExpanded: isExpanded,
+                  currentStat: nephroController.currentStat,
+                ).paddingSymmetric(vertical: 10.h),
+                Row(
                   children: [
                     CustomText(
-                        text: 'Test Name :',
+                        text: "${context.l10n.dqTestName} : ",
                         fontSize: 14,
                         fontFam: "Lato",
                         fontWeight: FontWeight.w500,
                         textColor: Colors.black,
                         textAlign: TextAlign.start),
                     CustomText(
-                        text: 'Blood Pressure',
+                        text: context.l10n.clinBloodPressure,
                         fontSize: 14,
                         fontFam: "Lato",
                         fontWeight: FontWeight.normal,
@@ -82,46 +79,46 @@ class _TabularAnalysisBloodState extends State<TabularAnalysisBlood> {
                 const SizedBox(
                   height: 15,
                 ),
-                SizedBox(
-                  height: 150,
-                  child: RoundedCornerTable(
-                    l1: widget.blooad != null && widget.blooad!.isNotEmpty
-                        ? widget.blooad!
-                            .asMap()
-                            .keys
-                            .map((index) => (index + 1).toString())
-                            .toList()
-                        : [],
-                    l2: widget.blooad
-                            ?.map((e) => e.preDialysisStartDate)
-                            .toList() ??
-                        [],
-                    l3: widget.blooad
-                            ?.map((e) => e.postDialysisStopDate)
-                            .toList() ??
-                        [],
-                    l4: widget.blooad?.map((e) => e.prebloodPressureHL).toList() ?? [],
-                    tableHeader: const [
-                      "Sr. \nNo\n",
-                      "Pre \nDate\n",
-                      "Post \nDate\n",
-                      "Pre \nBlood Pressure",
-                      "Post \nBlood Pressure"
-                    ],
-                    lastColumnWidgets: widget.blooad
-                            ?.map((diet) => CustomText(
-                                  text: diet.postbloodpressureLH ?? 'N/A',
-                                  fontSize: 14,
-                                  fontFam: "Lato",
-                                  fontWeight: FontWeight.w400,
-                                  textColor: Colors.black,
-                                  textAlign: TextAlign.start,
-                                ))
-                            .toList() ??
-                        [],
-                    onButtonPressed: handleButtonPress,
-                  ),
-                )
+                RoundedCornerTable(
+                  l1: widget.blooad != null && widget.blooad!.isNotEmpty
+                      ? widget.blooad!
+                          .asMap()
+                          .keys
+                          .map((index) => (index + 1).toString())
+                          .toList()
+                      : [],
+                  l2: widget.blooad
+                          ?.map((e) => e.preDialysisStartDate)
+                          .toList() ??
+                      [],
+                  l3: widget.blooad
+                          ?.map((e) => e.postDialysisStopDate)
+                          .toList() ??
+                      [],
+                  l4: widget.blooad
+                          ?.map((e) => e.prebloodPressureHL)
+                          .toList() ??
+                      [],
+                  tableHeader: const [
+                    "Sr. \nNo\n",
+                    "Pre \nDate\n",
+                    "Post \nDate\n",
+                    "Pre \nBlood Pressure",
+                    "Post \nBlood Pressure"
+                  ],
+                  lastColumnWidgets: widget.blooad
+                          ?.map((diet) => CustomText(
+                                text: diet.postbloodpressureLH ?? 'N/A',
+                                fontSize: 14,
+                                fontFam: "Lato",
+                                fontWeight: FontWeight.w400,
+                                textColor: Colors.black,
+                                textAlign: TextAlign.start,
+                              ))
+                          .toList() ??
+                      [],
+                  onButtonPressed: handleButtonPress,
+                ),
               ],
             ),
             const SizedBox(

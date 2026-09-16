@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/capture_photo/controller/capture_photo_controller.dart';
 import 'package:heamodialysis/registered_patient_list/model/already_regidtered_patient/patient_data.dart';
@@ -78,7 +79,7 @@ class _CapturePhotoState extends State<CapturePhoto> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Capture Photo'),
+        title: Text('Capture Photo'),
         leading: InkWell(
           onTap: () {
             Get.back();
@@ -99,7 +100,7 @@ class _CapturePhotoState extends State<CapturePhoto> {
             return Column(
               children: [
                 CameraPreview(_controller),
-                const SizedBox(height: 30),
+                SizedBox(height: 30),
                 InkWell(
                   onTap: () async {
                     try {
@@ -167,7 +168,7 @@ class _CapturePhotoState extends State<CapturePhoto> {
               ],
             );
           } else {
-            return const Center(child: CircularProgressIndicator());
+            return Center(child: CircularProgressIndicator());
           }
         },
       ),
@@ -236,7 +237,7 @@ class _CapturePhotoState extends State<CapturePhoto> {
 //   Widget build(BuildContext context) {
 //     return Scaffold(
 //       appBar: AppBar(
-//           title: const Text('Capture Photo'),
+//           title: Text('Capture Photo'),
 //           leading: InkWell(
 //               onTap: () {
 //                 Get.back();
@@ -248,7 +249,7 @@ class _CapturePhotoState extends State<CapturePhoto> {
 //           if (snapshot.connectionState == ConnectionState.done) {
 //             return Column(children: [
 //               CameraPreview(_controller),
-//               const SizedBox(
+//               SizedBox(
 //                 height: 30,
 //               ),
 //               InkWell(
@@ -311,7 +312,7 @@ class _CapturePhotoState extends State<CapturePhoto> {
 //               )
 //             ]);
 //           } else {
-//             return const Center(child: CircularProgressIndicator());
+//             return Center(child: CircularProgressIndicator());
 //           }
 //         },
 //       ),
@@ -330,8 +331,8 @@ class DisplayPictureScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: const CustomText(
-            text: 'Back',
+          title: CustomText(
+            text: context.l10n.commonBack,
             fontSize: 18.0,
             fontFam: 'Lato',
             fontWeight: FontWeight.w400,
@@ -346,7 +347,7 @@ class DisplayPictureScreen extends StatelessWidget {
       body: Column(
         children: [
           Image.file(File(imagePath)),
-          const SizedBox(
+          SizedBox(
             height: 30,
           ),
           InkWell(

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/patient_health_trends/screen/dialysis_investigation_report/patient_dialysis_invest_detail_screen.dart';
 import 'package:heamodialysis/patient_health_trends/model/dialysis_invest_patient_list_model.dart';
@@ -99,8 +100,8 @@ class _PatientDialysisInvestScreenState
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(bottomRight: Radius.circular(30)),
         ),
-        title: const CustomText(
-          text: 'Patient Dialysis Investigation Result Chart',
+        title: CustomText(
+          text: context.l10n.phtInvestigationResultChart,
           fontSize: 18.0,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,
@@ -142,8 +143,8 @@ class _PatientDialysisInvestScreenState
                   size: 80,
                   color: Colors.grey[400],
                 ),
-                const SizedBox(height: 20),
-                const Text(
+                SizedBox(height: 20),
+                Text(
                   'Failed to load data',
                   style: TextStyle(
                     fontSize: 18,
@@ -151,7 +152,7 @@ class _PatientDialysisInvestScreenState
                     color: Colors.grey,
                   ),
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
                     checkInternetAndLoadData();
@@ -160,7 +161,7 @@ class _PatientDialysisInvestScreenState
                     backgroundColor: AppColor.primaryBackgroundColor,
                     padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
                   ),
-                  child: const Text(
+                  child: Text(
                     'Retry',
                     style: TextStyle(color: Colors.white),
                   ),
@@ -180,10 +181,10 @@ class _PatientDialysisInvestScreenState
         if (!patientController.isLoading.value &&
             patientController.displayedPatientsInvest!.isEmpty) {
           return CommonStatusScreen(
-            title: "No Data Found",
+            title: context.l10n.commonNoDataFound,
             description: "We are unable to find the data that\nyou are looking for",
             img: "assets/no_Data_Found.png",
-            buttonText: "Go Back",
+            buttonText: context.l10n.commonGoBack,
             onPressed: () {
               Get.back();
             },
@@ -201,7 +202,7 @@ class _PatientDialysisInvestScreenState
             itemCount: patientController.displayedPatientsInvest?.length ?? 0,
             itemBuilder: (context, index) {
               if (index == patientController.displayedPatientsInvest?.length) {
-                return const Padding(
+                return Padding(
                   padding: EdgeInsets.symmetric(vertical: 12),
                   child: PatientDialysisInvestShimmer(),
                 );
@@ -260,8 +261,8 @@ class _PatientDialysisInvestScreenState
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const CustomText(
-                      text: 'Search Patient',
+                    CustomText(
+                      text: context.l10n.phtSearchPatient,
                       fontSize: 18.0,
                       fontFam: 'Lato',
                       fontWeight: FontWeight.w500,
@@ -286,8 +287,8 @@ class _PatientDialysisInvestScreenState
                 ).paddingOnly(top: 6, bottom: 16),
                 CustomTextField(
                   txtController: patientController.searchControllerInvest,
-                  labelText: "Search",
-                  hintText: "Search by patient name or id",
+                  labelText: context.l10n.commonSearch,
+                  hintText: context.l10n.phtSearchHint,
                   isRequired: false,
                   keyBoardType: TextInputType.text,
                   fillColor: Colors.white,
@@ -295,9 +296,9 @@ class _PatientDialysisInvestScreenState
                   maxLines: 1,
                   fontSize: 14,
                 ),
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
                 CustomButton(
-                  buttonText: "Search",
+                  buttonText: context.l10n.commonSearch,
                   path: "assets/save-next.png",
                   callB: () {
                     final query =
@@ -390,7 +391,7 @@ class PatientCard extends StatelessWidget {
                     patientCardActions(path1, callB1, null),
                   ],
                 ),
-                const SizedBox(height: 25),
+                SizedBox(height: 25),
               ],
             ),
           )

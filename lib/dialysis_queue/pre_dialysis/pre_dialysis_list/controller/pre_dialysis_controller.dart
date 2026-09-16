@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dialysis_queue/pre_dialysis/edit_pre_dialysis/model/access_type_model.dart';
 import 'package:heamodialysis/dialysis_queue/pre_dialysis/edit_pre_dialysis/model/access_type_site_model.dart';
@@ -97,7 +98,7 @@ class PreDialysisController extends GetxController {
       update();
 
       if (data['status'] == 'Success') {
-        CustomMessage.toast("Data Successfully save");
+        CustomMessage.toast(l10n.schedDataSaved);
         Get.off(const PreDialysisScreen());
       }
     } on ApiException {
@@ -106,7 +107,7 @@ class PreDialysisController extends GetxController {
 
       update();
 
-      CustomMessage.toast("Data save failed");
+      CustomMessage.toast(l10n.schedDataSaveFailed);
 
       throw Exception('Edit Failed');
     }

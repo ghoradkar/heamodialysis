@@ -8,6 +8,7 @@ import 'package:heamodialysis/dashboard/controller/dashboard_controller.dart';
 import 'package:heamodialysis/dashboard/widget/drawer_screen.dart';
 import 'package:heamodialysis/dashboard/widget/functional_center_table.dart';
 import 'package:heamodialysis/internet/no_internet_connectivity.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:heamodialysis/new_registration/controller/new_registration_controller.dart';
 import 'package:heamodialysis/utils/color_constants.dart';
 import 'package:heamodialysis/utils/shared_pref_constants.dart';
@@ -146,7 +147,7 @@ class _OperationalHeadScreenState extends State<OperationalHeadScreen> {
     return Scaffold(
       appBar: AppBar(
         title: CustomText(
-          text: 'Dashboard',
+          text: context.l10n.drawerDashboard,
           fontSize: 18.sp,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,
@@ -215,7 +216,7 @@ class _OperationalHeadScreenState extends State<OperationalHeadScreen> {
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 4.h, horizontal: 4.w),
               child: CustomText(
-                  text: "Today",
+                  text: context.l10n.dashToday,
                   fontSize: 14.sp,
                   fontWeight: FontWeight.bold,
                   textColor: Colors.black,
@@ -270,8 +271,8 @@ class _OperationalHeadScreenState extends State<OperationalHeadScreen> {
                                 child: Column(
                                   children: [
                                     CustomDateField(
-                                      labelText: 'From Date',
-                                      hint: 'Select Date',
+                                      labelText: context.l10n.dashFromDate,
+                                      hint: context.l10n.dashSelectDate,
                                       isRequired: false,
                                       callB: () {
                                         selectFromDate();
@@ -282,8 +283,8 @@ class _OperationalHeadScreenState extends State<OperationalHeadScreen> {
                                       dontDhowPrefix: false,
                                     ),
                                     CustomDateField(
-                                      labelText: 'To Date',
-                                      hint: 'Select Date',
+                                      labelText: context.l10n.dashToDate,
+                                      hint: context.l10n.dashSelectDate,
                                       isRequired: false,
                                       callB: () {
                                         selectToDate();
@@ -358,9 +359,8 @@ class _OperationalHeadScreenState extends State<OperationalHeadScreen> {
                                         },
                                         child: Container(
                                             padding: EdgeInsets.symmetric(
-                                                vertical: 8.h),
+                                                vertical: 8.h, horizontal: 20.w),
                                             alignment: Alignment.center,
-                                            width: 100.w,
                                             decoration: BoxDecoration(
                                               borderRadius:
                                                   BorderRadius.circular(10),
@@ -374,23 +374,28 @@ class _OperationalHeadScreenState extends State<OperationalHeadScreen> {
                                                 end: Alignment.bottomCenter,
                                               ),
                                             ),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                const Icon(
-                                                  Icons.search,
-                                                  color: Colors.white,
-                                                ),
-                                                CustomText(
-                                                    text: "Search",
-                                                    fontSize: 16.sp,
-                                                    fontFam: "Lato",
-                                                    fontWeight:
-                                                        FontWeight.normal,
-                                                    textColor: Colors.white,
-                                                    textAlign: TextAlign.start),
-                                              ],
+                                            child: FittedBox(
+                                              fit: BoxFit.scaleDown,
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  const Icon(
+                                                    Icons.search,
+                                                    color: Colors.white,
+                                                  ),
+                                                  SizedBox(width: 6.w),
+                                                  CustomText(
+                                                      text: context.l10n.commonSearch,
+                                                      fontSize: 16.sp,
+                                                      fontFam: "Lato",
+                                                      fontWeight:
+                                                          FontWeight.normal,
+                                                      textColor: Colors.white,
+                                                      textAlign: TextAlign.start),
+                                                ],
+                                              ),
                                             )),
                                       ),
                                     ),
@@ -406,15 +411,15 @@ class _OperationalHeadScreenState extends State<OperationalHeadScreen> {
                               children: [
                                 Expanded(
                                     child: DashCard(
-                                  title: 'Total Projected Center',
+                                  title: context.l10n.dashTotalProjectedCenter,
                                   firstCount: controller
                                       .dashboardCountModel?.totalCentre
                                       .toString(),
-                                  firstCountText: "Till Date",
+                                  firstCountText: context.l10n.dashTillDate,
                                   secondCount: controller
                                       .dashboardCountModel?.functionalCenter
                                       .toString(),
-                                  secondCountText: "Functional Center",
+                                  secondCountText: context.l10n.dashFunctionalCenter,
                                   iconPath: 'assets/professional-services.png',
                                   isSecondCount: true,
                                   isInfoVisible: true,
@@ -423,7 +428,7 @@ class _OperationalHeadScreenState extends State<OperationalHeadScreen> {
                                       patients: dashboardController
                                               .dashInfoFunctionalUnit ??
                                           [],
-                                      pageTitle: 'Total Functional Unit',
+                                      pageTitle: context.l10n.dashTotalFunctionalUnit,
                                     ));
                                     // showPatientTableDialog(context, dashboardController.dashInfoData);
                                   },
@@ -431,8 +436,8 @@ class _OperationalHeadScreenState extends State<OperationalHeadScreen> {
                                 )),
                                 Expanded(
                                     child: DashCard(
-                                  title: 'Total Patient Registration',
-                                  firstCountText: "Till Date",
+                                  title: context.l10n.dashTotalPatientRegistration,
+                                  firstCountText: context.l10n.dashTillDate,
                                   firstCount: controller
                                       .dashboardCountModel?.patientAdded
                                       .toString(),
@@ -441,9 +446,9 @@ class _OperationalHeadScreenState extends State<OperationalHeadScreen> {
                                       .toString(),
                                   secondCountText:
                                       dashboardController.isTodaysDate
-                                          ? "Current Date"
+                                          ? context.l10n.dashCurrentDate
                                           // ? "Current Date Patient Registerd"
-                                          : "Date Wise",
+                                          : context.l10n.dashDateWise,
                                   // : "Date Wise Patient Registered Count",
                                   iconPath: 'assets/total_patient.png',
                                   isSecondCount: true,
@@ -453,7 +458,7 @@ class _OperationalHeadScreenState extends State<OperationalHeadScreen> {
                                       patients: dashboardController
                                               .dashInfoDataAdmin ??
                                           [],
-                                      pageTitle: 'Total Dialysis Patient',
+                                      pageTitle: context.l10n.dashTotalDialysisPatient,
                                       // pageTitleSecond: "",
                                       showPopUp: (unitId) async {
                                         DateTime now = DateTime.now();
@@ -496,9 +501,8 @@ class _OperationalHeadScreenState extends State<OperationalHeadScreen> {
                                             patients: controller
                                                     .totalDialysisPatient ??
                                                 [],
-                                            pageTitle: 'Total Patient',
-                                            pageTitleSecond:
-                                                "Total Dialysis Patient",
+                                            pageTitle: context.l10n.dashTotalPatient,
+                                            pageTitleSecond: context.l10n.dashTotalDialysisPatient,
                                             showTreatment: false,
                                             showAbha: false));
                                       },
@@ -513,16 +517,16 @@ class _OperationalHeadScreenState extends State<OperationalHeadScreen> {
                               children: [
                                 Expanded(
                                     child: DashCard(
-                                  title: 'Total Payment',
+                                  title: context.l10n.dashTotalPayment,
 
                                   firstCount: controller
                                       .dashboardCountModel?.totalInvoicePayment
                                       .toString(),
-                                  firstCountText: "Till Date",
+                                  firstCountText: context.l10n.dashTillDate,
                                   secondCount: controller
                                       .dashboardCountModel?.currentMonthInvPymt
                                       .toString(),
-                                  secondCountText: "Current Month",
+                                  secondCountText: context.l10n.dashCurrentMonth,
                                   // "Current Month Payment Amount",
                                   iconPath: 'assets/payment.png',
                                   isSecondCount: true,
@@ -530,19 +534,19 @@ class _OperationalHeadScreenState extends State<OperationalHeadScreen> {
                                 )),
                                 Expanded(
                                     child: DashCard(
-                                  title: 'Dialysis Sessions',
+                                  title: context.l10n.dashDialysisSessions,
                                   firstCount: controller
                                       .dashboardCountModel?.totalDialysisSession
                                       .toString(),
-                                  firstCountText: "Till Date",
+                                  firstCountText: context.l10n.dashTillDate,
                                   secondCount: controller.dashboardCountModel
                                       ?.currentDateDialysisSession
                                       .toString(),
                                   secondCountText:
                                       dashboardController.isTodaysDate
-                                          ? "Current Date"
+                                          ? context.l10n.dashCurrentDate
                                           // ? "Current Date Dialysis Session"
-                                          : "Date Wise",
+                                          : context.l10n.dashDateWise,
                                   // : "Date Wise Dialysis Session Count",
                                   iconPath: 'assets/dialysis_session.png',
                                   isSecondCount: true,
@@ -553,9 +557,8 @@ class _OperationalHeadScreenState extends State<OperationalHeadScreen> {
                                       dataList: dashboardController
                                               .dialysisSessionAdmin ??
                                           [],
-                                      pageTitle: 'Dialysis Sessions',
-                                      pageTitleSecond:
-                                          "Total Dialysis Sessions",
+                                      pageTitle: context.l10n.dashDialysisSessions,
+                                      pageTitleSecond: context.l10n.dashTotalDialysisSessions,
                                       showData: (unitName) async {
                                         DateTime now = DateTime.now();
                                         String fromDate =
@@ -608,7 +611,7 @@ class _OperationalHeadScreenState extends State<OperationalHeadScreen> {
                                             patients:
                                                 controller.dialysisPatient ??
                                                     [],
-                                            pageTitle: 'Total Dialysis Patient',
+                                            pageTitle: context.l10n.dashTotalDialysisPatient,
                                             showTreatment: true,
                                             showAbha: false));
                                       },
@@ -619,17 +622,17 @@ class _OperationalHeadScreenState extends State<OperationalHeadScreen> {
                               ],
                             ),
                             DashCard(
-                              title: 'Total Invoice Amount',
+                              title: context.l10n.dashTotalInvoiceAmount,
                               firstCount: controller
                                   .dashboardCountModel?.totalInvoiceAmount
                                   ?.toInt()
                                   .toString(),
-                              firstCountText: "Till Date",
+                              firstCountText: context.l10n.dashTillDate,
                               secondCount: controller
                                   .dashboardCountModel?.currentMonthInvAmt
                                   ?.toInt()
                                   .toString(),
-                              secondCountText: "Current Month",
+                              secondCountText: context.l10n.dashCurrentMonth,
                               // secondCountText: "Current Month Invoice Amount",
                               iconPath: 'assets/invoice.png',
                               isSecondCount: true,

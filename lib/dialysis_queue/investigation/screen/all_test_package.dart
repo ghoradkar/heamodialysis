@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dialysis_queue/investigation/model/test_details_model.dart';
 import 'package:heamodialysis/utils/color_constants.dart';
@@ -18,8 +19,8 @@ class _AllTestPackageState extends State<AllTestPackage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const CustomText(
-          text: "All Test",
+        title: CustomText(
+          text: context.l10n.dqAllTest,
           fontSize: 18.0,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,
@@ -64,8 +65,8 @@ class _AllTestPackageState extends State<AllTestPackage> {
                   children: [
                     Row(
                       children: [
-                        const CustomText(
-                            text: "Package Name :",
+                        CustomText(
+                            text: "${context.l10n.dqTestName} :",
                             fontSize: 14,
                             fontFam: "Lato",
                             fontWeight: FontWeight.w500,
@@ -83,8 +84,8 @@ class _AllTestPackageState extends State<AllTestPackage> {
                     ),
                     Row(
                       children: [
-                        const CustomText(
-                            text: "Test ID :",
+                        CustomText(
+                            text: "${context.l10n.dqTestId} : ",
                             fontSize: 14,
                             fontFam: "Lato",
                             fontWeight: FontWeight.w500,
@@ -102,8 +103,8 @@ class _AllTestPackageState extends State<AllTestPackage> {
                     ),
                     Row(
                       children: [
-                        const CustomText(
-                            text: "Test Name :",
+                        CustomText(
+                            text: "${context.l10n.dqTestName} : ",
                             fontSize: 14,
                             fontFam: "Lato",
                             fontWeight: FontWeight.w500,

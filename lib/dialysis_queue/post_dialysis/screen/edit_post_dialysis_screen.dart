@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dialysis_queue/dialysis_event/controller/dialysis_event_controller.dart';
 import 'package:heamodialysis/dialysis_queue/dialysis_event/model/incedent_type_model.dart';
@@ -49,7 +50,7 @@ class EditPostDialysisScreenState extends State<EditPostDialysisScreen> {
   final SessionEndController dischargeController =
       Get.put(SessionEndController());
 
-   DateTime? _selectedDate;
+  DateTime? _selectedDate;
 
   String prefixVal = '';
 
@@ -236,8 +237,8 @@ class EditPostDialysisScreenState extends State<EditPostDialysisScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const CustomText(
-          text: 'Post Dialysis Details',
+        title: CustomText(
+          text: context.l10n.dqPostDialysisDetails,
           fontSize: 18.0,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,
@@ -280,14 +281,12 @@ class EditPostDialysisScreenState extends State<EditPostDialysisScreen> {
                                   data: ThemeData().copyWith(
                                       dividerColor: Colors.transparent),
                                   child: Container(
-
-
                                       decoration: BoxDecoration(
                                           color: AppColor.darkBlue,
                                           borderRadius:
                                               BorderRadius.circular(10)),
                                       child: ExpansionTile(
-                                           //maintainState: true,
+                                          //maintainState: true,
                                           //  key: const PageStorageKey<String>('pre_dialysis_vitals'),
                                           collapsedIconColor: Colors.white,
                                           iconColor: Colors.white,
@@ -296,19 +295,24 @@ class EditPostDialysisScreenState extends State<EditPostDialysisScreen> {
                                             const SizedBox(
                                               width: 12,
                                             ),
-                                            const CustomText(
-                                              text:
-                                                  "Post Dialysis Investigation",
-                                              fontSize: 14.0,
-                                              fontFam: 'Lato',
-                                              fontWeight: FontWeight.normal,
-                                              textColor: Colors.white,
-                                              textAlign: TextAlign.center,
+                                            Expanded(
+                                              child: CustomText(
+                                                text: context.l10n
+                                                    .clinPostDialysisInvestigation,
+                                                fontSize: 14.0,
+                                                fontFam: 'Lato',
+                                                fontWeight: FontWeight.normal,
+                                                textColor: Colors.white,
+                                                textAlign: TextAlign.start,
+                                                maxLines: 2,
+                                                softWrap: true,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
                                             )
                                           ]),
                                           children: <Widget>[
-                                       Container(
-                                             // height: MediaQuery.of(context).size.height * 0.5,
+                                            Container(
+                                              // height: MediaQuery.of(context).size.height * 0.5,
                                               padding: const EdgeInsets.all(12),
                                               //margin: const EdgeInsets.only(bottom: 2),
                                               decoration: BoxDecoration(
@@ -316,812 +320,913 @@ class EditPostDialysisScreenState extends State<EditPostDialysisScreen> {
                                                 borderRadius:
                                                     BorderRadius.circular(10),
                                               ),
-                                              child: SingleChildScrollView(child:Column(
-                                                //crossAxisAlignment: CrossAxisAlignment.start,
-                                               // mainAxisSize: MainAxisSize.min,
+                                              child: SingleChildScrollView(
+                                                child: Column(
+                                                  //crossAxisAlignment: CrossAxisAlignment.start,
+                                                  // mainAxisSize: MainAxisSize.min,
 
-                                                children: [
-                                                  const SizedBox(height: 16),
-                                                  Container(
-                                                    decoration: BoxDecoration(
-                                                        color: Colors.grey[50],
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10),
-                                                        border: Border.all(
-                                                            color: AppColor
-                                                                .borderColor)),
-                                                    child: Column(
-                                                      mainAxisSize: MainAxisSize.min,
-                                                      children: [
-                                                        Row(
-                                                         // mainAxisSize: MainAxisSize.min,
-                                                          children: [
-                                                            // Expanded(
-                                                            // Flexible(
-                                                            //   child:
-                                                                  SizedBox(
-                                                                    width:165,
-                                                                    child:CustomTextField(
-                                                                onChanged:
-                                                                     (value) {
-                                                                  try {
-                                                                    if (value
-                                                                        .isEmpty) {
-                                                                      return;
+                                                  children: [
+                                                    const SizedBox(height: 16),
+                                                    Container(
+                                                      decoration: BoxDecoration(
+                                                          color:
+                                                              Colors.grey[50],
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(10),
+                                                          border: Border.all(
+                                                              color: AppColor
+                                                                  .borderColor)),
+                                                      child: Column(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: [
+                                                          Row(
+                                                            // mainAxisSize: MainAxisSize.min,
+                                                            children: [
+                                                              // Expanded(
+                                                              // Flexible(
+                                                              //   child:
+                                                              SizedBox(
+                                                                width: 165,
+                                                                child:
+                                                                    CustomTextField(
+                                                                  onChanged:
+                                                                      (value) {
+                                                                    try {
+                                                                      if (value
+                                                                          .isEmpty) {
+                                                                        return;
+                                                                      }
+
+                                                                      var val =
+                                                                          double.parse(
+                                                                              value);
+
+                                                                      var weight =
+                                                                          postDialysisController.currentWeightModel?.weight ??
+                                                                              0.0;
+
+                                                                      var diff =
+                                                                          weight -
+                                                                              val;
+
+                                                                      postDialysisController
+                                                                              .currentWeightController
+                                                                              .text =
+                                                                          diff.toStringAsFixed(
+                                                                              2);
+
+                                                                      postDialysisController
+                                                                          .refreshUi();
+                                                                    } catch (e) {
+                                                                      debugPrint(
+                                                                          'Error: $e');
                                                                     }
-
-                                                                    var val = double
-                                                                        .parse(
-                                                                            value);
-
-                                                                    var weight =
-                                                                        postDialysisController.currentWeightModel?.weight ??
-                                                                            0.0;
-
-                                                                    var diff =
-                                                                        weight -
-                                                                            val;
-
-                                                                    postDialysisController
-                                                                            .currentWeightController
-                                                                            .text =
-                                                                        diff.toStringAsFixed(
-                                                                            2);
-
-                                                                    postDialysisController
-                                                                        .refreshUi();
-                                                                  } catch (e) {
-                                                                    debugPrint(
-                                                                        'Error: $e');
-                                                                  }
-                                                                  // try {
-                                                                  //   var val = double
-                                                                  //       .parse(
-                                                                  //       value);
-                                                                  //
-                                                                  //   var weight =
-                                                                  //       postDialysisController
-                                                                  //           .currentWeightModel
-                                                                  //           ?.weight ??
-                                                                  //           0.0;
-                                                                  //   // var diff = val -
-                                                                  //   //     weight;
-                                                                  //   var diff = weight -
-                                                                  //       val;
-                                                                  //
-                                                                  //   // Update the controller text with the difference
-                                                                  //   postDialysisController
-                                                                  //       .currentWeightController
-                                                                  //       .text =
-                                                                  //       diff.toString();
-                                                                  //   postDialysisController
-                                                                  //       .refreshUi();
-                                                                  // } catch (e) {
-                                                                  //   // Handle the error for parsing the value
-                                                                  //   debugPrint(
-                                                                  //       'Error: $e');
-                                                                  // }
-                                                                },
-                                                                maxLines: 1,
-                                                                isReadOnly:
-                                                                    false,
-                                                                keyBoardType:
-                                                                    TextInputType
-                                                                        .number,
-                                                                labelText:
-                                                                    'Post Dialysis Weight',
-                                                                hintText:
-                                                                    'Enter',
-                                                                isRequired:
-                                                                    true,
-                                                                txtController:
-                                                                    controller
-                                                                        .weightController,
-                                                                fillColor:
-                                                                    Colors
-                                                                        .white,
-                                                                fontSize: 16,
+                                                                    // try {
+                                                                    //   var val = double
+                                                                    //       .parse(
+                                                                    //       value);
+                                                                    //
+                                                                    //   var weight =
+                                                                    //       postDialysisController
+                                                                    //           .currentWeightModel
+                                                                    //           ?.weight ??
+                                                                    //           0.0;
+                                                                    //   // var diff = val -
+                                                                    //   //     weight;
+                                                                    //   var diff = weight -
+                                                                    //       val;
+                                                                    //
+                                                                    //   // Update the controller text with the difference
+                                                                    //   postDialysisController
+                                                                    //       .currentWeightController
+                                                                    //       .text =
+                                                                    //       diff.toString();
+                                                                    //   postDialysisController
+                                                                    //       .refreshUi();
+                                                                    // } catch (e) {
+                                                                    //   // Handle the error for parsing the value
+                                                                    //   debugPrint(
+                                                                    //       'Error: $e');
+                                                                    // }
+                                                                  },
+                                                                  maxLines: 1,
+                                                                  isReadOnly:
+                                                                      false,
+                                                                  keyBoardType:
+                                                                      TextInputType
+                                                                          .number,
+                                                                  labelText: context
+                                                                      .l10n
+                                                                      .clinPostDialysisWeight,
+                                                                  hintText: context
+                                                                      .l10n
+                                                                      .regHintEnter,
+                                                                  isRequired:
+                                                                      true,
+                                                                  txtController:
+                                                                      controller
+                                                                          .weightController,
+                                                                  fillColor:
+                                                                      Colors
+                                                                          .white,
+                                                                  fontSize: 16,
+                                                                ),
                                                               ),
-                                                            ),
-                                                            const SizedBox(
-                                                                height: 8),
-                                                            // Expanded(
-                                                            // child:
-                                                            // Flexible(
-                                                            //   child:
-                                                            SizedBox(
-                                                              width:150,
-                                                              child:CustomTextField(
-                                                                onChanged:
-                                                                    (value) {},
-                                                                maxLines: 1,
-                                                                isReadOnly:
-                                                                    true,
-                                                                keyBoardType:
-                                                                    TextInputType
-                                                                        .number,
-                                                                labelText:
-                                                                    'Current Wgt Diff',
-                                                                hintText:
-                                                                    'Enter',
-                                                                isRequired:
-                                                                    true,
-                                                                txtController:
-                                                                    controller
-                                                                        .currentWeightController,
-                                                                fillColor:
-                                                                    Colors
-                                                                        .white,
-                                                                fontSize: 16,
+                                                              const SizedBox(
+                                                                  height: 8),
+                                                              // Expanded(
+                                                              // child:
+                                                              // Flexible(
+                                                              //   child:
+                                                              SizedBox(
+                                                                width: 150,
+                                                                child:
+                                                                    CustomTextField(
+                                                                  onChanged:
+                                                                      (value) {},
+                                                                  maxLines: 1,
+                                                                  isReadOnly:
+                                                                      true,
+                                                                  keyBoardType:
+                                                                      TextInputType
+                                                                          .number,
+                                                                  labelText: context
+                                                                      .l10n
+                                                                      .clinCurrentWgtDiff,
+                                                                  hintText: context
+                                                                      .l10n
+                                                                      .regHintEnter,
+                                                                  isRequired:
+                                                                      true,
+                                                                  txtController:
+                                                                      controller
+                                                                          .currentWeightController,
+                                                                  fillColor:
+                                                                      Colors
+                                                                          .white,
+                                                                  fontSize: 16,
+                                                                ),
                                                               ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        const SizedBox(height: 8),
-                                                        Row(
-                                                          mainAxisSize: MainAxisSize.min,
-                                                          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            SizedBox(
-                                                              width:150,
-                                                              child:DoubleTextField(
-                                                              labelText:
-                                                                  'Blood Pressure',
-                                                              hintText1:
-                                                                  'Bottom',
-                                                              hintText2: 'Top',
-                                                              isRequired: true,
-                                                              keyBoardType:
-                                                                  TextInputType
-                                                                      .number,
-                                                              txtController1:
-                                                                  controller
-                                                                      .doubleTxtController1,
-                                                              txtController2:
-                                                                  controller
-                                                                      .doubleTxtController2,
-                                                              fillColor:
-                                                                  Colors.white,
-                                                              isReadOnly: false,
-                                                              maxLines: 1,
-                                                              onChange1:
-                                                                  (value) {},
-                                                              onChange2:
-                                                                  (value) {},
-                                                            )),
-                                                            const SizedBox(
-                                                                height: 8),
-                                                            // Expanded(
-                                                            //   child:
-                                                            // Flexible(
-                                                            //   child:
-                                                            SizedBox(
-                                                              width:150,
-                                                              child:CustomTextField(
-                                                                maxLines: 1,
-                                                                isReadOnly:
-                                                                    false,
-                                                                keyBoardType:
-                                                                    TextInputType
-                                                                        .number,
-                                                                labelText:
-                                                                    'Pulse (Beats/min)',
-                                                                hintText:
-                                                                    'Enter',
-                                                                isRequired:
-                                                                    false,
-                                                                txtController:
-                                                                    controller
-                                                                        .pulseLevel,
-                                                                fillColor:
-                                                                    Colors
-                                                                        .white,
-                                                                fontSize: 16,
+                                                            ],
+                                                          ),
+                                                          const SizedBox(
+                                                              height: 8),
+                                                          Row(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .min,
+                                                            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                            children: [
+                                                              SizedBox(
+                                                                  width: 150,
+                                                                  child:
+                                                                      DoubleTextField(
+                                                                    labelText:
+                                                                        context
+                                                                            .l10n
+                                                                            .clinBloodPressure,
+                                                                    hintText1:
+                                                                        context
+                                                                            .l10n
+                                                                            .commonBottom,
+                                                                    hintText2:
+                                                                        context
+                                                                            .l10n
+                                                                            .commonTop,
+                                                                    isRequired:
+                                                                        true,
+                                                                    keyBoardType:
+                                                                        TextInputType
+                                                                            .number,
+                                                                    txtController1:
+                                                                        controller
+                                                                            .doubleTxtController1,
+                                                                    txtController2:
+                                                                        controller
+                                                                            .doubleTxtController2,
+                                                                    fillColor:
+                                                                        Colors
+                                                                            .white,
+                                                                    isReadOnly:
+                                                                        false,
+                                                                    maxLines: 1,
+                                                                    onChange1:
+                                                                        (value) {},
+                                                                    onChange2:
+                                                                        (value) {},
+                                                                  )),
+                                                              const SizedBox(
+                                                                  height: 8),
+                                                              // Expanded(
+                                                              //   child:
+                                                              // Flexible(
+                                                              //   child:
+                                                              SizedBox(
+                                                                width: 150,
+                                                                child:
+                                                                    CustomTextField(
+                                                                  maxLines: 1,
+                                                                  isReadOnly:
+                                                                      false,
+                                                                  keyBoardType:
+                                                                      TextInputType
+                                                                          .number,
+                                                                  labelText: context
+                                                                      .l10n
+                                                                      .clinPulseBeatsMin,
+                                                                  hintText: context
+                                                                      .l10n
+                                                                      .regHintEnter,
+                                                                  isRequired:
+                                                                      false,
+                                                                  txtController:
+                                                                      controller
+                                                                          .pulseLevel,
+                                                                  fillColor:
+                                                                      Colors
+                                                                          .white,
+                                                                  fontSize: 16,
+                                                                ),
                                                               ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        const SizedBox(
-                                                            height: 8),
-                                                        Row(
-                                                          mainAxisSize: MainAxisSize.min,
-                                                          children: [
-                                                            // Expanded(
-                                                            //   child:
-                                                            // Flexible(
-                                                            //   child:
-                                                            SizedBox(
-                                                              width:150,
-                                                              child: CustomTextField(
-                                                                maxLines: 1,
-                                                                isReadOnly:
-                                                                    false,
-                                                                keyBoardType:
-                                                                    TextInputType
-                                                                        .number,
-                                                                labelText:
-                                                                    'Respiratory Rate',
-                                                                hintText:
-                                                                    'Enter',
-                                                                isRequired:
-                                                                    true,
-                                                                txtController:
-                                                                    controller
-                                                                        .respRateController,
-                                                                fillColor:
-                                                                    Colors
-                                                                        .white,
-                                                                fontSize: 16,
+                                                            ],
+                                                          ),
+                                                          const SizedBox(
+                                                              height: 8),
+                                                          Row(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .min,
+                                                            children: [
+                                                              // Expanded(
+                                                              //   child:
+                                                              // Flexible(
+                                                              //   child:
+                                                              SizedBox(
+                                                                width: 150,
+                                                                child:
+                                                                    CustomTextField(
+                                                                  maxLines: 1,
+                                                                  isReadOnly:
+                                                                      false,
+                                                                  keyBoardType:
+                                                                      TextInputType
+                                                                          .number,
+                                                                  labelText: context
+                                                                      .l10n
+                                                                      .clinRespiratoryRate,
+                                                                  hintText: context
+                                                                      .l10n
+                                                                      .regHintEnter,
+                                                                  isRequired:
+                                                                      true,
+                                                                  txtController:
+                                                                      controller
+                                                                          .respRateController,
+                                                                  fillColor:
+                                                                      Colors
+                                                                          .white,
+                                                                  fontSize: 16,
+                                                                ),
                                                               ),
-                                                            ),
-                                                            const SizedBox(
-                                                                height: 8),
-                                                            // Expanded(
-                                                            //   child:
-                                                            // Flexible(
-                                                            //   child:
-                                                            SizedBox(
-                                                              width:160,
-                                                              child:CustomTextField(
-                                                                onChanged:
-                                                                    (value) {},
-                                                                maxLines: 1,
-                                                                isReadOnly:
-                                                                    false,
-                                                                keyBoardType:
-                                                                    TextInputType
-                                                                        .number,
-                                                                labelText:
-                                                                    'Oxygen Level',
-                                                                hintText:
-                                                                    'Enter',
-                                                                isRequired:
-                                                                    true,
-                                                                txtController:
-                                                                    controller
-                                                                        .oxygenLevel,
-                                                                fillColor:
-                                                                    Colors
-                                                                        .white,
-                                                                fontSize: 16,
+                                                              const SizedBox(
+                                                                  height: 8),
+                                                              // Expanded(
+                                                              //   child:
+                                                              // Flexible(
+                                                              //   child:
+                                                              SizedBox(
+                                                                width: 160,
+                                                                child:
+                                                                    CustomTextField(
+                                                                  onChanged:
+                                                                      (value) {},
+                                                                  maxLines: 1,
+                                                                  isReadOnly:
+                                                                      false,
+                                                                  keyBoardType:
+                                                                      TextInputType
+                                                                          .number,
+                                                                  labelText: context
+                                                                      .l10n
+                                                                      .clinOxygenLevel,
+                                                                  hintText: context
+                                                                      .l10n
+                                                                      .regHintEnter,
+                                                                  isRequired:
+                                                                      true,
+                                                                  txtController:
+                                                                      controller
+                                                                          .oxygenLevel,
+                                                                  fillColor:
+                                                                      Colors
+                                                                          .white,
+                                                                  fontSize: 16,
+                                                                ),
                                                               ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        const SizedBox(
-                                                            height: 16),
-                                                // SizedBox(
-                                                //   width:300,
-                                                 // child:
-                                                  CustomTextFieldTemp(
-                                                          onUnitChanged:
-                                                              (isFahrenheit) {
-                                                            isCelsius =
-                                                                isFahrenheit;
-                                                          },
-                                                          maxLines: 1,
-                                                          isReadOnly: false,
-                                                          keyBoardType:
-                                                              TextInputType
-                                                                  .number,
-                                                          labelText:
-                                                              'Temperature',
-                                                          hintText: 'Enter',
-                                                          isRequired: false,
-                                                          txtController:
-                                                              postDialysisController
-                                                                  .temperaturController,
-                                                          fillColor:
-                                                              Colors.white,
-                                                          fontSize: 16,
-                                                        ),
-                                                        const SizedBox(
-                                                            height: 16),
-                                                        Row(
-                                                          mainAxisSize: MainAxisSize.min,
-                                                          children: [
-                                                            // Expanded(
-                                                            //   child:
-                                                            // Flexible(
-                                                            //   child:
-                                                            SizedBox(
-                                                              width:155,
-                                                              child:CustomTextField(
-                                                                maxLines: 1,
-                                                                isReadOnly:
-                                                                    false,
-                                                                keyBoardType:
-                                                                    TextInputType
-                                                                        .number,
-                                                                labelText:
-                                                                    'RRF Urine Vol',
-                                                                hintText:
-                                                                    'Enter',
-                                                                isRequired:
-                                                                    false,
-                                                                txtController:
-                                                                    controller
-                                                                        .rrfUrineController,
-                                                                fillColor:
-                                                                    Colors
-                                                                        .white,
-                                                                fontSize: 16,
-                                                              ),
-                                                            ),
-                                                            const SizedBox(
-                                                                height: 8),
-                                                            // Expanded(
-                                                            //   child:
-                                                            // Flexible(
-                                                            //   child:
-                                                            SizedBox(
-                                                              width:155,
-                                                              child:CustomTextField(
-                                                                onChanged:
-                                                                    (value) {},
-                                                                maxLines: 1,
-                                                                isReadOnly:
-                                                                    false,
-                                                                keyBoardType:
-                                                                    TextInputType
-                                                                        .number,
-                                                                labelText:
-                                                                    'Total Heparin Used',
-                                                                hintText:
-                                                                    'Enter',
-                                                                isRequired:
-                                                                    true,
-                                                                txtController:
-                                                                    controller
-                                                                        .heparinController,
-                                                                fillColor:
-                                                                    Colors
-                                                                        .white,
-                                                                fontSize: 16,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        const SizedBox(
-                                                            height: 16),
-                                                        Row(
-                                                          mainAxisSize: MainAxisSize.min,
-                                                          children: [
-                                                            // Expanded(
-                                                            //   child:
-                                                            // Flexible(
-                                                            //   child:
-                                                            SizedBox(
-                                                              width:155,
-                                                              child: CustomTextField(
-                                                                onChanged:
-                                                                    (value) {},
-                                                                maxLines: 1,
-                                                                isReadOnly:
-                                                                    false,
-                                                                keyBoardType:
-                                                                    TextInputType
-                                                                        .text,
-                                                                labelText:
-                                                                    'Case Narration',
-                                                                hintText:
-                                                                    'Enter',
-                                                                isRequired:
-                                                                    false,
-                                                                txtController:
-                                                                    controller
-                                                                        .caseNarrationController,
-                                                                fillColor:
-                                                                    Colors
-                                                                        .white,
-                                                                fontSize: 16,
-                                                              ),
-                                                            ),
-                                                            // Expanded(
-                                                            //     child:
-                                                            // Flexible(
-                                                            //     child:
-                                                            SizedBox(
-                                                                width:155,
-                                                                child:  CustomTextField(
-                                                              onChanged:
-                                                                  (value) {},
-                                                              maxLines: 1,
-                                                              isReadOnly: false,
-                                                              keyBoardType:
-                                                                  TextInputType
-                                                                      .number,
-                                                              labelText:
-                                                                  'Final KT/V',
-                                                              hintText: 'Enter',
-                                                              isRequired: true,
-                                                              txtController:
-                                                                  controller
-                                                                      .finalKtVController,
-                                                              fillColor:
-                                                                  Colors.white,
-                                                              fontSize: 16,
-                                                            )),
-                                                          ],
-                                                        ),
-
-                                                        Row(
-                                                          mainAxisSize: MainAxisSize.min,
-                                                          children: [
-                                                            // Expanded(
-                                                            //   child:
-                                                            // Flexible(
-                                                            //   child:
-                                                            SizedBox(
-                                                              width:155,
-                                                              child:CustomTextField(
-                                                                maxLines: 1,
-                                                                isReadOnly:
-                                                                false,
-                                                                keyBoardType:
+                                                            ],
+                                                          ),
+                                                          const SizedBox(
+                                                              height: 16),
+                                                          // SizedBox(
+                                                          //   width:300,
+                                                          // child:
+                                                          CustomTextFieldTemp(
+                                                            onUnitChanged:
+                                                                (isFahrenheit) {
+                                                              isCelsius =
+                                                                  isFahrenheit;
+                                                            },
+                                                            maxLines: 1,
+                                                            isReadOnly: false,
+                                                            keyBoardType:
                                                                 TextInputType
                                                                     .number,
-                                                                labelText:
-                                                                'CBV',
-                                                                hintText:
-                                                                'Enter',
-                                                                isRequired:
-                                                                false,
-                                                                txtController:
-                                                                controller
-                                                                    .cbvController,
-                                                                fillColor:
-                                                                Colors
-                                                                    .white,
-                                                                fontSize: 16,
-                                                              ),
-                                                            ),
-                                                            const SizedBox(
-                                                                height: 8),
-                                                            // Expanded(
-                                                            //   child:
-                                                            // Flexible(
-                                                            //   child:
-                                                            SizedBox(
-                                                              width:155,
-
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  const SizedBox(height: 8),
-                                                  Container(
-                                                    decoration: BoxDecoration(
-                                                        color: Colors.grey[50],
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10),
-                                                        border: Border.all(
-                                                            color: AppColor
-                                                                .borderColor)),
-                                                    child: Column(
-                                                      children: [
-                                                        Row(
-                                                          mainAxisSize: MainAxisSize.min,
-                                                          children: [
-                                                            // Expanded(
-                                                            //   child:
-                                                            // Flexible(
-                                                            //   child:
-                                                            SizedBox(
-                                                              width:160,
-                                                              child:CustomTextField(
-                                                                maxLines: 1,
-                                                                isReadOnly:
-                                                                    false,
-                                                                keyBoardType:
-                                                                    const TextInputType
-                                                                        .numberWithOptions(
-                                                                        decimal:
-                                                                            true),
-                                                                labelText:
-                                                                    'Final UFV',
-                                                                hintText:
-                                                                    'Enter',
-                                                                isRequired:
-                                                                    false,
-                                                                txtController:
-                                                                    controller
-                                                                        .finalUFVController,
-                                                                fillColor:
-                                                                    Colors
-                                                                        .white,
-                                                                fontSize: 16,
-                                                              ),
-                                                            ),
-                                                            const SizedBox(
-                                                                height: 8),
-                                                            // Expanded(
-                                                            //   child:
-                                                            // Flexible(
-                                                            //   child:
-                                                            SizedBox(
-                                                              width:155,
-                                                              child:CustomTextField(
-                                                                onChanged:
-                                                                    (value) {},
-                                                                maxLines: 1,
-                                                                isReadOnly:
-                                                                    false,
-                                                                keyBoardType:
-                                                                    TextInputType
-                                                                        .number,
-                                                                labelText:
-                                                                    'Venous Pressure',
-                                                                hintText:
-                                                                    'Enter',
-                                                                isRequired:
-                                                                    false,
-                                                                txtController:
-                                                                    controller
-                                                                        .venousPressureController,
-                                                                fillColor:
-                                                                    Colors
-                                                                        .white,
-                                                                fontSize: 16,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        const SizedBox(
-                                                            height: 10),
-                                                        Row(
-                                                          mainAxisSize: MainAxisSize.min,
-                                                          children: [
-                                                            // Expanded(
-                                                            //   child:
-                                                           // Flexible(
-                                                            //   child:
-                                                            SizedBox(
-                                                              width:150,
-                                                              child:CustomTextField(
-                                                                maxLines: 1,
-                                                                isReadOnly:
-                                                                    false,
-                                                                keyBoardType:
-                                                                    TextInputType
-                                                                        .number,
-                                                                labelText:
-                                                                    'Blood Flow(QB)',
-                                                                hintText:
-                                                                    'Enter',
-                                                                isRequired:
-                                                                    false,
-                                                                txtController:
-                                                                    controller
-                                                                        .bloodFlowController,
-                                                                fillColor:
-                                                                    Colors
-                                                                        .white,
-                                                                fontSize: 16,
-                                                              ),
-                                                            ),
-                                                            const SizedBox(
-                                                                height: 8),
-                                                            // Expanded(
-                                                            //   child:
-                                                            // Flexible(
-                                                            //   child:
-                                                            SizedBox(
-                                                              width:155,
-                                                              child:CustomTextField(
-                                                                onChanged:
-                                                                    (value) {},
-                                                                maxLines: 1,
-                                                                isReadOnly:
-                                                                    false,
-                                                                keyBoardType:
-                                                                    TextInputType
-                                                                        .number,
-                                                                labelText:
-                                                                    'Dialysate Flow(QD)',
-                                                                hintText:
-                                                                    'Enter',
-                                                                isRequired:
-                                                                    false,
-                                                                txtController:
-                                                                    controller
-                                                                        .dialyticFlowController,
-                                                                fillColor:
-                                                                    Colors
-                                                                        .white,
-                                                                fontSize: 16,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        const SizedBox(
-                                                            height: 8),
-                                                        Row(
-                                                          mainAxisSize: MainAxisSize.min,
-                                                          children: [
-                                                            // Expanded(
-                                                            //     child:
-                                                           // Flexible(
-                                                            //     child:
-                                                            SizedBox(
-                                                                width:160,
-                                                                child:  CustomTextField(
-                                                              onChanged:
-                                                                  (value) {},
-                                                              maxLines: 1,
-                                                              isReadOnly: true,
-                                                              keyBoardType:
-                                                                  TextInputType
-                                                                      .number,
-                                                              labelText:
-                                                                  'UFR (mL/hr/kg)',
-                                                              hintText: 'Enter',
-                                                              isRequired: false,
-                                                              txtController:
-                                                                  controller
-                                                                      .urfController,
-                                                              fillColor:
-                                                                  Colors.white,
-                                                              fontSize: 16,
-                                                            )),
-                                                            const SizedBox(
-                                                                height: 8),
-                                                            // Expanded(
-                                                            //   child:
-                                                            // Flexible(
-                                                            //   child:
-                                                            SizedBox(
-                                                              width:150,
-                                                              child:
-                                                              CustomTextField(
-                                                                maxLines: 1,
-                                                                // isReadOnly: controller
-                                                                //         .percentageFiberController
-                                                                //         .text
-                                                                //         .isNotEmpty
-                                                                //     ? false
-                                                                //     : true,
-                                                                isReadOnly:
-                                                                    false,
-                                                                keyBoardType:
-                                                                    TextInputType
-                                                                        .text,
-                                                                labelText:
-                                                                    'Discarded Remark',
-                                                                hintText:
-                                                                    'Enter',
-                                                                isRequired:
-                                                                    false,
-                                                                txtController:
-                                                                    controller
-                                                                        .discardedRemController,
-                                                                fillColor:
-                                                                    Colors
-                                                                        .white,
-                                                                fontSize: 16,
-                                                              )),
-
-                                                          ],
-                                                        ),
-                                                        const SizedBox(
-                                                            height: 8),
-                                                    // SizedBox(
-                                                    //   width:300,
-                                                    //   child:
-                                                      CustomTextField(
-                                                          onChanged:
-                                                              (String value) {
-                                                            if (value.isEmpty) {
-                                                              controller
-                                                                  .percentageFiberController
-                                                                  .clear();
-                                                              postDialysisController
-                                                                      .discardRem
-                                                                      ?.isSelected =
-                                                                  false;
-                                                              controller
-                                                                  .discardedRemController
-                                                                  .clear();
-                                                              controller
-                                                                  .update();
-                                                            }
-                                                          },
-                                                          maxLines: 1,
-                                                          isReadOnly: false,
-                                                          keyBoardType:
-                                                              TextInputType
-                                                                  .number,
-                                                          labelText:
-                                                              'Actual Fiber Bundle Volume',
-                                                          hintText: 'Enter',
-                                                          isRequired: false,
-                                                          txtController: controller
-                                                              .actualFiberController,
-                                                          fillColor:
-                                                              Colors.white,
-                                                          fontSize: 16,
-                                                        ),
-                                                        const SizedBox(
-                                                            height: 8),
-                                                        Row(
-                                                          mainAxisSize: MainAxisSize.min,
-                                                          children: [
-                                                            // Expanded(
-                                                            //   child:
-                                                             Flexible(
-                                                            //   child:
-                                                            // SizedBox(
-                                                            //   width:100,
-                                                              child:CustomTextField(
-                                                                maxLines: 1,
-                                                                onTap: () {
-                                                                  controller.calculatePercentage(
+                                                            labelText: context
+                                                                .l10n
+                                                                .clinTemperature,
+                                                            hintText: context
+                                                                .l10n
+                                                                .regHintEnter,
+                                                            isRequired: false,
+                                                            txtController:
+                                                                postDialysisController
+                                                                    .temperaturController,
+                                                            fillColor:
+                                                                Colors.white,
+                                                            fontSize: 16,
+                                                          ),
+                                                          const SizedBox(
+                                                              height: 16),
+                                                          Row(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .min,
+                                                            children: [
+                                                              // Expanded(
+                                                              //   child:
+                                                              // Flexible(
+                                                              //   child:
+                                                              SizedBox(
+                                                                width: 155,
+                                                                child:
+                                                                    CustomTextField(
+                                                                  maxLines: 1,
+                                                                  isReadOnly:
+                                                                      false,
+                                                                  keyBoardType:
+                                                                      TextInputType
+                                                                          .number,
+                                                                  labelText:
+                                                                      'RRF Urine Vol',
+                                                                  hintText: context
+                                                                      .l10n
+                                                                      .regHintEnter,
+                                                                  isRequired:
+                                                                      false,
+                                                                  txtController:
                                                                       controller
-                                                                          .actualFiberController
-                                                                          .text,
-                                                                      dischargeController
-                                                                          .dischargeFlagString);
-                                                                  if (controller
-                                                                      .percentageFiberController
-                                                                      .text
-                                                                      .isNotEmpty) {
-                                                                    controller
-                                                                        .discardRem
-                                                                        ?.isSelected = true;
-                                                                    controller
-                                                                        .update();
-                                                                  }
-                                                                },
-                                                                isReadOnly:
-                                                                    true,
-                                                                keyBoardType:
-                                                                    TextInputType
-                                                                        .number,
-                                                                labelText:
-                                                                    'Percentage Fiber Bundle',
-                                                                hintText:
-                                                                    'Enter',
-                                                                isRequired:
-                                                                    false,
-                                                                txtController:
-                                                                    controller
-                                                                        .percentageFiberController,
-                                                                fillColor:
-                                                                    Colors
-                                                                        .white,
-                                                                fontSize: 16,
+                                                                          .rrfUrineController,
+                                                                  fillColor:
+                                                                      Colors
+                                                                          .white,
+                                                                  fontSize: 16,
+                                                                ),
                                                               ),
-                                                            ),
-                                                            Checkbox(
-                                                              activeColor: AppColor
-                                                                  .primaryBackgroundColor,
-                                                              value: controller
-                                                                  .discardRem
-                                                                  ?.isSelected,
-                                                              // Boolean value for checkbox state
-                                                              onChanged: (bool?
-                                                                  newValue) {
-                                                                controller
-                                                                        .discardRem
-                                                                        ?.isSelected =
-                                                                    newValue;
-                                                                setState(() {});
-                                                              },
-                                                            )
-                                                          ],
-                                                        ),
-                                                      ],
+                                                              const SizedBox(
+                                                                  height: 8),
+                                                              // Expanded(
+                                                              //   child:
+                                                              // Flexible(
+                                                              //   child:
+                                                              SizedBox(
+                                                                width: 155,
+                                                                child:
+                                                                    CustomTextField(
+                                                                  onChanged:
+                                                                      (value) {},
+                                                                  maxLines: 1,
+                                                                  isReadOnly:
+                                                                      false,
+                                                                  keyBoardType:
+                                                                      TextInputType
+                                                                          .number,
+                                                                  labelText: context
+                                                                      .l10n
+                                                                      .clinTotalHeparinUsed,
+                                                                  hintText: context
+                                                                      .l10n
+                                                                      .regHintEnter,
+                                                                  isRequired:
+                                                                      true,
+                                                                  txtController:
+                                                                      controller
+                                                                          .heparinController,
+                                                                  fillColor:
+                                                                      Colors
+                                                                          .white,
+                                                                  fontSize: 16,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          const SizedBox(
+                                                              height: 16),
+                                                          Row(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .min,
+                                                            children: [
+                                                              // Expanded(
+                                                              //   child:
+                                                              // Flexible(
+                                                              //   child:
+                                                              SizedBox(
+                                                                width: 155,
+                                                                child:
+                                                                    CustomTextField(
+                                                                  onChanged:
+                                                                      (value) {},
+                                                                  maxLines: 1,
+                                                                  isReadOnly:
+                                                                      false,
+                                                                  keyBoardType:
+                                                                      TextInputType
+                                                                          .text,
+                                                                  labelText: context
+                                                                      .l10n
+                                                                      .clinCaseNarration,
+                                                                  hintText: context
+                                                                      .l10n
+                                                                      .regHintEnter,
+                                                                  isRequired:
+                                                                      false,
+                                                                  txtController:
+                                                                      controller
+                                                                          .caseNarrationController,
+                                                                  fillColor:
+                                                                      Colors
+                                                                          .white,
+                                                                  fontSize: 16,
+                                                                ),
+                                                              ),
+                                                              // Expanded(
+                                                              //     child:
+                                                              // Flexible(
+                                                              //     child:
+                                                              SizedBox(
+                                                                  width: 155,
+                                                                  child:
+                                                                      CustomTextField(
+                                                                    onChanged:
+                                                                        (value) {},
+                                                                    maxLines: 1,
+                                                                    isReadOnly:
+                                                                        false,
+                                                                    keyBoardType:
+                                                                        TextInputType
+                                                                            .number,
+                                                                    labelText:
+                                                                        context
+                                                                            .l10n
+                                                                            .clinFinalKtv,
+                                                                    hintText: context
+                                                                        .l10n
+                                                                        .regHintEnter,
+                                                                    isRequired:
+                                                                        true,
+                                                                    txtController:
+                                                                        controller
+                                                                            .finalKtVController,
+                                                                    fillColor:
+                                                                        Colors
+                                                                            .white,
+                                                                    fontSize:
+                                                                        16,
+                                                                  )),
+                                                            ],
+                                                          ),
+
+                                                          Row(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .min,
+                                                            children: [
+                                                              // Expanded(
+                                                              //   child:
+                                                              // Flexible(
+                                                              //   child:
+                                                              SizedBox(
+                                                                width: 155,
+                                                                child:
+                                                                    CustomTextField(
+                                                                  maxLines: 1,
+                                                                  isReadOnly:
+                                                                      false,
+                                                                  keyBoardType:
+                                                                      TextInputType
+                                                                          .number,
+                                                                  labelText:
+                                                                      'CBV',
+                                                                  hintText: context
+                                                                      .l10n
+                                                                      .regHintEnter,
+                                                                  isRequired:
+                                                                      false,
+                                                                  txtController:
+                                                                      controller
+                                                                          .cbvController,
+                                                                  fillColor:
+                                                                      Colors
+                                                                          .white,
+                                                                  fontSize: 16,
+                                                                ),
+                                                              ),
+                                                              const SizedBox(
+                                                                  height: 8),
+                                                              // Expanded(
+                                                              //   child:
+                                                              // Flexible(
+                                                              //   child:
+                                                              SizedBox(
+                                                                width: 155,
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      ),
                                                     ),
-                                                  ),
-                                                  const SizedBox(height: 10),
-                                                ],
+                                                    const SizedBox(height: 8),
+                                                    Container(
+                                                      decoration: BoxDecoration(
+                                                          color:
+                                                              Colors.grey[50],
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(10),
+                                                          border: Border.all(
+                                                              color: AppColor
+                                                                  .borderColor)),
+                                                      child: Column(
+                                                        children: [
+                                                          Row(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .min,
+                                                            children: [
+                                                              // Expanded(
+                                                              //   child:
+                                                              // Flexible(
+                                                              //   child:
+                                                              SizedBox(
+                                                                width: 160,
+                                                                child:
+                                                                    CustomTextField(
+                                                                  maxLines: 1,
+                                                                  isReadOnly:
+                                                                      false,
+                                                                  keyBoardType: const TextInputType
+                                                                      .numberWithOptions(
+                                                                      decimal:
+                                                                          true),
+                                                                  labelText: context
+                                                                      .l10n
+                                                                      .clinFinalUfv,
+                                                                  hintText: context
+                                                                      .l10n
+                                                                      .regHintEnter,
+                                                                  isRequired:
+                                                                      false,
+                                                                  txtController:
+                                                                      controller
+                                                                          .finalUFVController,
+                                                                  fillColor:
+                                                                      Colors
+                                                                          .white,
+                                                                  fontSize: 16,
+                                                                ),
+                                                              ),
+                                                              const SizedBox(
+                                                                  height: 8),
+                                                              // Expanded(
+                                                              //   child:
+                                                              // Flexible(
+                                                              //   child:
+                                                              SizedBox(
+                                                                width: 155,
+                                                                child:
+                                                                    CustomTextField(
+                                                                  onChanged:
+                                                                      (value) {},
+                                                                  maxLines: 1,
+                                                                  isReadOnly:
+                                                                      false,
+                                                                  keyBoardType:
+                                                                      TextInputType
+                                                                          .number,
+                                                                  labelText: context
+                                                                      .l10n
+                                                                      .clinVenousPressure,
+                                                                  hintText: context
+                                                                      .l10n
+                                                                      .regHintEnter,
+                                                                  isRequired:
+                                                                      false,
+                                                                  txtController:
+                                                                      controller
+                                                                          .venousPressureController,
+                                                                  fillColor:
+                                                                      Colors
+                                                                          .white,
+                                                                  fontSize: 16,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          const SizedBox(
+                                                              height: 10),
+                                                          Row(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .min,
+                                                            children: [
+                                                              // Expanded(
+                                                              //   child:
+                                                              // Flexible(
+                                                              //   child:
+                                                              SizedBox(
+                                                                width: 150,
+                                                                child:
+                                                                    CustomTextField(
+                                                                  maxLines: 1,
+                                                                  isReadOnly:
+                                                                      false,
+                                                                  keyBoardType:
+                                                                      TextInputType
+                                                                          .number,
+                                                                  labelText: context
+                                                                      .l10n
+                                                                      .clinBloodFlowQb,
+                                                                  hintText: context
+                                                                      .l10n
+                                                                      .regHintEnter,
+                                                                  isRequired:
+                                                                      false,
+                                                                  txtController:
+                                                                      controller
+                                                                          .bloodFlowController,
+                                                                  fillColor:
+                                                                      Colors
+                                                                          .white,
+                                                                  fontSize: 16,
+                                                                ),
+                                                              ),
+                                                              const SizedBox(
+                                                                  height: 8),
+                                                              // Expanded(
+                                                              //   child:
+                                                              // Flexible(
+                                                              //   child:
+                                                              SizedBox(
+                                                                width: 155,
+                                                                child:
+                                                                    CustomTextField(
+                                                                  onChanged:
+                                                                      (value) {},
+                                                                  maxLines: 1,
+                                                                  isReadOnly:
+                                                                      false,
+                                                                  keyBoardType:
+                                                                      TextInputType
+                                                                          .number,
+                                                                  labelText: context
+                                                                      .l10n
+                                                                      .clinDialysateFlowQd,
+                                                                  hintText: context
+                                                                      .l10n
+                                                                      .regHintEnter,
+                                                                  isRequired:
+                                                                      false,
+                                                                  txtController:
+                                                                      controller
+                                                                          .dialyticFlowController,
+                                                                  fillColor:
+                                                                      Colors
+                                                                          .white,
+                                                                  fontSize: 16,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          const SizedBox(
+                                                              height: 8),
+                                                          Row(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .min,
+                                                            children: [
+                                                              // Expanded(
+                                                              //     child:
+                                                              // Flexible(
+                                                              //     child:
+                                                              SizedBox(
+                                                                  width: 160,
+                                                                  child:
+                                                                      CustomTextField(
+                                                                    onChanged:
+                                                                        (value) {},
+                                                                    maxLines: 1,
+                                                                    isReadOnly:
+                                                                        true,
+                                                                    keyBoardType:
+                                                                        TextInputType
+                                                                            .number,
+                                                                    labelText:
+                                                                        'UFR (mL/hr/kg)',
+                                                                    hintText: context
+                                                                        .l10n
+                                                                        .regHintEnter,
+                                                                    isRequired:
+                                                                        false,
+                                                                    txtController:
+                                                                        controller
+                                                                            .urfController,
+                                                                    fillColor:
+                                                                        Colors
+                                                                            .white,
+                                                                    fontSize:
+                                                                        16,
+                                                                  )),
+                                                              const SizedBox(
+                                                                  height: 8),
+                                                              // Expanded(
+                                                              //   child:
+                                                              // Flexible(
+                                                              //   child:
+                                                              SizedBox(
+                                                                  width: 150,
+                                                                  child:
+                                                                      CustomTextField(
+                                                                    maxLines: 1,
+                                                                    // isReadOnly: controller
+                                                                    //         .percentageFiberController
+                                                                    //         .text
+                                                                    //         .isNotEmpty
+                                                                    //     ? false
+                                                                    //     : true,
+                                                                    isReadOnly:
+                                                                        false,
+                                                                    keyBoardType:
+                                                                        TextInputType
+                                                                            .text,
+                                                                    labelText:
+                                                                        context
+                                                                            .l10n
+                                                                            .clinDiscardedRemarks,
+                                                                    hintText: context
+                                                                        .l10n
+                                                                        .regHintEnter,
+                                                                    isRequired:
+                                                                        false,
+                                                                    txtController:
+                                                                        controller
+                                                                            .discardedRemController,
+                                                                    fillColor:
+                                                                        Colors
+                                                                            .white,
+                                                                    fontSize:
+                                                                        16,
+                                                                  )),
+                                                            ],
+                                                          ),
+                                                          const SizedBox(
+                                                              height: 8),
+                                                          // SizedBox(
+                                                          //   width:300,
+                                                          //   child:
+                                                          CustomTextField(
+                                                            onChanged:
+                                                                (String value) {
+                                                              if (value
+                                                                  .isEmpty) {
+                                                                controller
+                                                                    .percentageFiberController
+                                                                    .clear();
+                                                                postDialysisController
+                                                                    .discardRem
+                                                                    ?.isSelected = false;
+                                                                controller
+                                                                    .discardedRemController
+                                                                    .clear();
+                                                                controller
+                                                                    .update();
+                                                              }
+                                                            },
+                                                            maxLines: 1,
+                                                            isReadOnly: false,
+                                                            keyBoardType:
+                                                                TextInputType
+                                                                    .number,
+                                                            labelText: context
+                                                                .l10n
+                                                                .clinActualFiberBundleVolume,
+                                                            hintText: context
+                                                                .l10n
+                                                                .regHintEnter,
+                                                            isRequired: false,
+                                                            txtController:
+                                                                controller
+                                                                    .actualFiberController,
+                                                            fillColor:
+                                                                Colors.white,
+                                                            fontSize: 16,
+                                                          ),
+                                                          const SizedBox(
+                                                              height: 8),
+                                                          Row(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .min,
+                                                            children: [
+                                                              // Expanded(
+                                                              //   child:
+                                                              Flexible(
+                                                                //   child:
+                                                                // SizedBox(
+                                                                //   width:100,
+                                                                child:
+                                                                    CustomTextField(
+                                                                  maxLines: 1,
+                                                                  onTap: () {
+                                                                    controller.calculatePercentage(
+                                                                        controller
+                                                                            .actualFiberController
+                                                                            .text,
+                                                                        dischargeController
+                                                                            .dischargeFlagString);
+                                                                    if (controller
+                                                                        .percentageFiberController
+                                                                        .text
+                                                                        .isNotEmpty) {
+                                                                      controller
+                                                                          .discardRem
+                                                                          ?.isSelected = true;
+                                                                      controller
+                                                                          .update();
+                                                                    }
+                                                                  },
+                                                                  isReadOnly:
+                                                                      true,
+                                                                  keyBoardType:
+                                                                      TextInputType
+                                                                          .number,
+                                                                  labelText: context
+                                                                      .l10n
+                                                                      .clinPercentageFiberBundle,
+                                                                  hintText: context
+                                                                      .l10n
+                                                                      .regHintEnter,
+                                                                  isRequired:
+                                                                      false,
+                                                                  txtController:
+                                                                      controller
+                                                                          .percentageFiberController,
+                                                                  fillColor:
+                                                                      Colors
+                                                                          .white,
+                                                                  fontSize: 16,
+                                                                ),
+                                                              ),
+                                                              Checkbox(
+                                                                activeColor:
+                                                                    AppColor
+                                                                        .primaryBackgroundColor,
+                                                                value: controller
+                                                                    .discardRem
+                                                                    ?.isSelected,
+                                                                // Boolean value for checkbox state
+                                                                onChanged: (bool?
+                                                                    newValue) {
+                                                                  controller
+                                                                          .discardRem
+                                                                          ?.isSelected =
+                                                                      newValue;
+                                                                  setState(
+                                                                      () {});
+                                                                },
+                                                              )
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    const SizedBox(height: 10),
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                       )]))),
+                                            )
+                                          ]))),
                               const SizedBox(
                                 height: 10,
                               ),
@@ -1139,16 +1244,22 @@ class EditPostDialysisScreenState extends State<EditPostDialysisScreen> {
                                       iconColor: Colors.white,
                                       title: Row(children: [
                                         Image.asset("assets/file-list.png"),
-                                        const SizedBox(
+                                        SizedBox(
                                           width: 12,
                                         ),
-                                        const CustomText(
-                                          text: "EPO Administered",
-                                          fontSize: 14.0,
-                                          fontFam: 'Lato',
-                                          fontWeight: FontWeight.normal,
-                                          textColor: Colors.white,
-                                          textAlign: TextAlign.center,
+                                        Expanded(
+                                          child: CustomText(
+                                            text: context
+                                                .l10n.clinEpoAdministered,
+                                            fontSize: 14.0,
+                                            fontFam: 'Lato',
+                                            fontWeight: FontWeight.normal,
+                                            textColor: Colors.white,
+                                            textAlign: TextAlign.start,
+                                            maxLines: 2,
+                                            softWrap: true,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
                                         )
                                       ]),
                                       children: <Widget>[
@@ -1165,7 +1276,8 @@ class EditPostDialysisScreenState extends State<EditPostDialysisScreen> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               LookupRadioGroup(
-                                                label: "EPO Administered",
+                                                label: context
+                                                    .l10n.clinEpoAdministered,
                                                 isRequired: true,
                                                 items: postDialysisController
                                                         .getYesNoEpoList ??
@@ -1193,15 +1305,17 @@ class EditPostDialysisScreenState extends State<EditPostDialysisScreen> {
                                                       child: MyCustomDropdown(
                                                           selectedItem: controller
                                                               .selectedEPOBrand,
-                                                          labelText:
-                                                              "EPO Brand Name",
+                                                          labelText: context
+                                                              .l10n
+                                                              .clinEpoBrandName,
                                                           items: controller
                                                                   .epoBrandList
                                                                   ?.map((e) => e
                                                                       .lookupDetDescEn)
                                                                   .toList() ??
                                                               [],
-                                                          hint: "Select",
+                                                          hint: context.l10n
+                                                              .regHintSelect,
                                                           isRequired: true,
                                                           senValue: (vaule) {
                                                             controller
@@ -1217,14 +1331,16 @@ class EditPostDialysisScreenState extends State<EditPostDialysisScreen> {
                                                       child: MyCustomDropdown(
                                                           selectedItem: controller
                                                               .selectedEpoDose,
-                                                          labelText: "EPO Dose",
+                                                          labelText: context
+                                                              .l10n.clinEpoDose,
                                                           items: controller
                                                                   .epoDoseList
                                                                   ?.map((e) => e
                                                                       .lookupDetDescEn)
                                                                   .toList() ??
                                                               [],
-                                                          hint: "Select",
+                                                          hint: context.l10n
+                                                              .regHintSelect,
                                                           isRequired: true,
                                                           senValue: (vaule) {
                                                             controller
@@ -1248,15 +1364,17 @@ class EditPostDialysisScreenState extends State<EditPostDialysisScreen> {
                                                       child: MyCustomDropdown(
                                                           selectedItem: controller
                                                               .selectedEpoFreq,
-                                                          labelText:
-                                                              "EPO Frequency",
+                                                          labelText: context
+                                                              .l10n
+                                                              .clinEpoFrequency,
                                                           items: controller
                                                                   .epoFreqList
                                                                   ?.map((e) => e
                                                                       .lookupDetDescEn)
                                                                   .toList() ??
                                                               [],
-                                                          hint: "Select",
+                                                          hint: context.l10n
+                                                              .regHintSelect,
                                                           isRequired: true,
                                                           senValue: (vaule) {
                                                             controller
@@ -1272,15 +1390,17 @@ class EditPostDialysisScreenState extends State<EditPostDialysisScreen> {
                                                       child: MyCustomDropdown(
                                                           selectedItem: controller
                                                               .selectedEpoRoute,
-                                                          labelText:
-                                                              "EPO Route",
+                                                          labelText: context
+                                                              .l10n
+                                                              .clinEpoRoute,
                                                           items: controller
                                                                   .epoRouteList
                                                                   ?.map((e) => e
                                                                       .lookupDetDescEn)
                                                                   .toList() ??
                                                               [],
-                                                          hint: "Select",
+                                                          hint: context.l10n
+                                                              .regHintSelect,
                                                           isRequired: true,
                                                           senValue: (vaule) {
                                                             controller
@@ -1302,9 +1422,10 @@ class EditPostDialysisScreenState extends State<EditPostDialysisScreen> {
                                                     //   child:
                                                     Flexible(
                                                       child: CustomDateField(
-                                                        labelText:
-                                                            'EPO Start Date',
-                                                        hint: 'Select',
+                                                        labelText: context.l10n
+                                                            .clinEpoStartDate,
+                                                        hint: context
+                                                            .l10n.regHintSelect,
                                                         isRequired: false,
                                                         callB: () {
                                                           selectEpoDate();
@@ -1326,9 +1447,10 @@ class EditPostDialysisScreenState extends State<EditPostDialysisScreen> {
                                                         isReadOnly: false,
                                                         keyBoardType:
                                                             TextInputType.text,
-                                                        labelText:
-                                                            'EPO Indication',
-                                                        hintText: 'Enter',
+                                                        labelText: context.l10n
+                                                            .clinEpoIndication,
+                                                        hintText: context
+                                                            .l10n.regHintEnter,
                                                         isRequired: true,
                                                         txtController:
                                                             controller
@@ -1350,8 +1472,9 @@ class EditPostDialysisScreenState extends State<EditPostDialysisScreen> {
                                                   keyBoardType:
                                                       TextInputType.number,
                                                   labelText:
-                                                      'Last Hgb (Hemoglobin):',
-                                                  hintText: 'Enter',
+                                                      context.l10n.clinLastHgb,
+                                                  hintText:
+                                                      context.l10n.regHintEnter,
                                                   isRequired: false,
                                                   txtController:
                                                       controller.lastHgb,
@@ -1412,13 +1535,18 @@ class EditPostDialysisScreenState extends State<EditPostDialysisScreen> {
                                         const SizedBox(
                                           width: 12,
                                         ),
-                                        const CustomText(
-                                          text: "Iron Sucrose",
-                                          fontSize: 14.0,
-                                          fontFam: 'Lato',
-                                          fontWeight: FontWeight.normal,
-                                          textColor: Colors.white,
-                                          textAlign: TextAlign.center,
+                                        Expanded(
+                                          child: CustomText(
+                                            text: context.l10n.schedIronSucrose,
+                                            fontSize: 14.0,
+                                            fontFam: 'Lato',
+                                            fontWeight: FontWeight.normal,
+                                            textColor: Colors.white,
+                                            textAlign: TextAlign.start,
+                                            maxLines: 2,
+                                            softWrap: true,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
                                         )
                                       ]),
                                       children: <Widget>[
@@ -1435,7 +1563,8 @@ class EditPostDialysisScreenState extends State<EditPostDialysisScreen> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               LookupRadioGroup(
-                                                label: "Iron Sucrose",
+                                                label: context
+                                                    .l10n.schedIronSucrose,
                                                 isRequired: true,
                                                 items: postDialysisController
                                                         .getYesNoIronList ??
@@ -1463,15 +1592,17 @@ class EditPostDialysisScreenState extends State<EditPostDialysisScreen> {
                                                       child: MyCustomDropdown(
                                                           selectedItem: controller
                                                               .selectedIronPrep,
-                                                          labelText:
-                                                              "Iron Preparation",
+                                                          labelText: context
+                                                              .l10n
+                                                              .clinIronPreparation,
                                                           items: controller
                                                                   .ironPrepList
                                                                   ?.map((e) => e
                                                                       .lookupDetDescEn)
                                                                   .toList() ??
                                                               [],
-                                                          hint: "Select",
+                                                          hint: context.l10n
+                                                              .regHintSelect,
                                                           isRequired: true,
                                                           senValue: (vaule) {
                                                             controller
@@ -1487,15 +1618,17 @@ class EditPostDialysisScreenState extends State<EditPostDialysisScreen> {
                                                       child: MyCustomDropdown(
                                                           selectedItem: controller
                                                               .selectedIronDose,
-                                                          labelText:
-                                                              "Iron Dose",
+                                                          labelText: context
+                                                              .l10n
+                                                              .clinIronDose,
                                                           items: controller
                                                                   .ironDoseList
                                                                   ?.map((e) => e
                                                                       .lookupDetDescEn)
                                                                   .toList() ??
                                                               [],
-                                                          hint: "Select",
+                                                          hint: context.l10n
+                                                              .regHintSelect,
                                                           isRequired: true,
                                                           senValue: (vaule) {
                                                             controller
@@ -1519,15 +1652,17 @@ class EditPostDialysisScreenState extends State<EditPostDialysisScreen> {
                                                       child: MyCustomDropdown(
                                                           selectedItem: controller
                                                               .selectedIronFreq,
-                                                          labelText:
-                                                              "Iron Frequency",
+                                                          labelText: context
+                                                              .l10n
+                                                              .clinIronFrequency,
                                                           items: controller
                                                                   .ironFreqList
                                                                   ?.map((e) => e
                                                                       .lookupDetDescEn)
                                                                   .toList() ??
                                                               [],
-                                                          hint: "Select",
+                                                          hint: context.l10n
+                                                              .regHintSelect,
                                                           isRequired: true,
                                                           senValue: (vaule) {
                                                             controller
@@ -1543,15 +1678,17 @@ class EditPostDialysisScreenState extends State<EditPostDialysisScreen> {
                                                       child: MyCustomDropdown(
                                                           selectedItem: controller
                                                               .selectedIronRoute,
-                                                          labelText:
-                                                              "Iron Route",
+                                                          labelText: context
+                                                              .l10n
+                                                              .clinIronRoute,
                                                           items: controller
                                                                   .ironRouteList
                                                                   ?.map((e) => e
                                                                       .lookupDetDescEn)
                                                                   .toList() ??
                                                               [],
-                                                          hint: "Select",
+                                                          hint: context.l10n
+                                                              .regHintSelect,
                                                           isRequired: true,
                                                           senValue: (vaule) {
                                                             controller
@@ -1573,9 +1710,10 @@ class EditPostDialysisScreenState extends State<EditPostDialysisScreen> {
                                                     //   child:
                                                     Flexible(
                                                       child: CustomDateField(
-                                                        labelText:
-                                                            'Iron Start Date',
-                                                        hint: 'Select',
+                                                        labelText: context.l10n
+                                                            .clinIronStartDate,
+                                                        hint: context
+                                                            .l10n.regHintSelect,
                                                         isRequired: false,
                                                         callB: () {
                                                           selectIronDate();
@@ -1593,15 +1731,17 @@ class EditPostDialysisScreenState extends State<EditPostDialysisScreen> {
                                                       child: MyCustomDropdown(
                                                           selectedItem: controller
                                                               .selectedIronProtocol,
-                                                          labelText:
-                                                              "Iron Protocol Used",
+                                                          labelText: context
+                                                              .l10n
+                                                              .clinIronProtocolUsed,
                                                           items: controller
                                                                   .ironProtoColList
                                                                   ?.map((e) => e
                                                                       .lookupDetDescEn)
                                                                   .toList() ??
                                                               [],
-                                                          hint: "Select",
+                                                          hint: context.l10n
+                                                              .regHintSelect,
                                                           isRequired: true,
                                                           senValue: (vaule) {
                                                             controller
@@ -1630,9 +1770,10 @@ class EditPostDialysisScreenState extends State<EditPostDialysisScreen> {
                                                         keyBoardType:
                                                             TextInputType
                                                                 .number,
-                                                        labelText:
-                                                            'Ferritin Level',
-                                                        hintText: 'Enter',
+                                                        labelText: context.l10n
+                                                            .clinFerritinLevel,
+                                                        hintText: context
+                                                            .l10n.regHintEnter,
                                                         isRequired: false,
                                                         txtController:
                                                             controller
@@ -1652,8 +1793,10 @@ class EditPostDialysisScreenState extends State<EditPostDialysisScreen> {
                                                         keyBoardType:
                                                             TextInputType
                                                                 .number,
-                                                        labelText: 'TSAT (%)',
-                                                        hintText: 'Enter',
+                                                        labelText: context
+                                                            .l10n.clinTsat,
+                                                        hintText: context
+                                                            .l10n.regHintEnter,
                                                         isRequired: false,
                                                         txtController:
                                                             controller.tsat,
@@ -1717,14 +1860,19 @@ class EditPostDialysisScreenState extends State<EditPostDialysisScreen> {
                                         const SizedBox(
                                           width: 12,
                                         ),
-                                        const CustomText(
-                                          text:
-                                              "Blood Transfusion (Post Dialysis)",
-                                          fontSize: 14.0,
-                                          fontFam: 'Lato',
-                                          fontWeight: FontWeight.normal,
-                                          textColor: Colors.white,
-                                          textAlign: TextAlign.center,
+                                        Expanded(
+                                          child: CustomText(
+                                            text: context
+                                                .l10n.clinBloodTransfusionPost,
+                                            fontSize: 14.0,
+                                            fontFam: 'Lato',
+                                            fontWeight: FontWeight.normal,
+                                            textColor: Colors.white,
+                                            textAlign: TextAlign.start,
+                                            maxLines: 2,
+                                            softWrap: true,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
                                         )
                                       ]),
                                       children: <Widget>[
@@ -1774,9 +1922,10 @@ class EditPostDialysisScreenState extends State<EditPostDialysisScreen> {
                                                         keyBoardType:
                                                             TextInputType
                                                                 .number,
-                                                        labelText:
-                                                            'Volume (mL)',
-                                                        hintText: 'Enter',
+                                                        labelText: context
+                                                            .l10n.clinVolumeMl,
+                                                        hintText: context
+                                                            .l10n.regHintEnter,
                                                         isRequired: true,
                                                         txtController:
                                                             controller.volume,
@@ -1788,8 +1937,10 @@ class EditPostDialysisScreenState extends State<EditPostDialysisScreen> {
                                                     //   child:
                                                     Flexible(
                                                       child: CustomDateField(
-                                                        labelText: 'Date',
-                                                        hint: 'Select',
+                                                        labelText: context
+                                                            .l10n.commonDate,
+                                                        hint: context
+                                                            .l10n.regHintSelect,
                                                         isRequired: true,
                                                         callB: () {
                                                           selectBlodTranDate();
@@ -1833,7 +1984,8 @@ class EditPostDialysisScreenState extends State<EditPostDialysisScreen> {
                                             .withValues(alpha: 0.6),
                                         textColor: Colors.white,
                                         iconColor: Colors.white,
-                                        buttonText: 'Start Dialysis',
+                                        buttonText:
+                                            context.l10n.dqStartDialysis,
                                         path: 'assets/clock.png',
                                         callB: () {
                                           // Get.back();
@@ -1849,11 +2001,11 @@ class EditPostDialysisScreenState extends State<EditPostDialysisScreen> {
                                         //   child:
                                         Flexible(
                                           child: CustomDateField(
-                                            labelText: 'Date',
-                                            hint: 'Select',
+                                            labelText: context.l10n.commonDate,
+                                            hint: context.l10n.regHintSelect,
                                             isRequired: true,
                                             callB: () {
-                                               //_selectDate(context);
+                                              //_selectDate(context);
                                             },
                                             selectedDate:
                                                 controller.startDateController,
@@ -1866,8 +2018,8 @@ class EditPostDialysisScreenState extends State<EditPostDialysisScreen> {
                                         //   child:
                                         Flexible(
                                           child: CustomDateField(
-                                            labelText: 'Time',
-                                            hint: 'Select',
+                                            labelText: context.l10n.commonTime,
+                                            hint: context.l10n.regHintSelect,
                                             isRequired: true,
                                             callB: () {
                                               // selectTime(context);
@@ -1889,7 +2041,7 @@ class EditPostDialysisScreenState extends State<EditPostDialysisScreen> {
                                         secColor: AppColor.secondaryColor,
                                         textColor: Colors.white,
                                         iconColor: Colors.white,
-                                        buttonText: 'Stop Dialysis',
+                                        buttonText: context.l10n.dqStopDialysis,
                                         path: 'assets/clock.png',
                                         callB: () {
                                           showStopDiaButton = true;
@@ -1905,8 +2057,9 @@ class EditPostDialysisScreenState extends State<EditPostDialysisScreen> {
                                         children: [
                                           Expanded(
                                             child: CustomDateField(
-                                              labelText: 'Date',
-                                              hint: 'Select',
+                                              labelText:
+                                                  context.l10n.commonDate,
+                                              hint: context.l10n.regHintSelect,
                                               isRequired: false,
                                               callB: () {
                                                 // _selectDate(context);
@@ -1920,8 +2073,9 @@ class EditPostDialysisScreenState extends State<EditPostDialysisScreen> {
                                           const SizedBox(height: 8),
                                           Expanded(
                                             child: CustomDateField(
-                                              labelText: 'Time',
-                                              hint: 'Select',
+                                              labelText:
+                                                  context.l10n.commonTime,
+                                              hint: context.l10n.regHintSelect,
                                               isRequired: false,
                                               callB: () {
                                                 selectTime(context);
@@ -1941,8 +2095,8 @@ class EditPostDialysisScreenState extends State<EditPostDialysisScreen> {
                                       child: Column(
                                         children: [
                                           CustomDateField(
-                                            labelText: 'Duration',
-                                            hint: 'Select',
+                                            labelText: context.l10n.dqDuration,
+                                            hint: context.l10n.regHintSelect,
                                             isRequired: false,
                                             callB: () {
                                               // selectTime(context);
@@ -1958,14 +2112,15 @@ class EditPostDialysisScreenState extends State<EditPostDialysisScreen> {
                                             child: MyCustomDropdown(
                                                 selectedItem: controller
                                                     .selectedDurationRem,
-                                                labelText:
-                                                    "Dialysis Duration Remark",
+                                                labelText: context.l10n
+                                                    .clinDialysisDurationRemark,
                                                 items: dialysisEventController
                                                     .incidentList
                                                     .map(
                                                         (e) => e.lookupDetValue)
                                                     .toList(),
-                                                hint: "Select",
+                                                hint:
+                                                    context.l10n.regHintSelect,
                                                 isRequired: true,
                                                 senValue: (vaule) {
                                                   controller
@@ -1982,9 +2137,10 @@ class EditPostDialysisScreenState extends State<EditPostDialysisScreen> {
                                               maxLines: 1,
                                               isReadOnly: false,
                                               keyBoardType: TextInputType.text,
-                                              labelText:
-                                                  'Dialysis Duration Description',
-                                              hintText: 'Enter',
+                                              labelText: context.l10n
+                                                  .clinDialysisDurationDescription,
+                                              hintText:
+                                                  context.l10n.regHintEnter,
                                               isRequired: false,
                                               txtController:
                                                   controller.durationRemark,
@@ -2012,7 +2168,7 @@ class EditPostDialysisScreenState extends State<EditPostDialysisScreen> {
                                     secColor: AppColor.secondaryColor,
                                     textColor: Colors.white,
                                     iconColor: Colors.white,
-                                    buttonText: 'Save',
+                                    buttonText: context.l10n.commonSave,
                                     path: 'assets/save-next.png',
                                     isLoading:
                                         postDialysisController.isSaving ||
@@ -2156,8 +2312,9 @@ class EditPostDialysisScreenState extends State<EditPostDialysisScreen> {
                                                 }
 
                                                 postDialysisController
-                                                    .saveRequestModel
-                                                    .createdBy = userData['user_ID'];
+                                                        .saveRequestModel
+                                                        .createdBy =
+                                                    userData['user_ID'];
 
                                                 if (postDialysisController
                                                     .heparinController
@@ -2663,12 +2820,12 @@ class EditPostDialysisScreenState extends State<EditPostDialysisScreen> {
                                                 // Form is invalid, show errors
 
                                                 debugPrint('Form is invalid');
-                                                CustomMessage.toast(
-                                                    "Please fill madetory details");
+                                                CustomMessage.toast(context
+                                                    .l10n.regFillMandatory);
                                               }
                                             } else {
-                                              CustomMessage.toast(
-                                                  "Please fill madetory details");
+                                              CustomMessage.toast(context
+                                                  .l10n.regFillMandatory);
                                             }
                                           },
                                     buttonWidth: 100,
@@ -2678,7 +2835,7 @@ class EditPostDialysisScreenState extends State<EditPostDialysisScreen> {
                                     secColor: Colors.grey,
                                     textColor: Colors.white,
                                     iconColor: Colors.white,
-                                    buttonText: 'Reset',
+                                    buttonText: context.l10n.commonReset,
                                     path: 'assets/refresh.png',
                                     callB: () {
                                       postDialysisController
@@ -2720,7 +2877,7 @@ class EditPostDialysisScreenState extends State<EditPostDialysisScreen> {
                                     secColor: AppColor.red,
                                     textColor: Colors.white,
                                     iconColor: Colors.white,
-                                    buttonText: 'Cancel',
+                                    buttonText: context.l10n.commonCancel,
                                     path: 'assets/cancel.png',
                                     callB: () {
                                       Get.back();

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dashboard/screen/technician/institutewise_dashboard_screen.dart';
 import 'package:heamodialysis/internet/no_internet_connectivity.dart';
@@ -36,14 +37,14 @@ class _MachineCounterListState extends State<MachineCounterList> {
       Get.put(MachineStatusController());
   bool hasInternet = true;
 
-  List<String> cardItemDetailsList = [
-    'Institute Name',
-    'Date',
-    'Machine Name',
-    'Machine Serial No.',
-    "Today's Reading (Hours)",
-    "Last Reading (Hours)"
-  ];
+  List<String> _cardItemDetailsList(BuildContext context) => [
+        context.l10n.colInstituteName,
+        context.l10n.commonDate,
+        context.l10n.machMachineName,
+        context.l10n.machMachineSerialNo,
+        context.l10n.machTodaysReadingHours,
+        context.l10n.machLastReadingHours
+      ];
 
   SearchedData? dropDownValue;
 
@@ -114,8 +115,8 @@ class _MachineCounterListState extends State<MachineCounterList> {
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(bottomRight: Radius.circular(30)),
         ),
-        title: const CustomText(
-          text: 'Machine Counter',
+        title: CustomText(
+          text: context.l10n.machMachineCounter,
           fontSize: 18.0,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,
@@ -140,7 +141,7 @@ class _MachineCounterListState extends State<MachineCounterList> {
               ),
             ),
           ),
-          const SizedBox(
+          SizedBox(
             width: 2,
           ),
           InkWell(
@@ -176,8 +177,8 @@ class _MachineCounterListState extends State<MachineCounterList> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const CustomText(
-                                text: 'Machine Filter',
+                              CustomText(
+                                text: context.l10n.machMachineFilter,
                                 fontSize: 18.0,
                                 fontFam: 'Lato',
                                 fontWeight: FontWeight.w500,
@@ -204,7 +205,7 @@ class _MachineCounterListState extends State<MachineCounterList> {
                               color: AppColor.primaryBackgroundColor,
                             ),
                             decoration: InputDecoration(
-                              hintText: "select",
+                              hintText: context.l10n.regHintSelect,
                               filled: true,
                               fillColor: Colors.white,
                               hintStyle: const TextStyle(
@@ -245,8 +246,8 @@ class _MachineCounterListState extends State<MachineCounterList> {
                             },
                           ).paddingOnly(bottom: 10),
                           CustomDateField(
-                            labelText: 'From Date',
-                            hint: 'Select Date',
+                            labelText: context.l10n.dashFromDate,
+                            hint: context.l10n.dashSelectDate,
                             isRequired: false,
                             callB: () {
                               selectFromDate();
@@ -258,7 +259,7 @@ class _MachineCounterListState extends State<MachineCounterList> {
                           Align(
                             alignment: Alignment.center,
                             child: CustomButton(
-                              buttonText: 'Save',
+                              buttonText: context.l10n.commonSave,
                               path: 'assets/next.png',
                               callB: () async {
                                 Get.back();
@@ -312,10 +313,10 @@ class _MachineCounterListState extends State<MachineCounterList> {
             }
             if (controller.machineCountList == null || controller.machineCountList!.isEmpty) {
               return CommonStatusScreen(
-                title: "No Data Found",
+                title: context.l10n.commonNoDataFound,
                 description: "We are unable to find the data that\nyou are looking for",
                 img: "assets/no_Data_Found.png",
-                buttonText: "Go Back",
+                buttonText: context.l10n.commonGoBack,
                 onPressed: () {
                   Get.back();
                 },
@@ -323,7 +324,7 @@ class _MachineCounterListState extends State<MachineCounterList> {
             }
             return MachineCountCard(
                         patientList: controller.machineCountList ?? [],
-                        cardItemDetailsList: cardItemDetailsList,
+                        cardItemDetailsList: _cardItemDetailsList(context),
                         path1: "assets/edit.png",
                         callB1: (index) async {},
                       );

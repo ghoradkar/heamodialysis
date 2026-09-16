@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/nephro_desk_patient_list/model/choose_package_list_model.dart';
 import 'package:heamodialysis/utils/color_constants.dart';
@@ -52,7 +53,7 @@ class _ChooseTestsState extends State<ChooseTests> {
       children: [
         CustomTextField(
           labelText: widget.label,
-          hintText: 'Select',
+          hintText: context.l10n.regHintSelect,
           isRequired: false,
           keyBoardType: TextInputType.text,
           txtController: selectedTestsController,
@@ -90,8 +91,8 @@ class _ChooseTestsState extends State<ChooseTests> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const CustomText(
-                                text: "Investigation Test Scheduling Details",
+                              CustomText(
+                                text: context.l10n.nephroInvestigationScheduling,
                                 fontSize: 16,
                                 fontFam: "Lato",
                                 fontWeight: FontWeight.w400,

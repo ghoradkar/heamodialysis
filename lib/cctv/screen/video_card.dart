@@ -1,4 +1,5 @@
 // import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 // import 'package:media_kit/media_kit.dart';
 // import 'package:heamodialysis/widgets/custom_shimmer_loader.dart';
 // import 'package:media_kit_video/media_kit_video.dart';

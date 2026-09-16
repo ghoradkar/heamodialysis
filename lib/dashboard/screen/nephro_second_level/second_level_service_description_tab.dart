@@ -9,6 +9,7 @@ import 'package:heamodialysis/utils/shared_pref_constants.dart';
 import 'package:heamodialysis/utils/shared_preference.dart';
 import 'package:heamodialysis/widgets/cust_toast.dart';
 import 'package:heamodialysis/widgets/custom_expandable.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:heamodialysis/widgets/custom_text.dart';
 import 'package:heamodialysis/widgets/custom_textfield.dart';
 
@@ -98,7 +99,7 @@ class _SecondLevelServiceDescriptionTabState
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
                                   CustomText(
-                                      text: "Answer",
+                                      text: context.l10n.nephroAnswer,
                                       fontSize: 16.sp,
                                       fontWeight: FontWeight.w500,
                                       textColor: Colors.black,
@@ -114,7 +115,7 @@ class _SecondLevelServiceDescriptionTabState
                                         .scrutinyAnswer ??
                                         "YES",
                                     text: '',
-                                    firstRadioText: 'Yes',
+                                    firstRadioText: context.l10n.commonYes,
                                     secondRadioText: 'No',
                                     val1: 'YES',
                                     val2: 'NO',
@@ -131,8 +132,8 @@ class _SecondLevelServiceDescriptionTabState
                                     maxLines: 1,
                                     isReadOnly: true,
                                     keyBoardType: TextInputType.text,
-                                    labelText: 'Remark',
-                                    hintText: 'Enter',
+                                    labelText: context.l10n.nephroRemark,
+                                    hintText: context.l10n.nephroEnterHint,
                                     isRequired: true,
                                     initialValue:
                                     firstLevelScrutinyController
@@ -209,7 +210,7 @@ class _SecondLevelServiceDescriptionTabState
                                     CrossAxisAlignment.stretch,
                                     children: [
                                       CustomText(
-                                          text: "Answer",
+                                          text: context.l10n.nephroAnswer,
                                           fontSize: 16.sp,
                                           fontWeight: FontWeight.w500,
                                           textColor: Colors.black,
@@ -225,7 +226,7 @@ class _SecondLevelServiceDescriptionTabState
                                             .scrutinyAnswer ??
                                             "YES",
                                         text: '',
-                                        firstRadioText: 'Yes',
+                                        firstRadioText: context.l10n.commonYes,
                                         secondRadioText: 'No',
                                         val1: 'YES',
                                         val2: 'NO',
@@ -242,8 +243,8 @@ class _SecondLevelServiceDescriptionTabState
                                         maxLines: 1,
                                         isReadOnly: true,
                                         keyBoardType: TextInputType.text,
-                                        labelText: 'Remark',
-                                        hintText: 'Enter',
+                                        labelText: context.l10n.nephroRemark,
+                                        hintText: context.l10n.nephroEnterHint,
                                         isRequired: true,
                                         initialValue:
                                         firstLevelScrutinyController
@@ -313,7 +314,7 @@ class _SecondLevelServiceDescriptionTabState
                                     crossAxisAlignment: CrossAxisAlignment.stretch,
                                     children: [
                                       CustomText(
-                                          text: "Answer",
+                                          text: context.l10n.nephroAnswer,
                                           fontSize: 16.sp,
                                           fontWeight: FontWeight.w500,
                                           textColor: Colors.black,
@@ -344,7 +345,7 @@ class _SecondLevelServiceDescriptionTabState
                                             .scrutinyAnswer ??
                                             "YES",
                                         text: '',
-                                        firstRadioText: 'Yes',
+                                        firstRadioText: context.l10n.commonYes,
                                         secondRadioText: 'No',
                                         val1: 'YES',
                                         val2: 'NO',
@@ -360,8 +361,8 @@ class _SecondLevelServiceDescriptionTabState
                                         maxLines: 1,
                                         isReadOnly: false,
                                         keyBoardType: TextInputType.text,
-                                        labelText: 'Remark',
-                                        hintText: 'Enter',
+                                        labelText: context.l10n.nephroRemark,
+                                        hintText: context.l10n.nephroEnterHint,
                                         isRequired: true,
                                         initialValue:
                                         firstLevelScrutinyController
@@ -413,7 +414,7 @@ class _SecondLevelServiceDescriptionTabState
                               //               CrossAxisAlignment.stretch,
                               //           children: [
                               //             CustomText(
-                              //                     text: "Answer",
+                              //                     text: context.l10n.nephroAnswer,
                               //                     fontSize: 16.sp,
                               //                     fontWeight: FontWeight.w500,
                               //                     textColor: Colors.black,
@@ -444,7 +445,7 @@ class _SecondLevelServiceDescriptionTabState
                               //                           .scrutinyAnswer ??
                               //                       "YES",
                               //               text: '',
-                              //               firstRadioText: 'Yes',
+                              //               firstRadioText: context.l10n.commonYes,
                               //               secondRadioText: 'No',
                               //               val1: 'YES',
                               //               val2: 'NO',
@@ -460,8 +461,8 @@ class _SecondLevelServiceDescriptionTabState
                               //               maxLines: 1,
                               //               isReadOnly: false,
                               //               keyBoardType: TextInputType.text,
-                              //               labelText: 'Remark',
-                              //               hintText: 'Enter',
+                              //               labelText: context.l10n.nephroRemark,
+                              //               hintText: context.l10n.nephroEnterHint,
                               //               isRequired: true,
                               //               initialValue:
                               //                   firstLevelScrutinyController
@@ -507,7 +508,7 @@ class _SecondLevelServiceDescriptionTabState
                     Align(
                       alignment: Alignment.centerLeft,
                       child: CustomText(
-                              text: "Action",
+                              text: context.l10n.nephroAction,
                               fontSize: 16.sp,
                               fontWeight: FontWeight.w500,
                               textColor: Colors.black,
@@ -526,9 +527,9 @@ class _SecondLevelServiceDescriptionTabState
                       },
                       groupVal: firstLevelScrutinyController.groupVal,
                       text: '',
-                      firstRadioText: 'Approve',
-                      secondRadioText: 'Reject',
-                      thirdRadioText: 'Send Back',
+                      firstRadioText: context.l10n.nephroApprove,
+                      secondRadioText: context.l10n.nephroReject,
+                      thirdRadioText: context.l10n.nephroSendBack,
                       showThirdOption: true,
                       radioCallB3: (value) {
                         firstLevelScrutinyController.groupVal = value!;
@@ -539,8 +540,8 @@ class _SecondLevelServiceDescriptionTabState
                       maxLines: 2,
                       isReadOnly: false,
                       keyBoardType: TextInputType.text,
-                      labelText: 'Description',
-                      hintText: 'Enter',
+                      labelText: context.l10n.nephroDescription,
+                      hintText: context.l10n.nephroEnterHint,
                       isRequired: false,
                       txtController: firstLevelScrutinyController.description,
                       fillColor: Colors.white,
@@ -557,7 +558,7 @@ class _SecondLevelServiceDescriptionTabState
                             secColor: AppColor.secondaryColor,
                             textColor: Colors.white,
                             iconColor: Colors.white,
-                            buttonText: 'Save',
+                            buttonText: context.l10n.commonSave,
                             path: 'assets/save-next.png',
                             callB: () {
                               if (formKey.currentState?.validate() ?? false) {
@@ -655,8 +656,7 @@ class _SecondLevelServiceDescriptionTabState
                                 firstLevelScrutinyController.sendToSecondLevel(
                                     false, userData['user_Type']);
                               } else {
-                                CustomMessage.toast(
-                                    "Please fill mandatory field");
+                                CustomMessage.toast(context.l10n.nephroFillMandatory);
                               }
                             },
                             buttonWidth: 100.w,
@@ -669,7 +669,7 @@ class _SecondLevelServiceDescriptionTabState
                             secColor: AppColor.red,
                             textColor: Colors.white,
                             iconColor: Colors.white,
-                            buttonText: 'Cancel',
+                            buttonText: context.l10n.commonCancel,
                             path: 'assets/cancel.png',
                             callB: () {
                               Get.back();

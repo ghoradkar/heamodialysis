@@ -5,6 +5,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/internet/no_internet_connectivity.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:heamodialysis/new_registration/controller/new_registration_controller.dart';
 import 'package:heamodialysis/new_registration/model/blood_group/blood_data.dart';
 import 'package:heamodialysis/new_registration/model/dialysis_freq_model.dart';
@@ -260,6 +261,22 @@ class _NewRegistrationState extends State<NewRegistration>
     super.dispose();
   }
 
+  /// The AppBar title. `widget.pageTitle` stays an English key (it is compared
+  /// as a string elsewhere), so map it to a localized label for display only.
+  String _localizedPageTitle(BuildContext context) {
+    switch (widget.pageTitle) {
+      case 'New Registration':
+        return context.l10n.regNewRegistration;
+      case 'Edit Patient Details':
+        return context.l10n.regEditPatientDetails;
+      case 'View Patient Details':
+      case 'View Application':
+        return context.l10n.regViewPatientDetails;
+      default:
+        return widget.pageTitle;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return _isNetworkAvailable
@@ -272,7 +289,7 @@ class _NewRegistrationState extends State<NewRegistration>
                 ),
               ),
               title: CustomText(
-                text: widget.pageTitle,
+                text: _localizedPageTitle(context),
                 fontSize: 18.0,
                 fontFam: 'Lato',
                 fontWeight: FontWeight.w400,
@@ -305,11 +322,10 @@ class _NewRegistrationState extends State<NewRegistration>
                   if (widget.isViewPatient == true &&
                       controller.viewPatientModel == null) {
                     return CommonStatusScreen(
-                      title: "No Data Found",
-                      description:
-                          "We are unable to find the data that\nyou are looking for ",
+                      title: context.l10n.commonNoDataFound,
+                      description: context.l10n.commonNoDataFoundDescription,
                       img: "assets/no_Data_Found.png",
-                      buttonText: "Go Back",
+                      buttonText: context.l10n.commonGoBack,
                       onPressed: () {
                         Get.back();
                       },
@@ -320,23 +336,50 @@ class _NewRegistrationState extends State<NewRegistration>
                       AnimatedBuilder(
                         animation: tabController,
                         builder: (context, child) {
-                          return TabBar(
-                            controller: tabController,
-                            dividerColor: Colors.transparent,
-                            indicatorColor: Colors.transparent,
-                            padding: EdgeInsets.zero,
-                            indicatorPadding: EdgeInsets.zero,
-                            labelPadding: EdgeInsets.zero,
-                            tabs: [
-                              buildTab(0, "assets/user_textfield.png",
-                                  "Personal\nInfo"),
-                              buildTab(1, "assets/line-chart.png",
-                                  "Demographic\nInfo"),
-                              buildTab(2, "assets/refresh.png",
-                                  "History Of\nDialysis"),
-                              buildTab(3, "assets/upload_file.png",
-                                  "Upload\nDocument"),
-                            ],
+                          // 2 x 2 grid of tab cards - all four steps visible at
+                          // once with the full (bilingual) label on each.
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 4),
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: buildTab(
+                                          0,
+                                          "assets/user_textfield.png",
+                                          context.l10n.tabPersonalInfo),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: buildTab(
+                                          1,
+                                          "assets/line-chart.png",
+                                          context.l10n.tabDemographicInfo),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 8),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: buildTab(
+                                          2,
+                                          "assets/refresh.png",
+                                          context.l10n.tabHistoryOfDialysis),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: buildTab(
+                                          3,
+                                          "assets/upload_file.png",
+                                          context.l10n.tabUploadDocument),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           );
                         },
                       ),
@@ -879,13 +922,19 @@ class _NewRegistrationState extends State<NewRegistration>
   }
 
   Widget buildTab(int index, String path, String text) {
-    bool isSelected = tabController.index == index;
-    return Container(
-      width: 210,
-      // height: 50,
-      padding: const EdgeInsets.symmetric(horizontal: 0.8, vertical: 6),
-      decoration: BoxDecoration(
-          // color: isSelected ? Colors.blue.shade200 : Colors.transparent,
+    final bool isSelected = tabController.index == index;
+    // Bilingual labels arrive as "English / Français" - put each language on
+    // its own line so the whole label stays readable.
+    final labelLines = text.split(' / ');
+    return GestureDetector(
+      onTap: () => tabController.animateTo(index),
+      child: Container(
+        // Fixed height so all four cards in the 2x2 grid stay identical
+        // regardless of label length (English / French / bilingual).
+        height: 78,
+        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
+        decoration: BoxDecoration(
+          color: isSelected ? null : Colors.white,
           gradient: isSelected
               ? LinearGradient(
                   colors: [
@@ -895,45 +944,35 @@ class _NewRegistrationState extends State<NewRegistration>
                   begin: Alignment.topLeft,
                   end: Alignment.bottomCenter,
                 )
-              : const LinearGradient(
-                  colors: [
-                    Colors.transparent,
-                    Colors.transparent,
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomCenter,
-                ),
-          borderRadius: setBorderRadiusIndexWise(index),
-          border: Border.all(color: const Color(0xffE1E1E1))),
-      // padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-      child: Column(
-        children: [
-          Image.asset(
-            path,
-            color: isSelected ? Colors.white : const Color(0xff777777),
-          ),
-          CustomText(
-            text: text,
-            fontSize: 12.0,
-            fontFam: 'Lato',
-            fontWeight: FontWeight.normal,
-            textColor: isSelected ? Colors.white : const Color(0xff777777),
-            textAlign: TextAlign.center,
-          )
-        ],
+              : null,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: const Color(0xffE1E1E1)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              path,
+              height: 20,
+              color: isSelected ? Colors.white : const Color(0xff777777),
+            ),
+            const SizedBox(height: 4),
+            for (final line in labelLines)
+              CustomText(
+                text: line,
+                fontSize: 11.0,
+                fontFam: 'Lato',
+                fontWeight: FontWeight.normal,
+                textColor:
+                    isSelected ? Colors.white : const Color(0xff777777),
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+          ],
+        ),
       ),
     );
-  }
-
-  setBorderRadiusIndexWise(index) {
-    if (index == 0) {
-      return const BorderRadius.only(
-          topLeft: Radius.circular(10), bottomLeft: Radius.circular(10));
-    } else if (index == 1) {
-      return BorderRadius.zero;
-    } else if (index == 3) {
-      return const BorderRadius.only(
-          topRight: Radius.circular(10), bottomRight: Radius.circular(10));
-    }
   }
 }

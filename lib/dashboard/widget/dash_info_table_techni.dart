@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dashboard/model/dash_info_data.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:heamodialysis/utils/color_constants.dart';
 import 'package:heamodialysis/widgets/custom_text.dart';
 
@@ -43,10 +44,10 @@ class DashInfoTable extends StatelessWidget {
             headingRowColor: MaterialStateProperty.all(AppColor.primaryBackgroundColor),
             columnSpacing: 21.0,
             columns: <DataColumn>[
-              buildHeader('Sr. No'),
-              buildHeader('Patient ID'),
-              buildHeader('Patient Name'),
-              buildHeader('ABH No'),
+              buildHeader(context.l10n.colSrNo),
+              buildHeader(context.l10n.colPatientId),
+              buildHeader(context.l10n.colPatientName),
+              buildHeader(context.l10n.colAbhaNo),
             ],
             rows: List<DataRow>.generate(
               patients.length,
@@ -69,9 +70,9 @@ class DashInfoTable extends StatelessWidget {
         ),
       ),
     )
-        : const Center(
+        : Center(
     child: CustomText(
-    text: "No Data",
+    text: context.l10n.commonNoDataFound,
     fontSize: 16,
     fontWeight: FontWeight.normal,
     textColor: Colors.black,
@@ -126,15 +127,17 @@ class DashInfoTable1 extends StatelessWidget {
         textAlign: TextAlign.start,
       ),
       content: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Table(
-          defaultColumnWidth: const IntrinsicColumnWidth(),
+        scrollDirection: Axis.horizontal,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Table(
+            defaultColumnWidth: const IntrinsicColumnWidth(),
           children: [
             l1.isNotEmpty
                 ? _buildRoundedTableRow(tableHeader)
                 : TableRow(children: [
-                    const CustomText(
-                      text: "Data Not available",
+                    CustomText(
+                      text: context.l10n.commonNoDataFound,
                       fontSize: 14.0,
                       textColor: Colors.black,
                       textAlign: TextAlign.start,
@@ -157,13 +160,14 @@ class DashInfoTable1 extends StatelessWidget {
                     ]),
           ],
         ),
+        ),
       ),
       actions: [
         TextButton(
           onPressed: () {
             Get.back(); // Close the dialog
           },
-          child: const Text('Close'),
+          child: Text(context.l10n.commonClose),
         ),
       ],
     );

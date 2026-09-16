@@ -1,5 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/internet/no_internet_connectivity.dart';
 import 'package:heamodialysis/new_registration/model/institute/institute_data.dart';
@@ -151,8 +152,8 @@ class _AddEditDailyRoLogSheetState extends State<AddEditDailyRoLogSheet> {
       appBar: AppBar(
         title: CustomText(
           text: widget.isEdit == true
-              ? "Edit Daily RO Log Sheet"
-              : 'Add Daily RO Log Sheet',
+              ? context.l10n.roEditDailyLogSheet
+              : context.l10n.roAddDailyLogSheet,
           fontSize: 18.0,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,
@@ -180,7 +181,7 @@ class _AddEditDailyRoLogSheetState extends State<AddEditDailyRoLogSheet> {
       GetBuilder<DailyRoLogSheetController>(builder: (controller) {
         return hasInternet
             ? controller.isLoading
-                ?  const Center(child: ROLogSheetShimmer())
+                ?  Center(child: ROLogSheetShimmer())
                 : SingleChildScrollView(
                     child: Column(
                       children: [
@@ -203,15 +204,15 @@ class _AddEditDailyRoLogSheetState extends State<AddEditDailyRoLogSheet> {
 
                               /// ---------- HEADER ----------
                               _tableHeader(),
-                              _textRow("1", "Raw Water TDS", "ppm", roMaintDetailsController.rawWaterTDS),
-                              _textRow("2", "Post Softener TDS", "ppm", roMaintDetailsController.postSoftnerTDS),
-                              _textRow("3", "Post Membrane TDS", "ppm", roMaintDetailsController.postMembraneTDS),
-                              _textRow("4", "Post Mixbed TDS", "ppm", roMaintDetailsController.postMixbedTDS),
-                              _textRow("5", "Loopline TDS", "ppm", roMaintDetailsController.loopLineTDS),
-                              _textRow("6", "Post Softener Hardness", "ppm", roMaintDetailsController.postSoftnerHardness),
-                              _textRow("7", "Post Carbon Filter Chlorine", "ppm", roMaintDetailsController.carbonChlorine),
-                              _textRow("8", "Reject Flow", "lph", roMaintDetailsController.rejectFlow),
-                              _textRow("9", "Product / Permeate Flow", "lph", roMaintDetailsController.productPermeateFlow),
+                              _textRow("1", context.l10n.roRawWaterTdsLabel, "ppm", roMaintDetailsController.rawWaterTDS),
+                              _textRow("2", context.l10n.roPostSoftenerTdsLabel, "ppm", roMaintDetailsController.postSoftnerTDS),
+                              _textRow("3", context.l10n.roPostMembraneTdsLabel, "ppm", roMaintDetailsController.postMembraneTDS),
+                              _textRow("4", context.l10n.roPostMixbedTdsLabel, "ppm", roMaintDetailsController.postMixbedTDS),
+                              _textRow("5", context.l10n.roLooplineTdsLabel, "ppm", roMaintDetailsController.loopLineTDS),
+                              _textRow("6", context.l10n.roPostSoftenerHardnessLabel, "ppm", roMaintDetailsController.postSoftnerHardness),
+                              _textRow("7", context.l10n.roPostCarbonFilterChlorineLabel, "ppm", roMaintDetailsController.carbonChlorine),
+                              _textRow("8", context.l10n.roRejectFlowLabel, "lph", roMaintDetailsController.rejectFlow),
+                              _textRow("9", context.l10n.roProductPermeateFlowLabel, "lph", roMaintDetailsController.productPermeateFlow),
 
                               // _radioRow(
                               //   "10",
@@ -241,8 +242,8 @@ class _AddEditDailyRoLogSheetState extends State<AddEditDailyRoLogSheet> {
 
                         ]),
                         // CustomTextField(
-                        //   labelText: 'Raw Water TDS (ppm)',
-                        //   hintText: 'Enter',
+                        //   labelText: context.l10n.roRawWaterTdsPpm,
+                        //   hintText: context.l10n.regHintEnter,
                         //   isRequired: false,
                         //   keyBoardType: TextInputType.text,
                         //   txtController: roMaintDetailsController.rawWaterTDS,
@@ -252,8 +253,8 @@ class _AddEditDailyRoLogSheetState extends State<AddEditDailyRoLogSheet> {
                         //   maxLines: 1,
                         // ),
                         // CustomTextField(
-                        //   labelText: 'Post Softener TDS (ppm)',
-                        //   hintText: 'Enter',
+                        //   labelText: context.l10n.roPostSoftenerTds,
+                        //   hintText: context.l10n.regHintEnter,
                         //   isRequired: false,
                         //   keyBoardType: TextInputType.text,
                         //   txtController:
@@ -264,8 +265,8 @@ class _AddEditDailyRoLogSheetState extends State<AddEditDailyRoLogSheet> {
                         //   fontSize: 16,
                         // ),
                         // CustomTextField(
-                        //   labelText: 'Post Membrane TDS (ppm)',
-                        //   hintText: 'Enter',
+                        //   labelText: context.l10n.roPostMembraneTds,
+                        //   hintText: context.l10n.regHintEnter,
                         //   isRequired: false,
                         //   keyBoardType: TextInputType.text,
                         //   txtController:
@@ -276,8 +277,8 @@ class _AddEditDailyRoLogSheetState extends State<AddEditDailyRoLogSheet> {
                         //   fontSize: 16,
                         // ),
                         // CustomTextField(
-                        //   labelText: 'Post Mixbed TDS (ppm)',
-                        //   hintText: 'Enter',
+                        //   labelText: context.l10n.roPostMixbedTds,
+                        //   hintText: context.l10n.regHintEnter,
                         //   isRequired: false,
                         //   keyBoardType: TextInputType.text,
                         //   txtController: roMaintDetailsController.postMixbedTDS,
@@ -287,8 +288,8 @@ class _AddEditDailyRoLogSheetState extends State<AddEditDailyRoLogSheet> {
                         //   fontSize: 16,
                         // ),
                         // CustomTextField(
-                        //   labelText: 'Loopline TDS (ppm)',
-                        //   hintText: 'Enter',
+                        //   labelText: context.l10n.roLooplineTds,
+                        //   hintText: context.l10n.regHintEnter,
                         //   isRequired: false,
                         //   keyBoardType: TextInputType.text,
                         //   txtController: roMaintDetailsController.loopLineTDS,
@@ -298,8 +299,8 @@ class _AddEditDailyRoLogSheetState extends State<AddEditDailyRoLogSheet> {
                         //   fontSize: 16,
                         // ),
                         // CustomTextField(
-                        //   labelText: 'Post Softener Hardness (ppm)',
-                        //   hintText: 'Enter',
+                        //   labelText: context.l10n.roPostSoftenerHardness,
+                        //   hintText: context.l10n.regHintEnter,
                         //   isRequired: false,
                         //   keyBoardType: TextInputType.text,
                         //   txtController:
@@ -310,8 +311,8 @@ class _AddEditDailyRoLogSheetState extends State<AddEditDailyRoLogSheet> {
                         //   fontSize: 16,
                         // ),
                         // CustomTextField(
-                        //   labelText: 'Post Carbon Filter Chlorine (ppm)',
-                        //   hintText: 'Enter',
+                        //   labelText: context.l10n.roPostCarbonChlorine,
+                        //   hintText: context.l10n.regHintEnter,
                         //   isRequired: false,
                         //   keyBoardType: TextInputType.text,
                         //   txtController:
@@ -322,8 +323,8 @@ class _AddEditDailyRoLogSheetState extends State<AddEditDailyRoLogSheet> {
                         //   fontSize: 16,
                         // ),
                         // CustomTextField(
-                        //   labelText: 'Reject Flow (lph)',
-                        //   hintText: 'Enter',
+                        //   labelText: context.l10n.roRejectFlowLph,
+                        //   hintText: context.l10n.regHintEnter,
                         //   isRequired: false,
                         //   keyBoardType: TextInputType.text,
                         //   txtController: roMaintDetailsController.rejectFlow,
@@ -333,8 +334,8 @@ class _AddEditDailyRoLogSheetState extends State<AddEditDailyRoLogSheet> {
                         //   fontSize: 16,
                         // ),
                         // CustomTextField(
-                        //   labelText: 'Product / Permeate Flow (lph)',
-                        //   hintText: 'Enter',
+                        //   labelText: context.l10n.roProductPermeateFlow,
+                        //   hintText: context.l10n.regHintEnter,
                         //   isRequired: false,
                         //   keyBoardType: TextInputType.text,
                         //   txtController:
@@ -373,7 +374,7 @@ class _AddEditDailyRoLogSheetState extends State<AddEditDailyRoLogSheet> {
                           children: [
                             CustomButton(
                               isLoading: controller.isLoading,
-                              buttonText: 'Save',
+                              buttonText: context.l10n.commonSave,
                               path: 'assets/save-ro-disinfec.png',
                               callB: controller.isLoading
                                   ? null
@@ -656,7 +657,7 @@ class _AddEditDailyRoLogSheetState extends State<AddEditDailyRoLogSheet> {
                               iconColor: Colors.white,
                             ),
                             CustomButton(
-                              buttonText: 'Reset',
+                              buttonText: context.l10n.commonReset,
                               path: 'assets/refresh.png',
                               callB: () {
                                 controller.rawWaterTDS.text = "";
@@ -679,7 +680,7 @@ class _AddEditDailyRoLogSheetState extends State<AddEditDailyRoLogSheet> {
                               iconColor: Colors.white,
                             ),
                             CustomButton(
-                              buttonText: 'Cancel',
+                              buttonText: context.l10n.commonCancel,
                               path: 'assets/cancel.png',
                               callB: () {
                                 Get.back();
@@ -708,10 +709,10 @@ class _AddEditDailyRoLogSheetState extends State<AddEditDailyRoLogSheet> {
     return  TableRow(
       decoration: BoxDecoration(color: Color(0xFFF2F2F2)),
       children: [
-        _cellText("Sr. No.", bold: true),
-        _cellText("Parameter", bold: true),
-        _cellText("Units", bold: true),
-        _cellText("Values", bold: true),
+        _cellText(l10n.colSrNo, bold: true),
+        _cellText(l10n.commonParameter, bold: true),
+        _cellText(l10n.commonUnits, bold: true),
+        _cellText(l10n.commonValues, bold: true),
       ],
     );
   }
@@ -797,7 +798,7 @@ class _AddEditDailyRoLogSheetState extends State<AddEditDailyRoLogSheet> {
                     onChanged: (_) => onChanged(e),
                   ),
                   Text(e.text ?? ''),
-                  const SizedBox(width: 10),
+                  SizedBox(width: 10),
                 ],
               );
             }).toList(),
@@ -883,8 +884,8 @@ class LookupRadioGroup extends StatelessWidget {
           textAlign: TextAlign.start,
         ),
         if (isRequired)
-          const Text(' *', style: TextStyle(color: Colors.red, fontSize: 16)),
-        const SizedBox(width: 12),
+          Text(' *', style: TextStyle(color: Colors.red, fontSize: 16)),
+        SizedBox(width: 12),
         Wrap(
           spacing: 30,
           children: items.map((it) {

@@ -1,5 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/new_registration/controller/new_registration_controller.dart';
 import 'package:heamodialysis/patient_health_trends/model/dialysis_vital_patient_list_model.dart';
@@ -71,8 +72,8 @@ class _PatientDialysisVitalDetailsScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const CustomText(
-          text: 'Patient Dialysis Vital Chart',
+        title: CustomText(
+          text: context.l10n.phtVitalChart,
           fontSize: 18.0,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,
@@ -116,8 +117,8 @@ class _PatientDialysisVitalDetailsScreenState
                       Expanded(
                         child: CustomDateField(
                           selectedDate: patientController.fromDateVital,
-                          labelText: "From Date",
-                          hint: "From Date",
+                          labelText: context.l10n.dashFromDate,
+                          hint: context.l10n.dashFromDate,
                           isRequired: true,
                           callB: () {
                             selectFrom();
@@ -130,8 +131,8 @@ class _PatientDialysisVitalDetailsScreenState
                       Expanded(
                         child: CustomDateField(
                             selectedDate: patientController.toDateVital,
-                            labelText: "To Date",
-                            hint: "To Date",
+                            labelText: context.l10n.dashToDate,
+                            hint: context.l10n.dashToDate,
                             isRequired: true,
                             callB: () {
                               selectTo();
@@ -166,8 +167,8 @@ class _PatientDialysisVitalDetailsScreenState
                             end: Alignment.bottomCenter,
                           ),
                           borderRadius: BorderRadius.circular(6)),
-                      child: const CustomText(
-                          text: "Show Record",
+                      child: CustomText(
+                          text: context.l10n.phtShowRecord,
                           fontSize: 14,
                           fontWeight: FontWeight.normal,
                           textColor: Colors.white,
@@ -184,8 +185,8 @@ class _PatientDialysisVitalDetailsScreenState
                   color: AppColor.primaryBackgroundColor,
                   width: 40,
                 ).paddingOnly(right: 6),
-                const CustomText(
-                  text: "Vital Parameters",
+                CustomText(
+                  text: context.l10n.phtVitalParameters,
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
                   textColor: Colors.black,
@@ -256,7 +257,7 @@ class _PatientDialysisVitalDetailsScreenState
                                         ),
                                         if (latest != null)
                                           CustomText(
-                                              text: "Latest Value: $latest",
+                                              text: context.l10n.phtLatestValue(latest.toString()),
                                               fontSize: 12,
                                               fontWeight: FontWeight.normal,
                                               textColor: Colors.grey,
@@ -283,10 +284,10 @@ class _PatientDialysisVitalDetailsScreenState
                           ).paddingSymmetric(vertical: 6);
                         }),
                   )
-                : const Expanded(
+                : Expanded(
                     child: Center(
                       child: CustomText(
-                          text: "Data Not Found",
+                          text: context.l10n.phtDataNotFound,
                           fontSize: 16,
                           fontWeight: FontWeight.normal,
                           textColor: Colors.grey,
@@ -333,8 +334,8 @@ class _PatientDialysisVitalDetailsScreenState
                         begin: Alignment.topLeft,
                         end: Alignment.bottomCenter,
                       )),
-                  child: const CustomText(
-                      text: "Generate Report",
+                  child: CustomText(
+                      text: context.l10n.phtGenerateReport,
                       fontSize: 14,
                       fontWeight: FontWeight.normal,
                       textColor: Colors.white,
@@ -464,7 +465,7 @@ class _PatientDialysisVitalDetailsScreenState
 //         backgroundColor: Color(0xFF00BCD4),
 //         elevation: 2,
 //         title: CustomText(
-//           text: 'Patient Vital Chart',
+//           text: context.l10n.phtPatientVitalChart,
 //           fontSize: 18.0,
 //           fontFam: 'Lato',
 //           fontWeight: FontWeight.w500,
@@ -528,7 +529,7 @@ class _PatientDialysisVitalDetailsScreenState
 //                           color: Color(0xFF00BCD4), size: 20),
 //                       SizedBox(width: 8),
 //                       CustomText(
-//                         text: 'Select Date Range',
+//                         text: context.l10n.phtSelectDateRange,
 //                         fontSize: 16,
 //                         fontWeight: FontWeight.w600,
 //                         textColor: Colors.black87,
@@ -582,7 +583,7 @@ class _PatientDialysisVitalDetailsScreenState
 //                           Icon(Icons.search, color: Colors.white, size: 18),
 //                           SizedBox(width: 8),
 //                           CustomText(
-//                             text: "Show Report",
+//                             text: context.l10n.phtShowReport,
 //                             fontSize: 15,
 //                             fontWeight: FontWeight.w500,
 //                             textColor: Colors.white,
@@ -617,7 +618,7 @@ class _PatientDialysisVitalDetailsScreenState
 //                   ),
 //                   SizedBox(width: 12),
 //                   CustomText(
-//                     text: "Vital Parameters",
+//                     text: context.l10n.phtVitalParameters,
 //                     fontSize: 16,
 //                     fontWeight: FontWeight.w600,
 //                     textColor: Colors.black87,
@@ -691,7 +692,7 @@ class _PatientDialysisVitalDetailsScreenState
 //           },
 //           icon: Icon(Icons.description, color: Colors.white, size: 20),
 //           label: CustomText(
-//             text: "Generate Report",
+//             text: context.l10n.phtGenerateReport,
 //             fontSize: 15,
 //             fontWeight: FontWeight.w500,
 //             textColor: Colors.white,
@@ -839,7 +840,7 @@ class _PatientDialysisVitalDetailsScreenState
 //                           SizedBox(width: 6),
 //                           Expanded(
 //                             child: CustomText(
-//                               text: "Latest: $latest",
+//                               text: context.l10n.phtLatest(latest.toString()),
 //                               fontSize: 12,
 //                               fontWeight: FontWeight.normal,
 //                               textColor: Colors.grey[600]!,
@@ -900,7 +901,7 @@ class _PatientDialysisVitalDetailsScreenState
 //           ),
 //           SizedBox(height: 20),
 //           CustomText(
-//             text: 'No Vital Data Available',
+//             text: context.l10n.phtNoVitalData,
 //             fontSize: 18,
 //             fontWeight: FontWeight.w600,
 //             textColor: Colors.black87,
@@ -910,7 +911,7 @@ class _PatientDialysisVitalDetailsScreenState
 //           Padding(
 //             padding: EdgeInsets.symmetric(horizontal: 40),
 //             child: CustomText(
-//               text: 'Select a date range and tap "Show Report" to view vital parameters',
+//               text: context.l10n.phtSelectDateRangeTap + " "Show Report" to view vital parameters',
 //               fontSize: 14,
 //               fontWeight: FontWeight.normal,
 //               textColor: Colors.grey[600]!,

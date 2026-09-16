@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dashboard/model/nephro_list.dart';
 import 'package:heamodialysis/internet/no_internet_connectivity.dart';
@@ -35,17 +36,17 @@ class _PrescriptionState extends State<Prescription> {
   StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
   bool hasInternet = true;
 
-  List<String> cardItemDetailsList = [
-    'Medicine Name',
-    'Prep',
-    'Strength',
-    'Dose',
-    'Unit',
-    'Frequency',
-    'Instructions',
-    'Quantity',
-    'Prescribed by',
-  ];
+  List<String> _cardItemDetailsList(BuildContext context) => [
+        context.l10n.nephroMedicineName,
+        context.l10n.nephroPrep,
+        context.l10n.nephroStrength,
+        context.l10n.nephroDose,
+        context.l10n.commonUnit,
+        context.l10n.nephroFrequency,
+        context.l10n.nephroInstructions,
+        context.l10n.commonQuantity,
+        context.l10n.nephroPrescribedBy,
+      ];
 
   List<SearchByPatient> searchByList = [
     SearchByPatient('1', 'Dialysis Center'),
@@ -137,16 +138,16 @@ class _PrescriptionState extends State<Prescription> {
                         },
                         child: Image.asset("assets/add-pre-dialysis.png"),
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8),
                       // Image.asset("assets/download.png"),
                     ],
                   ).paddingOnly(right: 8),
                   // FIXED: Added Expanded to give ListView a bounded height
                   Expanded(
                     child: controller.prescrriptionList?.isEmpty ?? true
-                        ? const Center(
+                        ? Center(
                             child: CustomText(
-                              text: "No prescriptions found",
+                              text: context.l10n.nephroNoPrescriptions,
                               fontSize: 16,
                               fontFam: "Lato",
                               fontWeight: FontWeight.normal,
@@ -166,7 +167,7 @@ class _PrescriptionState extends State<Prescription> {
                                   index: index,
                                   prescriptionItem:
                                   controller.prescrriptionList?[index],
-                                  cardItemDetailsList: cardItemDetailsList,
+                                  cardItemDetailsList: _cardItemDetailsList(context),
                                   path1: "assets/edit.png",
                                   path2: "assets/delete-bin.png",
                                   callB1: (index) {
@@ -284,7 +285,7 @@ class PrescriptionDiagCard extends StatelessWidget {
                             child: patientDetailsCard(cardItemDetailsList[3],
                                 prescriptionItem?.dose ?? ''),
                           ),
-                          const SizedBox(width: 8),
+                          SizedBox(width: 8),
                           Expanded(
                             child: patientDetailsCard(cardItemDetailsList[4],
                                 prescriptionItem?.unitName.toString() ?? ''),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dialysis_queue/dialysis_event/screen/dialysis_event_list.dart';
 import 'package:heamodialysis/dialysis_queue/dialysis_event/model/add_edit_dialysis_event_req.dart';

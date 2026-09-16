@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dialysis_queue/post_dialysis/controller/post_dialysis_controller.dart';
 import 'package:heamodialysis/dialysis_queue/pre_dialysis/edit_pre_dialysis/edit_history_screen.dart';
@@ -155,8 +156,8 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const CustomText(
-          text: 'Edit Pre Dialysis  Details',
+        title: CustomText(
+          text: context.l10n.dqEditPreDialysisDetails,
           fontSize: 18.0,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,
@@ -169,8 +170,7 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
             },
             child: Image.asset('assets/arrow-left.png')),
       ),
-      body:
-      GetBuilder<PreDialysisController>(
+      body: GetBuilder<PreDialysisController>(
           init: PreDialysisController(),
           builder: (controller) {
             return hasInternet
@@ -224,13 +224,19 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
                                         const SizedBox(
                                           width: 12,
                                         ),
-                                        const CustomText(
-                                          text: "Pre Dialysis Details",
-                                          fontSize: 14.0,
-                                          fontFam: 'Lato',
-                                          fontWeight: FontWeight.normal,
-                                          textColor: Colors.white,
-                                          textAlign: TextAlign.center,
+                                        Expanded(
+                                          child: CustomText(
+                                            text: context
+                                                .l10n.dqPreDialysisDetails,
+                                            fontSize: 14.0,
+                                            fontFam: 'Lato',
+                                            fontWeight: FontWeight.normal,
+                                            textColor: Colors.white,
+                                            textAlign: TextAlign.start,
+                                            maxLines: 2,
+                                            softWrap: true,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
                                         )
                                       ]),
                                       children: <Widget>[
@@ -262,302 +268,563 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
                                                               .borderColor)),
                                                   child: Column(
                                                     children: [
-                                                      Row(
-                                                        children: [
-                                                          // Expanded(
-                                                          //   child:
-                                                          Flexible(
-                                                            fit: FlexFit.loose,
-                                                            child:
-                                                                MyCustomDropdown(
-                                                                    selectedItem:
-                                                                        selectedDialysisTypeVal,
-                                                                    labelText:
-                                                                        'Dialysis Type',
-                                                                    items: preDialysisController
-                                                                            .editPredialysisDetailsModel
-                                                                            ?.data
-                                                                            ?.map((e) => e
-                                                                                .lookupDetDescEn)
-                                                                            .toList() ??
-                                                                        [],
-                                                                    hint:
-                                                                        'Select',
-                                                                    isRequired:
-                                                                        true,
-                                                                    senValue:
-                                                                        (value) {
-                                                                      selectedEditPreDialysis = preDialysisController
-                                                                          .editPredialysisDetailsModel
-                                                                          ?.data
-                                                                          ?.firstWhere((e) =>
-                                                                              e.lookupDetDescEn ==
-                                                                              value);
-                                                                      selectedDialysisTypeVal =
-                                                                          selectedEditPreDialysis?.lookupDetDescEn ??
-                                                                              "";
-                                                                      preDialysisController
-                                                                          .refreshUi();
-                                                                    },
-                                                                    filledColor:
-                                                                        Colors
-                                                                            .white),
-                                                          ),
-                                                          const SizedBox(
-                                                              height: 8),
-                                                          // Expanded(
-                                                          //   child:
-                                                          Flexible(
-                                                            fit: FlexFit.loose,
-                                                            child:
-                                                                MyCustomDropdown(
-                                                                    selectedItem:
-                                                                        selectedAcessTypeValue,
-                                                                    labelText:
-                                                                        'Access Type',
-                                                                    items: preDialysisController
-                                                                            .accessTypeData
-                                                                            ?.data2
-                                                                            ?.map((e) => e
-                                                                                .lookupDetHierDescEn)
-                                                                            .toList() ??
-                                                                        [],
-                                                                    hint:
-                                                                        'Select',
-                                                                    isRequired:
-                                                                        true,
-                                                                    senValue:
-                                                                        (value) async {
-                                                                      selectedAccessSiteVal =
-                                                                          null;
-                                                                      controller
-                                                                          .update();
-                                                                      selectedAccessType = preDialysisController
-                                                                          .accessTypeData
-                                                                          ?.data2
-                                                                          ?.firstWhere((e) =>
-                                                                              e.lookupDetHierDescEn ==
-                                                                              value);
-                                                                      selectedAcessTypeValue =
-                                                                          selectedAccessType?.lookupDetHierDescEn ??
-                                                                              "";
-                                                                      String
-                                                                          lookupId =
-                                                                          selectedAccessType?.lookupDetHierId.toString() ??
-                                                                              "";
-                                                                      await preDialysisController
-                                                                          .getAccessTypeSite(
-                                                                              lookupId);
-                                                                      preDialysisController
-                                                                          .refreshUi();
-                                                                    },
-                                                                    filledColor:
-                                                                        Colors
-                                                                            .white),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      const SizedBox(height: 8),
-                                                      Row(
-                                                        children: [
-                                                          // Expanded(
-                                                          Flexible(
-                                                            fit: FlexFit.loose,
-                                                            child: Padding(
+                                                      MyCustomDropdown(
+                                                          selectedItem:
+                                                              selectedDialysisTypeVal,
+                                                          labelText: context
+                                                              .l10n
+                                                              .clinDialysisType,
+                                                          items: preDialysisController
+                                                                  .editPredialysisDetailsModel
+                                                                  ?.data
+                                                                  ?.map((e) => e
+                                                                      .lookupDetDescEn)
+                                                                  .toList() ??
+                                                              [],
+                                                          hint: context.l10n
+                                                              .regHintSelect,
+                                                          isRequired: true,
+                                                          senValue: (value) {
+                                                            selectedEditPreDialysis =
+                                                                preDialysisController
+                                                                    .editPredialysisDetailsModel
+                                                                    ?.data
+                                                                    ?.firstWhere((e) =>
+                                                                        e.lookupDetDescEn ==
+                                                                        value);
+                                                            selectedDialysisTypeVal =
+                                                                selectedEditPreDialysis
+                                                                        ?.lookupDetDescEn ??
+                                                                    "";
+                                                            preDialysisController
+                                                                .refreshUi();
+                                                          },
+                                                          filledColor:
+                                                              Colors.white),
+                                                      MyCustomDropdown(
+                                                          selectedItem:
+                                                              selectedAcessTypeValue,
+                                                          labelText: context
+                                                              .l10n
+                                                              .clinAccessType,
+                                                          items: preDialysisController
+                                                                  .accessTypeData
+                                                                  ?.data2
+                                                                  ?.map((e) => e
+                                                                      .lookupDetHierDescEn)
+                                                                  .toList() ??
+                                                              [],
+                                                          hint: context.l10n
+                                                              .regHintSelect,
+                                                          isRequired: true,
+                                                          senValue:
+                                                              (value) async {
+                                                            selectedAccessSiteVal =
+                                                                null;
+                                                            controller.update();
+                                                            selectedAccessType =
+                                                                preDialysisController
+                                                                    .accessTypeData
+                                                                    ?.data2
+                                                                    ?.firstWhere((e) =>
+                                                                        e.lookupDetHierDescEn ==
+                                                                        value);
+                                                            selectedAcessTypeValue =
+                                                                selectedAccessType
+                                                                        ?.lookupDetHierDescEn ??
+                                                                    "";
+                                                            String lookupId =
+                                                                selectedAccessType
+                                                                        ?.lookupDetHierId
+                                                                        .toString() ??
+                                                                    "";
+                                                            await preDialysisController
+                                                                .getAccessTypeSite(
+                                                                    lookupId);
+                                                            preDialysisController
+                                                                .refreshUi();
+                                                          },
+                                                          filledColor:
+                                                              Colors.white),
+                                                      // Row(
+                                                      //   children: [
+                                                      //     // Expanded(
+                                                      //     //   child:
+                                                      //     Flexible(
+                                                      //       fit: FlexFit.loose,
+                                                      //       child:
+                                                      //           MyCustomDropdown(
+                                                      //               selectedItem:
+                                                      //                   selectedDialysisTypeVal,
+                                                      //               labelText:
+                                                      //                   context.l10n.clinDialysisType,
+                                                      //               items: preDialysisController
+                                                      //                       .editPredialysisDetailsModel
+                                                      //                       ?.data
+                                                      //                       ?.map((e) => e
+                                                      //                           .lookupDetDescEn)
+                                                      //                       .toList() ??
+                                                      //                   [],
+                                                      //               hint: context.l10n.regHintSelect,
+                                                      //               isRequired:
+                                                      //                   true,
+                                                      //               senValue:
+                                                      //                   (value) {
+                                                      //                 selectedEditPreDialysis = preDialysisController
+                                                      //                     .editPredialysisDetailsModel
+                                                      //                     ?.data
+                                                      //                     ?.firstWhere((e) =>
+                                                      //                         e.lookupDetDescEn ==
+                                                      //                         value);
+                                                      //                 selectedDialysisTypeVal =
+                                                      //                     selectedEditPreDialysis?.lookupDetDescEn ??
+                                                      //                         "";
+                                                      //                 preDialysisController
+                                                      //                     .refreshUi();
+                                                      //               },
+                                                      //               filledColor:
+                                                      //                   Colors
+                                                      //                       .white),
+                                                      //     ),
+                                                      //     const SizedBox(
+                                                      //         height: 8),
+                                                      //     // Expanded(
+                                                      //     //   child:
+                                                      //     Flexible(
+                                                      //       fit: FlexFit.loose,
+                                                      //       child:
+                                                      //           MyCustomDropdown(
+                                                      //               selectedItem:
+                                                      //                   selectedAcessTypeValue,
+                                                      //               labelText:
+                                                      //                   context.l10n.clinAccessType,
+                                                      //               items: preDialysisController
+                                                      //                       .accessTypeData
+                                                      //                       ?.data2
+                                                      //                       ?.map((e) => e
+                                                      //                           .lookupDetHierDescEn)
+                                                      //                       .toList() ??
+                                                      //                   [],
+                                                      //               hint: context.l10n.regHintSelect,
+                                                      //               isRequired:
+                                                      //                   true,
+                                                      //               senValue:
+                                                      //                   (value) async {
+                                                      //                 selectedAccessSiteVal =
+                                                      //                     null;
+                                                      //                 controller
+                                                      //                     .update();
+                                                      //                 selectedAccessType = preDialysisController
+                                                      //                     .accessTypeData
+                                                      //                     ?.data2
+                                                      //                     ?.firstWhere((e) =>
+                                                      //                         e.lookupDetHierDescEn ==
+                                                      //                         value);
+                                                      //                 selectedAcessTypeValue =
+                                                      //                     selectedAccessType?.lookupDetHierDescEn ??
+                                                      //                         "";
+                                                      //                 String
+                                                      //                     lookupId =
+                                                      //                     selectedAccessType?.lookupDetHierId.toString() ??
+                                                      //                         "";
+                                                      //                 await preDialysisController
+                                                      //                     .getAccessTypeSite(
+                                                      //                         lookupId);
+                                                      //                 preDialysisController
+                                                      //                     .refreshUi();
+                                                      //               },
+                                                      //               filledColor:
+                                                      //                   Colors
+                                                      //                       .white),
+                                                      //     ),
+                                                      //   ],
+                                                      // ),
+                                                      // const SizedBox(height: 8),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .fromLTRB(
+                                                                8, 0, 8, 8),
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Padding(
                                                               padding:
                                                                   const EdgeInsets
                                                                       .fromLTRB(
-                                                                      8,
                                                                       0,
                                                                       8,
+                                                                      8,
                                                                       8),
-                                                              child: Column(
-                                                                crossAxisAlignment:
-                                                                    CrossAxisAlignment
-                                                                        .start,
+                                                              child: Row(
                                                                 children: [
-                                                                  Padding(
-                                                                    padding:
-                                                                        const EdgeInsets
-                                                                            .fromLTRB(
-                                                                            0,
-                                                                            8,
-                                                                            8,
-                                                                            8),
-                                                                    child: Row(
-                                                                      children: [
-                                                                        const Text(
-                                                                          "Access Site",
-                                                                          style:
-                                                                              TextStyle(fontSize: 16),
-                                                                        ),
-                                                                        Text(
-                                                                          ' *',
-                                                                          style:
-                                                                              TextStyle(
-                                                                            color:
-                                                                                AppColor.red,
-                                                                            fontSize:
-                                                                                16,
-                                                                          ),
-                                                                        ),
-                                                                      ],
+                                                                  Text(
+                                                                    context.l10n
+                                                                        .clinAccessSite,
+                                                                    style: const TextStyle(
+                                                                        fontSize:
+                                                                            16),
+                                                                  ),
+                                                                  Text(
+                                                                    ' *',
+                                                                    style:
+                                                                        TextStyle(
+                                                                      color: AppColor
+                                                                          .red,
+                                                                      fontSize:
+                                                                          16,
                                                                     ),
                                                                   ),
-                                                                  DropdownButtonFormField(
-                                                                    isExpanded:
-                                                                        true,
-                                                                    icon: Icon(
-                                                                      Icons
-                                                                          .keyboard_arrow_down_outlined,
-                                                                      color: AppColor
-                                                                          .primaryBackgroundColor,
-                                                                    ),
-                                                                    decoration:
-                                                                        InputDecoration(
-                                                                      hintText:
-                                                                          "Select",
-                                                                      filled:
-                                                                          true,
-                                                                      fillColor:
-                                                                          Colors
-                                                                              .white,
-                                                                      hintStyle: const TextStyle(
-                                                                          fontSize:
-                                                                              16.0,
-                                                                          color: Color(
-                                                                              0xff999999),
-                                                                          fontFamily:
-                                                                              "Lato",
-                                                                          fontWeight:
-                                                                              FontWeight.normal),
-                                                                      focusedBorder:
-                                                                          OutlineInputBorder(
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(10.0),
-                                                                        borderSide:
-                                                                            BorderSide(
-                                                                          color:
-                                                                              AppColor.borderColor,
-                                                                        ),
-                                                                      ),
-                                                                      errorBorder:
-                                                                          OutlineInputBorder(
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(10.0),
-                                                                        borderSide:
-                                                                            BorderSide(
-                                                                          color:
-                                                                              Colors.red, // Red border on all sides
-                                                                          width:
-                                                                              1.0,
-                                                                        ),
-                                                                      ),
-                                                                      enabledBorder:
-                                                                          OutlineInputBorder(
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(10.0),
-                                                                        borderSide:
-                                                                            BorderSide(
-                                                                          color:
-                                                                              AppColor.borderColor,
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                    initialValue:
-                                                                        selectedAccessSiteVal,
-                                                                    items: preDialysisController
-                                                                        .accessTypeSiteModel
-                                                                        ?.data2
-                                                                        ?.map((item) =>
-                                                                            DropdownMenuItem(
-                                                                              value: item.lookupDetHierId,
-                                                                              child: Text(item.lookupDetHierDescEn ?? ""),
-                                                                            ))
-                                                                        .toList(),
-                                                                    onChanged:
-                                                                        (value) {
-                                                                      accessTypeSiteData = preDialysisController
-                                                                          .accessTypeSiteModel
-                                                                          ?.data2
-                                                                          ?.firstWhere((e) =>
-                                                                              e.lookupDetHierId ==
-                                                                              value);
-                                                                      selectedAccessSiteVal =
-                                                                          accessTypeSiteData
-                                                                              ?.lookupDetHierId;
-                                                                      preDialysisController
-                                                                          .refreshUi();
-                                                                    },
-                                                                    validator:
-                                                                        (value) {
-                                                                      if (value ==
-                                                                          null) {
-                                                                        return "Access Type is required";
-                                                                      }
-                                                                      return null;
-                                                                    },
-                                                                  )
                                                                 ],
                                                               ),
                                                             ),
-                                                          ),
-                                                          const SizedBox(
-                                                              height: 8),
-                                                          // Expanded(
-                                                          //   child:
-                                                          Flexible(
-                                                            fit: FlexFit.loose,
-                                                            child:
-                                                                MyCustomDropdown(
-                                                                    selectedItem:
-                                                                        selectedDialyzerTypeVal,
-                                                                    labelText:
-                                                                        'Dialyzer Type',
-                                                                    items: preDialysisController
-                                                                            .dialyzerTypeModel
-                                                                            ?.data
-                                                                            ?.map((e) => e
-                                                                                .lookupDetDescEn)
-                                                                            .toList() ??
-                                                                        [],
-                                                                    hint:
-                                                                        'Select',
-                                                                    isRequired:
-                                                                        true,
-                                                                    senValue:
-                                                                        (value) async {
-                                                                      dialyzerTypeData = preDialysisController
-                                                                          .dialyzerTypeModel
-                                                                          ?.data
-                                                                          ?.firstWhere((e) =>
-                                                                              e.lookupDetDescEn ==
-                                                                              value);
-                                                                      selectedDialyzerTypeVal =
-                                                                          dialyzerTypeData?.lookupDetDescEn ??
-                                                                              "";
-                                                                      await preDialysisController.getFiberBundle(dialyzerTypeData!
-                                                                          .lookupDetId
-                                                                          .toString());
-                                                                      preDialysisController
-                                                                          .refreshUi();
-                                                                    },
-                                                                    filledColor:
-                                                                        Colors
-                                                                            .white),
-                                                          ),
-                                                        ],
+                                                            DropdownButtonFormField(
+                                                              isExpanded: true,
+                                                              icon: Icon(
+                                                                Icons
+                                                                    .keyboard_arrow_down_outlined,
+                                                                color: AppColor
+                                                                    .primaryBackgroundColor,
+                                                              ),
+                                                              decoration:
+                                                                  InputDecoration(
+                                                                hintText: context
+                                                                    .l10n
+                                                                    .regHintSelect,
+                                                                filled: true,
+                                                                fillColor:
+                                                                    Colors
+                                                                        .white,
+                                                                hintStyle: const TextStyle(
+                                                                    fontSize:
+                                                                        16.0,
+                                                                    color: Color(
+                                                                        0xff999999),
+                                                                    fontFamily:
+                                                                        "Lato",
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .normal),
+                                                                focusedBorder:
+                                                                    OutlineInputBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              10.0),
+                                                                  borderSide:
+                                                                      BorderSide(
+                                                                    color: AppColor
+                                                                        .borderColor,
+                                                                  ),
+                                                                ),
+                                                                errorBorder:
+                                                                    OutlineInputBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              10.0),
+                                                                  borderSide:
+                                                                      const BorderSide(
+                                                                    color: Colors
+                                                                        .red, // Red border on all sides
+                                                                    width: 1.0,
+                                                                  ),
+                                                                ),
+                                                                enabledBorder:
+                                                                    OutlineInputBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              10.0),
+                                                                  borderSide:
+                                                                      BorderSide(
+                                                                    color: AppColor
+                                                                        .borderColor,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              initialValue:
+                                                                  selectedAccessSiteVal,
+                                                              items: preDialysisController
+                                                                  .accessTypeSiteModel
+                                                                  ?.data2
+                                                                  ?.map((item) =>
+                                                                      DropdownMenuItem(
+                                                                        value: item
+                                                                            .lookupDetHierId,
+                                                                        child: Text(item.lookupDetHierDescEn ??
+                                                                            ""),
+                                                                      ))
+                                                                  .toList(),
+                                                              onChanged:
+                                                                  (value) {
+                                                                accessTypeSiteData = preDialysisController
+                                                                    .accessTypeSiteModel
+                                                                    ?.data2
+                                                                    ?.firstWhere((e) =>
+                                                                        e.lookupDetHierId ==
+                                                                        value);
+                                                                selectedAccessSiteVal =
+                                                                    accessTypeSiteData
+                                                                        ?.lookupDetHierId;
+                                                                preDialysisController
+                                                                    .refreshUi();
+                                                              },
+                                                              validator:
+                                                                  (value) {
+                                                                if (value ==
+                                                                    null) {
+                                                                  return context
+                                                                      .l10n
+                                                                      .fieldRequired(context
+                                                                          .l10n
+                                                                          .clinAccessType);
+                                                                }
+                                                                return null;
+                                                              },
+                                                            )
+                                                          ],
+                                                        ),
                                                       ),
-                                                      const SizedBox(height: 8),
+                                                      MyCustomDropdown(
+                                                          selectedItem:
+                                                              selectedDialyzerTypeVal,
+                                                          labelText: context
+                                                              .l10n
+                                                              .clinDialyzerType,
+                                                          items: preDialysisController
+                                                                  .dialyzerTypeModel
+                                                                  ?.data
+                                                                  ?.map((e) => e
+                                                                      .lookupDetDescEn)
+                                                                  .toList() ??
+                                                              [],
+                                                          hint: context.l10n
+                                                              .regHintSelect,
+                                                          isRequired: true,
+                                                          senValue:
+                                                              (value) async {
+                                                            dialyzerTypeData =
+                                                                preDialysisController
+                                                                    .dialyzerTypeModel
+                                                                    ?.data
+                                                                    ?.firstWhere((e) =>
+                                                                        e.lookupDetDescEn ==
+                                                                        value);
+                                                            selectedDialyzerTypeVal =
+                                                                dialyzerTypeData
+                                                                        ?.lookupDetDescEn ??
+                                                                    "";
+                                                            await preDialysisController
+                                                                .getFiberBundle(
+                                                                    dialyzerTypeData!
+                                                                        .lookupDetId
+                                                                        .toString());
+                                                            preDialysisController
+                                                                .refreshUi();
+                                                          },
+                                                          filledColor:
+                                                              Colors.white),
+                                                      // Row(
+                                                      //   children: [
+                                                      //     // Expanded(
+                                                      //     Flexible(
+                                                      //       fit: FlexFit.loose,
+                                                      //       child: Padding(
+                                                      //         padding:
+                                                      //             const EdgeInsets
+                                                      //                 .fromLTRB(
+                                                      //                 8,
+                                                      //                 0,
+                                                      //                 8,
+                                                      //                 8),
+                                                      //         child: Column(
+                                                      //           crossAxisAlignment:
+                                                      //               CrossAxisAlignment
+                                                      //                   .start,
+                                                      //           children: [
+                                                      //             Padding(
+                                                      //               padding:
+                                                      //                   const EdgeInsets
+                                                      //                       .fromLTRB(
+                                                      //                       0,
+                                                      //                       8,
+                                                      //                       8,
+                                                      //                       8),
+                                                      //               child: Row(
+                                                      //                 children: [
+                                                      //                   Text(context.l10n.clinAccessSite,
+                                                      //                     style:
+                                                      //                         const TextStyle(fontSize: 16),
+                                                      //                   ),
+                                                      //                   Text(
+                                                      //                     ' *',
+                                                      //                     style:
+                                                      //                         TextStyle(
+                                                      //                       color:
+                                                      //                           AppColor.red,
+                                                      //                       fontSize:
+                                                      //                           16,
+                                                      //                     ),
+                                                      //                   ),
+                                                      //                 ],
+                                                      //               ),
+                                                      //             ),
+                                                      //             DropdownButtonFormField(
+                                                      //               isExpanded:
+                                                      //                   true,
+                                                      //               icon: Icon(
+                                                      //                 Icons
+                                                      //                     .keyboard_arrow_down_outlined,
+                                                      //                 color: AppColor
+                                                      //                     .primaryBackgroundColor,
+                                                      //               ),
+                                                      //               decoration:
+                                                      //                   InputDecoration(
+                                                      //                 hintText: context.l10n.regHintSelect,
+                                                      //                 filled:
+                                                      //                     true,
+                                                      //                 fillColor:
+                                                      //                     Colors
+                                                      //                         .white,
+                                                      //                 hintStyle: const TextStyle(
+                                                      //                     fontSize:
+                                                      //                         16.0,
+                                                      //                     color: Color(
+                                                      //                         0xff999999),
+                                                      //                     fontFamily:
+                                                      //                         "Lato",
+                                                      //                     fontWeight:
+                                                      //                         FontWeight.normal),
+                                                      //                 focusedBorder:
+                                                      //                     OutlineInputBorder(
+                                                      //                   borderRadius:
+                                                      //                       BorderRadius.circular(10.0),
+                                                      //                   borderSide:
+                                                      //                       BorderSide(
+                                                      //                     color:
+                                                      //                         AppColor.borderColor,
+                                                      //                   ),
+                                                      //                 ),
+                                                      //                 errorBorder:
+                                                      //                     OutlineInputBorder(
+                                                      //                   borderRadius:
+                                                      //                       BorderRadius.circular(10.0),
+                                                      //                   borderSide:
+                                                      //                       const BorderSide(
+                                                      //                     color:
+                                                      //                         Colors.red, // Red border on all sides
+                                                      //                     width:
+                                                      //                         1.0,
+                                                      //                   ),
+                                                      //                 ),
+                                                      //                 enabledBorder:
+                                                      //                     OutlineInputBorder(
+                                                      //                   borderRadius:
+                                                      //                       BorderRadius.circular(10.0),
+                                                      //                   borderSide:
+                                                      //                       BorderSide(
+                                                      //                     color:
+                                                      //                         AppColor.borderColor,
+                                                      //                   ),
+                                                      //                 ),
+                                                      //               ),
+                                                      //               initialValue:
+                                                      //                   selectedAccessSiteVal,
+                                                      //               items: preDialysisController
+                                                      //                   .accessTypeSiteModel
+                                                      //                   ?.data2
+                                                      //                   ?.map((item) =>
+                                                      //                       DropdownMenuItem(
+                                                      //                         value: item.lookupDetHierId,
+                                                      //                         child: Text(item.lookupDetHierDescEn ?? ""),
+                                                      //                       ))
+                                                      //                   .toList(),
+                                                      //               onChanged:
+                                                      //                   (value) {
+                                                      //                 accessTypeSiteData = preDialysisController
+                                                      //                     .accessTypeSiteModel
+                                                      //                     ?.data2
+                                                      //                     ?.firstWhere((e) =>
+                                                      //                         e.lookupDetHierId ==
+                                                      //                         value);
+                                                      //                 selectedAccessSiteVal =
+                                                      //                     accessTypeSiteData
+                                                      //                         ?.lookupDetHierId;
+                                                      //                 preDialysisController
+                                                      //                     .refreshUi();
+                                                      //               },
+                                                      //               validator:
+                                                      //                   (value) {
+                                                      //                 if (value ==
+                                                      //                     null) {
+                                                      //                   return context.l10n.fieldRequired(context.l10n.clinAccessType);
+                                                      //                 }
+                                                      //                 return null;
+                                                      //               },
+                                                      //             )
+                                                      //           ],
+                                                      //         ),
+                                                      //       ),
+                                                      //     ),
+                                                      //     const SizedBox(
+                                                      //         height: 8),
+                                                      //     // Expanded(
+                                                      //     //   child:
+                                                      //     Flexible(
+                                                      //       fit: FlexFit.loose,
+                                                      //       child:
+                                                      //           MyCustomDropdown(
+                                                      //               selectedItem:
+                                                      //                   selectedDialyzerTypeVal,
+                                                      //               labelText:
+                                                      //                   context.l10n.clinDialyzerType,
+                                                      //               items: preDialysisController
+                                                      //                       .dialyzerTypeModel
+                                                      //                       ?.data
+                                                      //                       ?.map((e) => e
+                                                      //                           .lookupDetDescEn)
+                                                      //                       .toList() ??
+                                                      //                   [],
+                                                      //               hint: context.l10n.regHintSelect,
+                                                      //               isRequired:
+                                                      //                   true,
+                                                      //               senValue:
+                                                      //                   (value) async {
+                                                      //                 dialyzerTypeData = preDialysisController
+                                                      //                     .dialyzerTypeModel
+                                                      //                     ?.data
+                                                      //                     ?.firstWhere((e) =>
+                                                      //                         e.lookupDetDescEn ==
+                                                      //                         value);
+                                                      //                 selectedDialyzerTypeVal =
+                                                      //                     dialyzerTypeData?.lookupDetDescEn ??
+                                                      //                         "";
+                                                      //                 await preDialysisController.getFiberBundle(dialyzerTypeData!
+                                                      //                     .lookupDetId
+                                                      //                     .toString());
+                                                      //                 preDialysisController
+                                                      //                     .refreshUi();
+                                                      //               },
+                                                      //               filledColor:
+                                                      //                   Colors
+                                                      //                       .white),
+                                                      //     ),
+                                                      //   ],
+                                                      // ),
+                                                      // const SizedBox(height: 8),
                                                       CustomTextField(
                                                         onChanged: (value) {},
                                                         maxLines: 1,
                                                         isReadOnly: true,
                                                         keyBoardType:
                                                             TextInputType.name,
-                                                        labelText:
-                                                            'Expected Fiber Bundle Volume',
-                                                        hintText: 'Enter',
+                                                        labelText: context.l10n
+                                                            .clinExpectedFiberBundleVolume,
+                                                        hintText: context
+                                                            .l10n.regHintEnter,
                                                         isRequired: false,
                                                         txtController:
                                                             preDialysisController
@@ -608,7 +875,8 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
                                                                       .text = '';
                                                                   Get.back();
                                                                 },
-                                                                "Kindly enter discarded remarks before using new dialyser and blood tubing",
+                                                                context.l10n
+                                                                    .dqDiscardedRemarksWarning,
                                                                 "assets/info.png",
                                                                 false,
                                                                 () {},
@@ -628,9 +896,12 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
                                                         groupVal:
                                                             preDialysisController
                                                                 .groupVal1,
-                                                        text: "New Dialyzer",
-                                                        firstRadioText: 'Yes',
-                                                        secondRadioText: 'No',
+                                                        text: context.l10n
+                                                            .clinNewDialyzer,
+                                                        firstRadioText: context
+                                                            .l10n.commonYes,
+                                                        secondRadioText: context
+                                                            .l10n.commonNo,
                                                       ).paddingOnly(left: 8),
                                                       const SizedBox(height: 8),
                                                       Row(
@@ -643,9 +914,12 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
                                                                 CustomTextField(
                                                               onChanged:
                                                                   (value) {},
-                                                              labelText:
-                                                                  'Dialyzer Barcode No',
-                                                              hintText: 'Enter',
+                                                              labelText: context
+                                                                  .l10n
+                                                                  .clinDialyzerBarcodeNo,
+                                                              hintText: context
+                                                                  .l10n
+                                                                  .regHintEnter,
                                                               keyBoardType:
                                                                   TextInputType
                                                                       .number,
@@ -673,9 +947,12 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
                                                             fit: FlexFit.loose,
                                                             child:
                                                                 CustomTextField(
-                                                              labelText:
-                                                                  'Dialyzer Reuse No',
-                                                              hintText: 'Enter',
+                                                              labelText: context
+                                                                  .l10n
+                                                                  .clinDialyzerReuseNo,
+                                                              hintText: context
+                                                                  .l10n
+                                                                  .regHintEnter,
                                                               keyBoardType:
                                                                   TextInputType
                                                                       .number,
@@ -699,9 +976,10 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
                                                         isReadOnly: false,
                                                         keyBoardType:
                                                             TextInputType.name,
-                                                        labelText:
-                                                            'Dialyzer Remark',
-                                                        hintText: 'Enter',
+                                                        labelText: context.l10n
+                                                            .clinDialyzerRemark,
+                                                        hintText: context
+                                                            .l10n.regHintEnter,
                                                         isRequired: false,
                                                         txtController:
                                                             preDialysisController
@@ -742,10 +1020,12 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
                                                         groupVal:
                                                             preDialysisController
                                                                 .groupVal2,
-                                                        text:
-                                                            'New Blood Tubing',
-                                                        firstRadioText: 'Yes',
-                                                        secondRadioText: 'No',
+                                                        text: context.l10n
+                                                            .clinNewBloodTubing,
+                                                        firstRadioText: context
+                                                            .l10n.commonYes,
+                                                        secondRadioText: context
+                                                            .l10n.commonNo,
                                                       ).paddingOnly(
                                                           left: 8, top: 6),
                                                       const SizedBox(height: 6),
@@ -758,9 +1038,12 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
                                                             child:
                                                                 CustomTextField(
                                                               onChanged: () {},
-                                                              labelText:
-                                                                  'Tube Barcode No',
-                                                              hintText: 'Enter',
+                                                              labelText: context
+                                                                  .l10n
+                                                                  .clinTubeBarcodeNo,
+                                                              hintText: context
+                                                                  .l10n
+                                                                  .regHintEnter,
                                                               keyBoardType:
                                                                   TextInputType
                                                                       .number,
@@ -788,9 +1071,12 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
                                                             fit: FlexFit.loose,
                                                             child:
                                                                 CustomTextField(
-                                                              labelText:
-                                                                  'Tube Reuse No',
-                                                              hintText: 'Enter',
+                                                              labelText: context
+                                                                  .l10n
+                                                                  .clinTubeReuseNo,
+                                                              hintText: context
+                                                                  .l10n
+                                                                  .regHintEnter,
                                                               keyBoardType:
                                                                   TextInputType
                                                                       .number,
@@ -814,9 +1100,10 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
                                                         isReadOnly: false,
                                                         keyBoardType:
                                                             TextInputType.name,
-                                                        labelText:
-                                                            'Blood Tube Remark',
-                                                        hintText: 'Enter',
+                                                        labelText: context.l10n
+                                                            .clinBloodTubeRemark,
+                                                        hintText: context
+                                                            .l10n.regHintEnter,
                                                         isRequired: false,
                                                         txtController:
                                                             preDialysisController
@@ -834,7 +1121,9 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
                                                             child:
                                                                 MyCustomDropdown(
                                                                     labelText:
-                                                                        'Special Dialysis',
+                                                                        context
+                                                                            .l10n
+                                                                            .clinSpecialDialysis,
                                                                     items: preDialysisController
                                                                             .specialDialysisModel
                                                                             ?.data
@@ -842,8 +1131,9 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
                                                                                 .lookupDetDescEn)
                                                                             .toList() ??
                                                                         [],
-                                                                    hint:
-                                                                        'Select',
+                                                                    hint: context
+                                                                        .l10n
+                                                                        .regHintSelect,
                                                                     isRequired:
                                                                         false,
                                                                     senValue:
@@ -927,9 +1217,12 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
                                                               keyBoardType:
                                                                   TextInputType
                                                                       .number,
-                                                              labelText:
-                                                                  'Pre Dialysis Weight',
-                                                              hintText: 'Enter',
+                                                              labelText: context
+                                                                  .l10n
+                                                                  .clinPreDialysisWeight,
+                                                              hintText: context
+                                                                  .l10n
+                                                                  .regHintEnter,
                                                               isRequired: true,
                                                               txtController:
                                                                   preDialysisController
@@ -957,9 +1250,12 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
                                                               keyBoardType:
                                                                   TextInputType
                                                                       .number,
-                                                              labelText:
-                                                                  'Interdialytic Gain',
-                                                              hintText: 'Enter',
+                                                              labelText: context
+                                                                  .l10n
+                                                                  .clinInterdialyticGain,
+                                                              hintText: context
+                                                                  .l10n
+                                                                  .regHintEnter,
                                                               isRequired: true,
                                                               txtController:
                                                                   preDialysisController
@@ -984,9 +1280,12 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
                                                               keyBoardType:
                                                                   TextInputType
                                                                       .number,
-                                                              labelText:
-                                                                  'Dry Weight',
-                                                              hintText: 'Enter',
+                                                              labelText: context
+                                                                  .l10n
+                                                                  .clinDryWeight,
+                                                              hintText: context
+                                                                  .l10n
+                                                                  .regHintEnter,
                                                               isRequired: true,
                                                               txtController:
                                                                   preDialysisController
@@ -1005,9 +1304,10 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
                                                         isReadOnly: false,
                                                         keyBoardType:
                                                             TextInputType.name,
-                                                        labelText:
-                                                            'Pre HD Condition',
-                                                        hintText: 'Enter',
+                                                        labelText: context.l10n
+                                                            .clinPreHdCondition,
+                                                        hintText: context
+                                                            .l10n.regHintEnter,
                                                         isRequired: false,
                                                         txtController:
                                                             preDialysisController
@@ -1030,8 +1330,9 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
                                                               Colors.white,
                                                           iconColor:
                                                               Colors.white,
-                                                          buttonText:
-                                                              'View History',
+                                                          buttonText: context
+                                                              .l10n
+                                                              .dqViewHistory,
                                                           path:
                                                               'assets/eye.png',
                                                           callB: () {
@@ -1085,8 +1386,8 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
                               //           title: Row(children: [
                               //             Image.asset("assets/pulse-line.png"),
                               //             const SizedBox(width: 12),
-                              //             const Text(
-                              //               "Pre Dialysis Vitals",
+                              //             Text(
+                              //               context.l10n.clinPreDialysisVitals,
                               //               style: TextStyle(
                               //                   fontSize: 14.0,
                               //                   color: Colors.white,
@@ -1128,9 +1429,9 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
                               //                           children: [
                               //                             DoubleTextField(
                               //                               labelText:
-                              //                                   'Blood Pressure\n(mmHg)',
-                              //                               hintText1: 'Bottom',
-                              //                               hintText2: 'Top',
+                              //                                   context.l10n.clinBloodPressureMmhg,
+                              //                               hintText1: context.l10n.commonBottom,
+                              //                               hintText2: context.l10n.commonTop,
                               //                               isRequired: true,
                               //                               keyBoardType:
                               //                                   TextInputType
@@ -1163,8 +1464,8 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
                               //                                     TextInputType
                               //                                         .number,
                               //                                 labelText:
-                              //                                     'Pulse\n(Beats/min)',
-                              //                                 hintText: 'Enter',
+                              //                                     context.l10n.clinPulseBeatsMin,
+                              //                                 hintText: context.l10n.regHintEnter,
                               //                                 isRequired: true,
                               //                                 txtController:
                               //                                     preDialysisController
@@ -1197,8 +1498,8 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
                               //                                     TextInputType
                               //                                         .number,
                               //                                 labelText:
-                              //                                     'Temperature',
-                              //                                 hintText: 'Enter',
+                              //                                     context.l10n.clinTemperature,
+                              //                                 hintText: context.l10n.regHintEnter,
                               //                                 isRequired: false,
                               //                                 txtController:
                               //                                     preDialysisController
@@ -1223,8 +1524,8 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
                               //                                     TextInputType
                               //                                         .number,
                               //                                 labelText:
-                              //                                     'Oxygen Level (%)',
-                              //                                 hintText: 'Enter',
+                              //                                     context.l10n.clinOxygenLevelPercent,
+                              //                                 hintText: context.l10n.regHintEnter,
                               //                                 isRequired: true,
                               //                                 txtController:
                               //                                     preDialysisController
@@ -1246,7 +1547,7 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
                               //                               TextInputType.text,
                               //                           labelText:
                               //                               'Respiratory Rate(Breaths/min)',
-                              //                           hintText: 'Enter',
+                              //                           hintText: context.l10n.regHintEnter,
                               //                           isRequired: true,
                               //                           txtController:
                               //                               preDialysisController
@@ -1282,12 +1583,16 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
                                       children: [
                                         Image.asset("assets/pulse-line.png"),
                                         const SizedBox(width: 12),
-                                        const Text(
-                                          "Pre Dialysis Vitals",
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.white,
-                                            fontFamily: 'Lato',
+                                        Expanded(
+                                          child: Text(
+                                            context.l10n.clinPreDialysisVitals,
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.white,
+                                              fontFamily: 'Lato',
+                                            ),
                                           ),
                                         ),
                                       ],
@@ -1322,10 +1627,14 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
                                                     children: [
                                                       Expanded(
                                                         child: DoubleTextField(
-                                                          labelText:
-                                                              'Blood Pressure\n(mmHg)',
-                                                          hintText1: 'Bottom',
-                                                          hintText2: 'Top',
+                                                          labelText: context
+                                                              .l10n
+                                                              .clinBloodPressureMmhg,
+                                                          hintText1: context
+                                                              .l10n
+                                                              .commonBottom,
+                                                          hintText2: context
+                                                              .l10n.commonTop,
                                                           isRequired: true,
                                                           keyBoardType:
                                                               TextInputType
@@ -1352,9 +1661,11 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
                                                           keyBoardType:
                                                               TextInputType
                                                                   .number,
-                                                          labelText:
-                                                              'Pulse\n(Beats/min)',
-                                                          hintText: 'Enter',
+                                                          labelText: context
+                                                              .l10n
+                                                              .clinPulseBeatsMin,
+                                                          hintText: context.l10n
+                                                              .regHintEnter,
                                                           isRequired: true,
                                                           txtController:
                                                               preDialysisController
@@ -1386,9 +1697,11 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
                                                           keyBoardType:
                                                               TextInputType
                                                                   .number,
-                                                          labelText:
-                                                              'Temperature',
-                                                          hintText: 'Enter',
+                                                          labelText: context
+                                                              .l10n
+                                                              .clinTemperature,
+                                                          hintText: context.l10n
+                                                              .regHintEnter,
                                                           isRequired: false,
                                                           txtController:
                                                               preDialysisController
@@ -1406,9 +1719,11 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
                                                           keyBoardType:
                                                               TextInputType
                                                                   .number,
-                                                          labelText:
-                                                              'Oxygen Level (%)',
-                                                          hintText: 'Enter',
+                                                          labelText: context
+                                                              .l10n
+                                                              .clinOxygenLevelPercent,
+                                                          hintText: context.l10n
+                                                              .regHintEnter,
                                                           isRequired: true,
                                                           txtController:
                                                               preDialysisController
@@ -1429,9 +1744,10 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
                                                     isReadOnly: false,
                                                     keyBoardType:
                                                         TextInputType.text,
-                                                    labelText:
-                                                        'Respiratory Rate (Breaths/min)',
-                                                    hintText: 'Enter',
+                                                    labelText: context.l10n
+                                                        .clinRespiratoryRateBreathsMin,
+                                                    hintText: context
+                                                        .l10n.regHintEnter,
                                                     isRequired: true,
                                                     txtController:
                                                         preDialysisController
@@ -1465,8 +1781,8 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
                                       CrossAxisAlignment.stretch,
                                   children: [
                                     const SizedBox(height: 16),
-                                    const CustomText(
-                                      text: 'Start Dialysis',
+                                    CustomText(
+                                      text: context.l10n.dqStartDialysis,
                                       fontSize: 18.0,
                                       fontFam: 'Lato',
                                       fontWeight: FontWeight.w500,
@@ -1482,8 +1798,8 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
                                         Flexible(
                                           fit: FlexFit.loose,
                                           child: CustomDateField(
-                                            labelText: 'Date',
-                                            hint: 'Select',
+                                            labelText: context.l10n.commonDate,
+                                            hint: context.l10n.regHintSelect,
                                             isRequired: true,
                                             callB: () {
                                               _selectDate(context);
@@ -1500,8 +1816,8 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
                                         Flexible(
                                           fit: FlexFit.loose,
                                           child: CustomDateField(
-                                            labelText: 'Time',
-                                            hint: 'Select',
+                                            labelText: context.l10n.commonTime,
+                                            hint: context.l10n.regHintSelect,
                                             isRequired: true,
                                             callB: () {
                                               selectTime(context);
@@ -1523,7 +1839,7 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
                                         secColor: AppColor.secondaryColor,
                                         textColor: Colors.white,
                                         iconColor: Colors.white,
-                                        buttonText: 'Start',
+                                        buttonText: context.l10n.commonStart,
                                         path: 'assets/check.png',
                                         callB: () {
                                           if (formKey.currentState
@@ -1565,7 +1881,7 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
 
                                             debugPrint('Form is invalid');
                                             CustomMessage.toast(
-                                                "Please fill mandatory details");
+                                                context.l10n.regFillMandatory);
                                           }
                                         },
                                         buttonWidth: 100,
@@ -1587,7 +1903,7 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
                                     secColor: AppColor.secondaryColor,
                                     textColor: Colors.white,
                                     iconColor: Colors.white,
-                                    buttonText: 'Save',
+                                    buttonText: context.l10n.commonSave,
                                     path: 'assets/save-next.png',
                                     isLoading:
                                         (preDialysisController.isSaving ||
@@ -1803,8 +2119,8 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
                                               // Form is invalid, show errors
 
                                               debugPrint('Form is invalid');
-                                              CustomMessage.toast(
-                                                  "Please fill madetory details");
+                                              CustomMessage.toast(context
+                                                  .l10n.regFillMandatory);
                                             }
                                           },
                                     buttonWidth: 100,
@@ -1814,7 +2130,7 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
                                     secColor: Colors.grey,
                                     textColor: Colors.white,
                                     iconColor: Colors.white,
-                                    buttonText: 'Reset',
+                                    buttonText: context.l10n.commonReset,
                                     path: 'assets/refresh.png',
                                     callB: () {
                                       selectedDialysisTypeVal = null;
@@ -1853,7 +2169,7 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
                                     secColor: AppColor.red,
                                     textColor: Colors.white,
                                     iconColor: Colors.white,
-                                    buttonText: 'Cancel',
+                                    buttonText: context.l10n.commonCancel,
                                     path: 'assets/cancel.png',
                                     callB: () {
                                       Get.back();
@@ -2026,8 +2342,8 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
                       onChanged: (value) {
                         txtFieldValue(value);
                       },
-                      labelText: "Discarded Remarks",
-                      hintText: "Discarded Remarks",
+                      labelText: context.l10n.clinDiscardedRemarks,
+                      hintText: context.l10n.clinDiscardedRemarks,
                       isRequired: false,
                       keyBoardType: TextInputType.text,
                       fillColor: Colors.white,
@@ -2041,7 +2357,7 @@ class EditPreDialysisScreenState extends State<EditPreDialysisScreen> {
                         CustomButton(
                           primColor: AppColor.primaryBackgroundColor,
                           secColor: AppColor.secondaryColor,
-                          buttonText: "Confirm",
+                          buttonText: context.l10n.commonConfirm,
                           path: 'assets/check.png',
                           callB: () {
                             okCallB();

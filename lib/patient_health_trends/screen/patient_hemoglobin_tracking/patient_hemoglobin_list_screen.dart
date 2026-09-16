@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/patient_health_trends/model/dialysis_vital_patient_list_model.dart';
 import 'package:heamodialysis/patient_health_trends/screen/dialysis_vital_chart/patient_dialysis_vital_details_screen.dart';
@@ -161,8 +162,8 @@ class _PatientHemoglobinScreenState extends State<PatientHemoglobinScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const CustomText(
-                      text: 'Search Patient',
+                    CustomText(
+                      text: context.l10n.phtSearchPatient,
                       fontSize: 18.0,
                       fontFam: 'Lato',
                       fontWeight: FontWeight.w500,
@@ -184,8 +185,8 @@ class _PatientHemoglobinScreenState extends State<PatientHemoglobinScreen> {
                 ).paddingOnly(top: 6, bottom: 16),
                 CustomTextField(
                   txtController: patientController.searchControllerVital,
-                  labelText: "Search",
-                  hintText: "Search by patient name or id",
+                  labelText: context.l10n.commonSearch,
+                  hintText: context.l10n.phtSearchHint,
                   isRequired: false,
                   keyBoardType: TextInputType.text,
                   fillColor: Colors.white,
@@ -197,7 +198,7 @@ class _PatientHemoglobinScreenState extends State<PatientHemoglobinScreen> {
                   // },
                 ),
                 CustomButton(
-                  buttonText: "Search",
+                  buttonText: context.l10n.commonSearch,
                   path: "assets/save-next.png",
                   callB: () {
                     final query =
@@ -226,8 +227,8 @@ class _PatientHemoglobinScreenState extends State<PatientHemoglobinScreen> {
     return _isNetworkAvailable
         ? Scaffold(
             appBar: AppBar(
-              title: const CustomText(
-                text: 'Haemoglobin Tracking Report',
+              title: CustomText(
+                text: context.l10n.phtHaemoglobinTracking,
                 fontSize: 18.0,
                 fontFam: 'Lato',
                 fontWeight: FontWeight.w400,
@@ -279,8 +280,8 @@ class _PatientHemoglobinScreenState extends State<PatientHemoglobinScreen> {
                               size: 80,
                               color: Colors.grey[400],
                             ),
-                            const SizedBox(height: 20),
-                            const Text(
+                            SizedBox(height: 20),
+                            Text(
                               'No Matching Patients',
                               style: TextStyle(
                                 fontSize: 18,
@@ -288,15 +289,15 @@ class _PatientHemoglobinScreenState extends State<PatientHemoglobinScreen> {
                                 color: Colors.grey,
                               ),
                             ),
-                            const SizedBox(height: 8),
-                            const Text(
+                            SizedBox(height: 8),
+                            Text(
                               'Try searching with different keywords',
                               style: TextStyle(
                                 fontSize: 14,
                                 color: Colors.grey,
                               ),
                             ),
-                            const SizedBox(height: 20),
+                            SizedBox(height: 20),
                             ElevatedButton(
                               onPressed: () {
                                 patientController.clearSearchVital();
@@ -307,7 +308,7 @@ class _PatientHemoglobinScreenState extends State<PatientHemoglobinScreen> {
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 30, vertical: 12),
                               ),
-                              child: const Text(
+                              child: Text(
                                 'Clear Search',
                                 style: TextStyle(color: Colors.white),
                               ),
@@ -324,11 +325,11 @@ class _PatientHemoglobinScreenState extends State<PatientHemoglobinScreen> {
                         patientController.displayedPatientsVital.isEmpty) {
                       debugPrint('Showing no data found screen');
                       return CommonStatusScreen(
-                        title: "No Data Found",
+                        title: context.l10n.commonNoDataFound,
                         description:
                             "We are unable to find the data that\nyou are looking for",
                         img: "assets/no_Data_Found.png",
-                        buttonText: "Go Back",
+                        buttonText: context.l10n.commonGoBack,
                         onPressed: () {
                           Get.back();
                         },
@@ -465,7 +466,7 @@ class PatientCard extends StatelessWidget {
           //           patientCardActions(path1, callB1, null),
           //         ],
           //       ),
-          //       const SizedBox(height: 25),
+          //       SizedBox(height: 25),
           //     ],
           //   ),
           // )

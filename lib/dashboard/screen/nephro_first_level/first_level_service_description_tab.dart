@@ -8,6 +8,7 @@ import 'package:heamodialysis/utils/color_constants.dart';
 import 'package:heamodialysis/utils/shared_pref_constants.dart';
 import 'package:heamodialysis/utils/shared_preference.dart';
 import 'package:heamodialysis/widgets/cust_toast.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:heamodialysis/widgets/custom_text.dart';
 import 'package:heamodialysis/widgets/custom_textfield.dart';
 
@@ -42,6 +43,19 @@ class _FirstLevelServiceDescriptionTabState
     userData = await SharedPref().read(const SharedPrefConstant().kUserData);
   }
 
+  /// `lvlName` comes from the API as the literal "Level1" / "Level2" (also used
+  /// as a filter key in the controller), so translate it for display here.
+  String _levelLabel(BuildContext context, String? lvlName) {
+    switch (lvlName) {
+      case 'Level1':
+        return context.l10n.nephroLevel1;
+      case 'Level2':
+        return context.l10n.nephroLevel2;
+      default:
+        return lvlName ?? '';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -69,9 +83,10 @@ class _FirstLevelServiceDescriptionTabState
                             collapsedIconColor: AppColor.secondaryColor,
                             iconColor: AppColor.secondaryColor,
                             title: CustomText(
-                                text: firstLevelScrutinyController
-                                        .levelOneList[index].lvlName ??
-                                    '',
+                                text: _levelLabel(
+                                    context,
+                                    firstLevelScrutinyController
+                                        .levelOneList[index].lvlName),
                                 fontSize: 16.sp,
                                 fontWeight: FontWeight.w500,
                                 textColor: Colors.black,
@@ -90,7 +105,7 @@ class _FirstLevelServiceDescriptionTabState
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
                                   CustomText(
-                                          text: "Answer",
+                                          text: context.l10n.nephroAnswer,
                                           fontSize: 16.sp,
                                           fontWeight: FontWeight.w500,
                                           textColor: Colors.black,
@@ -120,8 +135,8 @@ class _FirstLevelServiceDescriptionTabState
                                             .scrutinyAnswer ??
                                         "YES",
                                     text: '',
-                                    firstRadioText: 'Yes',
-                                    secondRadioText: 'No',
+                                    firstRadioText: context.l10n.commonYes,
+                                    secondRadioText: context.l10n.commonNo,
                                   ),
                                   CustomTextField(
                                     key: UniqueKey(),
@@ -134,8 +149,8 @@ class _FirstLevelServiceDescriptionTabState
                                     maxLines: 1,
                                     isReadOnly: false,
                                     keyBoardType: TextInputType.text,
-                                    labelText: 'Remark',
-                                    hintText: 'Enter',
+                                    labelText: context.l10n.nephroRemark,
+                                    hintText: context.l10n.nephroEnterHint,
                                     isRequired: true,
                                     initialValue: firstLevelScrutinyController
                                         .levelOneList[index]
@@ -178,8 +193,8 @@ class _FirstLevelServiceDescriptionTabState
                 }),
             Align(
               alignment: Alignment.centerLeft,
-              child: const CustomText(
-                      text: "Action",
+              child: CustomText(
+                      text: context.l10n.nephroAction,
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                       textColor: Colors.black,
@@ -202,9 +217,9 @@ class _FirstLevelServiceDescriptionTabState
               },
               groupVal: firstLevelScrutinyController.groupVal,
               text: '',
-              firstRadioText: 'Approve',
-              secondRadioText: 'Reject',
-              thirdRadioText: 'Send Back',
+              firstRadioText: context.l10n.nephroApprove,
+              secondRadioText: context.l10n.nephroReject,
+              thirdRadioText: context.l10n.nephroSendBack,
               showThirdOption: true,
             ),
             CustomTextField(
@@ -212,8 +227,8 @@ class _FirstLevelServiceDescriptionTabState
               maxLines: 2,
               isReadOnly: false,
               keyBoardType: TextInputType.text,
-              labelText: 'Description',
-              hintText: 'Enter',
+              labelText: context.l10n.nephroDescription,
+              hintText: context.l10n.nephroEnterHint,
               isRequired: false,
               txtController: firstLevelScrutinyController.description,
               fillColor: Colors.white,
@@ -227,7 +242,7 @@ class _FirstLevelServiceDescriptionTabState
                   secColor: AppColor.secondaryColor,
                   textColor: Colors.white,
                   iconColor: Colors.white,
-                  buttonText: 'Save',
+                  buttonText: context.l10n.commonSave,
                   path: 'assets/save-next.png',
                   callB: () {
                     if (formKey.currentState?.validate() ?? false) {
@@ -303,7 +318,7 @@ class _FirstLevelServiceDescriptionTabState
                       firstLevelScrutinyController.sendToSecondLevel(
                           true, userData['user_Type']);
                     } else {
-                      CustomMessage.toast("Please fill mandatory field");
+                      CustomMessage.toast(context.l10n.nephroFillMandatory);
                     }
                   },
                   buttonWidth: 100.w,
@@ -316,7 +331,7 @@ class _FirstLevelServiceDescriptionTabState
                   secColor: AppColor.red,
                   textColor: Colors.white,
                   iconColor: Colors.white,
-                  buttonText: 'Cancel',
+                  buttonText: context.l10n.commonCancel,
                   path: 'assets/cancel.png',
                   callB: () {
                     Get.back();

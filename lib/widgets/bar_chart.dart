@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:heamodialysis/dashboard/model/bar_chart_model.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:heamodialysis/widgets/custom_text.dart';
 
 class BarChartSample extends StatelessWidget {
@@ -100,10 +101,10 @@ class BarChartSample extends StatelessWidget {
           ),
         ),
       )
-          : const Align(
+          : Align(
         alignment: Alignment.center,
         child: CustomText(
-          text: "No Data",
+          text: context.l10n.commonNoData,
           fontSize: 16,
           fontWeight: FontWeight.w500,
           textColor: Colors.black,

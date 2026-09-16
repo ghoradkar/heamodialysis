@@ -1,5 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dashboard/screen/technician/institutewise_dashboard_screen.dart';
@@ -92,7 +93,7 @@ class _ConsumableScreenState extends State<ConsumableScreen> {
       appBar: AppBar(
         titleSpacing:0,
         title:  CustomText(
-          text: 'Physical Entry of Consumable\nUsed',
+          text: context.l10n.dqPhysicalEntryConsumable,
           fontSize: 16.sp,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,
@@ -136,7 +137,7 @@ class _ConsumableScreenState extends State<ConsumableScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                              CustomText(
-                                    text: "Search",
+                                    text: context.l10n.commonSearch,
                                     fontSize: 16.sp,
                                     fontFam: "Lato",
                                     fontWeight: FontWeight.w400,
@@ -159,7 +160,7 @@ class _ConsumableScreenState extends State<ConsumableScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                              CustomText(
-                                    text: "Search By",
+                                    text: context.l10n.commonSearchBy,
                                     fontSize: 16.sp,
                                     fontFam: "Lato",
                                     fontWeight: FontWeight.normal,
@@ -178,7 +179,7 @@ class _ConsumableScreenState extends State<ConsumableScreen> {
                               child: DropdownButton<SearchedData>(
                                 isExpanded: true,
                                 value: dropDownValue,
-                                hint: const Text("select"),
+                                hint: Text("select"),
                                 onChanged: (SearchedData? newValue) {
                                   dropDownValue = newValue!;
                                   preDialysisController.update();
@@ -203,7 +204,7 @@ class _ConsumableScreenState extends State<ConsumableScreen> {
                          Align(
                           alignment: Alignment.centerLeft,
                           child: CustomText(
-                              text: "Type",
+                              text: context.l10n.colType,
                               fontSize: 16.sp,
                               fontFam: "Lato",
                               fontWeight: FontWeight.normal,
@@ -212,8 +213,8 @@ class _ConsumableScreenState extends State<ConsumableScreen> {
                         ).paddingOnly(top: 10.h, bottom: 4.h),
                         TextField(
                             controller: valueController,
-                            decoration: const InputDecoration(
-                              labelText: 'Patient Id, name, mobile no etc.',
+                            decoration: InputDecoration(
+                              labelText: context.l10n.regSearchPatientHint,
                               labelStyle: TextStyle(color: Color(0xFFE1E1E1)),
                               enabledBorder: OutlineInputBorder(
                                 borderSide:
@@ -252,7 +253,7 @@ class _ConsumableScreenState extends State<ConsumableScreen> {
                                       children: [
                                         Image.asset("assets/cancel.png"),
                                          CustomText(
-                                            text: "Cancel",
+                                            text: context.l10n.commonCancel,
                                             fontSize: 16.sp,
                                             fontFam: "Lato",
                                             fontWeight: FontWeight.normal,
@@ -301,7 +302,7 @@ class _ConsumableScreenState extends State<ConsumableScreen> {
                                           color: Colors.white,
                                         ),
                                         CustomText(
-                                            text: "Search",
+                                            text: context.l10n.commonSearch,
                                             fontSize: 16.sp,
                                             fontFam: "Lato",
                                             fontWeight: FontWeight.normal,

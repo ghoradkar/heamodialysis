@@ -12,6 +12,7 @@ import 'package:heamodialysis/utils/shared_pref_constants.dart';
 import 'package:heamodialysis/utils/shared_preference.dart';
 import 'package:heamodialysis/widgets/bar_chart.dart';
 import 'package:heamodialysis/widgets/custom_shimmer_loader.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:heamodialysis/widgets/custom_text.dart';
 import 'package:heamodialysis/widgets/dash_card.dart';
 import 'package:heamodialysis/widgets/radila_chart.dart';
@@ -95,7 +96,7 @@ class _NephroSecondLevelState extends State<NephroSecondLevel>
     return Scaffold(
       appBar: AppBar(
         title:  CustomText(
-          text: 'Dashboard',
+          text: context.l10n.drawerDashboard,
           fontSize: 18.sp,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,
@@ -114,7 +115,7 @@ class _NephroSecondLevelState extends State<NephroSecondLevel>
           InkWell(
             onTap: () {},
             child:  CustomText(
-                text: "Today",
+                text: context.l10n.dashToday,
                 fontSize: 14.sp,
                 fontWeight: FontWeight.bold,
                 textColor: Colors.black,
@@ -154,8 +155,8 @@ class _NephroSecondLevelState extends State<NephroSecondLevel>
 
                       Expanded(
                           child: DashCard(
-                            title:'Total Patient Registration',
-                            firstCountText:'Till Date',
+                            title: context.l10n.dashTotalPatientRegistration,
+                            firstCountText: context.l10n.dashTillDate,
                             firstCount: controller
                                 .dashboardCountModel?.patientAdded
                                 .toString(),
@@ -171,11 +172,11 @@ class _NephroSecondLevelState extends State<NephroSecondLevel>
 
                       Expanded(
                           child: DashCard(
-                            title:'Total ABHA Registration',
+                            title: context.l10n.dashTotalAbhaRegistration,
                             firstCount: controller
                                 .dashboardCountModel?.abhaRegistration
                                 .toString(),
-                            firstCountText: "Till Date",
+                            firstCountText: context.l10n.dashTillDate,
                             secondCount: controller
                                 .dashboardCountModel?.currentDateAbhaReg
                                 .toString(),
@@ -192,11 +193,11 @@ class _NephroSecondLevelState extends State<NephroSecondLevel>
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
                         child: Expanded(
                             child: DashCard(
-                              title: 'Total Dialysis Sessions',
+                              title: context.l10n.dashTotalDialysisSessions,
                               firstCount: controller
                                   .dashboardCountModel?.totalDialysisSession
                                   .toString(),
-                              firstCountText: "Till Date",
+                              firstCountText: context.l10n.dashTillDate,
                               secondCount: controller.dashboardCountModel
                                   ?.currentDateDialysisSession
                                   .toString(),
@@ -208,11 +209,11 @@ class _NephroSecondLevelState extends State<NephroSecondLevel>
                       ),
                       Expanded(
                           child: DashCard(
-                            title: 'Total Dialysis Cancelled',
+                            title: context.l10n.dashTotalDialysisCancelled,
                             firstCount: controller
                                 .dashboardCountModel?.totalDialysisCnacel
                                 .toString(),
-                            firstCountText: "Till Date",
+                            firstCountText: context.l10n.dashTillDate,
                             secondCount: controller
                                 .dashboardCountModel?.currentdialCancel
                                 .toString(),
@@ -228,30 +229,30 @@ class _NephroSecondLevelState extends State<NephroSecondLevel>
                     children: [
                       Expanded(
                           child: DashCard(
-                            title:'Total Event Occured',
+                            title: context.l10n.dashTotalEventOccurred,
                             firstCount: controller
                                 .dashboardCountModel?.totalEvent
                                 .toString(),
-                            firstCountText: "Till Date",
+                            firstCountText: context.l10n.dashTillDate,
                             secondCount: controller
                                 .dashboardCountModel?.currentDateEvent
                                 .toString(),
-                            secondCountText: "Current Day",
+                            secondCountText: context.l10n.dashCurrentDay,
                             iconPath: 'assets/event.png',
                             isSecondCount: true, cardHeight: 80.h,
                           )),
 
                       Expanded(
                           child: DashCard(
-                            title:'Total Active Machines',
+                            title: context.l10n.dashTotalActiveMachines,
                             firstCount: controller
                                 .dashboardCountModel?.ticket
                                 .toString(),
-                            firstCountText: "Till Date",
+                            firstCountText: context.l10n.dashTillDate,
                             secondCount: controller
                                 .dashboardCountModel?.ticket
                                 .toString(),
-                            secondCountText: "Current Date",
+                            secondCountText: context.l10n.dashCurrentDate,
                             iconPath: 'assets/machine.png',
                             isSecondCount: true, cardHeight: 80.h,
                           )),
@@ -261,11 +262,11 @@ class _NephroSecondLevelState extends State<NephroSecondLevel>
                     children: [
                       Expanded(
                         child: DashCard(
-                          title:'Total Laboratory Test Assigned',
+                          title: context.l10n.dashTotalLabTestAssigned,
                           firstCount: controller
                               .dashboardCountModel?.totalLbTest
                               .toString(),
-                          firstCountText: "Till Date",
+                          firstCountText: context.l10n.dashTillDate,
                           secondCount: controller
                               .dashboardCountModel?.currentDateLabTest
                               .toString(),
@@ -282,15 +283,15 @@ class _NephroSecondLevelState extends State<NephroSecondLevel>
                       ),
                       Expanded(
                         child: DashCard(
-                          title:'Total Feedback',
+                          title: context.l10n.dashTotalFeedback,
                           firstCount: controller
                               .dashboardCountModel?.feedback
                               .toString(),
-                          firstCountText: "Till Date",
+                          firstCountText: context.l10n.dashTillDate,
                           secondCount: controller
                               .dashboardCountModel?.currentDateFeedback
                               .toString(),
-                          secondCountText: "Current Date",
+                          secondCountText: context.l10n.dashCurrentDate,
                           iconPath: 'assets/feedback.png',
                           isSecondCount: true, cardHeight: 80.h,
                         ),
@@ -301,11 +302,11 @@ class _NephroSecondLevelState extends State<NephroSecondLevel>
                     children: [
                       Expanded(
                         child: DashCard(
-                          title:'Total Online Complaints',
+                          title: context.l10n.dashTotalOnlineComplaints,
                           firstCount: controller
                               .dashboardCountModel?.totalLbTest
                               .toString(),
-                          firstCountText: "Till Date",
+                          firstCountText: context.l10n.dashTillDate,
                           secondCount: controller
                               .dashboardCountModel?.currentDateLabTest
                               .toString(),
@@ -322,11 +323,11 @@ class _NephroSecondLevelState extends State<NephroSecondLevel>
                       ),
                       Expanded(
                         child: DashCard(
-                          title: 'Total Online Tickets',
+                          title: context.l10n.dashTotalOnlineTickets,
                           firstCount: controller
                               .dashboardCountModel?.ticket
                               .toString(),
-                          firstCountText: "Till Date",
+                          firstCountText: context.l10n.dashTillDate,
                           secondCount: controller
                               .dashboardCountModel?.ticket
                               .toString(),
@@ -357,8 +358,8 @@ class _NephroSecondLevelState extends State<NephroSecondLevel>
                       indicatorPadding: EdgeInsets.zero,
                       labelPadding: EdgeInsets.zero,
                       tabs: [
-                        buildTab(0, "Scheme Performance"),
-                        buildTab(1, "Viral Load Status")
+                        buildTab(0, context.l10n.dashSchemePerformance),
+                        buildTab(1, context.l10n.colViralLoadStatus)
                       ],
                     ),
                   ),
@@ -403,7 +404,7 @@ class _NephroSecondLevelState extends State<NephroSecondLevel>
                     padding: EdgeInsets.only(
                         top: 8.h, left: 8.w, bottom: 0, right: 8.w),
                     child: CustomText(
-                        text: "Ongoing Dialysis Session ",
+                        text: context.l10n.nephroOngoingDialysisSession,
                         fontSize: 16.sp,
                         fontWeight: FontWeight.normal,
                         textColor: Colors.black,

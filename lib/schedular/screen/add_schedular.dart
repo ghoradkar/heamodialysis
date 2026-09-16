@@ -1,5 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
@@ -138,7 +139,7 @@ class _AddSchedularState extends State<AddSchedular> {
     return Scaffold(
       appBar: AppBar(
         title: CustomText(
-          text: 'Add Dialysis Schedular',
+          text: context.l10n.schedAddSchedular,
           fontSize: 18.sp,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,
@@ -161,7 +162,7 @@ class _AddSchedularState extends State<AddSchedular> {
             builder: (controller) {
               return hasInternet
                   ? controller.isLoading
-                      ?  const AddSchedularShimmer()
+                      ? const AddSchedularShimmer()
                       : Column(
                           children: [
                             Theme(
@@ -180,12 +181,18 @@ class _AddSchedularState extends State<AddSchedular> {
                                         Image.asset(
                                             "assets/user_textfield.png"),
                                         SizedBox(width: 12.w),
-                                        CustomText(
-                                            text: "Search Patient",
-                                            fontSize: 14.sp,
-                                            fontWeight: FontWeight.normal,
-                                            textColor: Colors.white,
-                                            textAlign: TextAlign.start)
+                                        Expanded(
+                                          child: CustomText(
+                                              text: context
+                                                  .l10n.schedSearchPatient,
+                                              fontSize: 14.sp,
+                                              fontWeight: FontWeight.normal,
+                                              textColor: Colors.white,
+                                              textAlign: TextAlign.start,
+                                              maxLines: 2,
+                                              softWrap: true,
+                                              overflow: TextOverflow.ellipsis),
+                                        )
                                       ]),
                                       children: <Widget>[
                                         Container(
@@ -205,7 +212,8 @@ class _AddSchedularState extends State<AddSchedular> {
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   CustomText(
-                                                          text: "Search By",
+                                                          text: context.l10n
+                                                              .commonSearchBy,
                                                           fontSize: 16.sp,
                                                           fontFam: "Lato",
                                                           fontWeight:
@@ -235,7 +243,8 @@ class _AddSchedularState extends State<AddSchedular> {
                                                       isExpanded: true,
                                                       value: dropDownValue2,
                                                       hint: CustomText(
-                                                          text: "select",
+                                                          text: context.l10n
+                                                              .commonSelect,
                                                           fontSize: 14.sp,
                                                           fontWeight:
                                                               FontWeight.normal,
@@ -259,8 +268,14 @@ class _AddSchedularState extends State<AddSchedular> {
                                                                 SearchByPatient>(
                                                             value: value,
                                                             child: CustomText(
-                                                                text: value
-                                                                    .searchBy,
+                                                                text: value.id ==
+                                                                        '1'
+                                                                    ? context
+                                                                        .l10n
+                                                                        .schedDialysisCenter
+                                                                    : context
+                                                                        .l10n
+                                                                        .schedState,
                                                                 fontSize: 14.sp,
                                                                 fontWeight:
                                                                     FontWeight
@@ -293,7 +308,8 @@ class _AddSchedularState extends State<AddSchedular> {
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   CustomText(
-                                                          text: "Type",
+                                                          text: context
+                                                              .l10n.colType,
                                                           fontSize: 16.sp,
                                                           fontFam: "Lato",
                                                           fontWeight:
@@ -324,7 +340,8 @@ class _AddSchedularState extends State<AddSchedular> {
                                                       value: controller
                                                           .dropDownValue1,
                                                       hint: CustomText(
-                                                          text: "select",
+                                                          text: context.l10n
+                                                              .commonSelect,
                                                           fontSize: 16.sp,
                                                           fontFam: "Lato",
                                                           fontWeight:
@@ -396,7 +413,8 @@ class _AddSchedularState extends State<AddSchedular> {
                                                   alignment:
                                                       Alignment.centerLeft,
                                                   child: CustomText(
-                                                      text: "Value",
+                                                      text: context
+                                                          .l10n.commonValue,
                                                       fontSize: 16.sp,
                                                       fontFam: "Lato",
                                                       fontWeight:
@@ -439,11 +457,12 @@ class _AddSchedularState extends State<AddSchedular> {
                                                         focusNode: focusNode,
                                                         autofocus: true,
                                                         decoration:
-                                                            const InputDecoration(
+                                                            InputDecoration(
                                                           border:
-                                                              OutlineInputBorder(),
-                                                          labelText:
-                                                              'Patient Id, name, mobile no etc',
+                                                              const OutlineInputBorder(),
+                                                          labelText: context
+                                                              .l10n
+                                                              .regSearchPatientHint,
                                                         ));
                                                   },
                                                   itemBuilder:
@@ -462,7 +481,7 @@ class _AddSchedularState extends State<AddSchedular> {
                                                                 FontWeight
                                                                     .normal,
                                                             textColor:
-                                                               Colors.black,
+                                                                Colors.black,
                                                             textAlign: TextAlign
                                                                 .start));
                                                   },
@@ -496,11 +515,15 @@ class _AddSchedularState extends State<AddSchedular> {
                                                               .scrutinyType ??=
                                                           "Undefined ";
 
-                                                      CustomPopup
-                                                          .showSuccessDialog(
-                                                              () {
+                                                      CustomPopup.showSuccessDialog(
+                                                          () {
                                                         Get.back();
-                                                      }, "", "Approval From ${registrationController.scrutinyType} Is In Process");
+                                                      },
+                                                          "",
+                                                          l10n.schedApprovalInProcess(
+                                                              registrationController
+                                                                      .scrutinyType ??
+                                                                  ""));
                                                     }
                                                   },
                                                 ),
@@ -510,17 +533,18 @@ class _AddSchedularState extends State<AddSchedular> {
                                                         .dropDownValue1
                                                         ?.lookupDetValue ==
                                                     "PID",
-                                                child:  Align(
+                                                child: Align(
                                                   alignment:
                                                       Alignment.centerLeft,
                                                   child: CustomText(
-                                                      text: "Value",
+                                                      text: context
+                                                          .l10n.commonValue,
                                                       fontSize: 16.sp,
                                                       fontFam: "Lato",
                                                       fontWeight:
                                                           FontWeight.normal,
-                                                      textColor:
-                                                          const Color(0xff515151),
+                                                      textColor: const Color(
+                                                          0xff515151),
                                                       textAlign:
                                                           TextAlign.start),
                                                 ).paddingOnly(
@@ -539,15 +563,15 @@ class _AddSchedularState extends State<AddSchedular> {
                                                         .addSchedularValueController,
                                                     keyboardType:
                                                         TextInputType.number,
-                                                    decoration:
-                                                        const InputDecoration(
-                                                      labelText:
-                                                          'Patient Id, name, mobile no etc.',
-                                                      labelStyle: TextStyle(
-                                                          color: Color(
-                                                              0xFFE1E1E1)),
+                                                    decoration: InputDecoration(
+                                                      labelText: context.l10n
+                                                          .regSearchPatientHint,
+                                                      labelStyle:
+                                                          const TextStyle(
+                                                              color: Color(
+                                                                  0xFFE1E1E1)),
                                                       enabledBorder:
-                                                          OutlineInputBorder(
+                                                          const OutlineInputBorder(
                                                         borderSide: BorderSide(
                                                             color: Color(
                                                                 0xFFE1E1E1)),
@@ -557,7 +581,7 @@ class _AddSchedularState extends State<AddSchedular> {
                                                                     10.0)),
                                                       ),
                                                       focusedBorder:
-                                                          OutlineInputBorder(
+                                                          const OutlineInputBorder(
                                                         borderSide: BorderSide(
                                                             color: Color(
                                                                 0xFFE1E1E1)),
@@ -569,13 +593,14 @@ class _AddSchedularState extends State<AddSchedular> {
                                                     )),
                                               ),
                                               Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
                                                 children: [
-                                                  Align(
-                                                    alignment:
-                                                        Alignment.centerRight,
-                                                    child: InkWell(
+                                                  Expanded(
+                                                    child: _actionButton(
+                                                      label: context
+                                                          .l10n.commonCancel,
+                                                      leading: Image.asset(
+                                                          "assets/cancel.png"),
+                                                      color: AppColor.red,
                                                       onTap: () {
                                                         newRegistrationController
                                                                 .viewPatientModel =
@@ -588,55 +613,28 @@ class _AddSchedularState extends State<AddSchedular> {
                                                             .text = '';
                                                         Get.back();
                                                       },
-                                                      child: Container(
-                                                          padding:
-                                                               EdgeInsets
-                                                                  .symmetric(
-                                                                  vertical: 8.h),
-                                                          alignment:
-                                                              Alignment.center,
-                                                          width: 100.w,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        10),
-                                                            color: AppColor.red,
-                                                          ),
-                                                          child: Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            children: [
-                                                              Image.asset(
-                                                                  "assets/cancel.png"),
-                                                               CustomText(
-                                                                  text:
-                                                                      "Cancel",
-                                                                  fontSize: 16.sp,
-                                                                  fontFam:
-                                                                      "Lato",
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .normal,
-                                                                  textColor:
-                                                                      Colors
-                                                                          .white,
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .start),
-                                                            ],
-                                                          )),
                                                     ),
-                                                  ).paddingOnly(top: 20.h),
-                                                   SizedBox(
-                                                    width: 14.w,
                                                   ),
-                                                  Align(
-                                                    alignment:
-                                                        Alignment.centerRight,
-                                                    child: InkWell(
+                                                  SizedBox(width: 14.w),
+                                                  Expanded(
+                                                    child: _actionButton(
+                                                      label: context
+                                                          .l10n.commonSearch,
+                                                      leading: const Icon(
+                                                          Icons.search,
+                                                          color: Colors.white),
+                                                      gradient: LinearGradient(
+                                                        colors: [
+                                                          AppColor
+                                                              .primaryBackgroundColor,
+                                                          AppColor
+                                                              .secondaryColor
+                                                        ],
+                                                        begin:
+                                                            Alignment.topLeft,
+                                                        end: Alignment
+                                                            .bottomCenter,
+                                                      ),
                                                       onTap: () {
                                                         if (controller
                                                                 .dropDownValue1
@@ -661,65 +659,10 @@ class _AddSchedularState extends State<AddSchedular> {
                                                           setState(() {});
                                                         }
                                                       },
-                                                      child: Container(
-                                                          padding:
-                                                               EdgeInsets
-                                                                  .symmetric(
-                                                                  vertical: 8.h),
-                                                          alignment:
-                                                              Alignment.center,
-                                                          width: 100.w,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        10),
-                                                            gradient:
-                                                                LinearGradient(
-                                                              colors: [
-                                                                AppColor
-                                                                    .primaryBackgroundColor,
-                                                                AppColor
-                                                                    .secondaryColor
-                                                              ],
-                                                              begin: Alignment
-                                                                  .topLeft,
-                                                              end: Alignment
-                                                                  .bottomCenter,
-                                                            ),
-                                                          ),
-                                                          child:  Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            children: [
-                                                              const Icon(
-                                                                Icons.search,
-                                                                color: Colors
-                                                                    .white,
-                                                              ),
-                                                              CustomText(
-                                                                  text:
-                                                                      "Search",
-                                                                  fontSize: 16.sp,
-                                                                  fontFam:
-                                                                      "Lato",
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .normal,
-                                                                  textColor:
-                                                                      Colors
-                                                                          .white,
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .start),
-                                                            ],
-                                                          )),
                                                     ),
-                                                  ).paddingOnly(top: 20.h),
+                                                  ),
                                                 ],
-                                              )
+                                              ).paddingOnly(top: 20.h)
                                             ],
                                           ),
                                         ),
@@ -731,8 +674,7 @@ class _AddSchedularState extends State<AddSchedular> {
                                   newRegistrationController.viewPatientModel !=
                                       null,
                               child: PatientDetailsSchedular(
-                                patientId:
-                                newRegistrationController
+                                patientId: newRegistrationController
                                             .viewPatientModel
                                             ?.data
                                             ?.patientId !=
@@ -818,7 +760,8 @@ class _AddSchedularState extends State<AddSchedular> {
                                               .alreadyRegisteredPatient !=
                                           null),
                               child: Container(
-                                padding:  EdgeInsets.symmetric(vertical: 8.h,horizontal: 8.w),
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 8.h, horizontal: 8.w),
                                 decoration: BoxDecoration(
                                     color: Colors.grey[50],
                                     borderRadius: BorderRadius.circular(10),
@@ -832,20 +775,21 @@ class _AddSchedularState extends State<AddSchedular> {
                                         isReadOnly: true,
                                         keyBoardType:
                                             TextInputType.streetAddress,
-                                        labelText: 'Institute Name',
-                                        hintText: 'Enter',
+                                        labelText:
+                                            context.l10n.colInstituteName,
+                                        hintText: context.l10n.regHintEnter,
                                         isRequired: false,
                                         txtController: schedularController
                                             .instituteController,
                                         fillColor: Colors.white),
-                                     SizedBox(height: 8.h),
+                                    SizedBox(height: 8.h),
                                     MyCustomDropdown(
                                         isViewProfile: false,
                                         selectedItem: selectedDiaFreq,
                                         labelText:
-                                            'Dialysis Frequency Status/ Week',
+                                            context.l10n.regDialysisFreqWeek,
                                         items: diaFrequency,
-                                        hint: 'Select',
+                                        hint: context.l10n.regHintSelect,
                                         isRequired: false,
                                         senValue: (value) {
                                           cardList.clear();
@@ -877,11 +821,14 @@ class _AddSchedularState extends State<AddSchedular> {
                                           controller.update();
                                         },
                                         filledColor: Colors.white),
-                                     SizedBox(height: 8.h),
+                                    SizedBox(height: 8.h),
                                   ],
                                 ),
                               ).paddingOnly(
-                                  top: 10.h, left: 10.w, right: 10.w, bottom: 0),
+                                  top: 10.h,
+                                  left: 10.w,
+                                  right: 10.w,
+                                  bottom: 0),
                             ),
                             Visibility(
                               visible:
@@ -892,7 +839,7 @@ class _AddSchedularState extends State<AddSchedular> {
                                           null,
                               child: Column(
                                 children: [
-                                   SizedBox(
+                                  SizedBox(
                                     height: 10.h,
                                   ),
                                   ...cardList.asMap().entries.map((entry) {
@@ -911,8 +858,8 @@ class _AddSchedularState extends State<AddSchedular> {
                                       isSlotSelected: (value) {
                                         if (int.parse(selectedDiaFreq!) !=
                                             cardList.length) {
-                                          CustomMessage.toast(
-                                              'schedule according to selected frequency');
+                                          CustomMessage.toast(context.l10n
+                                              .schedFrequencyScheduleMismatch);
                                           cardData = null;
                                           controller.update();
                                         } else {
@@ -925,7 +872,8 @@ class _AddSchedularState extends State<AddSchedular> {
                                           cardData?.slotId =
                                               selectedSlot.slotId;
                                           cardData?.userId = userData['unitId'];
-                                          cardData?.userId = userData['user_ID'];
+                                          cardData?.userId =
+                                              userData['user_ID'];
                                         }
                                       },
                                       selectFromDate: () {
@@ -952,11 +900,12 @@ class _AddSchedularState extends State<AddSchedular> {
                                       },
                                     );
                                   }),
-                                   SizedBox(
+                                  SizedBox(
                                     height: 10.h,
                                   )
                                 ],
-                              ).paddingSymmetric(vertical: 10.h, horizontal: 10.w),
+                              ).paddingSymmetric(
+                                  vertical: 10.h, horizontal: 10.w),
                             ),
                             Visibility(
                               visible:
@@ -966,11 +915,12 @@ class _AddSchedularState extends State<AddSchedular> {
                                               .alreadyRegisteredPatient !=
                                           null,
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Align(
-                                    alignment: Alignment.centerRight,
-                                    child: InkWell(
+                                  Expanded(
+                                    child: _actionButton(
+                                      label: context.l10n.commonCancel,
+                                      leading: Image.asset("assets/cancel.png"),
+                                      color: AppColor.red,
                                       onTap: () {
                                         newRegistrationController
                                             .viewPatientModel = null;
@@ -981,38 +931,22 @@ class _AddSchedularState extends State<AddSchedular> {
                                             .text = '';
                                         Get.back();
                                       },
-                                      child: Container(
-                                          padding:  EdgeInsets.symmetric(
-                                              vertical: 8.h),
-                                          alignment: Alignment.center,
-                                          width: 100.w,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            color: AppColor.red,
-                                          ),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Image.asset("assets/cancel.png"),
-                                               CustomText(
-                                                  text: "Cancel",
-                                                  fontSize: 16.sp,
-                                                  fontFam: "Lato",
-                                                  fontWeight: FontWeight.normal,
-                                                  textColor: Colors.white,
-                                                  textAlign: TextAlign.start),
-                                            ],
-                                          )),
                                     ),
-                                  ).paddingOnly(top: 20.h,bottom: 20.h),
-                                   SizedBox(
-                                    width: 14.w,
                                   ),
-                                  Align(
-                                    alignment: Alignment.centerRight,
-                                    child: InkWell(
+                                  SizedBox(width: 14.w),
+                                  Expanded(
+                                    child: _actionButton(
+                                      label: context.l10n.commonSave,
+                                      leading:
+                                          Image.asset('assets/save-next.png'),
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          AppColor.primaryBackgroundColor,
+                                          AppColor.secondaryColor
+                                        ],
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomCenter,
+                                      ),
                                       onTap: () async {
                                         for (final card in cardList) {
                                           final slot = (card.slot ?? '')
@@ -1023,8 +957,8 @@ class _AddSchedularState extends State<AddSchedular> {
                                               card.bedAllocationDate != null;
 
                                           if (!hasSlot || !hasDate) {
-                                            CustomMessage.toast(
-                                                'Please select date and slot');
+                                            CustomMessage.toast(context
+                                                .l10n.schedSelectDateAndSlot);
                                             return;
                                           }
                                         }
@@ -1033,47 +967,13 @@ class _AddSchedularState extends State<AddSchedular> {
                                         for (final card in cardList) {
                                           await controller.addSchedular(card);
                                         }
-
                                       },
-                                      child: Container(
-                                          padding:  EdgeInsets.symmetric(
-                                              vertical: 8.h),
-                                          alignment: Alignment.center,
-                                          width: 100.w,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            gradient: LinearGradient(
-                                              colors: [
-                                                AppColor.primaryBackgroundColor,
-                                                AppColor.secondaryColor
-                                              ],
-                                              begin: Alignment.topLeft,
-                                              end: Alignment.bottomCenter,
-                                            ),
-                                          ),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Image.asset(
-                                                  'assets/save-next.png'),
-                                               CustomText(
-                                                  text: "Save",
-                                                  fontSize: 16.sp,
-                                                  fontFam: "Lato",
-                                                  fontWeight: FontWeight.normal,
-                                                  textColor: Colors.white,
-                                                  textAlign: TextAlign.start),
-                                            ],
-                                          )),
                                     ),
-                                  ).paddingOnly(top: 20.h,bottom: 20.h),
-                                   SizedBox(
-                                    height: 14.h,
                                   ),
                                 ],
-                              ),
+                              )
+                                  .paddingSymmetric(horizontal: 10.w)
+                                  .paddingOnly(top: 20.h, bottom: 20.h),
                             )
                           ],
                         )
@@ -1142,6 +1042,51 @@ class _AddSchedularState extends State<AddSchedular> {
       return suggestion.mobile;
     }
     return suggestion.searchParam;
+  }
+
+  /// A pill-style action button that fills the width it is given. Wrapping the
+  /// label in [Flexible] with ellipsis keeps it from overflowing when the
+  /// localized (EN / FR) text is wider than the button.
+  Widget _actionButton({
+    required String label,
+    required Widget leading,
+    required VoidCallback onTap,
+    Color? color,
+    Gradient? gradient,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 10.w),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: color,
+          gradient: gradient,
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            leading,
+            SizedBox(width: 6.w),
+            Flexible(
+              child: CustomText(
+                text: label,
+                fontSize: 14.sp,
+                fontFam: "Lato",
+                fontWeight: FontWeight.normal,
+                textColor: Colors.white,
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                softWrap: false,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 

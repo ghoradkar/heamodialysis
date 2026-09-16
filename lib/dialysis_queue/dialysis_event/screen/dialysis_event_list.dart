@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dashboard/screen/technician/institutewise_dashboard_screen.dart';
@@ -46,14 +47,14 @@ class _DialysisEventListState extends State<DialysisEventList> {
   ];
 
   SearchedData? selectedValue;
-  List<String> cardItemDetailsList = [
-    'Patient Id',
-    'Patient Name',
-    'Patient Age',
-    'Mobile No',
-    'Scheme Adopted',
-    'Viral Load Status '
-  ];
+  List<String> _cardItemDetailsList(BuildContext context) => [
+        context.l10n.colPatientId,
+        context.l10n.colPatientName,
+        context.l10n.regPatientAge,
+        context.l10n.commonMobileNo,
+        context.l10n.regSchemeAdopted,
+        context.l10n.colViralLoadStatus
+      ];
 
   SearchedData? dropDownValue;
   SearchedData? dropDownValue2;
@@ -142,7 +143,7 @@ class _DialysisEventListState extends State<DialysisEventList> {
     return _isNetworkAvailable ? Scaffold(
       appBar: AppBar(
         title: CustomText(
-          text: 'Event Queued Patient List',
+          text: context.l10n.dqEventQueuedPatientList,
           fontSize: 16.sp,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,
@@ -186,7 +187,7 @@ class _DialysisEventListState extends State<DialysisEventList> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             CustomText(
-                                    text: "Search",
+                                    text: context.l10n.commonSearch,
                                     fontSize: 16.sp,
                                     fontFam: "Lato",
                                     fontWeight: FontWeight.w400,
@@ -209,9 +210,9 @@ class _DialysisEventListState extends State<DialysisEventList> {
                           height: 10,
                         ),
                         MyCustomDropdown(
-                          labelText: 'Search By',
+                          labelText: context.l10n.commonSearchBy,
                           items: ['a','b','c'],
-                          hint: 'Select',
+                          hint: context.l10n.regHintSelect,
                           isRequired: false,
                           senValue: (SearchedData? value) {
                             setState(() {
@@ -227,7 +228,7 @@ class _DialysisEventListState extends State<DialysisEventList> {
                               Align(
                                 alignment: Alignment.centerLeft,
                                 child: CustomText(
-                                    text: "Value",
+                                    text: context.l10n.commonValue,
                                     fontSize: 14.sp,
                                     fontFam: "Lato",
                                     fontWeight: FontWeight.normal,
@@ -236,8 +237,8 @@ class _DialysisEventListState extends State<DialysisEventList> {
                               ).paddingOnly(top: 10, bottom: 4),
                               TextField(
                                   controller: valueController,
-                                  decoration: const InputDecoration(
-                                    labelText: 'Patient Id, name, mobile no etc.',
+                                  decoration: InputDecoration(
+                                    labelText: context.l10n.regSearchPatientHint,
                                     labelStyle: TextStyle(color: Color(0xFFE1E1E1)),
                                     enabledBorder: OutlineInputBorder(
                                       borderSide:
@@ -329,7 +330,7 @@ class _DialysisEventListState extends State<DialysisEventList> {
                                           color: Colors.white,
                                         ),
                                         CustomText(
-                                            text: "Search",
+                                            text: context.l10n.commonSearch,
                                             fontSize: 16.sp,
                                             fontFam: "Lato",
                                             fontWeight: FontWeight.normal,
@@ -373,11 +374,11 @@ class _DialysisEventListState extends State<DialysisEventList> {
                 : controller.dialysisEventList;
             if (dialysisList.isEmpty) {
               return CommonStatusScreen(
-                title: "No Data Found",
+                title: context.l10n.commonNoDataFound,
                 description:
                 "We are unable to find the data that\nyou are looking for ",
                 img: "assets/no_Data_Found.png",
-                buttonText: "Go Back",
+                buttonText: context.l10n.commonGoBack,
                 onPressed: () {
                   Get.back();
                 },
@@ -389,7 +390,7 @@ class _DialysisEventListState extends State<DialysisEventList> {
                             controller.filteredDialysisEventList != null
                                 ? controller.filteredDialysisEventList ?? []
                                 : controller.dialysisEventList,
-                        cardItemDetailsList: cardItemDetailsList,
+                        cardItemDetailsList: _cardItemDetailsList(context),
                         isSecondColumnVisiable: false,
                         isfromPredialysis: true,
                         path1: "assets/add_entry.png",

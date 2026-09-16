@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/schedular/model/add_schedular_request.dart';
@@ -43,8 +44,8 @@ class DateSlotCard extends StatelessWidget {
                 child: CustomDateField(
                   key: UniqueKey(),
                   initialValue: cardData?.bedAllocationDate,
-                  labelText: 'From Date',
-                  hint: 'Select Date',
+                  labelText: context.l10n.dashFromDate,
+                  hint: context.l10n.dashSelectDate,
                   isRequired: false,
                   callB: () {
                     selectFromDate();
@@ -59,9 +60,9 @@ class DateSlotCard extends StatelessWidget {
                   key: UniqueKey(),
                   isViewProfile: false,
                   selectedItem:selectedSlot,
-                  labelText: 'Slot Time',
+                  labelText: context.l10n.schedSlotTime,
                   items: dropDownList ?? [],
-                  hint: "Select",
+                  hint: context.l10n.regHintSelect,
                   isRequired: false,
                   senValue: (value) {
                     if(cardData?.bedAllocationDate != ""){

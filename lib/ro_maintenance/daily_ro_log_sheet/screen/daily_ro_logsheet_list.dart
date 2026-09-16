@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dashboard/screen/technician/institutewise_dashboard_screen.dart';
 import 'package:heamodialysis/internet/no_internet_connectivity.dart';
@@ -35,7 +37,8 @@ class _DailyRoLogSheetScreenState extends State<DailyRoLogSheetScreen> {
   final DailyRoLogSheetController dailyRoLogSheetController =
       Get.put(DailyRoLogSheetController());
 
-  List<String> cardItemDetailsList = ["RO Machine", "Date"];
+  List<String> _cardItemDetailsList(BuildContext context) =>
+      [context.l10n.roMachine, context.l10n.commonDate];
   bool hasInternet = true;
   var userData;
 
@@ -103,8 +106,8 @@ class _DailyRoLogSheetScreenState extends State<DailyRoLogSheetScreen> {
   Widget build(BuildContext context) {
     return _isNetworkAvailable ? Scaffold(
       appBar: AppBar(
-        title: const CustomText(
-          text: 'Daily RO Log Sheet',
+        title: CustomText(
+          text: context.l10n.roDailyLogSheet,
           fontSize: 18.0,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,
@@ -128,7 +131,7 @@ class _DailyRoLogSheetScreenState extends State<DailyRoLogSheetScreen> {
               child: Image.asset("assets/add-pre-dialysis.png"),
             ),
           ),
-          const SizedBox(
+          SizedBox(
             width: 4,
           ),
           InkWell(
@@ -164,8 +167,8 @@ class _DailyRoLogSheetScreenState extends State<DailyRoLogSheetScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const CustomText(
-                                      text: "Search",
+                              CustomText(
+                                      text: context.l10n.commonSearch,
                                       fontSize: 16,
                                       fontFam: "Lato",
                                       fontWeight: FontWeight.w500,
@@ -189,7 +192,7 @@ class _DailyRoLogSheetScreenState extends State<DailyRoLogSheetScreen> {
                             ],
                           ),
                           CustomDateField(
-                            labelText: 'Date',
+                            labelText: context.l10n.commonDate,
                             hint: 'yyyy-MM-dd',
                             isRequired: false,
                             callB: () {
@@ -213,7 +216,7 @@ class _DailyRoLogSheetScreenState extends State<DailyRoLogSheetScreen> {
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 8),
                                 alignment: Alignment.center,
-                                width: 100,
+                                width: 130.w,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   gradient: LinearGradient(
@@ -225,7 +228,7 @@ class _DailyRoLogSheetScreenState extends State<DailyRoLogSheetScreen> {
                                     end: Alignment.bottomCenter,
                                   ),
                                 ),
-                                child: const Row(
+                                child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Icon(
@@ -233,7 +236,7 @@ class _DailyRoLogSheetScreenState extends State<DailyRoLogSheetScreen> {
                                       color: Colors.white,
                                     ),
                                     CustomText(
-                                        text: "Search",
+                                        text: context.l10n.commonSearch,
                                         fontSize: 16,
                                         fontFam: "Lato",
                                         fontWeight: FontWeight.normal,
@@ -254,7 +257,7 @@ class _DailyRoLogSheetScreenState extends State<DailyRoLogSheetScreen> {
               child: Image.asset("assets/filter-line.png"),
             ),
           ),
-          const SizedBox(
+          SizedBox(
             width: 2,
           ),
         ],
@@ -267,10 +270,10 @@ class _DailyRoLogSheetScreenState extends State<DailyRoLogSheetScreen> {
         if (controller.roMaintenanceDetailsModel == null ||
             controller.roMaintenanceDetailsModel!.isEmpty) {
           return CommonStatusScreen(
-            title: "No Data Found",
+            title: context.l10n.commonNoDataFound,
             description: "We are unable to find the data that\nyou are looking for",
             img: "assets/no_Data_Found.png",
-            buttonText: "Go Back",
+            buttonText: context.l10n.commonGoBack,
             onPressed: () {
               Get.back();
             },
@@ -278,7 +281,7 @@ class _DailyRoLogSheetScreenState extends State<DailyRoLogSheetScreen> {
         }
         return DailyRoLogSheetCardList(
                     roList: controller.roMaintenanceDetailsModel ?? [],
-                    cardItemDetailsList: cardItemDetailsList,
+                    cardItemDetailsList: _cardItemDetailsList(context),
                     path1: "assets/edit.png",
                     callB1: (index) {
                       Get.to(() => AddEditDailyRoLogSheet(

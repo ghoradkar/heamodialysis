@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dialysis_queue/investigation/screen/investigation_queue.dart';
 import 'package:heamodialysis/dialysis_queue/investigation/model/invest_model.dart';
@@ -109,7 +110,7 @@ class InvestigationController extends GetxController {
       update();
       await getInvestList(unitId, "PRD");
     } on ApiException {
-      CustomMessage.toast("Fail to saving machine reading");
+      CustomMessage.toast(l10n.dqFailSaveMachineReading);
       Get.to(const InvestigationQueue());
       isLoading = false;
       update();
@@ -135,7 +136,7 @@ class InvestigationController extends GetxController {
           userId,
           unitId);
     } on ApiException {
-      CustomMessage.toast("Fail to saving machine reading");
+      CustomMessage.toast(l10n.dqFailSaveMachineReading);
       Get.to(const InvestigationQueue());
       isLoading = false;
       update();

@@ -1,18 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/new_registration/model/schema_adopted/schema_data.dart';
 import 'package:heamodialysis/new_registration/controller/new_registration_controller.dart';
 import 'package:heamodialysis/new_registration/model/view_patient_model.dart';
 import 'package:heamodialysis/utils/color_constants.dart';
-import 'package:heamodialysis/widgets/custom_text.dart';
 
 import 'custom_shimmer_loader.dart';
 
 class PatientCardDetails extends StatefulWidget {
-  // final String gender;
-  // final String age;
   final String refBy;
   final String schemaAdopted;
   final String? imagePath;
@@ -23,9 +21,6 @@ class PatientCardDetails extends StatefulWidget {
 
   const PatientCardDetails(
       {super.key,
-
-      // required this.gender,
-      // required this.age,
       required this.refBy,
       required this.schemaAdopted,
       this.isFromAddPredialysis,
@@ -78,396 +73,146 @@ class _PatientCardDetailsState extends State<PatientCardDetails> {
       );
     }
 
-    return isLoading
-        ? const PatientHistoryShimmer.headerCard()
-        : Container(
-      //height: 170,
-            padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 8.w),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                gradient: LinearGradient(
-                  colors: [
-                    AppColor.primaryBackgroundColor.withValues(alpha: (0.2)),
-                    AppColor.secondaryColor.withValues(alpha: (0.2))
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomCenter,
-                )),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    (widget.imagePath == null || widget.imagePath == "")
-                        ? Container(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 4.h, horizontal: 4.w),
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(6)),
-                            child: const Icon(
-                              Icons.account_circle,
-                              color: Colors.grey,
-                            ),
-                          )
-                        : Container(
-                            decoration:
-                                const BoxDecoration(color: Colors.white),
-                            width: 30.w,
-                            height: 30.h,
-                            child: CachedNetworkImage(
-                              imageUrl: widget.imagePath!,
-                            ),
-                          ),
-                    SizedBox(
-                      width: 10.w,
-                    ),
-                    CustomText(
-                      text: 'Patient ID : ',
-                      fontSize: 14.sp,
-                      fontFam: 'Lato',
-                      fontWeight: FontWeight.w400,
-                      textColor: Colors.black,
-                      textAlign: TextAlign.start,
-                    ),
-                    CustomText(
-                      text: widget.patientDetails?.data?.patientId.toString() ??
-                          '',
-                      fontSize: 14.sp,
-                      fontFam: 'Lato',
-                      fontWeight: FontWeight.w400,
-                      textColor: Colors.grey,
-                      textAlign: TextAlign.start,
-                    ),
-                    const Spacer(),
-                    Visibility(
-                        visible: widget.isFromAddPredialysis == true,
-                        child: IconButton(
-                            onPressed: () {
-                              if (widget.isExpand != null) {
-                                widget.isExpand!(!widget.isExpanded!);
-                              }
-                            },
-                            icon: widget.isExpanded == true
-                                ? const Icon(Icons.arrow_circle_up_outlined)
-                                : const Icon(Icons.arrow_circle_down)))
-                  ],
-                ).paddingOnly(top: 0.h),
-                Padding(
-                  padding: const EdgeInsets.only(left: 43.0),
-                  child: Row(
-                    children: [
-                      CustomText(
-                        text: 'Patient Name  : ',
-                        fontSize: 14.sp,
-                        fontFam: 'Lato',
-                        fontWeight: FontWeight.w400,
-                        textColor: Colors.black,
-                        textAlign: TextAlign.start,
-                      ),
-                      CustomText(
-                        text:
-                            "${widget.patientDetails?.data?.fName} ${widget.patientDetails?.data?.lName ?? ''}",
-                        fontSize: 14.sp,
-                        fontFam: 'Lato',
-                        fontWeight: FontWeight.w400,
-                        textColor: Colors.grey,
-                        textAlign: TextAlign.start,
-                      )
-                    ],
-                  ).paddingOnly(bottom: 1.h),
-                ),
-                SizedBox(height: 2,),
-                Visibility(
-                  visible: widget.isFromAddPredialysis != true,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 43.0),
-                    child: Row(
-                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-flex: 2,
-                          child: Row(
-                            children: [
-                              CustomText(
-                                text: 'Mobile No :',
-                                fontSize: 14.sp,
-                                fontFam: 'Lato',
-                                fontWeight: FontWeight.w400,
-                                textColor: Colors.black,
-                                textAlign: TextAlign.start,
-                              ),
-                              CustomText(
-                                text: widget.patientDetails?.data?.mobile ?? "",
-                                fontSize: 14.sp,
-                                fontFam: 'Lato',
-                                fontWeight: FontWeight.w400,
-                                textColor: Colors.grey,
-                                textAlign: TextAlign.start,
-                              ),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              CustomText(
-                                text: 'Age : ',
-                                fontSize: 12.sp,
-                                fontFam: 'Lato',
-                                fontWeight: FontWeight.w400,
-                                textColor: Colors.black,
-                                textAlign: TextAlign.start,
-                              ),
-                              CustomText(
-                                text:
-                                    widget.patientDetails?.data?.age.toString() ??
-                                        '0',
-                                fontSize: 12.sp,
-                                fontFam: 'Lato',
-                                fontWeight: FontWeight.w400,
-                                textColor: Colors.grey,
-                                textAlign: TextAlign.start,
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ).paddingOnly(top: 2.h, bottom: 1.h),
-                  ),
-                ),
-                SizedBox(height: 2,),
-                Visibility(
-                  visible: widget.isFromAddPredialysis == true,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 42.0),
-                    child: Row(
-                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Flexible(
-                          flex: 1,
-                          child:Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              CustomText(
-                                text: 'Scheme Adopt : ',
-                                fontSize: 14.sp,
-                                fontFam: 'Lato',
-                                fontWeight: FontWeight.w400,
-                                textColor: Colors.black,
-                                textAlign: TextAlign.start,
-                              ),
-                              Flexible(
-                                child: CustomText(
-                                  text: schemAdpt?.lookupDetDescEn ?? '',
-                                  fontSize: 14.sp,
-                                  fontFam: 'Lato',
-                                  fontWeight: FontWeight.w400,
-                                  textColor: Colors.grey,
-                                  textAlign: TextAlign.start,
-                                ),
-                              ),
-                            ],
-                          ),
+    if (isLoading) return const PatientHistoryShimmer.headerCard();
 
-                        ),
-                      ],
-                    ).paddingOnly(top: 2.h, bottom: 1.h),
-                  ),
+    final data = widget.patientDetails?.data;
+    final bool addPredialysis = widget.isFromAddPredialysis == true;
+
+    final detailRows = <Widget>[
+      _field(context, context.l10n.colPatientName,
+          "${data?.fName ?? ''} ${data?.lName ?? ''}".trim()),
+      if (addPredialysis) ...[
+        _field(context, context.l10n.regSchemeAdopted,
+            schemAdpt?.lookupDetDescEn ?? ''),
+        _pair(
+          _field(context, context.l10n.commonGender, data?.gender ?? ''),
+          _field(context, context.l10n.commonAge, data?.age?.toString() ?? ''),
+        ),
+        if (widget.isExpanded == true)
+          _pair(
+            _field(context, context.l10n.colHeight,
+                data?.pheight?.toString() ?? '0'),
+            _field(context, context.l10n.colWeight,
+                data?.pweight?.toString() ?? '0'),
+          ),
+      ] else ...[
+        _pair(
+          _field(context, context.l10n.commonMobileNo, data?.mobile ?? ''),
+          _field(context, context.l10n.commonAge, data?.age?.toString() ?? ''),
+        ),
+        _pair(
+          _field(context, context.l10n.commonGender, data?.gender ?? ''),
+          _field(context, context.l10n.patientCardRefBy, widget.refBy),
+        ),
+      ],
+    ];
+
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 10.w),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          gradient: LinearGradient(
+            colors: [
+              AppColor.primaryBackgroundColor.withValues(alpha: 0.2),
+              AppColor.secondaryColor.withValues(alpha: 0.2)
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomCenter,
+          )),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _avatar(),
+              SizedBox(width: 10.w),
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.only(top: 6.h),
+                  child: _field(context, context.l10n.colPatientId,
+                      data?.patientId?.toString() ?? ''),
                 ),
-                SizedBox(height: 2,),
-                Visibility(
-                  visible: widget.isFromAddPredialysis == false ||
-                      widget.isFromAddPredialysis == null,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 42.0),
-                    child: Row(
-                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Flexible(
-                          flex: 1,
-                          child: Row(
-                            children: [
-                              CustomText(
-                                text: 'Gender : ',
-                                fontSize: 14.sp,
-                                fontFam: 'Lato',
-                                fontWeight: FontWeight.w400,
-                                textColor: Colors.black,
-                                textAlign: TextAlign.start,
-                              ),
-                              CustomText(
-                                text: widget.patientDetails?.data?.gender ?? '',
-                                fontSize: 14.sp,
-                                fontFam: 'Lato',
-                                fontWeight: FontWeight.w400,
-                                textColor: Colors.grey,
-                                textAlign: TextAlign.start,
-                              ),
-                            ],
-                          ),
-                        ),
-                        Flexible(
-                          flex: 1,
-                          child: Row(
-                            children: [
-                              CustomText(
-                                text: 'Ref. By : ',
-                                fontSize: 12.sp,
-                                fontFam: 'Lato',
-                                fontWeight: FontWeight.w400,
-                                textColor: Colors.black,
-                                textAlign: TextAlign.start,
-                              ),
-                              CustomText(
-                                text: widget.refBy,
-                                fontSize: 12.sp,
-                                fontFam: 'Lato',
-                                fontWeight: FontWeight.w400,
-                                textColor: Colors.grey,
-                                textAlign: TextAlign.start,
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ).paddingOnly(top: 2.h, bottom: 1.h),
-                  ),
+              ),
+              if (addPredialysis && widget.isExpand != null)
+                IconButton(
+                  padding: EdgeInsets.zero,
+                  visualDensity: VisualDensity.compact,
+                  constraints: const BoxConstraints(),
+                  onPressed: () =>
+                      widget.isExpand!(!(widget.isExpanded ?? false)),
+                  icon: Icon(widget.isExpanded == true
+                      ? Icons.arrow_circle_up_outlined
+                      : Icons.arrow_circle_down),
                 ),
-                SizedBox(height: 2,),
-                Visibility(
-                  visible: widget.isFromAddPredialysis == true,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 43.0),
-                    child: Row(
-                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Flexible(
-                          flex: 1,
-                          child: Row(
-                            children: [
-                              CustomText(
-                                text: 'Gender : ',
-                                fontSize: 12.sp,
-                                fontFam: 'Lato',
-                                fontWeight: FontWeight.w400,
-                                textColor: Colors.black,
-                                textAlign: TextAlign.start,
-                              ),
-                              CustomText(
-                                text: widget.patientDetails?.data?.gender ?? '',
-                                fontSize: 12.sp,
-                                fontFam: 'Lato',
-                                fontWeight: FontWeight.w400,
-                                textColor: Colors.grey,
-                                textAlign: TextAlign.start,
-                              ),
-                            ],
-                          ),
-                        ),
-                        Flexible(
-                          flex: 1,
-                          child: Row(
-                            children: [
-                              CustomText(
-                                text: 'Age : ',
-                                fontSize: 12.sp,
-                                fontFam: 'Lato',
-                                fontWeight: FontWeight.w400,
-                                textColor: Colors.black,
-                                textAlign: TextAlign.start,
-                              ),
-                              CustomText(
-                                text:
-                                    widget.patientDetails?.data?.age.toString() ??
-                                        '',
-                                fontSize: 12.sp,
-                                fontFam: 'Lato',
-                                fontWeight: FontWeight.w400,
-                                textColor: Colors.grey,
-                                textAlign: TextAlign.start,
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ).paddingOnly(top: 2.h, bottom: 1.h),
-                  ),
-                ),
-                SizedBox(height: 2,),
-                Visibility(
-                  visible: widget.isExpanded == true,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 43.0),
-                    child: Column(
-                      children: [
-                        Row(
-                          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Flexible(
-                              flex: 1,
-                              child: Row(
-                                children: [
-                                  CustomText(
-                                    text: 'Height : ',
-                                    fontSize: 14.sp,
-                                    fontFam: 'Lato',
-                                    fontWeight: FontWeight.w400,
-                                    textColor: Colors.black,
-                                    textAlign: TextAlign.start,
-                                  ),
-                                  CustomText(
-                                    text: widget.patientDetails?.data?.pheight !=
-                                            null
-                                        ? widget.patientDetails?.data?.pheight
-                                                .toString() ??
-                                            ''
-                                        : "0 Kg",
-                                    fontSize: 14.sp,
-                                    fontFam: 'Lato',
-                                    fontWeight: FontWeight.w400,
-                                    textColor: Colors.grey,
-                                    textAlign: TextAlign.start,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Flexible(
-                              flex: 1,
-                              child: Row(
-                                children: [
-                                  CustomText(
-                                    text: 'Weight : ',
-                                    fontSize: 14.sp,
-                                    fontFam: 'Lato',
-                                    fontWeight: FontWeight.w400,
-                                    textColor: Colors.black,
-                                    textAlign: TextAlign.start,
-                                  ),
-                                  CustomText(
-                                    text: widget.patientDetails?.data?.pweight !=
-                                            null
-                                        ? widget.patientDetails?.data?.pweight
-                                                .toString() ??
-                                            ''
-                                        : "0 Kg",
-                                    fontSize: 14.sp,
-                                    fontFam: 'Lato',
-                                    fontWeight: FontWeight.w400,
-                                    textColor: Colors.grey,
-                                    textAlign: TextAlign.start,
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
-                        ).paddingOnly(top: 2.h, bottom: 1.h),
-                      ],
-                    ),
-                  ),
-                )
-              ],
+            ],
+          ),
+          SizedBox(height: 4.h),
+          Padding(
+            padding: EdgeInsets.only(left: 40.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: detailRows,
             ),
-          );
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _avatar() {
+    if (widget.imagePath == null || widget.imagePath == "") {
+      return Container(
+        padding: EdgeInsets.symmetric(vertical: 4.h, horizontal: 4.w),
+        decoration: BoxDecoration(
+            color: Colors.white, borderRadius: BorderRadius.circular(6)),
+        child: const Icon(Icons.account_circle, color: Colors.grey),
+      );
+    }
+    return Container(
+      decoration: const BoxDecoration(color: Colors.white),
+      width: 30.w,
+      height: 30.h,
+      child: CachedNetworkImage(imageUrl: widget.imagePath!),
+    );
+  }
+
+  /// Two fields side by side; each half wraps on its own so a long localized
+  /// label can never push the row past the card edge.
+  Widget _pair(Widget left, Widget right) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(child: left),
+        SizedBox(width: 12.w),
+        Expanded(child: right),
+      ],
+    );
+  }
+
+  /// A "Label : value" line that flows as one wrapping paragraph, so bilingual
+  /// (EN / FR) labels stay inside their column instead of overflowing.
+  Widget _field(BuildContext context, String label, String value) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 2.h),
+      child: Text.rich(
+        TextSpan(
+          style: TextStyle(
+            fontFamily: 'Lato',
+            fontSize: 13.sp,
+            fontWeight: FontWeight.w400,
+            height: 1.3,
+            color: Colors.black,
+          ),
+          children: [
+            TextSpan(text: '$label : '),
+            TextSpan(
+              text: value,
+              style: const TextStyle(color: Colors.grey),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

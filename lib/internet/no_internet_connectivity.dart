@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 
 class InternetIssue extends StatelessWidget {
   // const InternetIssue({super.key});
@@ -39,7 +40,7 @@ class InternetIssue extends StatelessWidget {
                    SizedBox(height: 20,),
                    Center(
                       child: Text(
-                        "Oh No",
+                        context.l10n.noInternetHeadline,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontFamily: 'Lato',          // font-family
@@ -57,7 +58,7 @@ class InternetIssue extends StatelessWidget {
                       child: Column(
                         children: [
                           Text(
-                            "No internet connection found.",
+                            context.l10n.noInternetMessage,
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontFamily: 'Lato',          // font-family
@@ -70,7 +71,7 @@ class InternetIssue extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            "Check your connection or try again.",
+                            context.l10n.noInternetHint,
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontFamily: 'Lato',
@@ -110,7 +111,7 @@ class InternetIssue extends StatelessWidget {
 
                                 // Show loader for a few seconds
                                 Get.defaultDialog(
-                                  title: "Loading",
+                                  title: context.l10n.commonLoading,
                                   content:
                                   const CircularProgressIndicator(),
                                 );
@@ -132,20 +133,25 @@ class InternetIssue extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(11),
                                 ),
                               ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Icon(Icons.arrow_forward, color: Colors.white),
-                                  SizedBox(width: 14.w), // 👈 yaha spacing control
-                                  Text(
-                                    "Retry",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16.sp,
-                                      fontWeight: FontWeight.w600,
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Icon(Icons.arrow_forward,
+                                        color: Colors.white),
+                                    SizedBox(width: 14.w),
+                                    Text(
+                                      context.l10n.commonRetry,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16.sp,
+                                        fontWeight: FontWeight.w600,
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             )
 

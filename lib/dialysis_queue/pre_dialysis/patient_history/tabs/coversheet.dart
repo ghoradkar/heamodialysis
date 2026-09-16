@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dashboard/model/nephro_list.dart';
@@ -72,13 +73,13 @@ class CoversheetState extends State<Coversheet> {
       child: GetBuilder<SchedularController>(builder: (controller) {
         return Column(
           children: [
-            const SizedBox(
+            SizedBox(
               height: 20,
             ),
             //
             CustomExpandableContainer(
               leading: 'assets/file-info.png',
-              text: 'Pre-Post-Event Investigation',
+              text: context.l10n.dqPrePostEventInvestigation,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
@@ -89,11 +90,11 @@ class CoversheetState extends State<Coversheet> {
                         l1: schedularController.prePostCoversheetl1,
                         l2: schedularController.prePostCoversheetl2,
                         l3: schedularController.prePostCoversheetl3,
-                        tableHeader: const [
-                          "Sr.\nNo",
-                          "Particulars\n",
-                          "Date\n",
-                          "Report\n"
+                        tableHeader: [
+                          context.l10n.colSrNo,
+                          context.l10n.colParticulars,
+                          context.l10n.commonDate,
+                          context.l10n.colReport
                         ],
                         lastColumnWidgets: schedularController
                             .prePostCoversheetlastColumnWidgets,
@@ -117,7 +118,7 @@ class CoversheetState extends State<Coversheet> {
             //         title: Row(children: [
             //           Image.asset("assets/file-info.png"),
             //           const SizedBox(width: 12),
-            //           const Text(
+            //           Text(
             //             "Pre-Post-Event Investigation",
             //             style: TextStyle(
             //                 fontSize: 14.0,
@@ -155,12 +156,12 @@ class CoversheetState extends State<Coversheet> {
             //         ],
             //       ),
             //     )),
-            const SizedBox(
+            SizedBox(
               height: 10,
             ),
             CustomExpandableContainer(
               leading: 'assets/relation.png',
-              text: 'Prescription Details',
+              text: context.l10n.dqPrescriptionDetails,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
@@ -190,20 +191,20 @@ class CoversheetState extends State<Coversheet> {
                               .prescriptionCoversheetl1
                               .map((e) => 'Active')
                               .toList(),
-                          tableHeader: const [
-                            "Sr.\nNo",
-                            "Drugs\n",
-                            "Freq\n",
-                            "Duration\n",
-                            "Status\n",
-                            "Report\n"
+                          tableHeader: [
+                            context.l10n.colSrNo,
+                            context.l10n.colDrugs,
+                            context.l10n.colFreq,
+                            context.l10n.dqDuration,
+                            context.l10n.commonStatus,
+                            context.l10n.colReport
                           ],
                           lastColumnWidgets: schedularController
                               .prescriptionlastColumnWidgets,
                           onButtonPressed: handleButtonPress,
                         )
-                            : const CustomText(
-                          text: "No Data found",
+                            : CustomText(
+                          text: context.l10n.commonNoDataFound,
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
                           textColor: Colors.black,
@@ -216,12 +217,12 @@ class CoversheetState extends State<Coversheet> {
               ),
             ),
 
-            const SizedBox(
+            SizedBox(
               height: 10,
             ),
             CustomExpandableContainer(
               leading: 'assets/file-info.png',
-              text: 'Laboratory Investigation',
+              text: context.l10n.dqLaboratoryInvestigation,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
@@ -239,12 +240,12 @@ class CoversheetState extends State<Coversheet> {
                           l2: schedularController.labCoversheetl2,
                           l3: schedularController.labCoversheetl3,
                           l4: schedularController.labCoversheetl4,
-                          tableHeader: const [
-                            "Sr. No",
-                            "Particulars\n",
-                            "Date\n",
-                            "Packg Name",
-                            "View\n"
+                          tableHeader: [
+                            context.l10n.colSrNo,
+                            context.l10n.colParticulars,
+                            context.l10n.commonDate,
+                            context.l10n.colPackageName,
+                            context.l10n.commonView
                           ],
                           lastColumnWidgets: schedularController.lablastColumnWidgets,
                           onButtonPressed: handleButtonPress,
@@ -273,7 +274,7 @@ class CoversheetState extends State<Coversheet> {
                         //                       .testReportLink!
                         //                       .isNotEmpty)
                         //               ? CustomButtonWithoutIcon(
-                        //                   buttonText: 'View',
+                        //                   buttonText: context.l10n.commonView,
                         //                   callB: () {
                         //                     debugPrint('Tapped row $index');
                         //                     // Get.to();
@@ -284,8 +285,8 @@ class CoversheetState extends State<Coversheet> {
                         //                   secColor: AppColor.secondaryColor,
                         //                   textColor: Colors.white,
                         //                 )
-                        //               : const CustomText(
-                        //                   text: "Processing",
+                        //               : CustomText(
+                        //                   text: context.l10n.commonProcessing,
                         //                   fontSize: 8,
                         //                   fontWeight: FontWeight.normal,
                         //                   textColor: Colors.black,
@@ -300,8 +301,8 @@ class CoversheetState extends State<Coversheet> {
                         //         ],
                         //         onButtonPressed: handleButtonPress,
                         //       )
-                        //     : const CustomText(
-                        //         text: "No Data found",
+                        //     : CustomText(
+                        //         text: context.l10n.commonNoDataFound,
                         //         fontSize: 16,
                         //         fontWeight: FontWeight.w500,
                         //         textColor: Colors.black,
@@ -314,12 +315,12 @@ class CoversheetState extends State<Coversheet> {
               ),
             ),
 
-            const SizedBox(
+            SizedBox(
               height: 10,
             ),
             CustomExpandableContainer(
               leading: 'assets/file-info.png',
-              text: 'Diet Details',
+              text: context.l10n.dqDietDetails,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
@@ -340,16 +341,11 @@ class CoversheetState extends State<Coversheet> {
                           l2: schedularController.dietCoversheetl2,
                           l3: schedularController.dietCoversheetl3,
                           l4: schedularController.dietCoversheetl4,
-                          tableHeader: const [
-                            "Sr. No",
-                            "Particulars",
-                            "From Date",
-                            "To Date"
-                          ],
+                          tableHeader: [context.l10n.colSrNo, context.l10n.colParticulars, context.l10n.dashFromDate, context.l10n.dashToDate],
                           onButtonPressed: handleButtonPress,
                         )
-                            : const CustomText(
-                          text: "No Data found",
+                            : CustomText(
+                          text: context.l10n.commonNoDataFound,
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
                           textColor: Colors.black,
@@ -362,7 +358,7 @@ class CoversheetState extends State<Coversheet> {
               ),
             ),
 
-            const SizedBox(
+            SizedBox(
               height: 10,
             ),
 
@@ -370,7 +366,7 @@ class CoversheetState extends State<Coversheet> {
 
               return CustomExpandableContainer(
                 leading: 'assets/file-info.png',
-                text: 'Trend Analysis',
+                text: context.l10n.dqTrendAnalysis,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
@@ -393,14 +389,10 @@ class CoversheetState extends State<Coversheet> {
                               'Blood Pressure'
                             ],
                             l3: const ['', '', '', '', ''],
-                            tableHeader: const [
-                              "Sr. No",
-                              "Test Name",
-                              "Trend Analysis",
-                            ],
+                            tableHeader: [context.l10n.colSrNo, context.l10n.dqTestName, context.l10n.dqTrendAnalysis],
                             lastColumnWidgets: [
                               CustomButtonWithoutIcon(
-                                buttonText: 'Analyze',
+                                buttonText: context.l10n.dqAnalyze,
                                 callB: () {
                                   debugPrint('Tapped1');
                                   Get.to(() => TrendAnalysisTabsWeight(
@@ -415,7 +407,7 @@ class CoversheetState extends State<Coversheet> {
                                 textColor: Colors.white,
                               ),
                               CustomButtonWithoutIcon(
-                                buttonText: 'Analyze',
+                                buttonText: context.l10n.dqAnalyze,
                                 callB: () {
                                   debugPrint('Tapped2');
                                   Get.to(TrendAnalysisTabsPulse(
@@ -429,7 +421,7 @@ class CoversheetState extends State<Coversheet> {
                                 textColor: Colors.white,
                               ),
                               CustomButtonWithoutIcon(
-                                buttonText: 'Analyze',
+                                buttonText: context.l10n.dqAnalyze,
                                 callB: () {
                                   debugPrint('Tapped3');
                                   Get.to(TrendAnalysisTabsOxygen(
@@ -444,7 +436,7 @@ class CoversheetState extends State<Coversheet> {
                                 textColor: Colors.white,
                               ),
                               CustomButtonWithoutIcon(
-                                buttonText: 'Analyze',
+                                buttonText: context.l10n.dqAnalyze,
                                 callB: () {
                                   debugPrint('Tapped4');
                                   Get.to(TrendAnalysisTabsTemp(
@@ -458,7 +450,7 @@ class CoversheetState extends State<Coversheet> {
                                 textColor: Colors.white,
                               ),
                               CustomButtonWithoutIcon(
-                                buttonText: 'Analyze',
+                                buttonText: context.l10n.dqAnalyze,
                                 callB: () {
                                   debugPrint('Tapped5');
 
@@ -495,7 +487,7 @@ class CoversheetState extends State<Coversheet> {
                 //       title: Row(children: [
                 //         Image.asset("assets/file-info.png"),
                 //         const SizedBox(width: 12),
-                //         const Text(
+                //         Text(
                 //           "Trend Analysis",
                 //           style: TextStyle(
                 //               fontSize: 14.0,
@@ -530,7 +522,7 @@ class CoversheetState extends State<Coversheet> {
                 //                 ],
                 //                 lastColumnWidgets: [
                 //                   CustomButtonWithoutIcon(
-                //                     buttonText: 'Analyze',
+                //                     buttonText: context.l10n.dqAnalyze,
                 //                     callB: () {
                 //                       debugPrint('Tapped1');
                 //                       Get.to(() => TrendAnalysisTabsWeight(
@@ -545,7 +537,7 @@ class CoversheetState extends State<Coversheet> {
                 //                     textColor: Colors.white,
                 //                   ),
                 //                   CustomButtonWithoutIcon(
-                //                     buttonText: 'Analyze',
+                //                     buttonText: context.l10n.dqAnalyze,
                 //                     callB: () {
                 //                       debugPrint('Tapped2');
                 //                       Get.to(TrendAnalysisTabsPulse(
@@ -559,7 +551,7 @@ class CoversheetState extends State<Coversheet> {
                 //                     textColor: Colors.white,
                 //                   ),
                 //                   CustomButtonWithoutIcon(
-                //                     buttonText: 'Analyze',
+                //                     buttonText: context.l10n.dqAnalyze,
                 //                     callB: () {
                 //                       debugPrint('Tapped3');
                 //                       Get.to(TrendAnalysisTabsOxygen(
@@ -574,7 +566,7 @@ class CoversheetState extends State<Coversheet> {
                 //                     textColor: Colors.white,
                 //                   ),
                 //                   CustomButtonWithoutIcon(
-                //                     buttonText: 'Analyze',
+                //                     buttonText: context.l10n.dqAnalyze,
                 //                     callB: () {
                 //                       debugPrint('Tapped4');
                 //                       Get.to(TrendAnalysisTabsTemp(
@@ -588,7 +580,7 @@ class CoversheetState extends State<Coversheet> {
                 //                     textColor: Colors.white,
                 //                   ),
                 //                   CustomButtonWithoutIcon(
-                //                     buttonText: 'Analyze',
+                //                     buttonText: context.l10n.dqAnalyze,
                 //                     callB: () {
                 //                       debugPrint('Tapped5');
                 //
@@ -613,12 +605,12 @@ class CoversheetState extends State<Coversheet> {
                 //     ),
                 //   ));
             }),
-            const SizedBox(
+            SizedBox(
               height: 10,
             ),
             CustomExpandableContainer(
               leading: 'assets/file-info.png',
-              text: 'Clinical History',
+              text: context.l10n.dqClinicalHistory,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
@@ -652,16 +644,12 @@ class CoversheetState extends State<Coversheet> {
                               e.updatedDateTime)
                               .toList() ??
                               [],
-                          tableHeader: const [
-                            "Sr.No",
-                            "Clinical History Date",
-                            "Action",
-                          ],
+                          tableHeader: [context.l10n.colSrNo, context.l10n.colClinicalHistoryDate, context.l10n.nephroAction],
                           lastColumnWidgets: List.generate(
                             nephroController.clinicalHistoryList?.length ??
                                 0,
                                 (index) => CustomButtonWithoutIcon(
-                              buttonText: 'Clinical History',
+                              buttonText: context.l10n.dqClinicalHistory,
                               callB: () {
                                 NephroList p = NephroList(
                                     patientId: widget.patientId,
@@ -669,8 +657,8 @@ class CoversheetState extends State<Coversheet> {
                                 debugPrint('Tapped row $index');
                                 Get.to(Scaffold(
                                     appBar: AppBar(
-                                      title: const CustomText(
-                                        text: 'Clinical History',
+                                      title: CustomText(
+                                        text: context.l10n.dqClinicalHistory,
                                         fontSize: 18.0,
                                         fontFam: 'Lato',
                                         fontWeight: FontWeight.w400,
@@ -710,12 +698,12 @@ class CoversheetState extends State<Coversheet> {
                 ],
               ),
             ),
-            const SizedBox(
+            SizedBox(
               height: 10,
             ),
             CustomExpandableContainer(
               leading: 'assets/file-info.png',
-              text: 'Upload Document',
+              text: context.l10n.regUploadDocument,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
@@ -736,18 +724,18 @@ class CoversheetState extends State<Coversheet> {
                               .uploadDocCoversheetl2,
                           l3: schedularController
                               .uploadDocCoversheetl3,
-                          tableHeader: const [
-                            "Sr. No",
-                            "Document\n",
-                            "Date\n",
-                            "View\n"
+                          tableHeader: [
+                            context.l10n.colSrNo,
+                            context.l10n.commonDocument,
+                            context.l10n.commonDate,
+                            context.l10n.commonView
                           ],
                           lastColumnWidgets: schedularController
                               .uploadDocCoversheetlastColumnWidgets,
                           onButtonPressed: handleButtonPress,
                         )
-                            : const CustomText(
-                          text: "No Data found",
+                            : CustomText(
+                          text: context.l10n.commonNoDataFound,
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
                           textColor: Colors.black,
@@ -759,13 +747,13 @@ class CoversheetState extends State<Coversheet> {
                 ],
               ),
             ),
-            const SizedBox(
+            SizedBox(
               height: 10,
             ),
 
             CustomExpandableContainer(
               leading: 'assets/file-info.png',
-              text: 'Instruction Details',
+              text: context.l10n.dqInstructionDetails,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
@@ -785,14 +773,14 @@ class CoversheetState extends State<Coversheet> {
                               .instructionCoversheetl1,
                           l2: schedularController
                               .instructionCoversheetl2,
-                          tableHeader: const [
-                            "Sr.\nNo",
-                            "Instruction\nName",
+                          tableHeader: [
+                            context.l10n.colSrNo,
+                            context.l10n.colInstructionName,
                           ],
                           onButtonPressed: handleButtonPress,
                         )
-                            : const CustomText(
-                          text: "No Data found",
+                            : CustomText(
+                          text: context.l10n.commonNoDataFound,
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
                           textColor: Colors.black,
@@ -804,7 +792,7 @@ class CoversheetState extends State<Coversheet> {
                 ],
               ),
             ),
-            const SizedBox(
+            SizedBox(
               height: 10,
             ),
 
@@ -813,7 +801,7 @@ class CoversheetState extends State<Coversheet> {
             GetBuilder<NephroController>(builder: (controller) {
               return CustomExpandableContainer(
                   leading: 'assets/file-info.png',
-                  text: 'Clinical Condition',
+                  text: context.l10n.dqClinicalCondition,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
@@ -832,16 +820,16 @@ class CoversheetState extends State<Coversheet> {
                               l2: nephroController.clinicalConditionL2,
                               l3: nephroController.clinicalConditionL3,
                               l4: nephroController.clinicalConditionL4,
-                              tableHeader: const [
-                                "Sr.\nNo",
-                                "Diagnosis\nType",
-                                "Date\n",
-                                "Type\n"
+                              tableHeader: [
+                                context.l10n.colSrNo,
+                                context.l10n.nephroDiagnosisType,
+                                context.l10n.commonDate,
+                                context.l10n.colType
                               ],
                               onButtonPressed: handleButtonPress,
                             )
-                                : const CustomText(
-                              text: "No Data found",
+                                : CustomText(
+                              text: context.l10n.commonNoDataFound,
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
                               textColor: Colors.black,
@@ -868,7 +856,7 @@ class CoversheetState extends State<Coversheet> {
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
           color: Colors.green[100], borderRadius: BorderRadius.circular(4)),
-      child: const CustomText(
+      child: CustomText(
         text: 'Active',
         fontSize: 12,
         fontFam: 'Lato',

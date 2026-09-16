@@ -1,4 +1,5 @@
 // import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 // import 'package:get/get.dart';
 // import 'package:heamodialysis/discharge_form/model/discharge_list.dart';
 // import 'package:heamodialysis/utils/color_constants.dart';

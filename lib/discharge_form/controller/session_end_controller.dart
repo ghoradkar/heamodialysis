@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/discharge_form/repository/session_end_repository.dart';
 import 'package:heamodialysis/nephro_desk_patient_list/screen/edit_nephro/tabs/choose_package.dart';
@@ -46,14 +47,13 @@ class SessionEndController extends GetxController {
 
   String dischargeFlagString = '';
 
-  CheckBoxList? predialysis = CheckBoxList('Predialysis', true);
-  CheckBoxList? postDialysis = CheckBoxList('Post Dialysis', true);
-  CheckBoxList? event = CheckBoxList('Event', false);
-  CheckBoxList? doctorDesk = CheckBoxList('Doctor Desk', true);
-  CheckBoxList? nephroDesk = CheckBoxList('Nephrologist Desk', true);
-  CheckBoxList? dietician = CheckBoxList('Dietician', false);
-  CheckBoxList? termsCondition = CheckBoxList(
-      'I have verified all dialysis stages and patient details', false);
+  CheckBoxList? predialysis = CheckBoxList(l10n.dqPreDialysis, true);
+  CheckBoxList? postDialysis = CheckBoxList(l10n.dqPostDialysis, true);
+  CheckBoxList? event = CheckBoxList(l10n.nephroEvent, false);
+  CheckBoxList? doctorDesk = CheckBoxList(l10n.drawerDoctorDesk, true);
+  CheckBoxList? nephroDesk = CheckBoxList(l10n.drawerNephrologistDesk, true);
+  CheckBoxList? dietician = CheckBoxList(l10n.dischDietician, false);
+  CheckBoxList? termsCondition = CheckBoxList(l10n.dischTermsVerified, false);
 
   List<DischargeListModel>? filteredDialysisEventList;
 

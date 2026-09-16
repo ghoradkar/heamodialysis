@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/new_registration/model/institute/Institute_list.dart';
 import 'package:heamodialysis/new_registration/model/institute/institute_data.dart';
@@ -370,12 +371,12 @@ class RoLogSheetController extends GetxController {
       isLoading = false;
       debugPrint(responseBody);
 
-      CustomMessage.toast("Saved Successfully");
+      CustomMessage.toast(l10n.roSavedSuccessfully);
       Get.off(const RoLogSheetList());
     } on ApiException catch (e) {
       debugPrint(e.body);
       isLoading = false;
-      CustomMessage.toast("Save Fail");
+      CustomMessage.toast(l10n.roSaveFailed);
     }
     update();
   }

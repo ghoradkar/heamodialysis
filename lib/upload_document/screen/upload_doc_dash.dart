@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/upload_document/screen/feedback/feedback_upload_document_screen.dart';
 import 'package:heamodialysis/upload_document/screen/hd_chart/he_chart_upload_document_screen.dart';
@@ -31,11 +32,10 @@ class _UploadDocDashScreenState extends State<UploadDocDashScreen> {
     );
   }
 
-  final List<Map<String, dynamic>> options = [
-
-    {"title": "HD Chart", "icon": "assets/HD Chart.png", "color": const Color(0xFFFFE7E7)},
-    {"title": "FeedBack Form", "icon": "assets/feedback.png", "color": const Color(0xFFDDF5FF)},
-  ];
+  List<Map<String, dynamic>> _options(BuildContext context) => [
+        {"title": context.l10n.uploadHdChart, "icon": "assets/HD Chart.png", "color": const Color(0xFFFFE7E7)},
+        {"title": context.l10n.uploadFeedbackForm, "icon": "assets/feedback.png", "color": const Color(0xFFDDF5FF)},
+      ];
 
   @override
   Widget build(BuildContext context) {
@@ -48,8 +48,8 @@ class _UploadDocDashScreenState extends State<UploadDocDashScreen> {
             bottomRight: Radius.circular(30),
           ),
         ),
-        title: const CustomText(
-          text: 'Upload Documents',
+        title: CustomText(
+          text: context.l10n.uploadDocuments,
           fontSize: 18.0,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,
@@ -75,7 +75,7 @@ class _UploadDocDashScreenState extends State<UploadDocDashScreen> {
           child: GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: isLoading ? 6 : options.length,
+            itemCount: isLoading ? 6 : _options(context).length,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,
               mainAxisSpacing: 8,
@@ -86,7 +86,7 @@ class _UploadDocDashScreenState extends State<UploadDocDashScreen> {
               if (isLoading) {
                 return DialysisShimmer();
               }
-              return buildOptionCard(options[index],index);
+              return buildOptionCard(_options(context)[index],index);
             },
           ),
         ),
@@ -119,7 +119,7 @@ class _UploadDocDashScreenState extends State<UploadDocDashScreen> {
               width: 45,
               height: 45,
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             Text(
               data["title"],
               textAlign: TextAlign.center,

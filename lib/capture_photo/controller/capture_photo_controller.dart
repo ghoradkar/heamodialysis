@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:heamodialysis/capture_photo/model/captured_photo_list_model.dart';
 import 'package:heamodialysis/capture_photo/model/save_captured_photo_model.dart';
 import 'package:heamodialysis/capture_photo/repository/capture_photo_repository.dart';
@@ -38,7 +39,7 @@ class CapturePhotoController extends GetxController {
 
       if (response.statusCode == 200) {
         isLoading = false;
-        CustomMessage.toast("Data saved successfully");
+        CustomMessage.toast(l10n.photoDataSaved);
         Get.off(const RegisteredPatientList());
       } else {
         isLoading = false;

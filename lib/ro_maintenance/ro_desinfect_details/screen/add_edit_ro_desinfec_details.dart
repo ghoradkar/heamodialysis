@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/internet/no_internet_connectivity.dart';
 import 'package:heamodialysis/new_registration/model/institute/institute_data.dart';
@@ -69,7 +70,7 @@ class _AddRoDesinfectionDetailsState extends State<AddRoDesinfectionDetails> {
   void addCard() {
     // Create a fresh cardData for the new card
     ROFileDetails newCard = ROFileDetails(
-        name: 'Upload Image',
+        name: l10n.commonUploadImage,
         key: 'files',
         isSelected: false,
         isReq: false,
@@ -184,8 +185,8 @@ class _AddRoDesinfectionDetailsState extends State<AddRoDesinfectionDetails> {
       appBar: AppBar(
         title: CustomText(
           text: widget.isEdit == true
-              ? "Edit RO Disinfection Details"
-              : 'Add RO Disinfection Details',
+              ? context.l10n.roEditDisinfectionDetails
+              : context.l10n.roAddDisinfectionDetails,
           fontSize: 18.0,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,
@@ -217,7 +218,7 @@ class _AddRoDesinfectionDetailsState extends State<AddRoDesinfectionDetails> {
                         child: Column(
                           children: [
                             MyCustomDropdown(
-                              labelText: 'Institute Name',
+                              labelText: context.l10n.colInstituteName,
                               isViewProfile:
                                   userData != null && userData['unitId'] == 1
                                       ? false
@@ -226,7 +227,7 @@ class _AddRoDesinfectionDetailsState extends State<AddRoDesinfectionDetails> {
                                       ?.map((e) => e.unitName)
                                       .toList() ??
                                   [],
-                              hint: 'Select',
+                              hint: context.l10n.regHintSelect,
                               isRequired: false,
                               senValue: (value) {
                                 roMaintDetailsController.selectedInsti =
@@ -244,12 +245,12 @@ class _AddRoDesinfectionDetailsState extends State<AddRoDesinfectionDetails> {
                             MyCustomDropdown(
                               selectedItem:
                                   roMaintDetailsController.initialMachine,
-                              labelText: 'Machine Name',
+                              labelText: context.l10n.machMachineName,
                               items: controller.getMachineNameModel?.data
                                       ?.map((e) => e.machineName)
                                       .toList() ??
                                   [],
-                              hint: 'Select',
+                              hint: context.l10n.regHintSelect,
                               isRequired: false,
                               senValue: (value) {
                                 roMaintDetailsController.selectedMachine =
@@ -266,12 +267,12 @@ class _AddRoDesinfectionDetailsState extends State<AddRoDesinfectionDetails> {
                             MyCustomDropdown(
                               selectedItem:
                                   roMaintDetailsController.initialDisinfect,
-                              labelText: 'Type of Disinfection Used',
+                              labelText: context.l10n.roTypeOfDisinfection,
                               items: controller.disinfectTypeModel?.data
                                       ?.map((e) => e.lookupDetDescEn)
                                       .toList() ??
                                   [],
-                              hint: 'Select',
+                              hint: context.l10n.regHintSelect,
                               isRequired: false,
                               senValue: (value) {
                                 roMaintDetailsController.selectedDisinfect =
@@ -286,8 +287,8 @@ class _AddRoDesinfectionDetailsState extends State<AddRoDesinfectionDetails> {
                               filledColor: Colors.white,
                             ),
                             CustomDateField(
-                              labelText: 'Inspection Date',
-                              hint: 'Select Date',
+                              labelText: context.l10n.roInspectionDate,
+                              hint: context.l10n.dashSelectDate,
                               isRequired: false,
                               callB: () {
                                 pickInspectionDate(context);
@@ -298,8 +299,8 @@ class _AddRoDesinfectionDetailsState extends State<AddRoDesinfectionDetails> {
                               dontDhowPrefix: false,
                             ),
                             CustomDateField(
-                              labelText: 'Next Inspection Date',
-                              hint: 'Select Date',
+                              labelText: context.l10n.roNextInspectionDate,
+                              hint: context.l10n.dashSelectDate,
                               isRequired: false,
                               callB: () {
                                 pickNextInspecDate(context);
@@ -310,8 +311,8 @@ class _AddRoDesinfectionDetailsState extends State<AddRoDesinfectionDetails> {
                               dontDhowPrefix: false,
                             ),
                             CustomTextField(
-                              labelText: 'Comments',
-                              hintText: 'Enter Comments',
+                              labelText: context.l10n.commonComments,
+                              hintText: context.l10n.nephroEnterComments,
                               isRequired: false,
                               keyBoardType: TextInputType.text,
                               txtController:
@@ -324,12 +325,12 @@ class _AddRoDesinfectionDetailsState extends State<AddRoDesinfectionDetails> {
                             MyCustomDropdown(
                               selectedItem:
                                   roMaintDetailsController.initialDoneBy,
-                              labelText: 'Done By',
+                              labelText: context.l10n.roDoneBy,
                               items: controller.doneByModel?.data
                                       ?.map((e) => e.username)
                                       .toList() ??
                                   [],
-                              hint: 'Select',
+                              hint: context.l10n.regHintSelect,
                               isRequired: false,
                               senValue: (value) {
                                 roMaintDetailsController.selectedDoneBy =
@@ -340,10 +341,10 @@ class _AddRoDesinfectionDetailsState extends State<AddRoDesinfectionDetails> {
                               },
                               filledColor: Colors.white,
                             ),
-                            const Align(
+                            Align(
                               alignment: Alignment.centerLeft,
                               child: CustomText(
-                                  text: "Image Upload",
+                                  text: context.l10n.roImageUpload,
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
                                   textColor: Colors.black,
@@ -391,7 +392,7 @@ class _AddRoDesinfectionDetailsState extends State<AddRoDesinfectionDetails> {
                               children: [
                                 CustomButton(
                                   isLoading: controller.isLoading,
-                                  buttonText: 'Save',
+                                  buttonText: context.l10n.commonSave,
                                   path: 'assets/save-ro-disinfec.png',
                                   callB: controller.isLoading
                                       ? null
@@ -405,7 +406,7 @@ class _AddRoDesinfectionDetailsState extends State<AddRoDesinfectionDetails> {
                                           if (selectedNextInspection!
                                               .isBefore(inspecDate)) {
                                             CustomMessage.toast(
-                                                "Next Inspection Date Should Not Before Inspection Date ");
+                                                context.l10n.roNextInspectionBeforeError);
                                           } else {
                                             if (widget.isEdit == true) {
                                               controller.addRoDisinfectModel
@@ -513,7 +514,7 @@ class _AddRoDesinfectionDetailsState extends State<AddRoDesinfectionDetails> {
                                   iconColor: Colors.white,
                                 ),
                                 CustomButton(
-                                  buttonText: 'Reset',
+                                  buttonText: context.l10n.commonReset,
                                   path: 'assets/refresh.png',
                                   callB: () {
                                     roMaintDetailsController.selectedInsti =
@@ -550,7 +551,7 @@ class _AddRoDesinfectionDetailsState extends State<AddRoDesinfectionDetails> {
                                   iconColor: Colors.white,
                                 ),
                                 CustomButton(
-                                  buttonText: 'Cancel',
+                                  buttonText: context.l10n.commonCancel,
                                   path: 'assets/cancel.png',
                                   callB: () {
                                     Get.back();
@@ -695,8 +696,8 @@ class UploadRODisDocument extends StatelessWidget {
         children: [
           CustomTextField(
             key: UniqueKey(),
-            labelText: 'Image Name',
-            hintText: 'Enter',
+            labelText: context.l10n.roImageName,
+            hintText: context.l10n.regHintEnter,
             isRequired: false,
             keyBoardType: TextInputType.text,
             initialValue: fileData.docName,
@@ -710,7 +711,7 @@ class UploadRODisDocument extends StatelessWidget {
             },
             fontSize: 16,
           ),
-          const SizedBox(
+          SizedBox(
             height: 6,
           ),
           CustomUploadButton(
@@ -741,7 +742,7 @@ class UploadRODisDocument extends StatelessWidget {
             isViewProfile: isViewPatient,
             showIndex: false,
           ).paddingOnly(bottom: 8, left: 5, right: 5),
-          const SizedBox(
+          SizedBox(
             height: 10,
           ),
           Row(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:heamodialysis/widgets/custom_text.dart';
 
 import '../../utils/color_constants.dart';
@@ -71,14 +72,16 @@ class DashInfoTableTotal extends StatelessWidget {
                   columnSpacing: 16.0,
                   // Build columns dynamically based on available data
                   columns: [
-                    const DataColumn(label: Text('Sr No')),
-                    if (showUnitName) const DataColumn(label: Text('Unit Name')),
+                    DataColumn(label: Text(context.l10n.colSrNo)),
+                    if (showUnitName)
+                      DataColumn(label: Text(context.l10n.colUnitName)),
                     if (showMjpjayCount)
-                      const DataColumn(label: Text('MJPJAY Count')),
+                      DataColumn(label: Text(context.l10n.colMjpjayCount)),
                     if (showNonMjpjayCount)
-                      const DataColumn(label: Text('Non-MJPJAY Count')),
-                    const DataColumn(label: Text('Total')),
-                    if (isShowButton!)  const DataColumn(label: Text('View Patient')),
+                      DataColumn(label: Text(context.l10n.colNonMjpjayCount)),
+                    DataColumn(label: Text(context.l10n.colTotal)),
+                    if (isShowButton!)
+                      DataColumn(label: Text(context.l10n.colViewPatient)),
                   ],
                   rows: [
                     ...dataList.asMap().entries.map((entry) {
@@ -103,12 +106,12 @@ class DashInfoTableTotal extends StatelessWidget {
                         if (showNonMjpjayCount)
                           DataCell(Text(dashInfo.nonMjpjayCount?.toString() ?? '')),
                         DataCell(Text(dashInfo.total?.toString() ?? '')),
-                        if (isShowButton!)  DataCell(TextButton(onPressed: () { showData!(dashInfo.unitName); }, child: const Text("Show Data"),)),
+                        if (isShowButton!)  DataCell(TextButton(onPressed: () { showData!(dashInfo.unitName); }, child: Text(context.l10n.dashShowData),)),
                       ]);
                     }),
                     DataRow(cells: [
-                      const DataCell(Text('Total',
-                          style: TextStyle(fontWeight: FontWeight.bold))),
+                      DataCell(Text(context.l10n.colTotal,
+                          style: const TextStyle(fontWeight: FontWeight.bold))),
                       if (showUnitName) const DataCell(Text('')),
                       if (showMjpjayCount)
                         const DataCell(Text("",
@@ -126,9 +129,9 @@ class DashInfoTableTotal extends StatelessWidget {
             ),
           )
         ] ,
-      ):const Center(
+      ) : Center(
         child: CustomText(
-            text: "No Data",
+            text: context.l10n.commonNoDataFound,
             fontSize: 16,
             fontWeight: FontWeight.normal,
             textColor: Colors.black,
@@ -193,36 +196,36 @@ class DashInfoTableSubHeaderTicket extends StatelessWidget {
                 (states) => AppColor.primaryBackgroundColor),
             columnSpacing: 16.0,
             // Define the column headers
-            columns: const [
+            columns: [
               DataColumn(
                   label: Text(
-                'Sr No',
-                style: TextStyle(color: Colors.white),
+                context.l10n.colSrNo,
+                style: const TextStyle(color: Colors.white),
               )),
               DataColumn(
-                  label:
-                      Text('Unit Name', style: TextStyle(color: Colors.white))),
+                  label: Text(context.l10n.colUnitName,
+                      style: const TextStyle(color: Colors.white))),
               DataColumn(
-                  label: Text('Ticket Types\nData Correction',
-                      style: TextStyle(color: Colors.white))),
+                  label: Text(context.l10n.colTicketTypeDataCorrection,
+                      style: const TextStyle(color: Colors.white))),
               DataColumn(
-                  label: Text('Ticket Types\nNew Requirement',
-                      style: TextStyle(color: Colors.white))),
+                  label: Text(context.l10n.colTicketTypeNewRequirement,
+                      style: const TextStyle(color: Colors.white))),
               DataColumn(
-                  label: Text('Ticket Types\nOperator Issue',
-                      style: TextStyle(color: Colors.white))),
+                  label: Text(context.l10n.colTicketTypeOperatorIssue,
+                      style: const TextStyle(color: Colors.white))),
               DataColumn(
-                  label: Text('Ticket Types\nSoftware Services',
-                      style: TextStyle(color: Colors.white))),
+                  label: Text(context.l10n.colTicketTypeSoftwareServices,
+                      style: const TextStyle(color: Colors.white))),
               DataColumn(
-                  label: Text('Ticket Types\nBug',
-                      style: TextStyle(color: Colors.white))),
+                  label: Text(context.l10n.colTicketTypeBug,
+                      style: const TextStyle(color: Colors.white))),
               DataColumn(
-                  label: Text('Ticket Types\nEnhancement',
-                      style: TextStyle(color: Colors.white))),
+                  label: Text(context.l10n.colTicketTypeEnhancement,
+                      style: const TextStyle(color: Colors.white))),
               DataColumn(
-                  label: Text('Total Count',
-                      style: TextStyle(color: Colors.white))),
+                  label: Text(context.l10n.colTotalCount,
+                      style: const TextStyle(color: Colors.white))),
             ],
             rows: [
               ...dataList.asMap().entries.map((entry) {
@@ -248,8 +251,8 @@ class DashInfoTableSubHeaderTicket extends StatelessWidget {
               }),
               // Add total row
               DataRow(cells: [
-                const DataCell(Text('Total',
-                    style: TextStyle(fontWeight: FontWeight.bold))),
+                DataCell(Text(context.l10n.colTotal,
+                    style: const TextStyle(fontWeight: FontWeight.bold))),
                 const DataCell(Text('')),
                 const DataCell(Text("")),
                 const DataCell(Text("")),
@@ -263,9 +266,9 @@ class DashInfoTableSubHeaderTicket extends StatelessWidget {
             ],
           ),
         ),
-      ):const Center(
+      ) : Center(
         child: CustomText(
-            text: "No Data",
+            text: context.l10n.commonNoDataFound,
             fontSize: 16,
             fontWeight: FontWeight.bold,
             textColor: Colors.black,
@@ -329,25 +332,24 @@ class DashInfoTableSubHeaderComplaints extends StatelessWidget {
                       (states) => AppColor.primaryBackgroundColor),
                   columnSpacing: 16.0,
                   // Define the column headers
-                  columns: const [
+                  columns: [
                     DataColumn(
                         label: Text(
-                      'Sr No',
-                      style: TextStyle(color: Colors.white),
+                      context.l10n.colSrNo,
+                      style: const TextStyle(color: Colors.white),
                     )),
                     DataColumn(
-                        label: Text('Unit Name',
-                            style: TextStyle(color: Colors.white))),
+                        label: Text(context.l10n.colUnitName,
+                            style: const TextStyle(color: Colors.white))),
                     DataColumn(
-                        label: Text('Complaint Types\nDenial of Service',
-                            style: TextStyle(color: Colors.white))),
+                        label: Text(context.l10n.colComplaintTypeDenialOfService,
+                            style: const TextStyle(color: Colors.white))),
                     DataColumn(
-                        label: Text(
-                            'Complaint Types\nMoney Taken Against Treat',
-                            style: TextStyle(color: Colors.white))),
+                        label: Text(context.l10n.colComplaintTypeMoneyTaken,
+                            style: const TextStyle(color: Colors.white))),
                     DataColumn(
-                        label: Text('Total Count',
-                            style: TextStyle(color: Colors.white))),
+                        label: Text(context.l10n.colTotalCount,
+                            style: const TextStyle(color: Colors.white))),
                   ],
                   rows: [
                     ...dataList.asMap().entries.map((entry) {
@@ -368,8 +370,8 @@ class DashInfoTableSubHeaderComplaints extends StatelessWidget {
                     }),
                     // Add total row
                     DataRow(cells: [
-                      const DataCell(Text('Total',
-                          style: TextStyle(fontWeight: FontWeight.bold))),
+                      DataCell(Text(context.l10n.colTotal,
+                          style: const TextStyle(fontWeight: FontWeight.bold))),
                       const DataCell(Text("")),
                       const DataCell(Text("")),
                       const DataCell(Text("")),
@@ -380,9 +382,9 @@ class DashInfoTableSubHeaderComplaints extends StatelessWidget {
                 ),
               ),
             )
-          : const Center(
+          : Center(
               child: CustomText(
-                  text: "No Data",
+                  text: context.l10n.commonNoDataFound,
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                   textColor: Colors.black,
@@ -446,24 +448,24 @@ class DashInfoTableSubHeaderTestDet extends StatelessWidget {
                 (states) => AppColor.primaryBackgroundColor),
             columnSpacing: 16.0,
             // Define the column headers
-            columns: const [
+            columns: [
               DataColumn(
                   label: Text(
-                'Sr No',
-                style: TextStyle(color: Colors.white),
+                context.l10n.colSrNo,
+                style: const TextStyle(color: Colors.white),
               )),
               DataColumn(
-                  label:
-                      Text('Unit Name', style: TextStyle(color: Colors.white))),
+                  label: Text(context.l10n.colUnitName,
+                      style: const TextStyle(color: Colors.white))),
               DataColumn(
-                  label: Text('Test Types\nPending',
-                      style: TextStyle(color: Colors.white))),
+                  label: Text(context.l10n.colTestTypePending,
+                      style: const TextStyle(color: Colors.white))),
               DataColumn(
-                  label: Text('Test Types\nComplete',
-                      style: TextStyle(color: Colors.white))),
+                  label: Text(context.l10n.colTestTypeComplete,
+                      style: const TextStyle(color: Colors.white))),
               DataColumn(
-                  label: Text('Total Count',
-                      style: TextStyle(color: Colors.white))),
+                  label: Text(context.l10n.colTotalCount,
+                      style: const TextStyle(color: Colors.white))),
             ],
             rows: [
               ...dataList.asMap().entries.map((entry) {
@@ -482,8 +484,8 @@ class DashInfoTableSubHeaderTestDet extends StatelessWidget {
               }),
               // Add total row
               DataRow(cells: [
-                const DataCell(Text('Total',
-                    style: TextStyle(fontWeight: FontWeight.bold))),
+                DataCell(Text(context.l10n.colTotal,
+                    style: const TextStyle(fontWeight: FontWeight.bold))),
                 const DataCell(Text("")),
                 const DataCell(Text("")),
                 const DataCell(Text("")),
@@ -493,9 +495,9 @@ class DashInfoTableSubHeaderTestDet extends StatelessWidget {
             ],
           ),
         ),
-      ):const Center(
+      ) : Center(
         child: CustomText(
-            text: "No Data",
+            text: context.l10n.commonNoDataFound,
             fontSize: 16,
             fontWeight: FontWeight.bold,
             textColor: Colors.black,

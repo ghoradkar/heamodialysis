@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/utils/color_constants.dart';
 import 'package:heamodialysis/widgets/custom_text.dart';
@@ -25,23 +26,23 @@ class _PreDialysisTabState extends State<PreDialysisTab> {
                 border: Border.all(color: AppColor.borderColor)),
             child:  Column(
               children: [
-                const SizedBox(height: 10,),
-                const Align(
+                SizedBox(height: 10,),
+                Align(
                   alignment: Alignment.centerLeft,
                   child: CustomText(
-                      text: 'Pre Dialysis Investigation',
+                      text: context.l10n.clinPreDialysisInvestigation,
                       fontSize: 16,
                       fontFam: "Lato",
                       fontWeight: FontWeight.w500,
                       textColor: Colors.black,
                       textAlign: TextAlign.start),
                 ),
-                const SizedBox(height: 10,),
+                SizedBox(height: 10,),
 
-                const Row(
+                Row(
                   children: [
                     CustomText(
-                        text: 'Dialysis Type :',
+                        text: "${context.l10n.clinDialysisType} : ",
                         fontSize: 14,
                         fontFam: "Lato",
                         fontWeight: FontWeight.normal,
@@ -56,7 +57,7 @@ class _PreDialysisTabState extends State<PreDialysisTab> {
                         textAlign: TextAlign.start),
                     Spacer(),
                     CustomText(
-                        text: 'Dialysis Type :',
+                        text: "${context.l10n.clinDialysisType} : ",
                         fontSize: 16,
                         fontFam: "Lato",
                         fontWeight: FontWeight.normal,
@@ -71,10 +72,10 @@ class _PreDialysisTabState extends State<PreDialysisTab> {
                         textAlign: TextAlign.start),
                   ],
                 ).paddingSymmetric(vertical: 2),
-                const Row(
+                Row(
                   children: [
                     CustomText(
-                        text: 'Access Site :',
+                        text: "${context.l10n.clinAccessSite} : ",
                         fontSize: 14,
                         fontFam: "Lato",
                         fontWeight: FontWeight.normal,
@@ -90,10 +91,10 @@ class _PreDialysisTabState extends State<PreDialysisTab> {
 
                   ],
                 ).paddingSymmetric(vertical: 2),
-                const Row(
+                Row(
                   children: [
                     CustomText(
-                        text: 'Dialyzer Type :',
+                        text: "${context.l10n.clinDialyzerType} : ",
                         fontSize: 14,
                         fontFam: "Lato",
                         fontWeight: FontWeight.normal,
@@ -109,10 +110,10 @@ class _PreDialysisTabState extends State<PreDialysisTab> {
 
                   ],
                 ).paddingSymmetric(vertical: 2),
-                const Row(
+                Row(
                   children: [
                     CustomText(
-                        text: 'Dialyzer Barcode No./Sr. No :',
+                        text: "${context.l10n.clinDialyzerBarcode} : ",
                         fontSize: 14,
                         fontFam: "Lato",
                         fontWeight: FontWeight.normal,
@@ -128,10 +129,10 @@ class _PreDialysisTabState extends State<PreDialysisTab> {
 
                   ],
                 ).paddingSymmetric(vertical: 2),
-                const Row(
+                Row(
                   children: [
                     CustomText(
-                        text: 'Dialyzer Reuse No :',
+                        text: "${context.l10n.clinDialyzerReuseNo} : ",
                         fontSize: 14,
                         fontFam: "Lato",
                         fontWeight: FontWeight.normal,
@@ -147,10 +148,10 @@ class _PreDialysisTabState extends State<PreDialysisTab> {
 
                   ],
                 ).paddingSymmetric(vertical: 2),
-                const Row(
+                Row(
                   children: [
                     CustomText(
-                        text: 'Dialyzer Remark :',
+                        text: "${context.l10n.clinDialyzerRemark} : ",
                         fontSize: 14,
                         fontFam: "Lato",
                         fontWeight: FontWeight.normal,
@@ -166,10 +167,10 @@ class _PreDialysisTabState extends State<PreDialysisTab> {
 
                   ],
                 ).paddingSymmetric(vertical: 2),
-                const Row(
+                Row(
                   children: [
                     CustomText(
-                        text: 'Blood Tubing Barcode No./Sr. No :',
+                        text: "${context.l10n.clinBloodTubingBarcode} : ",
                         fontSize: 14,
                         fontFam: "Lato",
                         fontWeight: FontWeight.normal,
@@ -185,10 +186,10 @@ class _PreDialysisTabState extends State<PreDialysisTab> {
 
                   ],
                 ).paddingSymmetric(vertical: 2),
-                const Row(
+                Row(
                   children: [
                     CustomText(
-                        text: 'Blood Tubing Reuse No :',
+                        text: "${context.l10n.clinBloodTubingReuseNo} : ",
                         fontSize: 14,
                         fontFam: "Lato",
                         fontWeight: FontWeight.normal,
@@ -204,17 +205,17 @@ class _PreDialysisTabState extends State<PreDialysisTab> {
 
                   ],
                 ).paddingSymmetric(vertical: 2),
-                const Row(
+                Row(
                   children: [
                     CustomText(
-                        text: 'Blood Tubing Reuse No :',
+                        text: "${context.l10n.clinBloodTubingReuseNo} : ",
                         fontSize: 14,
                         fontFam: "Lato",
                         fontWeight: FontWeight.normal,
                         textColor: Colors.black,
                         textAlign: TextAlign.start),
                     CustomText(
-                        text: 'Blood Tubing Remark',
+                        text: context.l10n.clinBloodTubingRemark,
                         fontSize: 14,
                         fontFam: "Lato",
                         fontWeight: FontWeight.normal,
@@ -223,17 +224,17 @@ class _PreDialysisTabState extends State<PreDialysisTab> {
 
                   ],
                 ).paddingSymmetric(vertical: 2),
-                const Row(
+                Row(
                   children: [
                     CustomText(
-                        text: 'Special Dialysis :',
+                        text: "${context.l10n.clinSpecialDialysis} : ",
                         fontSize: 14,
                         fontFam: "Lato",
                         fontWeight: FontWeight.normal,
                         textColor: Colors.black,
                         textAlign: TextAlign.start),
                     CustomText(
-                        text: 'Yes',
+                        text: context.l10n.commonYes,
                         fontSize: 14,
                         fontFam: "Lato",
                         fontWeight: FontWeight.normal,
@@ -242,10 +243,10 @@ class _PreDialysisTabState extends State<PreDialysisTab> {
 
                   ],
                 ).paddingSymmetric(vertical: 2),
-                const Row(
+                Row(
                   children: [
                     CustomText(
-                        text: 'Pre Dialysis Weight  :',
+                        text: "${context.l10n.clinPreDialysisWeight} : ",
                         fontSize: 14,
                         fontFam: "Lato",
                         fontWeight: FontWeight.normal,
@@ -260,7 +261,7 @@ class _PreDialysisTabState extends State<PreDialysisTab> {
                         textAlign: TextAlign.start),
                     Spacer(),
                     CustomText(
-                        text: 'Dry Weight :',
+                        text: "${context.l10n.clinDryWeight} : ",
                         fontSize: 14,
                         fontFam: "Lato",
                         fontWeight: FontWeight.normal,
@@ -275,17 +276,17 @@ class _PreDialysisTabState extends State<PreDialysisTab> {
                         textAlign: TextAlign.start),
                   ],
                 ).paddingSymmetric(vertical: 2),
-                const Row(
+                Row(
                   children: [
                     CustomText(
-                        text: 'Interdialytic Gain :',
+                        text: "${context.l10n.clinInterdialyticGain} : ",
                         fontSize: 14,
                         fontFam: "Lato",
                         fontWeight: FontWeight.normal,
                         textColor: Colors.black,
                         textAlign: TextAlign.start),
                     CustomText(
-                        text: 'Blood Tubing Remarks',
+                        text: context.l10n.clinBloodTubingRemark,
                         fontSize: 14,
                         fontFam: "Lato",
                         fontWeight: FontWeight.normal,
@@ -294,17 +295,17 @@ class _PreDialysisTabState extends State<PreDialysisTab> {
 
                   ],
                 ).paddingSymmetric(vertical: 2),
-                const Row(
+                Row(
                   children: [
                     CustomText(
-                        text: 'Pre HD Condition :',
+                        text: "${context.l10n.clinPreHdCondition} : ",
                         fontSize: 14,
                         fontFam: "Lato",
                         fontWeight: FontWeight.normal,
                         textColor: Colors.black,
                         textAlign: TextAlign.start),
                     CustomText(
-                        text: 'Blood Tubing Remarks',
+                        text: context.l10n.clinBloodTubingRemark,
                         fontSize: 14,
                         fontFam: "Lato",
                         fontWeight: FontWeight.normal,
@@ -313,17 +314,17 @@ class _PreDialysisTabState extends State<PreDialysisTab> {
 
                   ],
                 ).paddingSymmetric(vertical: 2),
-                const Row(
+                Row(
                   children: [
                     CustomText(
-                        text: 'Pre HD Condition :',
+                        text: "${context.l10n.clinPreHdCondition} : ",
                         fontSize: 14,
                         fontFam: "Lato",
                         fontWeight: FontWeight.normal,
                         textColor: Colors.black,
                         textAlign: TextAlign.start),
                     CustomText(
-                        text: 'Blood Tubing Remarks',
+                        text: context.l10n.clinBloodTubingRemark,
                         fontSize: 14,
                         fontFam: "Lato",
                         fontWeight: FontWeight.normal,
@@ -332,17 +333,17 @@ class _PreDialysisTabState extends State<PreDialysisTab> {
 
                   ],
                 ).paddingSymmetric(vertical: 2),
-                const Row(
+                Row(
                   children: [
                     CustomText(
-                        text: 'Dialyzer Remark :',
+                        text: "${context.l10n.clinDialyzerRemark} : ",
                         fontSize: 14,
                         fontFam: "Lato",
                         fontWeight: FontWeight.normal,
                         textColor: Colors.black,
                         textAlign: TextAlign.start),
                     CustomText(
-                        text: 'Blood Tubing Remarks',
+                        text: context.l10n.clinBloodTubingRemark,
                         fontSize: 14,
                         fontFam: "Lato",
                         fontWeight: FontWeight.normal,
@@ -351,17 +352,17 @@ class _PreDialysisTabState extends State<PreDialysisTab> {
 
                   ],
                 ).paddingSymmetric(vertical: 2),
-                const Row(
+                Row(
                   children: [
                     CustomText(
-                        text: 'Dialyzer Decarded :',
+                        text: "${context.l10n.clinDialyzerDiscarded} : ",
                         fontSize: 14,
                         fontFam: "Lato",
                         fontWeight: FontWeight.normal,
                         textColor: Colors.black,
                         textAlign: TextAlign.start),
                     CustomText(
-                        text: 'Blood Tubing Remarks',
+                        text: context.l10n.clinBloodTubingRemark,
                         fontSize: 14,
                         fontFam: "Lato",
                         fontWeight: FontWeight.normal,
@@ -385,24 +386,24 @@ class _PreDialysisTabState extends State<PreDialysisTab> {
                 border: Border.all(color: AppColor.borderColor)),
             child:  Column(
               children: [
-                const SizedBox(height: 10,),
+                SizedBox(height: 10,),
 
-                const Align(
+                Align(
                   alignment: Alignment.centerLeft,
                   child: CustomText(
-                      text: 'Pre Dialysis Vitals',
+                      text: context.l10n.clinPreDialysisVitals,
                       fontSize: 16,
                       fontFam: "Lato",
                       fontWeight: FontWeight.w500,
                       textColor: Colors.black,
                       textAlign: TextAlign.start),
                 ),
-                const SizedBox(height: 10,),
+                SizedBox(height: 10,),
 
-                const Row(
+                Row(
                   children: [
                     CustomText(
-                        text: 'Dialysis Type :',
+                        text: "${context.l10n.clinDialysisType} : ",
                         fontSize: 14,
                         fontFam: "Lato",
                         fontWeight: FontWeight.normal,
@@ -417,7 +418,7 @@ class _PreDialysisTabState extends State<PreDialysisTab> {
                         textAlign: TextAlign.start),
                     Spacer(),
                     CustomText(
-                        text: 'Dialysis Type :',
+                        text: "${context.l10n.clinDialysisType} : ",
                         fontSize: 14,
                         fontFam: "Lato",
                         fontWeight: FontWeight.normal,
@@ -432,10 +433,10 @@ class _PreDialysisTabState extends State<PreDialysisTab> {
                         textAlign: TextAlign.start),
                   ],
                 ).paddingSymmetric(vertical: 2),
-                const Row(
+                Row(
                   children: [
                     CustomText(
-                        text: 'Dialysis Type :',
+                        text: "${context.l10n.clinDialysisType} : ",
                         fontSize: 16,
                         fontFam: "Lato",
                         fontWeight: FontWeight.normal,
@@ -450,7 +451,7 @@ class _PreDialysisTabState extends State<PreDialysisTab> {
                         textAlign: TextAlign.start),
                     Spacer(),
                     CustomText(
-                        text: 'Dialysis Type :',
+                        text: "${context.l10n.clinDialysisType} : ",
                         fontSize: 16,
                         fontFam: "Lato",
                         fontWeight: FontWeight.normal,
@@ -482,22 +483,22 @@ class _PreDialysisTabState extends State<PreDialysisTab> {
               children: [
                 const SizedBox(height: 10,),
 
-                const Align(
+                Align(
                   alignment: Alignment.centerLeft,
                   child: CustomText(
-                      text: 'Dialysis Start Date and Tim',
+                      text: context.l10n.clinDialysisStartDateTime,
                       fontSize: 16,
                       fontFam: "Lato",
                       fontWeight: FontWeight.w500,
                       textColor: Colors.black,
                       textAlign: TextAlign.start),
                 ),
-                const SizedBox(height: 10,),
+                SizedBox(height: 10,),
 
-                 const Row(
+                 Row(
                   children: [
                     CustomText(
-                        text: 'Dialysis Start Date and Time :',
+                        text: "${context.l10n.clinDialysisStartDateTime} : ",
                         fontSize: 14,
                         fontFam: "Lato",
                         fontWeight: FontWeight.normal,

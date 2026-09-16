@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dashboard/model/dash_info_data.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:heamodialysis/utils/color_constants.dart';
 import 'package:heamodialysis/widgets/custom_text.dart';
 
@@ -39,13 +40,13 @@ class FunctionalCenterTable extends StatelessWidget {
                     (states) => AppColor.primaryBackgroundColor),
             columnSpacing: 10.0,
             columns: <DataColumn>[
-              buildHeader('Sr. No'), // Add Serial Number column header
-              buildHeader('District Name'),
-              buildHeader('Institute Name'),
-              buildHeader('Machine Count'),
-              buildHeader('Commencement Date'),
-              buildHeader('Patient Registered'),
-              buildHeader('Session Done')
+              buildHeader(context.l10n.colSrNo),
+              buildHeader(context.l10n.colDistrictName),
+              buildHeader(context.l10n.colInstituteName),
+              buildHeader(context.l10n.colMachineCount),
+              buildHeader(context.l10n.colCommencementDate),
+              buildHeader(context.l10n.colPatientRegistered),
+              buildHeader(context.l10n.colSessionDone)
             ],
             rows: patients.asMap().entries.map((entry) {
               final index = entry.key + 1;
@@ -71,9 +72,9 @@ class FunctionalCenterTable extends StatelessWidget {
           ).paddingSymmetric(vertical: 4, horizontal: 8),
         ),
       )
-          : const Center(
+          : Center(
         child: CustomText(
-            text: "No Data",
+            text: context.l10n.commonNoDataFound,
             fontSize: 16,
             fontWeight: FontWeight.normal,
             textColor: Colors.black,

@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:heamodialysis/dashboard/controller/dashboard_controller.dart';
 import 'package:heamodialysis/dashboard/widget/drawer_screen.dart';
 import 'package:heamodialysis/internet/no_internet_connectivity.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:heamodialysis/new_registration/controller/new_registration_controller.dart';
 import 'package:heamodialysis/utils/color_constants.dart';
 import 'package:heamodialysis/utils/shared_pref_constants.dart';
@@ -91,7 +92,7 @@ class _MISDashboardScreenState extends State<MISDashboardScreen>
     return Scaffold(
       appBar: AppBar(
           title:  CustomText(
-            text: 'MIS Dashboard',
+            text: context.l10n.dashMisDashboard,
             fontSize: 18.sp,
             fontFam: 'Lato',
             fontWeight: FontWeight.w400,
@@ -117,7 +118,7 @@ class _MISDashboardScreenState extends State<MISDashboardScreen>
                 dashboardController.update();
               },
               child:  CustomText(
-                  text: "Today",
+                  text: context.l10n.dashToday,
                   fontSize: 14.sp,
                   fontWeight: FontWeight.bold,
                   textColor: Colors.black,
@@ -177,8 +178,8 @@ class _MISDashboardScreenState extends State<MISDashboardScreen>
                                 child: Column(
                                   children: [
                                     CustomDateField(
-                                      labelText: 'From Date',
-                                      hint: 'Select Date',
+                                      labelText: context.l10n.dashFromDate,
+                                      hint: context.l10n.dashSelectDate,
                                       isRequired: false,
                                       callB: () {
                                         selectFromDate();
@@ -189,8 +190,8 @@ class _MISDashboardScreenState extends State<MISDashboardScreen>
                                       dontDhowPrefix: false,
                                     ),
                                     CustomDateField(
-                                      labelText: 'To Date',
-                                      hint: 'Select Date',
+                                      labelText: context.l10n.dashToDate,
+                                      hint: context.l10n.dashSelectDate,
                                       isRequired: false,
                                       callB: () {
                                         selectToDate();
@@ -320,10 +321,9 @@ class _MISDashboardScreenState extends State<MISDashboardScreen>
                                                   selectedToDate);
                                         },
                                         child: Container(
-                                            padding:  EdgeInsets.symmetric(
-                                                vertical: 8.h),
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 8.h, horizontal: 20.w),
                                             alignment: Alignment.center,
-                                            width: 100.w,
                                             decoration: BoxDecoration(
                                               borderRadius:
                                                   BorderRadius.circular(10),
@@ -337,23 +337,28 @@ class _MISDashboardScreenState extends State<MISDashboardScreen>
                                                 end: Alignment.bottomCenter,
                                               ),
                                             ),
-                                            child:  Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                const Icon(
-                                                  Icons.search,
-                                                  color: Colors.white,
-                                                ),
-                                                CustomText(
-                                                    text: "Search",
-                                                    fontSize: 16.sp,
-                                                    fontFam: "Lato",
-                                                    fontWeight:
-                                                        FontWeight.normal,
-                                                    textColor: Colors.white,
-                                                    textAlign: TextAlign.start),
-                                              ],
+                                            child: FittedBox(
+                                              fit: BoxFit.scaleDown,
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  const Icon(
+                                                    Icons.search,
+                                                    color: Colors.white,
+                                                  ),
+                                                  SizedBox(width: 6.w),
+                                                  CustomText(
+                                                      text: context.l10n.commonSearch,
+                                                      fontSize: 16.sp,
+                                                      fontFam: "Lato",
+                                                      fontWeight:
+                                                          FontWeight.normal,
+                                                      textColor: Colors.white,
+                                                      textAlign: TextAlign.start),
+                                                ],
+                                              ),
                                             )),
                                       ),
                                     ),
@@ -368,7 +373,7 @@ class _MISDashboardScreenState extends State<MISDashboardScreen>
                               children: [
                                 Expanded(
                                     child: MISDashCard(
-                                  firstCountText: "Functional Institute",
+                                  firstCountText: context.l10n.misFunctionalInstitute,
                                   firstCount: controller
                                       .misCount?.functionalUnit
                                       .toString(),
@@ -388,7 +393,7 @@ class _MISDashboardScreenState extends State<MISDashboardScreen>
                                     child: MISDashCard(
                                   firstCount: controller.misCount?.totalPatient
                                       .toString(),
-                                  firstCountText: "Number of Patients",
+                                  firstCountText: context.l10n.misNumberOfPatients,
                                   iconPath: 'assets/total_patient.png',
                                   isSecondCount: true,
                                   onInfoClick: () {
@@ -410,8 +415,7 @@ class _MISDashboardScreenState extends State<MISDashboardScreen>
                                     child: MISDashCard(
                                   firstCount: controller.misCount?.mjpjayCount
                                       .toString(),
-                                  firstCountText:
-                                      "Dialysis Treatment Under MJPJAY",
+                                  firstCountText: context.l10n.misDialysisUnderMjpjay,
                                   iconPath: 'assets/dialysis_session.png',
                                   isSecondCount: true,
                                   onInfoClick: () {
@@ -424,8 +428,7 @@ class _MISDashboardScreenState extends State<MISDashboardScreen>
                                   firstCount: controller
                                       .misCount?.nonmjpjayCount
                                       .toString(),
-                                  firstCountText:
-                                      "Dialysis Treatment Under Non MJPJAY",
+                                  firstCountText: context.l10n.misDialysisUnderNonMjpjay,
                                   iconPath: 'assets/dialysis_cancelled.png',
                                   isSecondCount: true,
                                   onInfoClick: () {
@@ -442,7 +445,7 @@ class _MISDashboardScreenState extends State<MISDashboardScreen>
                                   firstCount: controller
                                       .misCount?.positivePatient
                                       .toString(),
-                                  firstCountText: "Sero Positive Patients",
+                                  firstCountText: context.l10n.misSeroPositive,
                                   iconPath: 'assets/event.png',
                                   isSecondCount: true,
                                   onInfoClick: () {
@@ -455,7 +458,7 @@ class _MISDashboardScreenState extends State<MISDashboardScreen>
                                   firstCount: controller
                                       .misCount?.negativePatient
                                       .toString(),
-                                  firstCountText: "Sero Negative Patients",
+                                  firstCountText: context.l10n.misSeroNegative,
                                   iconPath: 'assets/machine.png',
                                   isSecondCount: true,
                                   onInfoClick: () {
@@ -468,8 +471,7 @@ class _MISDashboardScreenState extends State<MISDashboardScreen>
                             MISDashCard(
                               firstCount:
                                   controller.misCount?.testSendToLab.toString(),
-                              firstCountText:
-                                  "Number of Laboratory Test sent to MAHA LABS",
+                              firstCountText: context.l10n.misLabTestsSentToMahaLabs,
                               iconPath: 'assets/leboretory.png',
                               isSecondCount: true,
                               cardHeight: 160.h,

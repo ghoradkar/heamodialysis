@@ -7,6 +7,7 @@ import 'package:heamodialysis/dashboard/controller/dashboard_controller.dart';
 import 'package:heamodialysis/dashboard/widget/drawer_screen.dart';
 import 'package:heamodialysis/dashboard/widget/functional_center_table.dart';
 import 'package:heamodialysis/internet/no_internet_connectivity.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:heamodialysis/new_registration/controller/new_registration_controller.dart';
 import 'package:heamodialysis/utils/api_urls.dart';
 import 'package:heamodialysis/utils/color_constants.dart';
@@ -128,8 +129,8 @@ class _ClusterDistrictWiseDashState extends State<ClusterDistrictWiseDash>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const CustomText(
-          text: 'Cluster District Dashboard',
+        title: CustomText(
+          text: context.l10n.dashClusterDistrictDashboard,
           fontSize: 18.0,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,
@@ -238,8 +239,8 @@ class _ClusterDistrictWiseDashState extends State<ClusterDistrictWiseDash>
               // dashboardController.isTodaysDate = true;
               // dashboardController.update();
             },
-            child: const CustomText(
-                text: "Today",
+            child: CustomText(
+                text: context.l10n.dashToday,
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
                 textColor: Colors.black,
@@ -292,8 +293,8 @@ class _ClusterDistrictWiseDashState extends State<ClusterDistrictWiseDash>
                                 child: Column(
                                   children: [
                                     CustomDateField(
-                                      labelText: 'From Date',
-                                      hint: 'Select Date',
+                                      labelText: context.l10n.dashFromDate,
+                                      hint: context.l10n.dashSelectDate,
                                       isRequired: false,
                                       callB: () {
                                         selectFromDate();
@@ -304,8 +305,8 @@ class _ClusterDistrictWiseDashState extends State<ClusterDistrictWiseDash>
                                       dontDhowPrefix: false,
                                     ),
                                     CustomDateField(
-                                      labelText: 'To Date',
-                                      hint: 'Select Date',
+                                      labelText: context.l10n.dashToDate,
+                                      hint: context.l10n.dashSelectDate,
                                       isRequired: false,
                                       callB: () {
                                         selectToDate();
@@ -431,9 +432,8 @@ class _ClusterDistrictWiseDashState extends State<ClusterDistrictWiseDash>
                                         },
                                         child: Container(
                                             padding: const EdgeInsets.symmetric(
-                                                vertical: 8),
+                                                vertical: 8, horizontal: 20),
                                             alignment: Alignment.center,
-                                            width: 100,
                                             decoration: BoxDecoration(
                                               borderRadius:
                                                   BorderRadius.circular(10),
@@ -447,23 +447,27 @@ class _ClusterDistrictWiseDashState extends State<ClusterDistrictWiseDash>
                                                 end: Alignment.bottomCenter,
                                               ),
                                             ),
-                                            child: const Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Icon(
-                                                  Icons.search,
-                                                  color: Colors.white,
-                                                ),
-                                                CustomText(
-                                                    text: "Search",
-                                                    fontSize: 16,
-                                                    fontFam: "Lato",
-                                                    fontWeight:
-                                                        FontWeight.normal,
-                                                    textColor: Colors.white,
-                                                    textAlign: TextAlign.start),
-                                              ],
+                                            child: FittedBox(
+                                              fit: BoxFit.scaleDown,
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: [
+                                                  const Icon(
+                                                    Icons.search,
+                                                    color: Colors.white,
+                                                  ),
+                                                  const SizedBox(width: 6),
+                                                  CustomText(
+                                                      text: context.l10n.commonSearch,
+                                                      fontSize: 16,
+                                                      fontFam: "Lato",
+                                                      fontWeight:
+                                                          FontWeight.normal,
+                                                      textColor: Colors.white,
+                                                      textAlign: TextAlign.start),
+                                                ],
+                                              ),
                                             )),
                                       ),
                                     ),
@@ -478,11 +482,11 @@ class _ClusterDistrictWiseDashState extends State<ClusterDistrictWiseDash>
                               firstCount: controller
                                   .dashboardCountClusterModel?.totalCentre
                                   .toString(),
-                              firstCountText: "Total Projected\nCenter",
+                              firstCountText: context.l10n.dashTotalProjectedCenter,
                               secondCount: controller
                                   .dashboardCountClusterModel?.functionalCenter
                                   .toString(),
-                              secondCountText: "Functional\nCenter",
+                              secondCountText: context.l10n.dashFunctionalCenter,
                               iconPath: 'assets/professional-services.png',
                               isInfoVisible: true,
                               onInfoClick: () {
@@ -490,14 +494,14 @@ class _ClusterDistrictWiseDashState extends State<ClusterDistrictWiseDash>
                                   patients: dashboardController
                                           .dashInfoFunctionalUnitCluster ??
                                       [],
-                                  pageTitle: 'Total Functional Unit',
+                                  pageTitle: context.l10n.dashTotalFunctionalUnit,
                                 ));
                                 // showPatientTableDialog(context, dashboardController.dashInfoData);
                               },
                               cardHeight: 140,
                             ),
                             NewDashCard(
-                              firstCountText: "Total Patient\nRegistration",
+                              firstCountText: context.l10n.dashTotalPatientRegistration,
                               firstCount: controller
                                   .dashboardCountClusterModel?.patientAdded
                                   .toString(),
@@ -505,8 +509,8 @@ class _ClusterDistrictWiseDashState extends State<ClusterDistrictWiseDash>
                                   ?.currentDatePatient
                                   .toString(),
                               secondCountText: dashboardController.isTodaysDate
-                                  ? "Current Date Patient \nRegistered"
-                                  : "Date Wise Patient\nRegistered Count",
+                                  ? context.l10n.dashCurrentDatePatientRegistered
+                                  : context.l10n.dashDateWisePatientRegistered,
                               iconPath: 'assets/total_patient.png',
                               isInfoVisible: true,
                               onInfoClick: () {
@@ -514,7 +518,7 @@ class _ClusterDistrictWiseDashState extends State<ClusterDistrictWiseDash>
                                   patients:
                                       dashboardController.dashInfoDataCluster ??
                                           [],
-                                  pageTitle: 'Total Dialysis Patient',
+                                  pageTitle: context.l10n.dashTotalDialysisPatient,
                                   // pageTitleSecond: "",
                                   showPopUp: (unitId) async {
                                     DateTime now = DateTime.now();
@@ -553,8 +557,8 @@ class _ClusterDistrictWiseDashState extends State<ClusterDistrictWiseDash>
                                       patients: controller
                                               .totalDialysisPatientCluster ??
                                           [],
-                                      pageTitle: 'Total Patient',
-                                      pageTitleSecond: "Total Dialysis Patient",
+                                      pageTitle: context.l10n.dashTotalPatient,
+                                      pageTitleSecond: context.l10n.dashTotalDialysisPatient,
                                       showAbha: true,
                                     ));
                                   },
@@ -567,13 +571,13 @@ class _ClusterDistrictWiseDashState extends State<ClusterDistrictWiseDash>
                               firstCount: controller
                                   .dashboardCountClusterModel?.abhaRegistration
                                   .toString(),
-                              firstCountText: "Total ABHA\nRegistration",
+                              firstCountText: context.l10n.dashTotalAbhaRegistration,
                               secondCount: controller.dashboardCountClusterModel
                                   ?.currentDateAbhaReg
                                   .toString(),
                               secondCountText: dashboardController.isTodaysDate
-                                  ? "Current Date ABHA\nRegistration"
-                                  : "Date Wise Abha\nPatient Count",
+                                  ? context.l10n.dashCurrentDateAbhaRegistration
+                                  : context.l10n.dashDateWiseAbhaPatient,
                               iconPath: 'assets/abha_registration.png',
                               isInfoVisible: true,
                               onInfoClick: () {
@@ -581,7 +585,7 @@ class _ClusterDistrictWiseDashState extends State<ClusterDistrictWiseDash>
                                   patients: dashboardController
                                           .dashInfoDataAbhaCluster ??
                                       [],
-                                  pageTitle: 'Total ABHA Patient',
+                                  pageTitle: context.l10n.dashTotalAbhaPatient,
                                   onClick: (unitId) async {
                                     DateTime now = DateTime.now();
                                     String fromDate =
@@ -617,7 +621,7 @@ class _ClusterDistrictWiseDashState extends State<ClusterDistrictWiseDash>
                                     Get.to(AbhaCountIdTable(
                                       patients:
                                           controller.abhaDetIdListCluster ?? [],
-                                      pageTitle: 'Total ABHA Patient',
+                                      pageTitle: context.l10n.dashTotalAbhaPatient,
                                     ));
                                   },
                                 ));
@@ -629,13 +633,13 @@ class _ClusterDistrictWiseDashState extends State<ClusterDistrictWiseDash>
                               firstCount: controller.dashboardCountClusterModel
                                   ?.totalDialysisSession
                                   .toString(),
-                              firstCountText: "Dialysis\nSessions",
+                              firstCountText: context.l10n.dashDialysisSessions,
                               secondCount: controller.dashboardCountClusterModel
                                   ?.currentDateDialysisSession
                                   .toString(),
                               secondCountText: dashboardController.isTodaysDate
-                                  ? "Current Date\nDialysis Session"
-                                  : "Date Wise Dialysis\nSession Count",
+                                  ? context.l10n.dashCurrentDateDialysisSession
+                                  : context.l10n.dashDateWiseDialysisSession,
                               iconPath: 'assets/dialysis_session.png',
                               isInfoVisible: true,
                               onInfoClick: () {
@@ -644,8 +648,8 @@ class _ClusterDistrictWiseDashState extends State<ClusterDistrictWiseDash>
                                   dataList: dashboardController
                                           .dialysisSessionCluster ??
                                       [],
-                                  pageTitle: 'Dialysis Sessions',
-                                  pageTitleSecond: "Total Dialysis Sessions",
+                                  pageTitle: context.l10n.dashDialysisSessions,
+                                  pageTitleSecond: context.l10n.dashTotalDialysisSessions,
                                   showData: (unitName) async {
                                     DateTime now = DateTime.now();
                                     String fromDate =
@@ -690,7 +694,7 @@ class _ClusterDistrictWiseDashState extends State<ClusterDistrictWiseDash>
                                       patients: controller
                                               .dialysisSessionByIDCluster ??
                                           [],
-                                      pageTitle: 'Total Dialysis Patient',
+                                      pageTitle: context.l10n.dashTotalDialysisPatient,
                                       showAbha: true,
                                     ));
                                   },
@@ -702,13 +706,13 @@ class _ClusterDistrictWiseDashState extends State<ClusterDistrictWiseDash>
                               firstCount: controller.dashboardCountClusterModel
                                   ?.totalDialysisCnacel
                                   .toString(),
-                              firstCountText: "Total Dialysis\nCancelled",
+                              firstCountText: context.l10n.dashTotalDialysisCancelled,
                               secondCount: controller
                                   .dashboardCountClusterModel?.currentdialCancel
                                   .toString(),
                               secondCountText: dashboardController.isTodaysDate
-                                  ? "Current Date\nDialysis Cancelled"
-                                  : "Date Wise\nDialysis Cancel Count",
+                                  ? context.l10n.dashCurrentDateDialysisCancelled
+                                  : context.l10n.dashDateWiseDialysisCancel,
                               iconPath: 'assets/dialysis_cancelled.png',
                               isInfoVisible: true,
                               onInfoClick: () {
@@ -717,7 +721,7 @@ class _ClusterDistrictWiseDashState extends State<ClusterDistrictWiseDash>
                                   dataList: dashboardController
                                           .dialysisSessionCancelledCluster ??
                                       [],
-                                  pageTitle: 'Total Dialysis Cancelled',
+                                  pageTitle: context.l10n.dashTotalDialysisCancelled,
                                   showData: () {},
                                 ));
                               },
@@ -731,7 +735,7 @@ class _ClusterDistrictWiseDashState extends State<ClusterDistrictWiseDash>
                                   firstCount: controller
                                       .dashboardCountClusterModel?.totalMachine
                                       .toString(),
-                                  firstCountText: "Machine Count",
+                                  firstCountText: context.l10n.colMachineCount,
                                   secondCount: "",
                                   secondCountText: "",
                                   iconPath: 'assets/machine.png',
@@ -743,7 +747,7 @@ class _ClusterDistrictWiseDashState extends State<ClusterDistrictWiseDash>
                                       dataList: dashboardController
                                               .machineCountInfoCluster ??
                                           [],
-                                      pageTitle: 'Total Machines',
+                                      pageTitle: context.l10n.dashTotalMachines,
                                       showData: () {},
                                     ));
                                   },
@@ -754,7 +758,7 @@ class _ClusterDistrictWiseDashState extends State<ClusterDistrictWiseDash>
                                   firstCount: controller
                                       .dashboardCountClusterModel?.ticket
                                       .toString(),
-                                  firstCountText: "Total Tickets",
+                                  firstCountText: context.l10n.dashTotalTickets,
                                   // secondCount: "61",
                                   // secondCountText: "Working Machine Count",
                                   isVisiableCol: true,
@@ -773,7 +777,7 @@ class _ClusterDistrictWiseDashState extends State<ClusterDistrictWiseDash>
                                       dataList: dashboardController
                                               .totalTicketsCluster ??
                                           [],
-                                      pageTitle: 'Tickets',
+                                      pageTitle: context.l10n.dashTickets,
                                     ));
                                   },
                                   cardHeight: 210,
@@ -784,13 +788,13 @@ class _ClusterDistrictWiseDashState extends State<ClusterDistrictWiseDash>
                               firstCount: controller
                                   .dashboardCountClusterModel?.totalLbTest
                                   .toString(),
-                              firstCountText: "Total Laboratory\nTest Assigned",
+                              firstCountText: context.l10n.dashTotalLabTestAssigned,
                               secondCount: controller.dashboardCountClusterModel
                                   ?.currentDateLabTest
                                   .toString(),
                               secondCountText: dashboardController.isTodaysDate
-                                  ? "Current Date Laboratory\nTest Assigned"
-                                  : "Date Wise Test\nAssign Count",
+                                  ? context.l10n.dashCurrentDateLabTest
+                                  : context.l10n.dashDateWiseTestAssign,
                               isVisiableRow: true,
                               iconPath: 'assets/leboretory.png',
                               isInfoVisible: true,
@@ -799,7 +803,7 @@ class _ClusterDistrictWiseDashState extends State<ClusterDistrictWiseDash>
                                   dataList:
                                       dashboardController.testDetailsCluster ??
                                           [],
-                                  pageTitle: 'Total Laboratory Test Assigned',
+                                  pageTitle: context.l10n.dashTotalLabTestAssigned,
                                 ));
                               },
                               cardHeight: 140,
@@ -808,13 +812,13 @@ class _ClusterDistrictWiseDashState extends State<ClusterDistrictWiseDash>
                               firstCount: controller
                                   .dashboardCountClusterModel?.totalEvent
                                   .toString(),
-                              firstCountText: "Adverse Event",
+                              firstCountText: context.l10n.dashAdverseEvent,
                               secondCount: controller
                                   .dashboardCountClusterModel?.currentDateEvent
                                   .toString(),
                               secondCountText: dashboardController.isTodaysDate
-                                  ? "Current Date\nAdverse Event"
-                                  : "Date Wise\nAdverse Event Count",
+                                  ? context.l10n.dashCurrentDateAdverseEvent
+                                  : context.l10n.dashDateWiseAdverseEvent,
                               iconPath: 'assets/event.png',
                               isInfoVisible: true,
                               onInfoClick: () {
@@ -822,7 +826,7 @@ class _ClusterDistrictWiseDashState extends State<ClusterDistrictWiseDash>
                                   isEvent: true,
                                   patients:
                                       dashboardController.eventDetCluster ?? [],
-                                  pageTitle: 'Adverse Events',
+                                  pageTitle: context.l10n.dashAdverseEvents,
                                   showPopUp: (unitId) async {
                                     DateTime now = DateTime.now();
                                     String fromDate =
@@ -859,7 +863,7 @@ class _ClusterDistrictWiseDashState extends State<ClusterDistrictWiseDash>
                                       patients:
                                           controller.eventDetIdListCluster ??
                                               [],
-                                      pageTitle: 'Total Adverse Event',
+                                      pageTitle: context.l10n.dashTotalAdverseEvent,
                                     ));
                                   },
                                 ));
@@ -874,7 +878,7 @@ class _ClusterDistrictWiseDashState extends State<ClusterDistrictWiseDash>
                                       .dashboardCountClusterModel
                                       ?.totalComplaint
                                       .toString(),
-                                  firstCountText: "Online Complaints",
+                                  firstCountText: context.l10n.dashOnlineComplaints,
                                   pendingCount: controller
                                       .dashboardCountClusterModel
                                       ?.pendingComplaint
@@ -892,7 +896,7 @@ class _ClusterDistrictWiseDashState extends State<ClusterDistrictWiseDash>
                                       dataList: dashboardController
                                               .complaintCluster ??
                                           [],
-                                      pageTitle: 'Online Complaints',
+                                      pageTitle: context.l10n.dashOnlineComplaints,
                                     ));
                                   },
                                   cardHeight: 224,
@@ -902,15 +906,15 @@ class _ClusterDistrictWiseDashState extends State<ClusterDistrictWiseDash>
                                   firstCount: controller
                                       .dashboardCountClusterModel?.feedback
                                       .toString(),
-                                  firstCountText: "Total Feedback",
+                                  firstCountText: context.l10n.dashTotalFeedback,
                                   secondCount: controller
                                       .dashboardCountClusterModel
                                       ?.currentDateFeedback
                                       .toString(),
                                   secondCountText:
                                       dashboardController.isTodaysDate
-                                          ? "Current Date Feedback"
-                                          : "Date Wise Feedback Count",
+                                          ? context.l10n.dashCurrentDateFeedback
+                                          : context.l10n.dashDateWiseFeedback,
                                   iconPath: 'assets/feedback.png',
                                   isSecondCount: true,
                                   cardHeight: 224,
@@ -931,8 +935,8 @@ class _ClusterDistrictWiseDashState extends State<ClusterDistrictWiseDash>
                                 indicatorPadding: EdgeInsets.zero,
                                 labelPadding: EdgeInsets.zero,
                                 tabs: [
-                                  buildTab(0, "Dialysis Performance"),
-                                  buildTab(1, "ABHA Registration")
+                                  buildTab(0, context.l10n.dashDialysisPerformance),
+                                  buildTab(1, context.l10n.dashAbhaRegistration)
                                 ],
                               ),
                             ),
@@ -999,10 +1003,10 @@ class _ClusterDistrictWiseDashState extends State<ClusterDistrictWiseDash>
                                     color: Colors.white),
                                 child: Column(
                                   children: [
-                                    const Align(
+                                    Align(
                                       alignment: Alignment.centerLeft,
                                       child: CustomText(
-                                          text: "Viral Load Status",
+                                          text: context.l10n.colViralLoadStatus,
                                           fontSize: 16,
                                           fontWeight: FontWeight.w400,
                                           textColor: Colors.black,
@@ -1058,10 +1062,12 @@ class _ClusterDistrictWiseDashState extends State<ClusterDistrictWiseDash>
   Widget buildTab(int index, String text) {
     bool isSelected = tabController.index == index;
     return Container(
-      width: 130,
+      // Content-sized so bilingual tab labels stay fully visible
+      // (TabBar is isScrollable).
+      constraints: const BoxConstraints(minWidth: 110),
       height: 40,
       alignment: Alignment.center,
-      padding: const EdgeInsets.symmetric(horizontal: 0.8, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
       decoration: BoxDecoration(
           // color: isSelected ? Colors.blue.shade200 : Colors.transparent,
           gradient: isSelected

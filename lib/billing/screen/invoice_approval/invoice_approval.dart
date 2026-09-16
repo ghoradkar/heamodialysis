@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/billing/controller/invoice_approval_controller.dart';
@@ -122,7 +123,7 @@ class InvoiceApprovalState extends State<InvoiceApproval> {
     return  _isNetworkAvailable ? Scaffold(
       appBar: AppBar(
         title:  CustomText(
-          text: "INVOICE APPROVAL (2nd LEVEL)",
+          text: context.l10n.billInvoiceApprovalSecondLevel,
           fontSize: 18.sp,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,
@@ -178,7 +179,7 @@ class InvoiceApprovalState extends State<InvoiceApproval> {
               }
             },
             child: CustomText(
-                text: "Approve",
+                text: context.l10n.commonApprove,
                 fontSize: 16.sp,
                 fontWeight: FontWeight.bold,
                 textColor: AppColor.primaryBackgroundColor,
@@ -206,11 +207,11 @@ class InvoiceApprovalState extends State<InvoiceApproval> {
             // 3️⃣ No Data Found screen
             if (invoiceList.isEmpty) {
               return CommonStatusScreen(
-                title: "No Data Found",
+                title: context.l10n.commonNoDataFound,
                 description:
                 "We are unable to find the data that\nyou are looking for ",
                 img: "assets/no_Data_Found.png",
-                buttonText: "Go Back",
+                buttonText: context.l10n.commonGoBack,
                 onPressed: () {
                   Get.back();
                 },
@@ -307,8 +308,8 @@ class InvoiceApprovalState extends State<InvoiceApproval> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const CustomText(
-                          text: "Filter Invoice",
+                  CustomText(
+                          text: context.l10n.billFilterInvoice,
                           fontSize: 16,
                           fontFam: "Lato",
                           fontWeight: FontWeight.w400,
@@ -329,8 +330,8 @@ class InvoiceApprovalState extends State<InvoiceApproval> {
               ),
               MyCustomDropdown(
                 items: monthList,
-                labelText: 'Month',
-                hint: 'Month',
+                labelText: context.l10n.billMonth,
+                hint: context.l10n.billMonth,
                 isRequired: false,
                 senValue: (value) {
                   selectedMonth = value;
@@ -340,8 +341,8 @@ class InvoiceApprovalState extends State<InvoiceApproval> {
               ),
               MyCustomDropdown(
                 items: yearList ?? [],
-                labelText: 'Year',
-                hint: 'Year',
+                labelText: context.l10n.billYear,
+                hint: context.l10n.billYear,
                 isRequired: false,
                 senValue: (value) {
                   selectedYear = value;
@@ -370,8 +371,8 @@ class InvoiceApprovalState extends State<InvoiceApproval> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Image.asset("assets/cancel.png"),
-                              const CustomText(
-                                  text: "Cancel",
+                              CustomText(
+                                  text: context.l10n.commonCancel,
                                   fontSize: 16,
                                   fontFam: "Lato",
                                   fontWeight: FontWeight.normal,
@@ -381,7 +382,7 @@ class InvoiceApprovalState extends State<InvoiceApproval> {
                           )),
                     ),
                   ).paddingOnly(top: 20),
-                  const SizedBox(
+                  SizedBox(
                     width: 14,
                   ),
                   Align(
@@ -413,7 +414,7 @@ class InvoiceApprovalState extends State<InvoiceApproval> {
                               end: Alignment.bottomCenter,
                             ),
                           ),
-                          child: const Row(
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Icon(
@@ -421,7 +422,7 @@ class InvoiceApprovalState extends State<InvoiceApproval> {
                                 color: Colors.white,
                               ),
                               CustomText(
-                                  text: "Search",
+                                  text: context.l10n.commonSearch,
                                   fontSize: 16,
                                   fontFam: "Lato",
                                   fontWeight: FontWeight.normal,

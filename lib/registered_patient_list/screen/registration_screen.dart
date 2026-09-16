@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/new_registration/screen/new_registration.dart';
 import 'package:heamodialysis/registered_patient_list/screen/registered_patient_list.dart';
@@ -75,8 +76,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   bottomRight: Radius.circular(30), // adjust as needed
                 ),
               ),
-              title: const CustomText(
-                text: 'Registration',
+              title: CustomText(
+                text: context.l10n.drawerRegistration,
                 fontSize: 18.0,
                 fontFam: 'Lato',
                 fontWeight: FontWeight.w400,
@@ -96,22 +97,21 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 ? const RegistrationShimmer()
                 : Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-
-                        GestureDetector(
-                          onTap: () {
-                            Get.to(() => const NewRegistration(
-                                  isViewPatient: false,
-                                  pageTitle: 'New Registration',
-                                  isEdit: false,
-                                ));
-                          },
-                          child: IntrinsicHeight(
+                    child: IntrinsicHeight(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              Get.to(() => const NewRegistration(
+                                    isViewPatient: false,
+                                    pageTitle: 'New Registration',
+                                    isEdit: false,
+                                  ));
+                            },
                             child: Container(
                               width: 150,
-                              height: 130,
                               decoration: BoxDecoration(
                                 color: const Color(0xFFFFF9D7),
                                 borderRadius: BorderRadius.circular(12),
@@ -124,10 +124,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                   children: [
                                     Image.asset(
                                       'assets/abha_registration.png',
+                                      height: 44,
                                     ),
                                     const SizedBox(height: 8),
-                                    const CustomText(
-                                      text: 'New Registration',
+                                    CustomText(
+                                      text: context.l10n.regNewRegistration,
                                       fontSize: 16,
                                       fontWeight: FontWeight.w400,
                                       textColor: Colors.black,
@@ -138,37 +139,40 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               ),
                             ),
                           ),
-                        ),
-                        const SizedBox(width: 16),
-                        // Registered Patients Button
-                        GestureDetector(
-                          onTap: () {
-                            Get.to(() => const RegisteredPatientList());
-                          },
-                          child: Container(
-                            width: 150,
-                            height: 130,
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFFFE7E7),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Image.asset('assets/team.png'),
-                                const SizedBox(height: 8),
-                                const CustomText(
-                                  text: 'Registered Patients',
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w400,
-                                  textColor: Colors.black,
-                                  textAlign: TextAlign.center,
+                          const SizedBox(width: 16),
+                          // Registered Patients Button
+                          GestureDetector(
+                            onTap: () {
+                              Get.to(() => const RegisteredPatientList());
+                            },
+                            child: Container(
+                              width: 150,
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFFFE7E7),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8.0, vertical: 13),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image.asset('assets/team.png', height: 44),
+                                    const SizedBox(height: 8),
+                                    CustomText(
+                                      text: context.l10n.regRegisteredPatients,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w400,
+                                      textColor: Colors.black,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ],
                                 ),
-                              ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
 

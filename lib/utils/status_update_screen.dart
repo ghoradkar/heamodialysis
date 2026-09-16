@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 
 class CommonStatusScreen extends StatelessWidget {
   final String title;
@@ -125,9 +126,12 @@ class CommonStatusScreen extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                 ),
-                                child: Text(
-                                  buttonText,
-                                  style: TextStyle(color: primaryTextColor),
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(
+                                    buttonText,
+                                    style: TextStyle(color: primaryTextColor),
+                                  ),
                                 ), // YES
                               ),
                             ),
@@ -158,9 +162,12 @@ class CommonStatusScreen extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                 ),
-                                child: Text(
-                                  secondButtonText!,
-                                  style: TextStyle(color: secondaryTextColor),
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(
+                                    secondButtonText!,
+                                    style: TextStyle(color: secondaryTextColor),
+                                  ),
                                 ), // NO
                               ),
                             ),
@@ -197,19 +204,23 @@ class CommonStatusScreen extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(
                               vertical: 14, horizontal: 21),
                         ),
-                        child: const Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Icon(Icons.arrow_back, color: Colors.white),
-                            Text(
-                              'Go Back',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white, // text white
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(Icons.arrow_back, color: Colors.white),
+                              const SizedBox(width: 8),
+                              Text(
+                                context.l10n.commonGoBack,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white, // text white
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),

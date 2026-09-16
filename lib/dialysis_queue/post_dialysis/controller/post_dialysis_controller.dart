@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dialysis_queue/post_dialysis/model/common_dropdown_post_dialysis_model.dart';
 import 'package:heamodialysis/dialysis_queue/post_dialysis/model/current_weight_model.dart';
@@ -218,7 +219,7 @@ class PostDialysisController extends GetxController {
       } else {
         isLoading = false;
         status = data['status'];
-        CustomMessage.toast("Save Failed");
+        CustomMessage.toast(l10n.dqSaveFailed);
       }
     } on ApiException {
       isLoading = false;
@@ -311,7 +312,7 @@ class PostDialysisController extends GetxController {
 
     if (part > total) {
       Get.defaultDialog(
-        title: 'Invalid Input',
+        title: l10n.dqInvalidInput,
         middleText:
             'The actual fiber bundle value cannot be greater than the expected fiber bundle.',
         confirm: ElevatedButton(

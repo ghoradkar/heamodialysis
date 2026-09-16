@@ -1,5 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dashboard/model/nephro_list.dart';
 import 'package:heamodialysis/internet/no_internet_connectivity.dart';
@@ -96,7 +97,9 @@ class _AddEditDietState extends State<AddEditDiet> {
     return Scaffold(
       appBar: AppBar(
         title: CustomText(
-          text: widget.isEdit == true ? "Edit Diet" : 'Add Diet',
+          text: widget.isEdit == true
+              ? context.l10n.nephroEditDiet
+              : context.l10n.nephroAddDiet,
           fontSize: 18.0,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,
@@ -130,12 +133,12 @@ class _AddEditDietState extends State<AddEditDiet> {
                             child: Column(
                               children: [
                                 MyCustomDropdown(
-                                  labelText: 'Template',
+                                  labelText: context.l10n.nephroTemplate,
                                   items: controller.tempList
                                           ?.map((e) => e.tempname)
                                           .toList() ??
                                       [],
-                                  hint: 'Select',
+                                  hint: context.l10n.regHintSelect,
                                   isRequired: true,
                                   senValue: (value) {
                                     selectedempObj = controller.tempList
@@ -149,7 +152,7 @@ class _AddEditDietState extends State<AddEditDiet> {
                                 ),
                                 MyCustomDropdown(
                                   selectedItem: nephroController.days,
-                                  labelText: 'Days',
+                                  labelText: context.l10n.commonDays,
                                   items: const [
                                     '15',
                                     '30',
@@ -158,7 +161,7 @@ class _AddEditDietState extends State<AddEditDiet> {
                                     '75',
                                     '90'
                                   ],
-                                  hint: 'Select',
+                                  hint: context.l10n.regHintSelect,
                                   isRequired: true,
                                   senValue: (value) {
                                     nephroController.days = value;
@@ -213,7 +216,7 @@ class _AddEditDietState extends State<AddEditDiet> {
 
                           CustomButton(
                             isLoading: controller.isLoading,
-                            buttonText: 'Save',
+                            buttonText: context.l10n.commonSave,
                             path: 'assets/save-ro-disinfec.png',
                             callB: controller.isLoading
                                 ? null

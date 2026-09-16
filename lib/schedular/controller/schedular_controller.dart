@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dialysis_queue/pre_dialysis/edit_pre_dialysis/model/dialysis_type_mode.dart';
 import 'package:heamodialysis/nephro_desk_patient_list/model/get_instructions_model.dart';
@@ -112,15 +113,15 @@ class SchedularController extends GetxController {
   List<SlotTimeModel> slotTimeList = [];
 
   CheckBoxList? oxygenSupply =
-  CheckBoxList('Enough Oxygen Supply Available At The Bed', false);
+  CheckBoxList(l10n.schedOxygenSupplyAvailable, false);
   CheckBoxList? fuelAvailable =
-  CheckBoxList('Enough Fuel Available for GenSet at the Hospital', false);
-  CheckBoxList? ironSucrose = CheckBoxList('Iron Sucrose', false);
+  CheckBoxList(l10n.schedFuelAvailableGenset, false);
+  CheckBoxList? ironSucrose = CheckBoxList(l10n.schedIronSucrose, false);
 
-  CheckBoxList? eop = CheckBoxList('EPO Administered', false);
+  CheckBoxList? eop = CheckBoxList(l10n.clinEpoAdministered, false);
 
   ROFileDetails uploadImage = ROFileDetails(
-      name: 'Choose File', key: 'patientImage', isSelected: false, isReq: false);
+      name: l10n.commonChooseFile, key: 'patientImage', isSelected: false, isReq: false);
 
   List<PrePostCoversheet>? records;
 
@@ -307,7 +308,7 @@ class SchedularController extends GetxController {
 
       uploadDocCoversheetlastColumnWidgets = patientHistoryUplodDoc.map((item) {
         return CustomButtonWithoutIcon(
-          buttonText: 'View',
+          buttonText: l10n.commonView,
           callB: () async {
             await viewUploadedDoc(
                 item.doctorDeskFile!, item.documentId.toString());
@@ -403,7 +404,7 @@ class SchedularController extends GetxController {
 
       prePostCoversheetlastColumnWidgets = data.map((item) {
         return CustomButtonWithoutIcon(
-          buttonText: 'Session End Report',
+          buttonText: l10n.schedSessionEndReport,
           callB: () async {
             debugPrint('Tapped on item with ID: ${item[1]}');
 
@@ -483,7 +484,7 @@ class SchedularController extends GetxController {
 
       prePostCoversheetlastColumnWidgets = data.map((item) {
         return CustomButtonWithoutIcon(
-          buttonText: 'Discharge Summary',
+          buttonText: l10n.schedDischargeSummary,
           callB: () {
             debugPrint('Tapped on item with ID: ${item[1]}');
           },
@@ -533,7 +534,7 @@ class SchedularController extends GetxController {
         prescriptionlastColumnWidgets =
             coversheetPrescriptionDet!.listOPDPrescriptionDtoSP!.map((item) {
               return CustomButtonWithoutIcon(
-                buttonText: 'Print',
+                buttonText: l10n.commonPrint,
                 callB: () async {
                   await printReport(unitId, patientId, treatmentId, userId);
                 },
@@ -584,7 +585,7 @@ class SchedularController extends GetxController {
             onTap: () {
               Get.to(FileViewer(
                 fileUrl: item.testReportLink!,
-                patientName: 'View Lab Invest',
+                patientName: l10n.schedViewLabInvest,
               ));
             },
             child: Icon(
@@ -593,7 +594,7 @@ class SchedularController extends GetxController {
             ),
           )
               : CustomText(
-              text: "Processing",
+              text: l10n.commonProcessing,
               fontSize: 8,
               fontWeight: FontWeight.normal,
               textColor: AppColor.red,
@@ -796,10 +797,10 @@ class SchedularController extends GetxController {
         final data = jsonDecode(response.body);
 
         if (data['code'] == 0) {
-          CustomMessage.toast("Data Saved Successfully");
+          CustomMessage.toast(l10n.schedDataSaved);
           return true;
         } else {
-          CustomMessage.toast("Data Save Failed");
+          CustomMessage.toast(l10n.schedDataSaveFailed);
           return false;
         }
       } else {
@@ -958,7 +959,7 @@ class SchedularController extends GetxController {
           CustomPopup.showSuccessDialog(() {
             Get.back();
           }, "",
-              "Approval From ${registrationController.scrutinyType} Is In Process");
+              l10n.schedApprovalInProcess(registrationController.scrutinyType ?? ""));
         }
       } else {
         isLoading = false;
@@ -1059,8 +1060,8 @@ class SchedularController extends GetxController {
           Get.back();
         }, () {
           Get.back();
-        }, "Already Booked", "Appointment already given on $date",
-            "assets/info.png", false, 'OK', () {});
+        }, l10n.schedAlreadyBooked, l10n.schedAppointmentAlreadyGiven(date),
+            "assets/info.png", false, l10n.commonOk, () {});
         cardData.bedAllocationDate = '';
       }
       return checkAppointment?.status ?? "true";
@@ -1090,8 +1091,8 @@ class SchedularController extends GetxController {
             Get.back();
           }, () {
             Get.back();
-          }, "Slot Not Available", "On this date $date", "assets/info.png",
-              false, "OK", () {});
+          }, l10n.schedSlotNotAvailable, l10n.schedOnThisDate(date), "assets/info.png",
+              false, l10n.commonOk, () {});
           cardData.bedAllocationDate = '';
         }
       } else {
@@ -1099,8 +1100,8 @@ class SchedularController extends GetxController {
           Get.back();
         }, () {
           Get.back();
-        }, "Slot Not Available", "On this date $date", "assets/info.png", false,
-            "OK", () {});
+        }, l10n.schedSlotNotAvailable, l10n.schedOnThisDate(date), "assets/info.png", false,
+            l10n.commonOk, () {});
         cardData.bedAllocationDate = '';
       }
 
@@ -1157,14 +1158,14 @@ class SchedularController extends GetxController {
 
         CustomPopup.showSuccessDialog(
               () => Get.to(const SchedularListScreen()),
-          "Schedule Confirmed",
-          "Your schedule has been successfully confirmed.",
+          l10n.schedScheduleConfirmed,
+          l10n.schedScheduleConfirmedMsg,
         );
       } else {
         CustomPopup.showAlertDialog(
               () => Get.to(const SchedularListScreen()),
               () => Get.to(const SchedularListScreen()),
-          "Add Schedular Failed",
+          l10n.schedAddSchedularFailed,
           "",
           'assets/consultation.png',
           false,
@@ -1177,7 +1178,7 @@ class SchedularController extends GetxController {
       CustomPopup.showAlertDialog(
             () => Get.back(),
             () => Get.back(),
-        "Add Schedular Failed",
+        l10n.schedAddSchedularFailed,
         e.toString(),
         'assets/consultation.png',
         false,

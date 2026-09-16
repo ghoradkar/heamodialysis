@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/patient_health_trends/model/vital_report_model.dart';
 import 'package:heamodialysis/patient_health_trends/controller/patient_heath_trends_controller.dart';
@@ -67,8 +68,8 @@ class _VitalChartScreenState extends State<VitalChartScreen> {
             // Trend Chart
             _buildTrendChart(controller),
 
-            const CustomText(
-              text: 'Values By Date',
+            CustomText(
+              text: context.l10n.phtValuesByDate,
               fontSize: 16,
               fontWeight: FontWeight.bold,
               textColor: Colors.black,
@@ -138,9 +139,9 @@ class _VitalChartScreenState extends State<VitalChartScreen> {
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: AppColor.borderColor),
         ),
-        child: const Center(
+        child: Center(
           child: CustomText(
-            text: 'No chart data available',
+            text: context.l10n.phtNoChartData,
             fontSize: 14,
             fontWeight: FontWeight.normal,
             textColor: Colors.grey,
@@ -194,9 +195,9 @@ class _VitalChartScreenState extends State<VitalChartScreen> {
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: AppColor.borderColor),
         ),
-        child: const Center(
+        child: Center(
           child: CustomText(
-            text: 'No valid data points to display',
+            text: context.l10n.phtNoValidDataPoints,
             fontSize: 14,
             fontWeight: FontWeight.normal,
             textColor: Colors.grey,
@@ -220,7 +221,7 @@ class _VitalChartScreenState extends State<VitalChartScreen> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          const SizedBox(height: 10),
+          SizedBox(height: 10),
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
@@ -238,7 +239,7 @@ class _VitalChartScreenState extends State<VitalChartScreen> {
               ),
             ),
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
         ],
       ),
     );
@@ -262,7 +263,7 @@ class VitalLineChartWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (preDialysisValue.isEmpty && postDialysisValue.isEmpty) {
-      return const Center(child: Text('No data available'));
+      return Center(child: Text('No data available'));
     }
 
     List<double> allValues = [];

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/utils/color_constants.dart';
 import 'package:heamodialysis/widgets/custom_table.dart';
@@ -33,7 +34,7 @@ class _PostDialysisState extends State<PostDialysis> {
                   title: Row(children: [
                     Image.asset("assets/file-info.png"),
                     const SizedBox(width: 12),
-                    const Text(
+                    Text(
                       "Post Dialysis Investigation",
                       style: TextStyle(
                           fontSize: 14.0,
@@ -51,7 +52,6 @@ class _PostDialysisState extends State<PostDialysis> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-
                           const SizedBox(
                             height: 20,
                           ),
@@ -60,16 +60,18 @@ class _PostDialysisState extends State<PostDialysis> {
                             decoration: BoxDecoration(
                                 color: Colors.grey[50],
                                 borderRadius: BorderRadius.circular(10),
-                                border: Border.all(color: AppColor.borderColor)),
+                                border:
+                                    Border.all(color: AppColor.borderColor)),
                             child: Column(
                               children: [
-                                const SizedBox(
+                                SizedBox(
                                   height: 10,
                                 ),
-                                const Row(
+                                Row(
                                   children: [
                                     CustomText(
-                                        text: 'Post Dialysis Weight  :',
+                                        text:
+                                            "${context.l10n.clinPostDialysisWeight} : ",
                                         fontSize: 14,
                                         fontFam: "Lato",
                                         fontWeight: FontWeight.normal,
@@ -84,10 +86,11 @@ class _PostDialysisState extends State<PostDialysis> {
                                         textAlign: TextAlign.start),
                                   ],
                                 ).paddingSymmetric(vertical: 2),
-                                const Row(
+                                Row(
                                   children: [
                                     CustomText(
-                                        text: 'Current Dialysis Session Weight Difference :',
+                                        text:
+                                            "${context.l10n.clinCurrentSessionWeightDiff} : ",
                                         fontSize: 14,
                                         fontFam: "Lato",
                                         fontWeight: FontWeight.normal,
@@ -102,10 +105,11 @@ class _PostDialysisState extends State<PostDialysis> {
                                         textAlign: TextAlign.start),
                                   ],
                                 ).paddingSymmetric(vertical: 2),
-                                const Row(
+                                Row(
                                   children: [
                                     CustomText(
-                                        text: 'Blood Pressure :',
+                                        text:
+                                            "${context.l10n.clinBloodPressure} : ",
                                         fontSize: 14,
                                         fontFam: "Lato",
                                         fontWeight: FontWeight.normal,
@@ -120,7 +124,7 @@ class _PostDialysisState extends State<PostDialysis> {
                                         textAlign: TextAlign.start),
                                     Spacer(),
                                     CustomText(
-                                        text: 'Pulse :',
+                                        text: "${context.l10n.clinPulse} : ",
                                         fontSize: 14,
                                         fontFam: "Lato",
                                         fontWeight: FontWeight.normal,
@@ -135,10 +139,11 @@ class _PostDialysisState extends State<PostDialysis> {
                                         textAlign: TextAlign.start),
                                   ],
                                 ).paddingSymmetric(vertical: 2),
-                                const Row(
+                                Row(
                                   children: [
                                     CustomText(
-                                        text: 'Temperature :',
+                                        text:
+                                            "${context.l10n.clinTemperature} : ",
                                         fontSize: 14,
                                         fontFam: "Lato",
                                         fontWeight: FontWeight.normal,
@@ -151,10 +156,10 @@ class _PostDialysisState extends State<PostDialysis> {
                                         fontWeight: FontWeight.normal,
                                         textColor: Colors.grey,
                                         textAlign: TextAlign.start),
-
                                     Spacer(),
                                     CustomText(
-                                        text: 'Oxygen Level :',
+                                        text:
+                                            "${context.l10n.clinOxygenLevel} : ",
                                         fontSize: 14,
                                         fontFam: "Lato",
                                         fontWeight: FontWeight.normal,
@@ -178,44 +183,40 @@ class _PostDialysisState extends State<PostDialysis> {
                           const SizedBox(
                             height: 15,
                           ),
-
-                          SizedBox(
-                            height: 150,
-                            child: RoundedCornerTable(
-                              l1: const ['1', '2'],
-                              l2: const [
-                                'Dialysis 1',
-                                'Dialysis 1',
-                              ],
-                              l3: const [
-                                '2024-07-22',
-                                '2024-07-22',
-                              ],
-                              tableHeader: const [
-                                "Final UFV",
-                                "Venous Pressure",
-                                "Blood Flow (QB)",
-                                "Dialysate Flow (QD)"
-                              ],
-                              lastColumnWidgets: const [
-                                CustomText(
-                                    text: "13:00:40",
-                                    fontSize: 14,
-                                    fontFam: "Lato",
-                                    fontWeight: FontWeight.w400,
-                                    textColor: Colors.black,
-                                    textAlign: TextAlign.start),
-                                CustomText(
-                                    text: "13:00:40",
-                                    fontSize: 14,
-                                    fontFam: "Lato",
-                                    fontWeight: FontWeight.w400,
-                                    textColor: Colors.black,
-                                    textAlign: TextAlign.start)
-                              ],
-                              onButtonPressed: handleButtonPress,
-                            ),
-                          )
+                          RoundedCornerTable(
+                            l1: const ['1', '2'],
+                            l2: const [
+                              'Dialysis 1',
+                              'Dialysis 1',
+                            ],
+                            l3: const [
+                              '2024-07-22',
+                              '2024-07-22',
+                            ],
+                            tableHeader: const [
+                              "Final UFV",
+                              "Venous Pressure",
+                              "Blood Flow (QB)",
+                              "Dialysate Flow (QD)"
+                            ],
+                            lastColumnWidgets: const [
+                              CustomText(
+                                  text: "13:00:40",
+                                  fontSize: 14,
+                                  fontFam: "Lato",
+                                  fontWeight: FontWeight.w400,
+                                  textColor: Colors.black,
+                                  textAlign: TextAlign.start),
+                              CustomText(
+                                  text: "13:00:40",
+                                  fontSize: 14,
+                                  fontFam: "Lato",
+                                  fontWeight: FontWeight.w400,
+                                  textColor: Colors.black,
+                                  textAlign: TextAlign.start)
+                            ],
+                            onButtonPressed: handleButtonPress,
+                          ),
                         ],
                       ),
                     ),
@@ -238,7 +239,7 @@ class _PostDialysisState extends State<PostDialysis> {
                   title: Row(children: [
                     Image.asset("assets/file-info.png"),
                     const SizedBox(width: 12),
-                    const Text(
+                    Text(
                       "Post Dialysis Injection/Medicine",
                       style: TextStyle(
                           fontSize: 14.0,
@@ -256,7 +257,6 @@ class _PostDialysisState extends State<PostDialysis> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-
                           const SizedBox(
                             height: 20,
                           ),
@@ -265,16 +265,18 @@ class _PostDialysisState extends State<PostDialysis> {
                             decoration: BoxDecoration(
                                 color: Colors.grey[50],
                                 borderRadius: BorderRadius.circular(10),
-                                border: Border.all(color: AppColor.borderColor)),
+                                border:
+                                    Border.all(color: AppColor.borderColor)),
                             child: Column(
                               children: [
-                                const SizedBox(
+                                SizedBox(
                                   height: 10,
                                 ),
-                                const Row(
+                                Row(
                                   children: [
                                     CustomText(
-                                        text: 'Post Dialysis Weight  :',
+                                        text:
+                                            "${context.l10n.clinPostDialysisWeight} : ",
                                         fontSize: 14,
                                         fontFam: "Lato",
                                         fontWeight: FontWeight.normal,
@@ -289,10 +291,11 @@ class _PostDialysisState extends State<PostDialysis> {
                                         textAlign: TextAlign.start),
                                   ],
                                 ).paddingSymmetric(vertical: 2),
-                                const Row(
+                                Row(
                                   children: [
                                     CustomText(
-                                        text: 'Current Dialysis Session Weight Difference :',
+                                        text:
+                                            "${context.l10n.clinCurrentSessionWeightDiff} : ",
                                         fontSize: 14,
                                         fontFam: "Lato",
                                         fontWeight: FontWeight.normal,
@@ -307,10 +310,11 @@ class _PostDialysisState extends State<PostDialysis> {
                                         textAlign: TextAlign.start),
                                   ],
                                 ).paddingSymmetric(vertical: 2),
-                                const Row(
+                                Row(
                                   children: [
                                     CustomText(
-                                        text: 'Blood Pressure :',
+                                        text:
+                                            "${context.l10n.clinBloodPressure} : ",
                                         fontSize: 14,
                                         fontFam: "Lato",
                                         fontWeight: FontWeight.normal,
@@ -325,7 +329,7 @@ class _PostDialysisState extends State<PostDialysis> {
                                         textAlign: TextAlign.start),
                                     Spacer(),
                                     CustomText(
-                                        text: 'Pulse :',
+                                        text: "${context.l10n.clinPulse} : ",
                                         fontSize: 14,
                                         fontFam: "Lato",
                                         fontWeight: FontWeight.normal,
@@ -340,10 +344,11 @@ class _PostDialysisState extends State<PostDialysis> {
                                         textAlign: TextAlign.start),
                                   ],
                                 ).paddingSymmetric(vertical: 2),
-                                const Row(
+                                Row(
                                   children: [
                                     CustomText(
-                                        text: 'Temperature :',
+                                        text:
+                                            "${context.l10n.clinTemperature} : ",
                                         fontSize: 14,
                                         fontFam: "Lato",
                                         fontWeight: FontWeight.normal,
@@ -356,10 +361,10 @@ class _PostDialysisState extends State<PostDialysis> {
                                         fontWeight: FontWeight.normal,
                                         textColor: Colors.grey,
                                         textAlign: TextAlign.start),
-
                                     Spacer(),
                                     CustomText(
-                                        text: 'Oxygen Level :',
+                                        text:
+                                            "${context.l10n.clinOxygenLevel} : ",
                                         fontSize: 14,
                                         fontFam: "Lato",
                                         fontWeight: FontWeight.normal,
@@ -383,44 +388,40 @@ class _PostDialysisState extends State<PostDialysis> {
                           const SizedBox(
                             height: 15,
                           ),
-
-                          SizedBox(
-                            height: 150,
-                            child: RoundedCornerTable(
-                              l1: const ['1', '2'],
-                              l2: const [
-                                'Dialysis 1',
-                                'Dialysis 1',
-                              ],
-                              l3: const [
-                                '2024-07-22',
-                                '2024-07-22',
-                              ],
-                              tableHeader: const [
-                                "Final UFV",
-                                "Venous Pressure",
-                                "Blood Flow (QB)",
-                                "Dialysate Flow (QD)"
-                              ],
-                              lastColumnWidgets: const [
-                                CustomText(
-                                    text: "13:00:40",
-                                    fontSize: 14,
-                                    fontFam: "Lato",
-                                    fontWeight: FontWeight.w400,
-                                    textColor: Colors.black,
-                                    textAlign: TextAlign.start),
-                                CustomText(
-                                    text: "13:00:40",
-                                    fontSize: 14,
-                                    fontFam: "Lato",
-                                    fontWeight: FontWeight.w400,
-                                    textColor: Colors.black,
-                                    textAlign: TextAlign.start)
-                              ],
-                              onButtonPressed: handleButtonPress,
-                            ),
-                          )
+                          RoundedCornerTable(
+                            l1: const ['1', '2'],
+                            l2: const [
+                              'Dialysis 1',
+                              'Dialysis 1',
+                            ],
+                            l3: const [
+                              '2024-07-22',
+                              '2024-07-22',
+                            ],
+                            tableHeader: const [
+                              "Final UFV",
+                              "Venous Pressure",
+                              "Blood Flow (QB)",
+                              "Dialysate Flow (QD)"
+                            ],
+                            lastColumnWidgets: const [
+                              CustomText(
+                                  text: "13:00:40",
+                                  fontSize: 14,
+                                  fontFam: "Lato",
+                                  fontWeight: FontWeight.w400,
+                                  textColor: Colors.black,
+                                  textAlign: TextAlign.start),
+                              CustomText(
+                                  text: "13:00:40",
+                                  fontSize: 14,
+                                  fontFam: "Lato",
+                                  fontWeight: FontWeight.w400,
+                                  textColor: Colors.black,
+                                  textAlign: TextAlign.start)
+                            ],
+                            onButtonPressed: handleButtonPress,
+                          ),
                         ],
                       ),
                     ),
@@ -438,21 +439,23 @@ class _PostDialysisState extends State<PostDialysis> {
                 border: Border.all(color: AppColor.borderColor)),
             child: Column(
               children: [
-                const Align(
+                Align(
                   alignment: Alignment.centerLeft,
                   child: CustomText(
-                      text: 'Dialysis Stop Date and Time',
+                      text: context.l10n.clinDialysisStopDateTime,
                       fontSize: 16,
                       fontFam: "Lato",
                       fontWeight: FontWeight.w500,
                       textColor: Colors.black,
                       textAlign: TextAlign.start),
                 ),
-                const SizedBox(height: 10,),
-                const Row(
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
                   children: [
                     CustomText(
-                        text: 'Dialysis Stop Date and Time :',
+                        text: "${context.l10n.clinDialysisStopDateTime} : ",
                         fontSize: 14,
                         fontFam: "Lato",
                         fontWeight: FontWeight.normal,
@@ -469,10 +472,10 @@ class _PostDialysisState extends State<PostDialysis> {
                     ),
                   ],
                 ).paddingSymmetric(vertical: 2),
-                const Row(
+                Row(
                   children: [
                     CustomText(
-                        text: 'Dialysis Duration :',
+                        text: "${context.l10n.clinDialysisDuration} : ",
                         fontSize: 14,
                         fontFam: "Lato",
                         fontWeight: FontWeight.normal,
@@ -485,10 +488,9 @@ class _PostDialysisState extends State<PostDialysis> {
                         fontWeight: FontWeight.normal,
                         textColor: Colors.grey,
                         textAlign: TextAlign.start),
-
                     Spacer(),
                     CustomText(
-                        text: 'Oxygen Level :',
+                        text: "${context.l10n.clinOxygenLevel} : ",
                         fontSize: 14,
                         fontFam: "Lato",
                         fontWeight: FontWeight.normal,

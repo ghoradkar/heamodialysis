@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dialysis_queue/pre_dialysis/patient_history/tabs/graphical_analysis_temp.dart';
@@ -102,8 +103,8 @@ class _TrendAnalysisTabsTempState extends State<TrendAnalysisTabsTemp>
   Widget build(BuildContext context) {
     return _isNetworkAvailable ?  Scaffold(
       appBar: AppBar(
-        title: const CustomText(
-          text: 'Trend Analysis',
+        title: CustomText(
+          text: context.l10n.dqTrendAnalysis,
           fontSize: 18.0,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,

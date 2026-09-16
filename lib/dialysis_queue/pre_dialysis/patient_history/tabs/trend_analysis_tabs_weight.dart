@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dialysis_queue/pre_dialysis/patient_history/tabs/coversheet.dart';
@@ -107,8 +108,8 @@ class _TrendAnalysisTabsWeightState extends State<TrendAnalysisTabsWeight>
   Widget build(BuildContext context) {
     return _isNetworkAvailable ?  Scaffold(
       appBar: AppBar(
-        title: const CustomText(
-          text: 'Trend Analysis',
+        title: CustomText(
+          text: context.l10n.dqTrendAnalysis,
           fontSize: 18.0,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,
@@ -125,7 +126,7 @@ class _TrendAnalysisTabsWeightState extends State<TrendAnalysisTabsWeight>
           init: NewRegistrationController(),
           builder: (controller) {
             return controller.isLoading
-                ? const Center(child: TrendAnalysisShimmer())
+                ? Center(child: TrendAnalysisShimmer())
                 : Column(
               children: [
                 ExpandableCardDetails(
@@ -141,10 +142,10 @@ class _TrendAnalysisTabsWeightState extends State<TrendAnalysisTabsWeight>
                 //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 //   children: [
                 //     // buildButton(currentPage: 1, 0, 'Cover Sheet'),
-                //     buildButton(index: 0, currentPage: currentPage, text: 'Cover Sheet',onTap: () => changeTab(0)),
-                //      buildButton(index: 1, currentPage: currentPage, text: 'Clinical History',onTap: () => changeTab(1)),
-                //      buildButton(index: 2, currentPage: currentPage, text: 'Clinical Condition',onTap: () => changeTab(2)),
-                //      buildButton(index: 3, currentPage: currentPage, text: 'Diagnostic Inv',onTap: () => changeTab(3)),
+                //     buildButton(index: 0, currentPage: currentPage, text: context.l10n.dqCoverSheet,onTap: () => changeTab(0)),
+                //      buildButton(index: 1, currentPage: currentPage, text: context.l10n.dqClinicalHistory,onTap: () => changeTab(1)),
+                //      buildButton(index: 2, currentPage: currentPage, text: context.l10n.dqClinicalCondition,onTap: () => changeTab(2)),
+                //      buildButton(index: 3, currentPage: currentPage, text: context.l10n.dqDiagnosticInv,onTap: () => changeTab(3)),
                 //
                 //   ],
                 // ),
@@ -154,10 +155,10 @@ class _TrendAnalysisTabsWeightState extends State<TrendAnalysisTabsWeight>
                 //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 //   children: [
                 //     // buildButton(currentPage: 1, 0, 'Cover Sheet'),
-                //     buildButton(index: 4, currentPage: currentPage, text: 'Prescription',onTap: () => changeTab(4),),
-                //     buildButton(index: 5, currentPage: currentPage, text: 'Instruction',onTap: () => changeTab(5)),
-                //     buildButton(index: 6, currentPage: currentPage, text: 'Diet',onTap: () => changeTab(6)),
-                //     buildButton(index: 7, currentPage: currentPage, text: 'Upload Document',onTap: () => changeTab(7)),
+                //     buildButton(index: 4, currentPage: currentPage, text: context.l10n.dqPrescription,onTap: () => changeTab(4),),
+                //     buildButton(index: 5, currentPage: currentPage, text: context.l10n.dqInstruction,onTap: () => changeTab(5)),
+                //     buildButton(index: 6, currentPage: currentPage, text: context.l10n.dqDiet,onTap: () => changeTab(6)),
+                //     buildButton(index: 7, currentPage: currentPage, text: context.l10n.regUploadDocument,onTap: () => changeTab(7)),
                 //   ],
                 // ),
                 // Expanded(

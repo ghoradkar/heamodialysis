@@ -8,6 +8,7 @@ import 'package:heamodialysis/dashboard/controller/dashboard_controller.dart';
 import 'package:heamodialysis/dashboard/widget/drawer_screen.dart';
 import 'package:heamodialysis/dashboard/widget/functional_center_table.dart';
 import 'package:heamodialysis/internet/no_internet_connectivity.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:heamodialysis/new_registration/controller/new_registration_controller.dart';
 import 'package:heamodialysis/utils/api_urls.dart';
 import 'package:heamodialysis/utils/color_constants.dart';
@@ -139,7 +140,7 @@ class _SuperAdminDashScreenState extends State<SuperAdminDashScreen>
         title: Padding(
           padding: EdgeInsets.only(bottom: 8.w),
           child: CustomText(
-            text: 'Central Dashboard',
+            text: context.l10n.dashCentralDashboard,
             fontSize: 18.sp,
             fontFam: 'Lato',
             fontWeight: FontWeight.w400,
@@ -207,7 +208,7 @@ class _SuperAdminDashScreenState extends State<SuperAdminDashScreen>
             child: Padding(
               padding: EdgeInsets.only(bottom: 8.w),
               child: CustomText(
-                  text: "Today",
+                  text: context.l10n.dashToday,
                   fontSize: 14.sp,
                   fontWeight: FontWeight.bold,
                   textColor: Colors.white,
@@ -279,8 +280,8 @@ class _SuperAdminDashScreenState extends State<SuperAdminDashScreen>
                                 child: Column(
                                   children: [
                                     CustomDateField(
-                                      labelText: 'From Date',
-                                      hint: 'Select Date',
+                                      labelText: context.l10n.dashFromDate,
+                                      hint: context.l10n.dashSelectDate,
                                       isRequired: false,
                                       callB: () {
                                         selectFromDate();
@@ -291,8 +292,8 @@ class _SuperAdminDashScreenState extends State<SuperAdminDashScreen>
                                       dontDhowPrefix: false,
                                     ),
                                     CustomDateField(
-                                      labelText: 'To Date',
-                                      hint: 'Select Date',
+                                      labelText: context.l10n.dashToDate,
+                                      hint: context.l10n.dashSelectDate,
                                       isRequired: false,
                                       callB: () {
                                         selectToDate();
@@ -433,9 +434,8 @@ class _SuperAdminDashScreenState extends State<SuperAdminDashScreen>
                                         },
                                         child: Container(
                                             padding: EdgeInsets.symmetric(
-                                                vertical: 8.h),
+                                                vertical: 8.h, horizontal: 20.w),
                                             alignment: Alignment.center,
-                                            width: 100.w,
                                             decoration: BoxDecoration(
                                               borderRadius:
                                                   BorderRadius.circular(10),
@@ -449,23 +449,28 @@ class _SuperAdminDashScreenState extends State<SuperAdminDashScreen>
                                                 end: Alignment.bottomCenter,
                                               ),
                                             ),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                const Icon(
-                                                  Icons.search,
-                                                  color: Colors.white,
-                                                ),
-                                                CustomText(
-                                                    text: "Search",
-                                                    fontSize: 16.sp,
-                                                    fontFam: "Lato",
-                                                    fontWeight:
-                                                        FontWeight.normal,
-                                                    textColor: Colors.white,
-                                                    textAlign: TextAlign.start),
-                                              ],
+                                            child: FittedBox(
+                                              fit: BoxFit.scaleDown,
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  const Icon(
+                                                    Icons.search,
+                                                    color: Colors.white,
+                                                  ),
+                                                  SizedBox(width: 6.w),
+                                                  CustomText(
+                                                      text: context.l10n.commonSearch,
+                                                      fontSize: 16.sp,
+                                                      fontFam: "Lato",
+                                                      fontWeight:
+                                                          FontWeight.normal,
+                                                      textColor: Colors.white,
+                                                      textAlign: TextAlign.start),
+                                                ],
+                                              ),
                                             )
                                         ),
                                       ),
@@ -489,18 +494,18 @@ class _SuperAdminDashScreenState extends State<SuperAdminDashScreen>
                                         patients: dashboardController
                                                 .dashInfoFunctionalUnit ??
                                             [],
-                                        pageTitle: 'Total Functional Unit',
+                                        pageTitle: context.l10n.dashTotalFunctionalUnit,
                                       ));
                                     },
                                     child: DashCard(
                                       firstCount: controller
                                           .dashboardCountModel?.totalCentre
                                           .toString(),
-                                      firstCountText: "Total Projected Center",
+                                      firstCountText: context.l10n.dashTotalProjectedCenter,
                                       secondCount: controller
                                           .dashboardCountModel?.functionalCenter
                                           .toString(),
-                                      secondCountText: "Functional Center",
+                                      secondCountText: context.l10n.dashFunctionalCenter,
                                       iconPath:
                                           'assets/professional-services.png',
                                       isSecondCount: true,
@@ -510,7 +515,7 @@ class _SuperAdminDashScreenState extends State<SuperAdminDashScreen>
                                       //   patients: dashboardController
                                       //           .dashInfoFunctionalUnit ??
                                       //       [],
-                                      //   pageTitle: 'Total Functional Unit',
+                                      //   pageTitle: context.l10n.dashTotalFunctionalUnit,
                                       // ));
                                       //
                                       //                                     },
@@ -534,7 +539,7 @@ class _SuperAdminDashScreenState extends State<SuperAdminDashScreen>
                                         patients: dashboardController
                                                 .dashInfoDataAdmin ??
                                             [],
-                                        pageTitle: 'Total Dialysis Patient',
+                                        pageTitle: context.l10n.dashTotalDialysisPatient,
                                         // pageTitleSecond: "",
                                         showPopUp: (unitId) async {
                                           DateTime now = DateTime.now();
@@ -580,16 +585,15 @@ class _SuperAdminDashScreenState extends State<SuperAdminDashScreen>
                                             patients: controller
                                                     .totalDialysisPatient ??
                                                 [],
-                                            pageTitle: 'Total Patient',
-                                            pageTitleSecond:
-                                                "Total Dialysis Patient",
+                                            pageTitle: context.l10n.dashTotalPatient,
+                                            pageTitleSecond: context.l10n.dashTotalDialysisPatient,
                                           ));
                                         },
                                       ));
                                     },
                                     child: DashCard(
-                                      title: 'Total Patient Registration',
-                                      firstCountText: "Till Date",
+                                      title: context.l10n.dashTotalPatientRegistration,
+                                      firstCountText: context.l10n.dashTillDate,
                                       firstCount: controller
                                           .dashboardCountModel?.patientAdded
                                           .toString(),
@@ -599,9 +603,9 @@ class _SuperAdminDashScreenState extends State<SuperAdminDashScreen>
                                           .toString(),
                                       secondCountText: dashboardController
                                               .isTodaysDate
-                                          ? "Current Date"
+                                          ? context.l10n.dashCurrentDate
                                           // ? "Current Date Patient Registered"
-                                          : "Date Wise",
+                                          : context.l10n.dashDateWise,
                                       // : "Date Wise Patient Registered Count",
                                       iconPath: 'assets/total_patient.png',
                                       isSecondCount: true,
@@ -611,7 +615,7 @@ class _SuperAdminDashScreenState extends State<SuperAdminDashScreen>
                                       //     patients: dashboardController
                                       //             .dashInfoDataAdmin ??
                                       //         [],
-                                      //     pageTitle: 'Total Dialysis Patient',
+                                      //     pageTitle: context.l10n.dashTotalDialysisPatient,
                                       //     // pageTitleSecond: "",
                                       //     showPopUp: (unitId) async {
                                       //       DateTime now = DateTime.now();
@@ -656,7 +660,7 @@ class _SuperAdminDashScreenState extends State<SuperAdminDashScreen>
                                       //         patients:
                                       //             controller.totalDialysisPatient ??
                                       //                 [],
-                                      //         pageTitle: 'Total Patient',
+                                      //         pageTitle: context.l10n.dashTotalPatient,
                                       //         pageTitleSecond:
                                       //             "Total Dialysis Patient",
                                       //       ));
@@ -694,7 +698,7 @@ class _SuperAdminDashScreenState extends State<SuperAdminDashScreen>
                                         patients: dashboardController
                                                 .dashInfoDataAbhaAdmin ??
                                             [],
-                                        pageTitle: 'Total ABHA Patient',
+                                        pageTitle: context.l10n.dashTotalAbhaPatient,
                                         onClick: (unitId) async {
                                           DateTime now = DateTime.now();
                                           String fromDate =
@@ -735,26 +739,26 @@ class _SuperAdminDashScreenState extends State<SuperAdminDashScreen>
                                           Get.to(AbhaCountIdTable(
                                             patients:
                                                 controller.abhaDetIdList ?? [],
-                                            pageTitle: 'Total ABHA Patient',
+                                            pageTitle: context.l10n.dashTotalAbhaPatient,
                                           ));
                                         },
                                       ));
                                     },
                                     child: DashCard(
-                                      title: 'Total ABHA Registration',
+                                      title: context.l10n.dashTotalAbhaRegistration,
                                       firstCount: controller
                                           .dashboardCountModel?.abhaRegistration
                                           .toString(),
-                                      firstCountText: "Till Date",
+                                      firstCountText: context.l10n.dashTillDate,
                                       secondCount: controller
                                           .dashboardCountModel
                                           ?.currentDateAbhaReg
                                           .toString(),
                                       secondCountText:
                                           dashboardController.isTodaysDate
-                                              ? "Current Date"
-                                              // ? "Current Date"
-                                              : "Date Wise",
+                                              ? context.l10n.dashCurrentDate
+                                              // ? context.l10n.dashCurrentDate
+                                              : context.l10n.dashDateWise,
                                       // : "Date Wise Abha Patient Count",
                                       iconPath: 'assets/abha_registration.png',
                                       isSecondCount: true,
@@ -764,7 +768,7 @@ class _SuperAdminDashScreenState extends State<SuperAdminDashScreen>
                                       //     patients: dashboardController
                                       //             .dashInfoDataAbhaAdmin ??
                                       //         [],
-                                      //     pageTitle: 'Total ABHA Patient',
+                                      //     pageTitle: context.l10n.dashTotalAbhaPatient,
                                       //     onClick: (unitId) async {
                                       //       DateTime now = DateTime.now();
                                       //       String fromDate =
@@ -804,7 +808,7 @@ class _SuperAdminDashScreenState extends State<SuperAdminDashScreen>
                                       //       Get.to(AbhaCountIdTable(
                                       //         patients:
                                       //             controller.abhaDetIdList ?? [],
-                                      //         pageTitle: 'Total ABHA Patient',
+                                      //         pageTitle: context.l10n.dashTotalAbhaPatient,
                                       //       ));
                                       //     },
                                       //   ));
@@ -831,9 +835,8 @@ class _SuperAdminDashScreenState extends State<SuperAdminDashScreen>
                                         dataList: dashboardController
                                                 .dialysisSessionAdmin ??
                                             [],
-                                        pageTitle: 'Dialysis Sessions',
-                                        pageTitleSecond:
-                                            "Total Dialysis Sessions",
+                                        pageTitle: context.l10n.dashDialysisSessions,
+                                        pageTitleSecond: context.l10n.dashTotalDialysisSessions,
                                         showData: (unitName) async {
                                           DateTime now = DateTime.now();
                                           String fromDate =
@@ -884,26 +887,26 @@ class _SuperAdminDashScreenState extends State<SuperAdminDashScreen>
                                             patients:
                                                 controller.dialysisPatient ??
                                                     [],
-                                            pageTitle: 'Total Dialysis Patient',
+                                            pageTitle: context.l10n.dashTotalDialysisPatient,
                                           ));
                                         },
                                       ));
                                     },
                                     child: DashCard(
-                                      title: 'Dialysis Sessions',
+                                      title: context.l10n.dashDialysisSessions,
                                       firstCount: controller.dashboardCountModel
                                           ?.totalDialysisSession
                                           .toString(),
-                                      firstCountText: "Till Date",
+                                      firstCountText: context.l10n.dashTillDate,
                                       secondCount: controller
                                           .dashboardCountModel
                                           ?.currentDateDialysisSession
                                           .toString(),
                                       secondCountText: dashboardController
                                               .isTodaysDate
-                                          ? "Current Date"
+                                          ? context.l10n.dashCurrentDate
                                           // ? "Current Date Dialysis Session"
-                                          : "Date Wise",
+                                          : context.l10n.dashDateWise,
                                       // : "Date Wise Dialysis Session Count",
                                       iconPath: 'assets/dialysis_session.png',
                                       isSecondCount: true,
@@ -914,7 +917,7 @@ class _SuperAdminDashScreenState extends State<SuperAdminDashScreen>
                                       //     dataList: dashboardController
                                       //             .dialysisSessionAdmin ??
                                       //         [],
-                                      //     pageTitle: 'Dialysis Sessions',
+                                      //     pageTitle: context.l10n.dashDialysisSessions,
                                       //     pageTitleSecond:
                                       //         "Total Dialysis Sessions",
                                       //     showData: (unitName) async {
@@ -965,7 +968,7 @@ class _SuperAdminDashScreenState extends State<SuperAdminDashScreen>
                                       //         showAbha: false,
                                       //         patients:
                                       //             controller.dialysisPatient ?? [],
-                                      //         pageTitle: 'Total Dialysis Patient',
+                                      //         pageTitle: context.l10n.dashTotalDialysisPatient,
                                       //       ));
                                       //     },
                                       //   ));
@@ -995,25 +998,25 @@ class _SuperAdminDashScreenState extends State<SuperAdminDashScreen>
                                         dataList: dashboardController
                                                 .dialysisSessionCancelledAdmin ??
                                             [],
-                                        pageTitle: 'Total Dialysis Cancelled',
+                                        pageTitle: context.l10n.dashTotalDialysisCancelled,
                                         showData: () {},
                                       ));
                                     },
                                     child: DashCard(
-                                      title: 'Total Dialysis Cancelled',
+                                      title: context.l10n.dashTotalDialysisCancelled,
                                       firstCount: controller.dashboardCountModel
                                           ?.totalDialysisCnacel
                                           .toString(),
-                                      firstCountText: "Till Date",
+                                      firstCountText: context.l10n.dashTillDate,
                                       secondCount: controller
                                           .dashboardCountModel
                                           ?.currentdialCancel
                                           .toString(),
                                       secondCountText: dashboardController
                                               .isTodaysDate
-                                          ? "Current Date"
+                                          ? context.l10n.dashCurrentDate
                                           // ? "Current Date Dialysis Cancelled"
-                                          : "Date Wise",
+                                          : context.l10n.dashDateWise,
                                       // : "Date Wise Dialysis Cancel Count",
                                       iconPath: 'assets/dialysis_cancelled.png',
                                       isSecondCount: true,
@@ -1024,7 +1027,7 @@ class _SuperAdminDashScreenState extends State<SuperAdminDashScreen>
                                       //     dataList: dashboardController
                                       //             .dialysisSessionCancelledAdmin ??
                                       //         [],
-                                      //     pageTitle: 'Total Dialysis Cancelled',
+                                      //     pageTitle: context.l10n.dashTotalDialysisCancelled,
                                       //     showData: () {},
                                       //   ));
                                       // },
@@ -1049,16 +1052,16 @@ class _SuperAdminDashScreenState extends State<SuperAdminDashScreen>
                                         dataList: dashboardController
                                                 .machineCountInfo ??
                                             [],
-                                        pageTitle: 'Total Machines',
+                                        pageTitle: context.l10n.dashTotalMachines,
                                         showData: () {},
                                       ));
                                     },
                                     child: DashCard(
-                                      title: 'Machine Count',
+                                      title: context.l10n.colMachineCount,
                                       firstCount: controller
                                           .dashboardCountModel?.totalMachine
                                           .toString(),
-                                      firstCountText: "Till Date",
+                                      firstCountText: context.l10n.dashTillDate,
                                       secondCount: "",
                                       secondCountText: "",
                                       iconPath: 'assets/machine.png',
@@ -1070,7 +1073,7 @@ class _SuperAdminDashScreenState extends State<SuperAdminDashScreen>
                                       //     dataList: dashboardController
                                       //             .machineCountInfo ??
                                       //         [],
-                                      //     pageTitle: 'Total Machines',
+                                      //     pageTitle: context.l10n.dashTotalMachines,
                                       //     showData: () {},
                                       //   ));
                                       // },
@@ -1087,23 +1090,23 @@ class _SuperAdminDashScreenState extends State<SuperAdminDashScreen>
                                   Get.to(DashInfoTableSubHeaderTestDet(
                                     dataList:
                                         dashboardController.testDetails ?? [],
-                                    pageTitle: 'Total Laboratory Test Assigned',
+                                    pageTitle: context.l10n.dashTotalLabTestAssigned,
                                   ));
                                 },
                                 child: DashCard(
-                                  title: 'Total Laboratory Test Assigned',
+                                  title: context.l10n.dashTotalLabTestAssigned,
                                   firstCount: controller
                                       .dashboardCountModel?.totalLbTest
                                       .toString(),
-                                  firstCountText: "Till Date",
+                                  firstCountText: context.l10n.dashTillDate,
                                   secondCount: controller
                                       .dashboardCountModel?.currentDateLabTest
                                       .toString(),
                                   secondCountText: dashboardController
                                           .isTodaysDate
-                                      ? "Current Dated"
+                                      ? context.l10n.dashCurrentDate
                                       // ? "Current Date Laboratory Test Assigned"
-                                      : "Date Wise",
+                                      : context.l10n.dashDateWise,
                                   // : "Date Wise Test Assign Count",
                                   pendingCount: controller
                                       .dashboardCountModel?.totalLbTest
@@ -1117,7 +1120,7 @@ class _SuperAdminDashScreenState extends State<SuperAdminDashScreen>
                                   //   Get.to(DashInfoTableSubHeaderTestDet(
                                   //     dataList:
                                   //         dashboardController.testDetails ?? [],
-                                  //     pageTitle: 'Total Laboratory Test Assigned',
+                                  //     pageTitle: context.l10n.dashTotalLabTestAssigned,
                                   //   ));
                                   // },
                                   cardHeight: 80.h,
@@ -1136,7 +1139,7 @@ class _SuperAdminDashScreenState extends State<SuperAdminDashScreen>
                                         patients:
                                             dashboardController.eventDetAdmin ??
                                                 [],
-                                        pageTitle: 'Adverse Events',
+                                        pageTitle: context.l10n.dashAdverseEvents,
                                         showPopUp: (unitId) async {
                                           DateTime now = DateTime.now();
                                           String fromDate =
@@ -1178,24 +1181,24 @@ class _SuperAdminDashScreenState extends State<SuperAdminDashScreen>
                                           Get.to(DashInfoTableEvent(
                                             patients:
                                                 controller.eventDetIdList ?? [],
-                                            pageTitle: 'Total Adverse Event',
+                                            pageTitle: context.l10n.dashTotalAdverseEvent,
                                           ));
                                         },
                                       ));
                                     },
                                     child: DashCard(
-                                      title: 'Adverse Event',
+                                      title: context.l10n.dashAdverseEvent,
                                       firstCount: controller
                                           .dashboardCountModel?.totalEvent
                                           .toString(),
-                                      firstCountText: "Till Date",
+                                      firstCountText: context.l10n.dashTillDate,
                                       secondCount: controller
                                           .dashboardCountModel?.currentDateEvent
                                           .toString(),
                                       secondCountText:
                                           dashboardController.isTodaysDate
-                                              ? "Current Date"
-                                              : "Date Wise",
+                                              ? context.l10n.dashCurrentDate
+                                              : context.l10n.dashDateWise,
                                       iconPath: 'assets/event.png',
                                       isSecondCount: true,
                                       isInfoVisible: true,
@@ -1205,7 +1208,7 @@ class _SuperAdminDashScreenState extends State<SuperAdminDashScreen>
                                           patients: dashboardController
                                                   .eventDetAdmin ??
                                               [],
-                                          pageTitle: 'Adverse Events',
+                                          pageTitle: context.l10n.dashAdverseEvents,
                                           showPopUp: (unitId) async {
                                             DateTime now = DateTime.now();
                                             String fromDate =
@@ -1250,7 +1253,7 @@ class _SuperAdminDashScreenState extends State<SuperAdminDashScreen>
                                               patients:
                                                   controller.eventDetIdList ??
                                                       [],
-                                              pageTitle: 'Total Adverse Event',
+                                              pageTitle: context.l10n.dashTotalAdverseEvent,
                                             ));
                                           },
                                         ));
@@ -1268,15 +1271,15 @@ class _SuperAdminDashScreenState extends State<SuperAdminDashScreen>
                                         dataList:
                                             dashboardController.totalTickets ??
                                                 [],
-                                        pageTitle: 'Tickets',
+                                        pageTitle: context.l10n.dashTickets,
                                       ));
                                     },
                                     child: DashCard(
-                                      title: 'Total Tickets',
+                                      title: context.l10n.dashTotalTickets,
                                       firstCount: controller
                                           .dashboardCountModel?.ticket
                                           .toString(),
-                                      firstCountText: "Till Date",
+                                      firstCountText: context.l10n.dashTillDate,
                                       // secondCount: "61",
                                       // secondCountText: "Working Machine Count",
                                       isVisiableCol: true,
@@ -1294,7 +1297,7 @@ class _SuperAdminDashScreenState extends State<SuperAdminDashScreen>
                                       //     dataList:
                                       //         dashboardController.totalTickets ??
                                       //             [],
-                                      //     pageTitle: 'Tickets',
+                                      //     pageTitle: context.l10n.dashTickets,
                                       //   ));
                                       // },
                                       cardHeight: 80.h,
@@ -1306,18 +1309,18 @@ class _SuperAdminDashScreenState extends State<SuperAdminDashScreen>
                             Visibility(
                               visible: isDFC == true,
                               child: DashCard(
-                                title: 'Total Feedback',
+                                title: context.l10n.dashTotalFeedback,
                                 firstCount: controller
                                     .dashboardCountModel?.feedback
                                     .toString(),
-                                firstCountText: "Till Date",
+                                firstCountText: context.l10n.dashTillDate,
                                 secondCount: controller
                                     .dashboardCountModel?.currentDateFeedback
                                     .toString(),
                                 secondCountText:
                                     dashboardController.isTodaysDate
-                                        ? "Current Date"
-                                        : "Date Wise",
+                                        ? context.l10n.dashCurrentDate
+                                        : context.l10n.dashDateWise,
                                 iconPath: 'assets/feedback.png',
                                 isSecondCount: true,
                                 cardHeight: 80.h,
@@ -1333,15 +1336,15 @@ class _SuperAdminDashScreenState extends State<SuperAdminDashScreen>
                                       Get.to(DashInfoTableSubHeaderComplaints(
                                         dataList:
                                             dashboardController.complaint ?? [],
-                                        pageTitle: 'Online Complaints',
+                                        pageTitle: context.l10n.dashOnlineComplaints,
                                       ));
                                     },
                                     child: DashCard(
-                                      title: 'Online Complaints',
+                                      title: context.l10n.dashOnlineComplaints,
                                       firstCount: controller
                                           .dashboardCountModel?.totalComplaint
                                           .toString(),
-                                      firstCountText: "Till Date",
+                                      firstCountText: context.l10n.dashTillDate,
                                       pendingCount: controller
                                           .dashboardCountModel?.pendingComplaint
                                           .toString(),
@@ -1363,23 +1366,23 @@ class _SuperAdminDashScreenState extends State<SuperAdminDashScreen>
                                       child: GestureDetector(
                                     onTap: () {
                                       Get.to(TotalPatientRegistration(
-                                        pageTitle: 'Invoice Amount',
+                                        pageTitle: context.l10n.colInvoiceAmount,
                                         patients: dashboardController
                                                 .totalInvoiceAmountModel ??
                                             [],
                                       ));
                                     },
                                     child: DashCard(
-                                      title: 'Total Invoice Amount',
+                                      title: context.l10n.dashTotalInvoiceAmount,
                                       firstCount: controller.dashboardCountModel
                                           ?.totalInvoiceAmount
                                           .toString(),
-                                      firstCountText: "Till Date",
+                                      firstCountText: context.l10n.dashTillDate,
                                       secondCount: controller
                                           .dashboardCountModel
                                           ?.currentMonthInvAmt
                                           .toString(),
-                                      secondCountText: "Current Month",
+                                      secondCountText: context.l10n.dashCurrentMonth,
                                       iconPath: 'assets/invoice.png',
                                       isSecondCount: true,
                                       cardHeight: 80.h,
@@ -1387,7 +1390,7 @@ class _SuperAdminDashScreenState extends State<SuperAdminDashScreen>
                                       isInfoVisible: true,
                                       // onInfoClick: () {
                                       //   Get.to(TotalPatientRegistration(
-                                      //     pageTitle: 'Invoice Amount',
+                                      //     pageTitle: context.l10n.colInvoiceAmount,
                                       //     patients: dashboardController
                                       //             .totalInvoiceAmountModel ??
                                       //         [],
@@ -1401,7 +1404,7 @@ class _SuperAdminDashScreenState extends State<SuperAdminDashScreen>
                             Visibility(
                               visible: isDPA == true,
                               child: DashCard(
-                                title: 'Total Payment',
+                                title: context.l10n.dashTotalPayment,
                                 firstCount: controller.dashboardCountModel
                                             ?.totalInvoicePayment ==
                                         null
@@ -1409,7 +1412,7 @@ class _SuperAdminDashScreenState extends State<SuperAdminDashScreen>
                                     : controller.dashboardCountModel
                                         ?.totalInvoicePayment
                                         .toString(),
-                                firstCountText: "Till Date",
+                                firstCountText: context.l10n.dashTillDate,
                                 secondCount: controller.dashboardCountModel
                                             ?.currentMonthInvPymt ==
                                         null
@@ -1417,7 +1420,7 @@ class _SuperAdminDashScreenState extends State<SuperAdminDashScreen>
                                     : controller.dashboardCountModel
                                         ?.currentMonthInvPymt
                                         .toString(),
-                                secondCountText: "Current Month",
+                                secondCountText: context.l10n.dashCurrentMonth,
                                 iconPath: 'assets/payment.png',
                                 isSecondCount: true,
                                 cardHeight: 80.h,
@@ -1436,8 +1439,8 @@ class _SuperAdminDashScreenState extends State<SuperAdminDashScreen>
                                 indicatorPadding: EdgeInsets.zero,
                                 labelPadding: EdgeInsets.zero,
                                 tabs: [
-                                  buildTab(0, "Dialysis Performance"),
-                                  buildTab(1, "ABHA Registration")
+                                  buildTab(0, context.l10n.dashDialysisPerformance),
+                                  buildTab(1, context.l10n.dashAbhaRegistration)
                                 ],
                               ),
                             ),
@@ -1507,7 +1510,7 @@ class _SuperAdminDashScreenState extends State<SuperAdminDashScreen>
                                     Align(
                                       alignment: Alignment.centerLeft,
                                       child: CustomText(
-                                          text: "Viral Load Status",
+                                          text: context.l10n.colViralLoadStatus,
                                           fontSize: 16.sp,
                                           fontWeight: FontWeight.w400,
                                           textColor: Colors.black,
@@ -1543,10 +1546,12 @@ class _SuperAdminDashScreenState extends State<SuperAdminDashScreen>
   Widget buildTab(int index, String text) {
     bool isSelected = tabController.index == index;
     return Container(
-      width: 130.w,
+      // Content-sized so bilingual tab labels stay fully visible
+      // (TabBar is isScrollable).
+      constraints: BoxConstraints(minWidth: 110.w),
       height: 40.h,
       alignment: Alignment.center,
-      padding: EdgeInsets.symmetric(horizontal: 0.8.w, vertical: 6.h),
+      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 6.h),
       decoration: BoxDecoration(
           // color: isSelected ? Colors.blue.shade200 : Colors.transparent,
           gradient: isSelected

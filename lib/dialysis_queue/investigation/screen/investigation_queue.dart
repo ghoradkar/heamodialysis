@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dialysis_queue/investigation/screen/all_test_package.dart';
 import 'package:heamodialysis/dialysis_queue/investigation/controller/investigation_controller.dart';
@@ -148,8 +149,8 @@ class _InvestigationQueueState extends State<InvestigationQueue> {
   Widget build(BuildContext context) {
     return _isNetworkAvailable ? Scaffold(
       appBar: AppBar(
-        title: const CustomText(
-          text: "Investigation Queue",
+        title: CustomText(
+          text: context.l10n.dqInvestigationQueue,
           fontSize: 18.0,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,
@@ -194,8 +195,8 @@ class _InvestigationQueueState extends State<InvestigationQueue> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const CustomText(
-                                      text: "Search",
+                              CustomText(
+                                      text: context.l10n.commonSearch,
                                       fontSize: 16,
                                       fontFam: "Lato",
                                       fontWeight: FontWeight.w500,
@@ -214,10 +215,10 @@ class _InvestigationQueueState extends State<InvestigationQueue> {
                                   )),
                             ],
                           ),
-                          const Align(
+                          Align(
                             alignment: Alignment.centerLeft,
                             child: CustomText(
-                                text: "Search BY",
+                                text: context.l10n.commonSearchBy,
                                 fontSize: 16,
                                 fontFam: "Lato",
                                 fontWeight: FontWeight.normal,
@@ -266,8 +267,8 @@ class _InvestigationQueueState extends State<InvestigationQueue> {
                                             MainAxisAlignment.center,
                                         children: [
                                           Image.asset("assets/cancel.png"),
-                                          const CustomText(
-                                              text: "Cancel",
+                                          CustomText(
+                                              text: context.l10n.commonCancel,
                                               fontSize: 16,
                                               fontFam: "Lato",
                                               fontWeight: FontWeight.normal,
@@ -303,7 +304,7 @@ class _InvestigationQueueState extends State<InvestigationQueue> {
                                           end: Alignment.bottomCenter,
                                         ),
                                       ),
-                                      child: const Row(
+                                      child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
@@ -312,7 +313,7 @@ class _InvestigationQueueState extends State<InvestigationQueue> {
                                             color: Colors.white,
                                           ),
                                           CustomText(
-                                              text: "Search",
+                                              text: context.l10n.commonSearch,
                                               fontSize: 16,
                                               fontFam: "Lato",
                                               fontWeight: FontWeight.normal,
@@ -348,10 +349,10 @@ class _InvestigationQueueState extends State<InvestigationQueue> {
             if (controller.filteredList == null ||
                 controller.filteredList!.isEmpty) {
               return CommonStatusScreen(
-                title: "No Data Found",
+                title: context.l10n.commonNoDataFound,
                 description: "We are unable to find the data that\nyou are looking for ",
                 img: "assets/no_Data_Found.png",
-                buttonText: "Go Back",
+                buttonText: context.l10n.commonGoBack,
                 onPressed: () {
                   Get.back();
                 },
@@ -437,7 +438,7 @@ class _InvestigationQueueState extends State<InvestigationQueue> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const CustomText(
+                    CustomText(
                             text:
                                 "Sample collected by Technician Date and Time",
                             fontSize: 14,
@@ -461,8 +462,8 @@ class _InvestigationQueueState extends State<InvestigationQueue> {
                   ],
                 ),
                 CustomDateField(
-                  labelText: 'Date',
-                  hint: 'Select Date',
+                  labelText: context.l10n.commonDate,
+                  hint: context.l10n.dashSelectDate,
                   isRequired: false,
                   callB: () {
                     pickInspectionDate();
@@ -474,8 +475,8 @@ class _InvestigationQueueState extends State<InvestigationQueue> {
                 ),
                 CustomDateField(
                   key: UniqueKey(),
-                  labelText: 'Time',
-                  hint: 'Select',
+                  labelText: context.l10n.commonTime,
+                  hint: context.l10n.regHintSelect,
                   isRequired: false,
                   callB: () {
                     selectTime();
@@ -505,8 +506,8 @@ class _InvestigationQueueState extends State<InvestigationQueue> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Image.asset("assets/cancel.png"),
-                                const CustomText(
-                                    text: "Cancel",
+                                CustomText(
+                                    text: context.l10n.commonCancel,
                                     fontSize: 16,
                                     fontFam: "Lato",
                                     fontWeight: FontWeight.normal,
@@ -583,11 +584,11 @@ class _InvestigationQueueState extends State<InvestigationQueue> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Image.asset("assets/save-next.png"),
-                                const SizedBox(
+                                SizedBox(
                                   width: 6,
                                 ),
-                                const CustomText(
-                                    text: "Save",
+                                CustomText(
+                                    text: context.l10n.commonSave,
                                     fontSize: 16,
                                     fontFam: "Lato",
                                     fontWeight: FontWeight.normal,
@@ -637,8 +638,8 @@ class _InvestigationQueueState extends State<InvestigationQueue> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const CustomText(
-                            text: "Add Barcode No.",
+                    CustomText(
+                            text: context.l10n.dqAddBarcodeNo,
                             fontSize: 16,
                             fontFam: "Lato",
                             fontWeight: FontWeight.w500,
@@ -659,8 +660,8 @@ class _InvestigationQueueState extends State<InvestigationQueue> {
                 ),
                 TextField(
                     controller: investController.barCodeController,
-                    decoration: const InputDecoration(
-                      labelText: 'Barcode No',
+                    decoration: InputDecoration(
+                      labelText: context.l10n.dqBarcodeNo,
                       labelStyle: TextStyle(color: Color(0xFFE1E1E1)),
                       enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Color(0xFFE1E1E1)),
@@ -692,8 +693,8 @@ class _InvestigationQueueState extends State<InvestigationQueue> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Image.asset("assets/cancel.png"),
-                                const CustomText(
-                                    text: "Cancel",
+                                CustomText(
+                                    text: context.l10n.commonCancel,
                                     fontSize: 16,
                                     fontFam: "Lato",
                                     fontWeight: FontWeight.normal,
@@ -767,7 +768,7 @@ class _InvestigationQueueState extends State<InvestigationQueue> {
                                 end: Alignment.bottomCenter,
                               ),
                             ),
-                            child: const Row(
+                            child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Icon(
@@ -775,7 +776,7 @@ class _InvestigationQueueState extends State<InvestigationQueue> {
                                   color: Colors.white,
                                 ),
                                 CustomText(
-                                    text: "Save",
+                                    text: context.l10n.commonSave,
                                     fontSize: 16,
                                     fontFam: "Lato",
                                     fontWeight: FontWeight.normal,

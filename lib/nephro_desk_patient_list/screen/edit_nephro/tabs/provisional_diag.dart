@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dashboard/model/nephro_list.dart';
 import 'package:heamodialysis/internet/no_internet_connectivity.dart';
@@ -131,11 +132,11 @@ class _ProvisionalDiagState extends State<ProvisionalDiag> {
           if (provisionList.isEmpty) {
             return  Center(child: Text('No Data Found'));
             //   CommonStatusScreen(
-            //   title: "No Data Found",
+            //   title: context.l10n.commonNoDataFound,
             //   description:
             //   "We are unable to find the data that\nyou are looking for ",
             //   img: "assets/no_Data_Found.png",
-            //   buttonText: "Go Back",
+            //   buttonText: context.l10n.commonGoBack,
             //   onPressed: () {
             //     Get.back();
             //   },
@@ -292,7 +293,7 @@ class ProvisionalDiagCard extends StatelessWidget {
                       //       child: patientDetailsCard(
                       //           cardItemDetailsList[3], roList?.date ?? ''),
                       //     ),
-                      //     const SizedBox(
+                      //     SizedBox(
                       //       width: 8,
                       //     ),
                       //     Expanded(

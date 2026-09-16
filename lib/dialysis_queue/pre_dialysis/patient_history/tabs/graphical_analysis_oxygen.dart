@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/nephro_desk_patient_list/model/cover_sheet_nephro.dart';
 import 'package:heamodialysis/utils/color_constants.dart';
@@ -50,20 +51,20 @@ class _GraphicalAnalysisOxygenState extends State<GraphicalAnalysisOxygen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const SizedBox(
+                SizedBox(
                   height: 20,
                 ),
-                const Row(
+                Row(
                   children: [
                     CustomText(
-                        text: 'Test Name :',
+                        text: "${context.l10n.dqTestName} : ",
                         fontSize: 14,
                         fontFam: "Lato",
                         fontWeight: FontWeight.w500,
                         textColor: Colors.black,
                         textAlign: TextAlign.start),
                     CustomText(
-                        text: 'Temperature Trend Analysis',
+                        text: context.l10n.dqTemperatureTrendAnalysis,
                         fontSize: 14,
                         fontFam: "Lato",
                         fontWeight: FontWeight.normal,

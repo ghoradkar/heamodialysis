@@ -10,6 +10,7 @@ import 'package:heamodialysis/dashboard/controller/dashboard_controller.dart';
 import 'package:heamodialysis/dashboard/widget/drawer_screen.dart';
 import 'package:heamodialysis/dashboard/screen/nephro_first_level/nephro_patient_reg.dart';
 import 'package:heamodialysis/internet/no_internet_connectivity.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:heamodialysis/new_registration/controller/new_registration_controller.dart';
 import 'package:heamodialysis/utils/color_constants.dart';
 import 'package:heamodialysis/utils/shared_pref_constants.dart';
@@ -148,7 +149,7 @@ class _NephroDashboardState extends State<NephroDashboard>
                 ),
               ),
               title: CustomText(
-                text: 'Dashboard',
+                text: context.l10n.drawerDashboard,
                 fontSize: 18.sp,
                 fontFam: 'Lato',
                 fontWeight: FontWeight.w400,
@@ -194,7 +195,7 @@ class _NephroDashboardState extends State<NephroDashboard>
                     dashboardController.update();
                   },
                   child: CustomText(
-                      text: "Today",
+                      text: context.l10n.dashToday,
                       fontSize: 14.sp,
                       fontWeight: FontWeight.bold,
                       textColor: Colors.white,
@@ -265,8 +266,8 @@ class _NephroDashboardState extends State<NephroDashboard>
                             child: Column(
                               children: [
                                 CustomDateField(
-                                  labelText: 'From Date',
-                                  hint: 'Select Date',
+                                  labelText: context.l10n.dashFromDate,
+                                  hint: context.l10n.dashSelectDate,
                                   isRequired: false,
                                   callB: () {
                                     selectFromDate();
@@ -277,8 +278,8 @@ class _NephroDashboardState extends State<NephroDashboard>
                                   dontDhowPrefix: false,
                                 ),
                                 CustomDateField(
-                                  labelText: 'To Date',
-                                  hint: 'Select Date',
+                                  labelText: context.l10n.dashToDate,
+                                  hint: context.l10n.dashSelectDate,
                                   isRequired: false,
                                   callB: () {
                                     selectToDate();
@@ -349,10 +350,9 @@ class _NephroDashboardState extends State<NephroDashboard>
                                       );
                                     },
                                     child: Container(
-                                        padding:
-                                            EdgeInsets.symmetric(vertical: 8.h),
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: 8.h, horizontal: 20.w),
                                         alignment: Alignment.center,
-                                        width: 100.w,
                                         decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(10),
@@ -365,22 +365,27 @@ class _NephroDashboardState extends State<NephroDashboard>
                                             end: Alignment.bottomCenter,
                                           ),
                                         ),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            const Icon(
-                                              Icons.search,
-                                              color: Colors.white,
-                                            ),
-                                            CustomText(
-                                                text: "Search",
-                                                fontSize: 16.sp,
-                                                fontFam: "Lato",
-                                                fontWeight: FontWeight.normal,
-                                                textColor: Colors.white,
-                                                textAlign: TextAlign.start),
-                                          ],
+                                        child: FittedBox(
+                                          fit: BoxFit.scaleDown,
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              const Icon(
+                                                Icons.search,
+                                                color: Colors.white,
+                                              ),
+                                              SizedBox(width: 6.w),
+                                              CustomText(
+                                                  text: context.l10n.commonSearch,
+                                                  fontSize: 16.sp,
+                                                  fontFam: "Lato",
+                                                  fontWeight: FontWeight.normal,
+                                                  textColor: Colors.white,
+                                                  textAlign: TextAlign.start),
+                                            ],
+                                          ),
                                         )),
                                   ),
                                 ),
@@ -397,15 +402,15 @@ class _NephroDashboardState extends State<NephroDashboard>
                               visible: isDPR == true,
                               child: Expanded(
                                 child: DashCard(
-                                  title: 'Patient Registration',
-                                  firstCountText: "Till Date",
+                                  title: context.l10n.dashPatientRegistration,
+                                  firstCountText: context.l10n.dashTillDate,
                                   firstCount: controller
                                       .nephroCounts?.patientAdded
                                       .toString(),
                                   secondCount: controller
                                       .nephroCounts?.currentDatePatient
                                       .toString(),
-                                  secondCountText: "Current Date",
+                                  secondCountText: context.l10n.dashCurrentDate,
                                   // secondCountText: "Current Date Patient Registration",
                                   iconPath: 'assets/total_patient.png',
                                   isSecondCount: true,
@@ -415,7 +420,7 @@ class _NephroDashboardState extends State<NephroDashboard>
                                       patients: dashboardController
                                               .dashInfoDataNephro ??
                                           [],
-                                      pageTitle: 'Total Dialysis Patient',
+                                      pageTitle: context.l10n.dashTotalDialysisPatient,
                                       // pageTitleSecond: "",
                                       showPopUp: (unitId) async {
                                         DateTime now = DateTime.now();
@@ -457,9 +462,8 @@ class _NephroDashboardState extends State<NephroDashboard>
                                           patients:
                                               controller.totalPatientByUnit ??
                                                   [],
-                                          pageTitle: 'Total Patient',
-                                          pageTitleSecond:
-                                              "Total Dialysis Patient",
+                                          pageTitle: context.l10n.dashTotalPatient,
+                                          pageTitleSecond: context.l10n.dashTotalDialysisPatient,
                                         ));
                                       },
                                     ));
@@ -478,15 +482,15 @@ class _NephroDashboardState extends State<NephroDashboard>
                               visible: isDCS == true,
                               child: Expanded(
                                 child: DashCard(
-                                  title: 'Dialysis Sessions',
+                                  title: context.l10n.dashDialysisSessions,
                                   firstCount: controller
                                       .nephroCounts?.totalDialysisSession
                                       .toString(),
-                                  firstCountText: "Till Date",
+                                  firstCountText: context.l10n.dashTillDate,
                                   secondCount: controller
                                       .nephroCounts?.currentDateDialysisSession
                                       .toString(),
-                                  secondCountText: "Current Day",
+                                  secondCountText: context.l10n.dashCurrentDay,
                                   // secondCountText: "Current Day Dialysis Sessions",
                                   iconPath: 'assets/dialysis_session.png',
                                   isSecondCount: true,
@@ -497,9 +501,9 @@ class _NephroDashboardState extends State<NephroDashboard>
                                       dataList: dashboardController
                                               .dialysisSessionNephro ??
                                           [],
-                                      pageTitle: 'Dialysis Sessions',
-                                      pageTitleSecond: "Total Dialysis",
-                                      // pageTitleSecond: "Total Dialysis Sessions",
+                                      pageTitle: context.l10n.dashDialysisSessions,
+                                      pageTitleSecond: context.l10n.dashTotalDialysis,
+                                      // pageTitleSecond: context.l10n.dashTotalDialysisSessions,
                                       showData: (unitName) async {
                                         DateTime now = DateTime.now();
                                         String fromDate =
@@ -547,7 +551,7 @@ class _NephroDashboardState extends State<NephroDashboard>
                                           patients: controller
                                                   .dialysisPatientIDNephro ??
                                               [],
-                                          pageTitle: 'Dialysis Sessions',
+                                          pageTitle: context.l10n.dashDialysisSessions,
                                         ));
                                       },
                                     ));
@@ -570,15 +574,15 @@ class _NephroDashboardState extends State<NephroDashboard>
                               child: Visibility(
                                 visible: isDDC == true,
                                 child: DashCard(
-                                  title: 'Dialysis Cancelled',
+                                  title: context.l10n.dashDialysisCancelled,
                                   firstCount: controller
                                       .nephroCounts?.totalDialysisCnacel
                                       .toString(),
-                                  firstCountText: "Till Date",
+                                  firstCountText: context.l10n.dashTillDate,
                                   secondCount: controller
                                       .nephroCounts?.currentdialCancel
                                       .toString(),
-                                  secondCountText: "Current Day",
+                                  secondCountText: context.l10n.dashCurrentDay,
                                   // secondCountText: "Current Day Dialysis Cancelled",
                                   iconPath: 'assets/dialysis_cancelled.png',
                                   isSecondCount: true,
@@ -589,9 +593,8 @@ class _NephroDashboardState extends State<NephroDashboard>
                                       dataList: dashboardController
                                               .dialysisSessionCancelNephro ??
                                           [],
-                                      pageTitle: 'Total Dialysis Cancelled',
-                                      pageTitleSecond:
-                                          "Total Dialysis Sessions",
+                                      pageTitle: context.l10n.dashTotalDialysisCancelled,
+                                      pageTitleSecond: context.l10n.dashTotalDialysisSessions,
                                       showData: (unitName) async {
                                         DateTime now = DateTime.now();
                                         String fromDate =
@@ -639,7 +642,7 @@ class _NephroDashboardState extends State<NephroDashboard>
                                           patients:
                                               controller.dialysisCancelNephro ??
                                                   [],
-                                          pageTitle: 'Total Dialysis Cancelled',
+                                          pageTitle: context.l10n.dashTotalDialysisCancelled,
                                         ));
                                       },
                                     ));
@@ -658,11 +661,11 @@ class _NephroDashboardState extends State<NephroDashboard>
                               child: Visibility(
                                 visible: isDVL == true,
                                 child: DashCard(
-                                  title: 'Patient Verification',
+                                  title: context.l10n.dashPatientVerification,
                                   firstCount: "0",
-                                  firstCountText: "Till Date",
+                                  firstCountText: context.l10n.dashTillDate,
                                   secondCount: "0",
-                                  secondCountText: "Total Pending",
+                                  secondCountText: context.l10n.dashTotalPending,
                                   //secondCountText: "Total Pending Verification",
                                   iconPath: 'assets/dialysis_cancelled.png',
                                   isSecondCount: true,
@@ -685,15 +688,15 @@ class _NephroDashboardState extends State<NephroDashboard>
                               child: Visibility(
                                 visible: isDAE == true,
                                 child: DashCard(
-                                  title: 'Event Occurred',
+                                  title: context.l10n.dashEventOccurred,
                                   firstCount: controller
                                       .nephroCounts?.totalEvent
                                       .toString(),
-                                  firstCountText: "Till Date",
+                                  firstCountText: context.l10n.dashTillDate,
                                   secondCount: controller
                                       .nephroCounts?.currentDateEvent
                                       .toString(),
-                                  secondCountText: "Current Day",
+                                  secondCountText: context.l10n.dashCurrentDay,
                                   iconPath: 'assets/event.png',
                                   isSecondCount: true,
                                   isInfoVisible: false,
@@ -702,7 +705,7 @@ class _NephroDashboardState extends State<NephroDashboard>
                                       patients:
                                           dashboardController.nephroEvent ?? [],
                                       isEvent: true,
-                                      pageTitle: 'Total Event Occured',
+                                      pageTitle: context.l10n.dashTotalEventOccurred,
                                       // pageTitleSecond: "",
                                       showPopUp: (unitId) async {
                                         DateTime now = DateTime.now();
@@ -744,7 +747,7 @@ class _NephroDashboardState extends State<NephroDashboard>
                                         Get.to(DashInfoTableEvent(
                                           patients:
                                               controller.nephroEventId ?? [],
-                                          pageTitle: 'Total Event Occured',
+                                          pageTitle: context.l10n.dashTotalEventOccurred,
                                         ));
                                       },
                                     ));

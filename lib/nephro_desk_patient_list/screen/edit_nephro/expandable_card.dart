@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:heamodialysis/dialysis_queue/dialysis_event/model/dialysis_event_detaisl_model.dart';
-import 'package:heamodialysis/new_registration/model/view_patient_model.dart';
 import 'package:heamodialysis/utils/color_constants.dart';
 import 'package:heamodialysis/widgets/custom_text.dart';
 import 'package:intl/intl.dart';
@@ -40,6 +39,7 @@ class ExpandableCardDetails extends StatelessWidget {
               end: Alignment.bottomCenter,
             )),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Row(
               children: [
@@ -53,27 +53,36 @@ class ExpandableCardDetails extends StatelessWidget {
                     color: Colors.grey,
                   ),
                 ),
-                const SizedBox(
-                  width: 10,
+                const SizedBox(width: 10),
+                Flexible(
+                  child: CustomText(
+                    text: "${context.l10n.colPatientId} : ",
+                    fontSize: 12.0,
+                    fontFam: 'Lato',
+                    fontWeight: FontWeight.w400,
+                    textColor: Colors.black,
+                    textAlign: TextAlign.start,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
-                const CustomText(
-                  text: 'Patient ID : ',
-                  fontSize: 12.0,
-                  fontFam: 'Lato',
-                  fontWeight: FontWeight.w400,
-                  textColor: Colors.black,
-                  textAlign: TextAlign.start,
-                ),
-                CustomText(
-                  text: patientData?.patientId.toString() ?? "-",
-                  fontSize: 12.0,
-                  fontFam: 'Lato',
-                  fontWeight: FontWeight.w400,
-                  textColor: Colors.grey,
-                  textAlign: TextAlign.start,
+                Flexible(
+                  child: CustomText(
+                    text: patientData?.patientId.toString() ?? "-",
+                    fontSize: 12.0,
+                    fontFam: 'Lato',
+                    fontWeight: FontWeight.w400,
+                    textColor: Colors.grey,
+                    textAlign: TextAlign.start,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
                 const Spacer(),
                 IconButton(
+                    visualDensity: VisualDensity.compact,
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
                     onPressed: () {
                       if (isExpand != null) {
                         isExpand!(!isExpanded!);
@@ -83,319 +92,97 @@ class ExpandableCardDetails extends StatelessWidget {
                         ? const Icon(Icons.arrow_circle_up_outlined)
                         : const Icon(Icons.arrow_circle_down))
               ],
-            ).paddingOnly(top: 2),
-            Padding(
-              padding: const EdgeInsets.only(left: 43.0),
-              child: Row(
-               crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const CustomText(
-                    text: 'Patient Name  : ',
-                    fontSize: 12.0,
-                    fontFam: 'Lato',
-                    fontWeight: FontWeight.w400,
-                    textColor: Colors.black,
-                    textAlign: TextAlign.start,
-                  ),
-                  Flexible(
-                    child: CustomText(
-                      text: "${patientData?.patientName}",
-                      fontSize: 12.0,
-                      fontFam: 'Lato',
-                      fontWeight: FontWeight.w400,
-                      textColor: Colors.grey,
-                      textAlign: TextAlign.start,
-                    ),
-                  )
-                ],
-              ).paddingOnly(bottom: 1),
             ),
-            SizedBox(height: 3),
             Padding(
-              padding: const EdgeInsets.only(left: 43.0),
-              child: Row(
-                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              padding: const EdgeInsets.only(left: 43.0, top: 2),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Flexible(
-                    flex: 2,
-                    child: Row(
+                  _detailRow(context, context.l10n.colPatientName,
+                      patientData?.patientName?.toString() ?? "-"),
+                  _detailRow(context, context.l10n.nephroPatientMobileNo,
+                      patientData?.patientNo ?? "-"),
+                  _detailRow(context, context.l10n.commonAge,
+                      patientData?.age.toString() ?? "-"),
+                  Visibility(
+                    visible: isExpanded == true,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        const CustomText(
-                          text: 'Patient Mobile No : ',
-                          fontSize: 12.0,
-                          fontFam: 'Lato',
-                          fontWeight: FontWeight.w400,
-                          textColor: Colors.black,
-                          textAlign: TextAlign.start,
-                        ),
-                        Expanded(
-                          child: CustomText(
-                            text: patientData?.patientNo ?? "-",
-                            fontSize: 12.0,
-                            fontFam: 'Lato',
-                            fontWeight: FontWeight.w400,
-                            textColor: Colors.grey,
-                            textAlign: TextAlign.start,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Flexible(
-                    flex: 1,
-                    child: Row(
-                      children: [
-                        const CustomText(
-                          text: 'Age : ',
-                          fontSize: 12.0,
-                          fontFam: 'Lato',
-                          fontWeight: FontWeight.w400,
-                          textColor: Colors.black,
-                          textAlign: TextAlign.start,
-                        ),
-                        CustomText(
-                          text: patientData?.age.toString() ?? "-",
-                          fontSize: 12.0,
-                          fontFam: 'Lato',
-                          fontWeight: FontWeight.w400,
-                          textColor: Colors.grey,
-                          textAlign: TextAlign.start,
-                        ),
+                        _detailRow(context, context.l10n.nephroMachineNo, "-"),
+                        _detailRow(context, context.l10n.schedBedNo,
+                            patientData?.bedNo ?? '-'),
+                        _detailRow(context,
+                            context.l10n.nephroRegistrationDate, "-"),
+                        _detailRow(
+                            context, context.l10n.colRelativeContact, "-"),
+                        _detailRow(
+                            context,
+                            context.l10n.nephroNephrologistName,
+                            patientData?.nephrologistName ?? '-'),
+                        _detailRow(context, context.l10n.nephroRelativeName,
+                            patientData?.relativeName ?? "-"),
+                        _detailRow(
+                            context,
+                            context.l10n.nephroRegistrationDate,
+                            patientData?.regDate != null
+                                ? patientData!.regDate.toString()
+                                : "-"),
+                        _detailRow(
+                            context,
+                            context.l10n.commonStatus,
+                            currentStat == "true"
+                                ? context.l10n.commonCompleted
+                                : context.l10n.dashPending),
+                        _detailRow(context, context.l10n.nephroBmi,
+                            patientData?.bmi.toString() ?? '-'),
                       ],
                     ),
                   ),
                 ],
-              ).paddingOnly(top: 2, bottom: 1),
-            ),
-            SizedBox(height: 3),
-            Padding(
-              padding: const EdgeInsets.only(left: 43.0),
-              child: Visibility(
-                visible: isExpanded == true,
-                child: Column(
-                  children: [
-                    Row(
-                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Flexible(
-                          flex: 1,
-                          child: Row(
-                            children: [
-                              CustomText(
-                                text: 'Machine No. : ',
-                                fontSize: 12.0,
-                                fontFam: 'Lato',
-                                fontWeight: FontWeight.w400,
-                                textColor: Colors.black,
-                                textAlign: TextAlign.start,
-                              ),
-                              CustomText(
-                                text: "",
-                                fontSize: 12.0,
-                                fontFam: 'Lato',
-                                fontWeight: FontWeight.w400,
-                                textColor: Colors.grey,
-                                textAlign: TextAlign.start,
-                              ),
-                            ],
-                          ),
-                        ),
-                        Flexible(
-                          flex: 1,
-                          child: Row(
-                            children: [
-                              const CustomText(
-                                text: 'Bed No. : ',
-                                fontSize: 12.0,
-                                fontFam: 'Lato',
-                                fontWeight: FontWeight.w400,
-                                textColor: Colors.black,
-                                textAlign: TextAlign.start,
-                              ),
-                              CustomText(
-                                text: patientData?.bedNo ?? '-',
-                                fontSize: 12.0,
-                                fontFam: 'Lato',
-                                fontWeight: FontWeight.w400,
-                                textColor: Colors.grey,
-                                textAlign: TextAlign.start,
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ).paddingOnly(top: 2, bottom: 1),
-                    SizedBox(height: 3),
-                    const Row(
-                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Flexible(
-                          flex: 1,
-                          child: Row(
-                            children: [
-                              CustomText(
-                                text: 'Registration Date : ',
-                                fontSize: 12.0,
-                                fontFam: 'Lato',
-                                fontWeight: FontWeight.w400,
-                                textColor: Colors.black,
-                                textAlign: TextAlign.start,
-                              ),
-                              CustomText(
-                                text: "",
-                                fontSize: 12.0,
-                                fontFam: 'Lato',
-                                fontWeight: FontWeight.w400,
-                                textColor: Colors.grey,
-                                textAlign: TextAlign.start,
-                              ),
-                            ],
-                          ),
-                        ),
-                        Flexible(
-                          flex: 1,
-                          child: Row(
-                            children: [
-                              CustomText(
-                                text: 'Relative Contact :',
-                                fontSize: 12.0,
-                                fontFam: 'Lato',
-                                fontWeight: FontWeight.w400,
-                                textColor: Colors.black,
-                                textAlign: TextAlign.start,
-                              ),
-                              CustomText(
-                                text: "",
-                                fontSize: 12.0,
-                                fontFam: 'Lato',
-                                fontWeight: FontWeight.w400,
-                                textColor: Colors.grey,
-                                textAlign: TextAlign.start,
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ).paddingOnly(top: 2, bottom: 1),
-                    SizedBox(height: 3),
-                    Row(
-                      children: [
-                        const CustomText(
-                          text: 'Nephrologist Name : ',
-                          fontSize: 12.0,
-                          fontFam: 'Lato',
-                          fontWeight: FontWeight.w400,
-                          textColor: Colors.black,
-                          textAlign: TextAlign.start,
-                        ),
-                        Expanded(
-                          child: CustomText(
-                            text: patientData?.nephrologistName ?? '-',
-                            fontSize: 12.0,
-                            fontFam: 'Lato',
-                            fontWeight: FontWeight.w400,
-                            textColor: Colors.grey,
-                            textAlign: TextAlign.start,
-                          ),
-                        ),
-                      ],
-                    ).paddingOnly(top: 2, bottom: 1),
-                    SizedBox(height: 3),
-                    Row(
-                      children: [
-                        const CustomText(
-                          text: 'Relative Name : ',
-                          fontSize: 12.0,
-                          fontFam: 'Lato',
-                          fontWeight: FontWeight.w400,
-                          textColor: Colors.black,
-                          textAlign: TextAlign.start,
-                        ),
-                        CustomText(
-                          text: patientData?.relativeName ?? "",
-                          fontSize: 12.0,
-                          fontFam: 'Lato',
-                          fontWeight: FontWeight.w400,
-                          textColor: Colors.grey,
-                          textAlign: TextAlign.start,
-                        ),
-                      ],
-                    ).paddingOnly(top: 2, bottom: 1),
-                    SizedBox(height: 3),
-                    Row(
-                      children: [
-                        const CustomText(
-                          text: 'Registration Date : ',
-                          fontSize: 12.0,
-                          fontFam: 'Lato',
-                          fontWeight: FontWeight.w400,
-                          textColor: Colors.black,
-                          textAlign: TextAlign.start,
-                        ),
-                        CustomText(
-                          // text: patientData?.regDate != null
-                          //     ? getDate(patientData!.regDate)
-                          //     : "",
-                          text: patientData?.regDate != null
-                              ? patientData!.regDate.toString()
-                              : "",
-                          fontSize: 12.0,
-                          fontFam: 'Lato',
-                          fontWeight: FontWeight.w400,
-                          textColor: Colors.grey,
-                          textAlign: TextAlign.start,
-                        ),
-                      ],
-                    ).paddingOnly(top: 2, bottom: 1),
-                    SizedBox(height: 3),
-                    Row(
-                      children: [
-                        const CustomText(
-                          text: 'Status : ',
-                          fontSize: 12.0,
-                          fontFam: 'Lato',
-                          fontWeight: FontWeight.w400,
-                          textColor: Colors.black,
-                          textAlign: TextAlign.start,
-                        ),
-                        CustomText(
-                          text: currentStat == "true" ? "Completed" : "Pending",
-                          fontSize: 12.0,
-                          fontFam: 'Lato',
-                          fontWeight: FontWeight.w400,
-                          textColor: Colors.grey,
-                          textAlign: TextAlign.start,
-                        ),
-                      ],
-                    ).paddingOnly(top: 2, bottom: 1),
-                    SizedBox(height: 3),
-                    Row(
-                      children: [
-                        const CustomText(
-                          text: 'BMI : ',
-                          fontSize: 12.0,
-                          fontFam: 'Lato',
-                          fontWeight: FontWeight.w400,
-                          textColor: Colors.black,
-                          textAlign: TextAlign.start,
-                        ),
-                        CustomText(
-                          text: patientData?.bmi.toString() ?? '-',
-                          fontSize: 12.0,
-                          fontFam: 'Lato',
-                          fontWeight: FontWeight.w400,
-                          textColor: Colors.grey,
-                          textAlign: TextAlign.start,
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 3),
-                  ],
-                ),
               ),
-            )
+            ),
           ],
         ),
+      ),
+    );
+  }
+
+  /// "Label : value" on one line. Both halves are [Flexible] so long bilingual
+  /// (EN / FR) labels wrap instead of overflowing to the right.
+  Widget _detailRow(BuildContext context, String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 2, bottom: 1),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Flexible(
+            child: CustomText(
+              text: "$label : ",
+              fontSize: 12.0,
+              fontFam: 'Lato',
+              fontWeight: FontWeight.w400,
+              textColor: Colors.black,
+              textAlign: TextAlign.start,
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          Flexible(
+            child: CustomText(
+              text: value.isEmpty ? "-" : value,
+              fontSize: 12.0,
+              fontFam: 'Lato',
+              fontWeight: FontWeight.w400,
+              textColor: Colors.grey,
+              textAlign: TextAlign.start,
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/schedular/controller/schedular_controller.dart';
@@ -90,7 +91,7 @@ class _SchedularChartState extends State<SchedularChart> {
         title:  Padding(
           padding: const EdgeInsets.only(bottom: 8.0),
           child: CustomText(
-            text: 'Dialysis Schedule Chart',
+            text: context.l10n.schedDialysisScheduleChart,
             fontSize: 18.sp,
             fontFam: 'Lato',
             fontWeight: FontWeight.w400,
@@ -122,8 +123,8 @@ class _SchedularChartState extends State<SchedularChart> {
                   child: Column(
                     children: [
                       CustomDateField(
-                        labelText: 'From Date',
-                        hint: 'Select Date',
+                        labelText: context.l10n.dashFromDate,
+                        hint: context.l10n.dashSelectDate,
                         isRequired: true,
                         callB: () {
                           selectFromDate();
@@ -133,8 +134,8 @@ class _SchedularChartState extends State<SchedularChart> {
                         dontDhowPrefix: false,
                       ),
                       CustomDateField(
-                        labelText: 'To Date',
-                        hint: 'Select Date',
+                        labelText: context.l10n.dashToDate,
+                        hint: context.l10n.dashSelectDate,
                         isRequired: true,
                         callB: () {
                           selectToDate();
@@ -145,7 +146,7 @@ class _SchedularChartState extends State<SchedularChart> {
                       ),
                       MyCustomDropdown(
                         selectedItem: selectedSlot,
-                        labelText: 'Slot Time',
+                        labelText: context.l10n.schedSlotTime,
                         items: schedularController.searchSlotList
                                 ?.map((e) => e.slotTime)
                                 .toList() ??
@@ -195,7 +196,7 @@ class _SchedularChartState extends State<SchedularChart> {
                                     color: Colors.white,
                                   ),
                                   CustomText(
-                                      text: "Search",
+                                      text: context.l10n.commonSearch,
                                       fontSize: 16.sp,
                                       fontFam: "Lato",
                                       fontWeight: FontWeight.normal,
@@ -231,7 +232,7 @@ class _SchedularChartState extends State<SchedularChart> {
                                     Row(
                                       children: [
                                         CustomText(
-                                          text: 'Appointment Date :',
+                                          text: "${context.l10n.schedAppointmentDate} :",
                                           fontSize: 14.sp,
                                           fontFam: 'Lato',
                                           fontWeight: FontWeight.w500,
@@ -253,7 +254,7 @@ class _SchedularChartState extends State<SchedularChart> {
                                     Row(
                                       children: [
                                         CustomText(
-                                          text: 'Patient ID :',
+                                          text: "${context.l10n.colPatientId} :",
                                           fontSize: 14.sp,
                                           fontFam: 'Lato',
                                           fontWeight: FontWeight.w500,
@@ -276,7 +277,7 @@ class _SchedularChartState extends State<SchedularChart> {
                                     Row(
                                       children: [
                                         CustomText(
-                                          text: 'Patient Name :',
+                                          text: "${context.l10n.colPatientName} :",
                                           fontSize: 14.sp,
                                           fontFam: 'Lato',
                                           fontWeight: FontWeight.w500,
@@ -299,7 +300,7 @@ class _SchedularChartState extends State<SchedularChart> {
                                     Row(
                                       children: [
                                         CustomText(
-                                          text: 'Machine Name :',
+                                          text: "${context.l10n.schedMachineName} :",
                                           fontSize: 14.sp,
                                           fontFam: 'Lato',
                                           fontWeight: FontWeight.w500,

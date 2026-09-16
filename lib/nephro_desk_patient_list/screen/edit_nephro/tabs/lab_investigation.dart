@@ -1,5 +1,6 @@
 // import 'package:connectivity_plus/connectivity_plus.dart';
 // import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 // import 'package:get/get.dart';
 // import 'package:heamodialysis/internet/no_internet_connectivity.dart';
 // import 'package:heamodialysis/nephro_desk_patient_list/edit_nephro/model/choose_package_list_model.dart';

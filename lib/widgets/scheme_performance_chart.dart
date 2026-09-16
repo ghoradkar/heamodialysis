@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/get_utils.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:heamodialysis/utils/color_constants.dart';
 import 'package:heamodialysis/widgets/custom_text.dart';
 import 'package:intl/intl.dart';
@@ -134,29 +135,34 @@ class SchemePerformanceChart extends StatelessWidget {
                 ),
               ),
 
-              // Indicator Row
+              // Indicator Row - scaled down so the two legends fit on one line
+              // even when the labels are long (French / bilingual mode).
               const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Indicator(
-                    color: AppColor.secondaryColor,
-                    text: "MJPJAY Counts",
-                    isSquare: true,
-                  ),
-                  const SizedBox(width: 10),
-                  Indicator(
-                    color: AppColor.primaryBackgroundColor,
-                    text: "Non-MJPJAY Counts",
-                    isSquare: true,
-                  ),
-                ],
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Indicator(
+                      color: AppColor.secondaryColor,
+                      text: context.l10n.chartMjpjayCounts,
+                      isSquare: true,
+                    ),
+                    const SizedBox(width: 10),
+                    Indicator(
+                      color: AppColor.primaryBackgroundColor,
+                      text: context.l10n.chartNonMjpjayCounts,
+                      isSquare: true,
+                    ),
+                  ],
+                ),
               ),
             ],
           ).paddingSymmetric(vertical: 12, horizontal: 14)
-        : const Center(
+        : Center(
           child: CustomText(
-              text: "No Data Found",
+              text: context.l10n.commonNoDataFound,
               fontSize: 16,
               fontWeight: FontWeight.bold,
               textColor: Colors.black,
@@ -217,6 +223,7 @@ class Indicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Container(
           width: size,

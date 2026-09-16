@@ -1,5 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/discharge_form/controller/session_end_controller.dart';
 import 'package:heamodialysis/discharge_form/model/discharge_list.dart';
@@ -78,12 +79,103 @@ class _SessionEndFormDetailsState extends State<SessionEndFormDetails> {
     }
   }
 
+  /// One row of the checklist grid: two checkbox items sharing the width so a
+  /// long localized label wraps in its own half instead of overflowing.
+  Widget _checkRow(Widget a, Widget b) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(child: a),
+        const SizedBox(width: 8),
+        Expanded(child: b),
+      ],
+    );
+  }
+
+  Widget _checkTile(bool? value, String label) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 36,
+          height: 40,
+          child: Checkbox(
+            activeColor: AppColor.primaryBackgroundColor,
+            value: value,
+            visualDensity: VisualDensity.compact,
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            onChanged: (_) {},
+          ),
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: CustomText(
+              text: label,
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              textColor: Colors.black,
+              textAlign: TextAlign.start,
+              maxLines: 3,
+              softWrap: true,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Pill button that fills the width it is given; the label is [Flexible] with
+  /// ellipsis so the localized (EN / FR) text can't push past the button edge.
+  Widget _pillButton({
+    required String label,
+    required Widget leading,
+    required VoidCallback onTap,
+    Color? color,
+    Gradient? gradient,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: color,
+          gradient: gradient,
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            leading,
+            const SizedBox(width: 6),
+            Flexible(
+              child: CustomText(
+                text: label,
+                fontSize: 16,
+                fontFam: "Lato",
+                fontWeight: FontWeight.normal,
+                textColor: Colors.white,
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                softWrap: false,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const CustomText(
-          text: 'Discharge',
+        title: CustomText(
+          text: context.l10n.dischDischarge,
           fontSize: 18.0,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,
@@ -96,13 +188,12 @@ class _SessionEndFormDetailsState extends State<SessionEndFormDetails> {
             },
             child: Image.asset('assets/arrow-left.png')),
       ),
-      body:
-      GetBuilder<SessionEndController>(
+      body: GetBuilder<SessionEndController>(
           init: dischargeController,
           builder: (controller) {
             return hasInternet
                 ? controller.isLoading
-                ?  Center(child: DischargeShimmer())
+                    ? Center(child: DischargeShimmer())
                     : Column(
                         children: [
                           DischargePatientCardDetails(
@@ -154,7 +245,7 @@ class _SessionEndFormDetailsState extends State<SessionEndFormDetails> {
                             ),
                             child: Column(
                               children: [
-                                const SizedBox(height: 20),
+                                SizedBox(height: 20),
                                 Container(
                                   decoration: BoxDecoration(
                                       color: Colors.grey[50],
@@ -166,167 +257,35 @@ class _SessionEndFormDetailsState extends State<SessionEndFormDetails> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.stretch,
                                     children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Checkbox(
-                                                activeColor: AppColor
-                                                    .primaryBackgroundColor,
-                                                value: controller
-                                                    .predialysis?.isSelected,
-                                                // Boolean value for checkbox state
-                                                onChanged: (bool? newValue) {
-                                                  // controller.predialysis
-                                                  //     ?.isSelected = newValue;
-                                                  // setState(() {});
-                                                },
-                                              ),
-                                              CustomText(
-                                                  text: controller.predialysis
-                                                          ?.checkTitle ??
-                                                      "",
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w500,
-                                                  textColor: Colors.black,
-                                                  textAlign: TextAlign.start),
-                                            ],
-                                          ),
-                                          Row(
-                                            children: [
-                                              Checkbox(
-                                                activeColor: AppColor
-                                                    .primaryBackgroundColor,
-                                                value: controller
-                                                    .postDialysis?.isSelected,
-                                                // Boolean value for checkbox state
-                                                onChanged: (bool? newValue) {
-                                                  // controller.postDialysis
-                                                  //     ?.isSelected = newValue;
-                                                  // setState(() {});
-                                                },
-                                              ),
-                                              CustomText(
-                                                  text: controller.postDialysis
-                                                          ?.checkTitle ??
-                                                      "",
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w500,
-                                                  textColor: Colors.black,
-                                                  textAlign: TextAlign.start),
-                                            ],
-                                          )
-                                        ],
+                                      _checkRow(
+                                        _checkTile(
+                                            controller.predialysis?.isSelected,
+                                            controller
+                                                    .predialysis?.checkTitle ??
+                                                ""),
+                                        _checkTile(
+                                            controller.postDialysis?.isSelected,
+                                            controller
+                                                    .postDialysis?.checkTitle ??
+                                                ""),
                                       ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Checkbox(
-                                                activeColor: AppColor
-                                                    .primaryBackgroundColor,
-                                                value: controller
-                                                    .event?.isSelected,
-                                                // Boolean value for checkbox state
-                                                onChanged: (bool? newValue) {
-                                                  // controller.event?.isSelected =
-                                                  //     newValue;
-                                                  // setState(() {});
-                                                },
-                                              ),
-                                              CustomText(
-                                                  text: controller
-                                                          .event?.checkTitle ??
-                                                      "",
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w500,
-                                                  textColor: Colors.black,
-                                                  textAlign: TextAlign.start),
-                                            ],
-                                          ),
-                                          Row(
-                                            children: [
-                                              Checkbox(
-                                                activeColor: AppColor
-                                                    .primaryBackgroundColor,
-                                                value: controller
-                                                    .doctorDesk?.isSelected,
-                                                // Boolean value for checkbox state
-                                                onChanged: (bool? newValue) {
-                                                  // controller.doctorDesk
-                                                  //     ?.isSelected = newValue;
-                                                  // setState(() {});
-                                                },
-                                              ),
-                                              CustomText(
-                                                  text: controller.doctorDesk
-                                                          ?.checkTitle ??
-                                                      "",
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w500,
-                                                  textColor: Colors.black,
-                                                  textAlign: TextAlign.start),
-                                            ],
-                                          )
-                                        ],
+                                      _checkRow(
+                                        _checkTile(controller.event?.isSelected,
+                                            controller.event?.checkTitle ?? ""),
+                                        _checkTile(
+                                            controller.doctorDesk?.isSelected,
+                                            controller.doctorDesk?.checkTitle ??
+                                                ""),
                                       ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Checkbox(
-                                                activeColor: AppColor
-                                                    .primaryBackgroundColor,
-                                                value: controller
-                                                    .nephroDesk?.isSelected,
-                                                // Boolean value for checkbox state
-                                                onChanged: (bool? newValue) {
-                                                  // controller.nephroDesk
-                                                  //     ?.isSelected = newValue;
-                                                  // setState(() {});
-                                                },
-                                              ),
-                                              CustomText(
-                                                  text: controller.nephroDesk
-                                                          ?.checkTitle ??
-                                                      "",
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w500,
-                                                  textColor: Colors.black,
-                                                  textAlign: TextAlign.start),
-                                            ],
-                                          ),
-                                          Row(
-                                            children: [
-                                              Checkbox(
-                                                activeColor: AppColor
-                                                    .primaryBackgroundColor,
-                                                value: controller
-                                                    .dietician?.isSelected,
-                                                // Boolean value for checkbox state
-                                                onChanged: (bool? newValue) {
-                                                  // controller.dietician
-                                                  //     ?.isSelected = newValue;
-                                                  // setState(() {});
-                                                },
-                                              ),
-                                              CustomText(
-                                                  text: controller.dietician
-                                                          ?.checkTitle ??
-                                                      "",
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w500,
-                                                  textColor: Colors.black,
-                                                  textAlign: TextAlign.start),
-                                            ],
-                                          )
-                                        ],
+                                      _checkRow(
+                                        _checkTile(
+                                            controller.nephroDesk?.isSelected,
+                                            controller.nephroDesk?.checkTitle ??
+                                                ""),
+                                        _checkTile(
+                                            controller.dietician?.isSelected,
+                                            controller.dietician?.checkTitle ??
+                                                ""),
                                       ),
                                     ],
                                   ),
@@ -335,8 +294,8 @@ class _SessionEndFormDetailsState extends State<SessionEndFormDetails> {
                                   alignment: Alignment.centerLeft,
                                   child: Row(
                                     children: [
-                                      const CustomText(
-                                        text: "Terms & Conditions",
+                                      CustomText(
+                                        text: context.l10n.dischTermsConditions,
                                         fontSize: 16,
                                         fontWeight: FontWeight.w500,
                                         textColor: Colors.black,
@@ -381,46 +340,29 @@ class _SessionEndFormDetailsState extends State<SessionEndFormDetails> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Align(
-                                      alignment: Alignment.centerRight,
-                                      child: InkWell(
-                                        onTap: () {
-                                          Get.back();
-                                        },
-                                        child: Container(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 8),
-                                            alignment: Alignment.center,
-                                            width: 100,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              color: AppColor.red,
-                                            ),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Image.asset(
-                                                    "assets/cancel.png"),
-                                                const CustomText(
-                                                    text: "Cancel",
-                                                    fontSize: 16,
-                                                    fontFam: "Lato",
-                                                    fontWeight:
-                                                        FontWeight.normal,
-                                                    textColor: Colors.white,
-                                                    textAlign: TextAlign.start),
-                                              ],
-                                            )),
-                                      ),
-                                    ).paddingOnly(top: 20),
-                                    const SizedBox(
-                                      width: 14,
+                                    Expanded(
+                                      child: _pillButton(
+                                        label: context.l10n.commonCancel,
+                                        leading:
+                                            Image.asset("assets/cancel.png"),
+                                        color: AppColor.red,
+                                        onTap: () => Get.back(),
+                                      ).paddingOnly(top: 20),
                                     ),
-                                    Align(
-                                      alignment: Alignment.centerRight,
-                                      child: InkWell(
+                                    const SizedBox(width: 14),
+                                    Expanded(
+                                      child: _pillButton(
+                                        label: context.l10n.dischDischarge,
+                                        leading: const Icon(Icons.check,
+                                            color: Colors.white),
+                                        gradient: LinearGradient(
+                                          colors: [
+                                            AppColor.primaryBackgroundColor,
+                                            AppColor.secondaryColor
+                                          ],
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomCenter,
+                                        ),
                                         onTap: () {
                                           CustomPopup.showAlertDialog(
                                               () {
@@ -443,9 +385,11 @@ class _SessionEndFormDetailsState extends State<SessionEndFormDetails> {
                                                         widget.dialysisEventDet
                                                             .treatmentId
                                                             .toString(),
-                                                        widget.userData[
-                                                            'unitId'].toString(),
-                                                        widget.userData['user_ID']
+                                                        widget
+                                                            .userData['unitId']
+                                                            .toString(),
+                                                        widget
+                                                            .userData['user_ID']
                                                             .toString(),
                                                         widget.userData);
                                                   } else {
@@ -466,44 +410,8 @@ class _SessionEndFormDetailsState extends State<SessionEndFormDetails> {
                                                 Get.back();
                                               });
                                         },
-                                        child: Container(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 8),
-                                            alignment: Alignment.center,
-                                            width: 120,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              gradient: LinearGradient(
-                                                colors: [
-                                                  AppColor
-                                                      .primaryBackgroundColor,
-                                                  AppColor.secondaryColor
-                                                ],
-                                                begin: Alignment.topLeft,
-                                                end: Alignment.bottomCenter,
-                                              ),
-                                            ),
-                                            child: const Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Icon(
-                                                  Icons.check,
-                                                  color: Colors.white,
-                                                ),
-                                                CustomText(
-                                                    text: "Discharge",
-                                                    fontSize: 16,
-                                                    fontFam: "Lato",
-                                                    fontWeight:
-                                                        FontWeight.normal,
-                                                    textColor: Colors.white,
-                                                    textAlign: TextAlign.start),
-                                              ],
-                                            )),
-                                      ),
-                                    ).paddingOnly(top: 20),
+                                      ).paddingOnly(top: 20),
+                                    ),
                                   ],
                                 )
                               ],
@@ -520,6 +428,7 @@ class _SessionEndFormDetailsState extends State<SessionEndFormDetails> {
     );
   }
 }
+
 class DischargePatientCardDetails extends StatelessWidget {
   final String patientId;
   final String dialysisDate;
@@ -569,11 +478,11 @@ class DischargePatientCardDetails extends StatelessWidget {
                   color: Colors.grey,
                 ),
               ),
-              const SizedBox(
+              SizedBox(
                 width: 10,
               ),
-              const CustomText(
-                text: 'Patient ID : ',
+              CustomText(
+                text: "${context.l10n.colPatientId} : ",
                 fontSize: 12.0,
                 fontFam: 'Lato',
                 fontWeight: FontWeight.w400,
@@ -602,8 +511,8 @@ class DischargePatientCardDetails extends StatelessWidget {
           ).paddingOnly(top: 2),
           Row(
             children: [
-              const CustomText(
-                text: 'Patient Name  : ',
+              CustomText(
+                text: "${context.l10n.colPatientName} : ",
                 fontSize: 12.0,
                 fontFam: 'Lato',
                 fontWeight: FontWeight.w400,
@@ -627,8 +536,8 @@ class DischargePatientCardDetails extends StatelessWidget {
                 flex: 1,
                 child: Row(
                   children: [
-                    const CustomText(
-                      text: 'Gender :',
+                    CustomText(
+                      text: "${context.l10n.commonGender} : ",
                       fontSize: 12.0,
                       fontFam: 'Lato',
                       fontWeight: FontWeight.w400,
@@ -650,8 +559,8 @@ class DischargePatientCardDetails extends StatelessWidget {
                 flex: 1,
                 child: Row(
                   children: [
-                    const CustomText(
-                      text: 'Age :',
+                    CustomText(
+                      text: "${context.l10n.commonAge} : ",
                       fontSize: 12.0,
                       fontFam: 'Lato',
                       fontWeight: FontWeight.w400,
@@ -682,8 +591,8 @@ class DischargePatientCardDetails extends StatelessWidget {
                       flex: 1,
                       child: Row(
                         children: [
-                          const CustomText(
-                            text: 'Mobile :',
+                          CustomText(
+                            text: "${context.l10n.commonMobileNo} : ",
                             fontSize: 12.0,
                             fontFam: 'Lato',
                             fontWeight: FontWeight.w400,
@@ -705,8 +614,8 @@ class DischargePatientCardDetails extends StatelessWidget {
                       flex: 1,
                       child: Row(
                         children: [
-                          const CustomText(
-                            text: 'Dialysis Date :',
+                          CustomText(
+                            text: "${context.l10n.dischDialysisDate} : ",
                             fontSize: 12.0,
                             fontFam: 'Lato',
                             fontWeight: FontWeight.w400,

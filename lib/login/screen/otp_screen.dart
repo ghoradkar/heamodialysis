@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:heamodialysis/login/controller/login_controller.dart';
 import 'package:heamodialysis/login/screen/login_navigation.dart';
 import 'package:heamodialysis/utils/color_constants.dart';
@@ -123,7 +124,7 @@ class _OtpScreenState extends State<OtpScreen> {
   Future<void> _verifyOtp() async {
     final otp = _enteredOtp;
     if (otp.length != _otpLength) {
-      CustomMessage.toast("Please enter the $_otpLength-digit OTP");
+      CustomMessage.toast(context.l10n.otpEnterDigits(_otpLength));
       return;
     }
 
@@ -136,10 +137,11 @@ class _OtpScreenState extends State<OtpScreen> {
       await navigateAfterLogin(loginController);
     } else if (loginController.status == "Invalid User") {
       // Not something a retry on this screen can fix.
-      CustomMessage.toast(loginController.status ?? "Invalid User");
+      CustomMessage.toast(loginController.status ?? context.l10n.loginInvalidUser);
       Get.back();
     } else {
-      CustomMessage.toast(loginController.status ?? "Invalid or Expired OTP");
+      CustomMessage.toast(
+          loginController.status ?? context.l10n.otpInvalidOrExpired);
       _clearOtpBoxes();
     }
   }
@@ -160,7 +162,7 @@ class _OtpScreenState extends State<OtpScreen> {
       setState(() => _mobileNo = loginController.otpMobileNo ?? _mobileNo);
       _clearOtpBoxes();
       _startResendTimer();
-      CustomMessage.toast("OTP resent");
+      CustomMessage.toast(context.l10n.otpResent);
     } else if (loginController.status == "Success") {
       // Edge case: OTP requirement got toggled off between attempts.
       await navigateAfterLogin(loginController);
@@ -168,7 +170,7 @@ class _OtpScreenState extends State<OtpScreen> {
       // Credentials/captcha no longer valid for a fresh verifyLogin call -
       // can't recover from this screen.
       CustomMessage.toast(
-          loginController.status ?? "Could not resend OTP. Please login again.");
+          loginController.status ?? context.l10n.otpResendFailed);
       Get.back();
     }
   }
@@ -216,7 +218,7 @@ class _OtpScreenState extends State<OtpScreen> {
               ),
               SizedBox(height: 24.h),
               CustomText(
-                text: "Verify OTP",
+                text: context.l10n.otpVerifyTitle,
                 fontSize: 22.sp,
                 fontFam: 'Lato',
                 fontWeight: FontWeight.w700,
@@ -234,12 +236,11 @@ class _OtpScreenState extends State<OtpScreen> {
                     color: AppColor.grey,
                   ),
                   children: [
-                    const TextSpan(
-                        text: "OTP has been sent to registered mobile number: "),
+                    TextSpan(text: context.l10n.otpSentTo),
                     TextSpan(
                       text: (_mobileNo != null && _mobileNo!.isNotEmpty)
                           ? _maskMobile(_mobileNo!)
-                          : "your registered number",
+                          : context.l10n.otpYourNumber,
                       style: TextStyle(
                         fontWeight: FontWeight.w700,
                         color: AppColor.textGrey,
@@ -295,8 +296,8 @@ class _OtpScreenState extends State<OtpScreen> {
               SizedBox(height: 20.h),
               CustomText(
                 text: _secondsLeft > 0
-                    ? "This OTP is valid for a limited time"
-                    : "Didn't get it? You can resend now.",
+                    ? context.l10n.otpValidLimited
+                    : context.l10n.otpCanResendNow,
                 fontSize: 12.sp,
                 fontFam: 'Lato',
                 fontWeight: FontWeight.w400,
@@ -325,7 +326,7 @@ class _OtpScreenState extends State<OtpScreen> {
                               color: Colors.white, strokeWidth: 2.5),
                         )
                       : CustomText(
-                          text: 'Verify OTP',
+                          text: context.l10n.otpVerifyTitle,
                           fontSize: 16.sp,
                           fontFam: 'Lato',
                           fontWeight: FontWeight.w600,
@@ -339,7 +340,7 @@ class _OtpScreenState extends State<OtpScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   CustomText(
-                    text: "Didn't receive the code? ",
+                    text: context.l10n.otpDidntReceive,
                     fontSize: 13.sp,
                     fontFam: 'Lato',
                     fontWeight: FontWeight.w400,
@@ -358,8 +359,9 @@ class _OtpScreenState extends State<OtpScreen> {
                           )
                         : CustomText(
                             text: canResend
-                                ? "Resend OTP"
-                                : "Resend in $minutes:$seconds",
+                                ? context.l10n.otpResend
+                                : context.l10n
+                                    .otpResendIn("$minutes:$seconds"),
                             fontSize: 13.sp,
                             fontFam: 'Lato',
                             fontWeight: FontWeight.w700,

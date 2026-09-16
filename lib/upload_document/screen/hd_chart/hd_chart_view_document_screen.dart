@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
@@ -69,7 +70,7 @@ class HdChartViewDocumentScreen extends StatelessWidget {
                         ),
                         SizedBox(height: 12.h),
                         CustomText(
-                          text: 'No document available',
+                          text: context.l10n.uploadNoDocument,
                           fontSize: 14.sp,
                           fontFam: 'Lato',
                           fontWeight: FontWeight.normal,

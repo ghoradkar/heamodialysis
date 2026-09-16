@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/book_appointment/screen/book_appointment.dart';
@@ -52,17 +53,17 @@ class _SchedularListScreenState extends State<SchedularListScreen> {
 
   bool hasInternet = true;
 
-  List<String> cardItemDetailsList = [
-    'Patient Id',
-    'Patient Name',
-    'Age',
-    'Mobile No',
-    'ABHA Number',
-    'Gender',
-    'Appointment Date',
-    'Slot',
-    'Viral Load Status'
-  ];
+  List<String> _cardItemDetailsList(BuildContext context) => [
+        context.l10n.colPatientId,
+        context.l10n.colPatientName,
+        context.l10n.commonAge,
+        context.l10n.commonMobileNo,
+        context.l10n.colAbhaNumber,
+        context.l10n.commonGender,
+        context.l10n.schedAppointmentDate,
+        context.l10n.schedSlot,
+        context.l10n.colViralLoadStatus
+      ];
 
   SlotForSearch? dropDownValue;
   SearchedData? dropDownValue1;
@@ -166,7 +167,7 @@ class _SchedularListScreenState extends State<SchedularListScreen> {
 
       appBar: AppBar(
         title:  CustomText(
-          text: 'Dialysis Patient List',
+          text: context.l10n.schedDialysisPatientList,
           fontSize: 18.sp,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,
@@ -248,7 +249,7 @@ class _SchedularListScreenState extends State<SchedularListScreen> {
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                      CustomText(
-                                            text: "Search",
+                                            text: context.l10n.commonSearch,
                                             fontSize: 16.sp,
                                             fontFam: "Lato",
                                             fontWeight: FontWeight.bold,
@@ -271,7 +272,7 @@ class _SchedularListScreenState extends State<SchedularListScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                      CustomText(
-                                            text: "Type",
+                                            text: context.l10n.colType,
                                             fontSize: 16.sp,
                                             fontFam: "Lato",
                                             fontWeight: FontWeight.normal,
@@ -290,7 +291,7 @@ class _SchedularListScreenState extends State<SchedularListScreen> {
                                       child: DropdownButton<SearchedData>(
                                         isExpanded: true,
                                         value: dropDownValue1,
-                                        hint: const Text("select"),
+                                        hint: Text(context.l10n.commonSelect),
                                         onChanged: (SearchedData? newValue) {
                                           dropDownValue1 = newValue!;
                       
@@ -316,7 +317,7 @@ class _SchedularListScreenState extends State<SchedularListScreen> {
                                  Align(
                                   alignment: Alignment.centerLeft,
                                   child: CustomText(
-                                      text: "Value",
+                                      text: context.l10n.commonValue,
                                       fontSize: 16.sp,
                                       fontFam: "Lato",
                                       fontWeight: FontWeight.normal,
@@ -325,16 +326,16 @@ class _SchedularListScreenState extends State<SchedularListScreen> {
                                 ).paddingOnly(top: 10.h, bottom: 4.h),
                                 TextField(
                                     controller: schedularController.valueController,
-                                    decoration: const InputDecoration(
-                                      labelText: 'Patient Id, name, mobile no etc.',
-                                      labelStyle: TextStyle(color: Color(0xFFE1E1E1)),
-                                      enabledBorder: OutlineInputBorder(
+                                    decoration: InputDecoration(
+                                      labelText: context.l10n.regSearchPatientHint,
+                                      labelStyle: const TextStyle(color: Color(0xFFE1E1E1)),
+                                      enabledBorder: const OutlineInputBorder(
                                         borderSide:
                                             BorderSide(color: Color(0xFFE1E1E1)),
                                         borderRadius:
                                             BorderRadius.all(Radius.circular(10.0)),
                                       ),
-                                      focusedBorder: OutlineInputBorder(
+                                      focusedBorder: const OutlineInputBorder(
                                         borderSide:
                                             BorderSide(color: Color(0xFFE1E1E1)),
                                         borderRadius:
@@ -345,8 +346,8 @@ class _SchedularListScreenState extends State<SchedularListScreen> {
                                   children: [
                                     Expanded(
                                       child: CustomDateField(
-                                        labelText: 'From Date',
-                                        hint: 'Select Date',
+                                        labelText: context.l10n.dashFromDate,
+                                        hint: context.l10n.dashSelectDate,
                                         isRequired: false,
                                         callB: () {
                                           selectFromDate();
@@ -359,8 +360,8 @@ class _SchedularListScreenState extends State<SchedularListScreen> {
                                     ),
                                     Expanded(
                                       child: CustomDateField(
-                                        labelText: 'To Date',
-                                        hint: 'Select Date',
+                                        labelText: context.l10n.dashToDate,
+                                        hint: context.l10n.dashSelectDate,
                                         isRequired: false,
                                         callB: () {
                                           selectToDate();
@@ -377,11 +378,11 @@ class _SchedularListScreenState extends State<SchedularListScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                      CustomText(
-                                            text: "Slot",
+                                            text: context.l10n.schedSlot,
                                             fontSize: 16.sp,
                                             fontFam: "Lato",
                                             fontWeight: FontWeight.normal,
-                                            textColor: Color(0xff515151),
+                                            textColor: const Color(0xff515151),
                                             textAlign: TextAlign.start)
                                         .paddingOnly(top: 10.h, bottom: 4.h),
                                     Container(
@@ -396,7 +397,7 @@ class _SchedularListScreenState extends State<SchedularListScreen> {
                                       child: DropdownButton<SlotForSearch>(
                                         isExpanded: true,
                                         value: dropDownValue,
-                                        hint: const Text("select"),
+                                        hint: Text(context.l10n.commonSelect),
                                         onChanged: (SlotForSearch? newValue) {
                                           dropDownValue = newValue!;
                                           schedularController.update();
@@ -442,7 +443,7 @@ class _SchedularListScreenState extends State<SchedularListScreen> {
                                               children: [
                                                 Image.asset("assets/cancel.png"),
                                                  CustomText(
-                                                    text: "Cancel",
+                                                    text: context.l10n.commonCancel,
                                                     fontSize: 16.sp,
                                                     fontFam: "Lato",
                                                     fontWeight: FontWeight.normal,
@@ -486,7 +487,7 @@ class _SchedularListScreenState extends State<SchedularListScreen> {
                                             padding:  EdgeInsets.symmetric(
                                                 vertical: 8.h),
                                             alignment: Alignment.center,
-                                            width: 100.w,
+                                            width: 130.w,
                                             decoration: BoxDecoration(
                                               borderRadius: BorderRadius.circular(10),
                                               gradient: LinearGradient(
@@ -507,7 +508,7 @@ class _SchedularListScreenState extends State<SchedularListScreen> {
                                                   color: Colors.white,
                                                 ),
                                                 CustomText(
-                                                    text: "Search",
+                                                    text: context.l10n.commonSearch,
                                                     fontSize: 16.sp,
                                                     fontFam: "Lato",
                                                     fontWeight: FontWeight.normal,
@@ -544,7 +545,7 @@ class _SchedularListScreenState extends State<SchedularListScreen> {
           init: schedularController,
           builder: (controller) {
             if (controller.isLoading) {
-              return Center(child: RegisteredPatientsShimmer());
+              return const Center(child: RegisteredPatientsShimmer());
             }
 
             final schedularList =
@@ -552,11 +553,10 @@ class _SchedularListScreenState extends State<SchedularListScreen> {
 
             if (schedularList.isEmpty) {
               return CommonStatusScreen(
-                title: "No Data Found",
-                description:
-                "We are unable to find the data that\nyou are looking for ",
+                title: context.l10n.commonNoDataFound,
+                description: context.l10n.commonNoDataFoundDescription,
                 img: "assets/no_Data_Found.png",
-                buttonText: "Go Back",
+                buttonText: context.l10n.commonGoBack,
                 onPressed: () {
                   Get.back();
                 },
@@ -612,7 +612,7 @@ class _SchedularListScreenState extends State<SchedularListScreen> {
                         return SchedularCard(
                           patientList:
                           controller.schedularPatientList?.data?[index],
-                          cardItemDetailsList: cardItemDetailsList,
+                          cardItemDetailsList: _cardItemDetailsList(context),
                           isSecondColumnVisiable: true,
                           path1: "assets/file-list.png",
                           path2: "assets/visitor_entry.png",
@@ -662,13 +662,13 @@ class _SchedularListScreenState extends State<SchedularListScreen> {
                                       () {
                                     Get.back();
                                   },
-                                  "Appointment Cancelled",
-                                  "Appointment Cancelled Successfully",
+                                  l10n.schedAppointmentCancelled,
+                                  l10n.schedAppointmentCancelledMsg,
                                 );
                               }
                             },
                                 '',
-                                'Are you sure? Do you want to cancel the appointment?',
+                                context.l10n.schedCancelAppointmentConfirm,
                                 'assets/info.png');
                           },
                           callB5: () {},

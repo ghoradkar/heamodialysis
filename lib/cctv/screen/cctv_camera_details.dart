@@ -1,5 +1,6 @@
 // import 'package:connectivity_plus/connectivity_plus.dart';
 // import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 // import 'package:get/get.dart';
 // import 'package:heamodialysis/cctv/controller/cctv_controller.dart';
 // import 'package:heamodialysis/cctv/screen/favourite_tab.dart';
@@ -84,8 +85,8 @@
 //   Widget build(BuildContext context) {
 //     return Scaffold(
 //         appBar: AppBar(
-//           title: const CustomText(
-//             text: 'CCTV Camera Details',
+//           title: CustomText(
+//             text: context.l10n.cctvCameraDetails,
 //             fontSize: 18.0,
 //             fontFam: 'Lato',
 //             fontWeight: FontWeight.w400,
@@ -112,8 +113,8 @@
 //                                     vertical: 20, horizontal: 6),
 //                                 child: Row(
 //                                   children: [
-//                                     const CustomText(
-//                                         text: "Institute Name : ",
+//                                     CustomText(
+//                                         text: "${context.l10n.colInstituteName} : ",
 //                                         fontSize: 16,
 //                                         fontWeight: FontWeight.bold,
 //                                         textColor: Colors.black,
@@ -311,7 +312,7 @@
 //             path,
 //             color: isSelected ? Colors.white : Colors.grey,
 //           ),
-//           const SizedBox(
+//           SizedBox(
 //             width: 4,
 //           ),
 //           CustomText(

@@ -1,5 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dialysis_queue/investigation/model/test_details_model.dart';
 import 'package:heamodialysis/internet/no_internet_connectivity.dart';
@@ -73,8 +74,8 @@ class _AddMachineCounterState extends State<AddMachineCounter> {
   Widget build(BuildContext context) {
     return hasInternet ?  Scaffold(
       appBar: AppBar(
-        title: const CustomText(
-          text: "Add Machine Counter",
+        title: CustomText(
+          text: context.l10n.machAddMachineCounter,
           fontSize: 18.0,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,
@@ -104,7 +105,7 @@ class _AddMachineCounterState extends State<AddMachineCounter> {
                                   children: [
                                     Column(
                                       children: [
-                                        const SizedBox(height: 20),
+                                        SizedBox(height: 20),
                                         Container(
                                           decoration: BoxDecoration(
                                               color: Colors.grey[50],
@@ -123,8 +124,8 @@ class _AddMachineCounterState extends State<AddMachineCounter> {
                                             children: [
                                               Row(
                                                 children: [
-                                                  const CustomText(
-                                                      text: "Machine Name:",
+                                                  CustomText(
+                                                      text: "${context.l10n.machMachineName} : ",
                                                       fontSize: 14,
                                                       fontFam: "Lato",
                                                       fontWeight:
@@ -150,7 +151,7 @@ class _AddMachineCounterState extends State<AddMachineCounter> {
                                               ),
                                               Row(
                                                 children: [
-                                                  const CustomText(
+                                                  CustomText(
                                                       text:
                                                           "Machine Serial No:",
                                                       fontSize: 14,
@@ -275,7 +276,7 @@ class _AddMachineCounterState extends State<AddMachineCounter> {
                           secColor: AppColor.secondaryColor,
                           textColor: Colors.white,
                           iconColor: Colors.white,
-                          buttonText: 'Save',
+                          buttonText: context.l10n.commonSave,
                           path: 'assets/save-next.png',
                           callB: () async {
                             await machineController.addMachineCounter(

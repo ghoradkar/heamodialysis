@@ -1,5 +1,6 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/nephro_desk_patient_list/controller/nephro_controller.dart';
@@ -67,7 +68,7 @@ class NephroTableState extends State<NephroTable> {
             : TableRow(children: [
                 Center(
                     child: CustomText(
-                        text: "Data Not Available",
+                        text: context.l10n.commonNoDataFound,
                         fontSize: 16.sp,
                         fontWeight: FontWeight.normal,
                         textColor: Colors.black,
@@ -101,7 +102,7 @@ class NephroTableState extends State<NephroTable> {
               readOnly: widget.readOnly,
               txtController: widget.l3[index],
               onChanged: (value) {},
-              hintText: 'Enter',
+              hintText: context.l10n.regHintEnter,
               keyBoardType: TextInputType.number,
               fillColor: Colors.white,
             ),

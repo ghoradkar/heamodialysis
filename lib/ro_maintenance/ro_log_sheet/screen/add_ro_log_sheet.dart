@@ -1,5 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/internet/no_internet_connectivity.dart';
 import 'package:heamodialysis/new_registration/model/institute/institute_data.dart';
@@ -59,7 +60,7 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
   String? selectedAfterRegiHardness;
   String? selectedRoWaterConductivity;
   String? selectedCheckBy;
-  List<CheckBy> checkByList = [CheckBy("Active", 0), CheckBy("Inactive", 1)];
+  List<CheckBy> checkByList = [CheckBy(l10n.commonActive, 0), CheckBy(l10n.commonInactive, 1)];
   String? selectedPost;
 
   // String selectedCarbonPost = '0';
@@ -196,8 +197,8 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const CustomText(
-          text: 'Add RO Log Sheet ',
+        title: CustomText(
+          text: context.l10n.roAddLogSheet,
           fontSize: 18.0,
           fontWeight: FontWeight.w400,
           textColor: Colors.black,
@@ -234,12 +235,12 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                       selectedItem: selectedInstName,
                                       isViewProfile: userData['unitId'] == 1
                                           ? false:true,
-                                      labelText: 'Institute Name',
+                                      labelText: context.l10n.colInstituteName,
                                       items: controller.instituteList?.data
                                               ?.map((e) => e.unitName)
                                               .toList() ??
                                           [],
-                                      hint: "Select",
+                                      hint: context.l10n.regHintSelect,
                                       isRequired: false,
                                       senValue: (value) {
                                         selectedInstName = value;
@@ -249,13 +250,13 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                     ),
                                     MyCustomDropdown(
                                       selectedItem: selectedMachineName,
-                                      labelText: 'Machine Name',
+                                      labelText: context.l10n.machMachineName,
                                       items: controller
                                               .getMachineNameModel?.data
                                               ?.map((e) => e.machineName)
                                               .toList() ??
                                           [],
-                                      hint: "Select",
+                                      hint: context.l10n.regHintSelect,
                                       isRequired: false,
                                       senValue: (value) {
                                         selectedMachineName = value;
@@ -264,8 +265,8 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                       filledColor: Colors.white,
                                     ),
                                     CustomDateField(
-                                      labelText: 'Date',
-                                      hint: 'Select Date',
+                                      labelText: context.l10n.commonDate,
+                                      hint: context.l10n.dashSelectDate,
                                       isRequired: false,
                                       callB: () {
                                         selectFromDate();
@@ -299,8 +300,8 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                         const SizedBox(
                                           width: 12,
                                         ),
-                                        const CustomText(
-                                          text: "Sand",
+                                        CustomText(
+                                          text: context.l10n.roSand,
                                           fontSize: 14.0,
                                           fontWeight: FontWeight.normal,
                                           textColor: Colors.white,
@@ -319,11 +320,10 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                           child: Column(
                                             children: [
                                               const SizedBox(height: 8),
-                                              const Align(
+                                              Align(
                                                 alignment: Alignment.centerLeft,
                                                 child: CustomText(
-                                                    text:
-                                                        "Sand Filter Pressure (PSI)",
+                                                    text: context.l10n.roSandFilterPressurePsi,
                                                     fontSize: 16,
                                                     fontFam: "Lato",
                                                     fontWeight: FontWeight.bold,
@@ -338,7 +338,7 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                                     child: MyCustomDropdown(
                                                         selectedItem:
                                                             selectedPre,
-                                                        labelText: 'Pre',
+                                                        labelText: context.l10n.roPre,
                                                         items: roMachineIssueLogController
                                                                 .sandFilterPrePostModel
                                                                 ?.data
@@ -346,7 +346,7 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                                                     .lookupDetDescEn)
                                                                 .toList() ??
                                                             [],
-                                                        hint: 'Select',
+                                                        hint: context.l10n.regHintSelect,
                                                         isRequired: false,
                                                         senValue: (value) {
                                                           selectedPre = value;
@@ -362,7 +362,7 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                                     child: MyCustomDropdown(
                                                         selectedItem:
                                                             selectedPost,
-                                                        labelText: 'Post',
+                                                        labelText: context.l10n.roPost,
                                                         items: roMachineIssueLogController
                                                                 .sandFilterPrePostModel
                                                                 ?.data
@@ -370,7 +370,7 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                                                     .lookupDetValue)
                                                                 .toList() ??
                                                             [],
-                                                        hint: 'Select',
+                                                        hint: context.l10n.regHintSelect,
                                                         isRequired: false,
                                                         senValue: (value) {
                                                           selectedPost = value;
@@ -392,8 +392,8 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                                         keyBoardType:
                                                             TextInputType
                                                                 .number,
-                                                        labelText: 'Difference',
-                                                        hintText: 'Enter',
+                                                        labelText: context.l10n.roDifference,
+                                                        hintText: context.l10n.regHintEnter,
                                                         isRequired: false,
                                                         txtController:
                                                             roMachineIssueLogController
@@ -405,10 +405,10 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                               ),
                                               const SizedBox(height: 8),
                                               const SizedBox(height: 12),
-                                              const Align(
+                                              Align(
                                                 alignment: Alignment.centerLeft,
                                                 child: CustomText(
-                                                    text: "Sand Filter",
+                                                    text: context.l10n.roSandFilter,
                                                     fontSize: 16,
                                                     fontFam: "Lato",
                                                     fontWeight: FontWeight.bold,
@@ -423,7 +423,7 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                                     child: MyCustomDropdown(
                                                         selectedItem:
                                                             selectedBackwash,
-                                                        labelText: 'Backwash',
+                                                        labelText: context.l10n.roBackwash,
                                                         items: roMachineIssueLogController
                                                                 .getBackWashAndRinseModel
                                                                 ?.data
@@ -431,7 +431,7 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                                                     .lookupDetValue)
                                                                 .toList() ??
                                                             [],
-                                                        hint: 'Select',
+                                                        hint: context.l10n.regHintSelect,
                                                         isRequired: false,
                                                         senValue: (value) {
                                                           selectedBackwash =
@@ -447,7 +447,7 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                                     child: MyCustomDropdown(
                                                         selectedItem:
                                                             selectedRinse,
-                                                        labelText: 'Rinse',
+                                                        labelText: context.l10n.roRinse,
                                                         items: roMachineIssueLogController
                                                                 .getBackWashAndRinseModel
                                                                 ?.data
@@ -455,7 +455,7 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                                                     .lookupDetDescEn)
                                                                 .toList() ??
                                                             [],
-                                                        hint: 'Select',
+                                                        hint: context.l10n.regHintSelect,
                                                         isRequired: false,
                                                         senValue: (value) {
                                                           selectedRinse = value;
@@ -470,7 +470,7 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                                     child: MyCustomDropdown(
                                                         selectedItem:
                                                             selectedSandDoneBy,
-                                                        labelText: 'Done By',
+                                                        labelText: context.l10n.roDoneBy,
                                                         items: roMachineIssueLogController
                                                                 .doneByModel
                                                                 ?.data
@@ -478,7 +478,7 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                                                     e.username)
                                                                 .toList() ??
                                                             [],
-                                                        hint: 'Select',
+                                                        hint: context.l10n.regHintSelect,
                                                         isRequired: false,
                                                         senValue: (value) {
                                                           selectedSandDoneBy =
@@ -519,8 +519,8 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                         const SizedBox(
                                           width: 12,
                                         ),
-                                        const CustomText(
-                                          text: "Carbon",
+                                        CustomText(
+                                          text: context.l10n.roCarbon,
                                           fontSize: 14.0,
                                           fontWeight: FontWeight.normal,
                                           textColor: Colors.white,
@@ -602,8 +602,8 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                         const SizedBox(
                                           width: 12,
                                         ),
-                                        const CustomText(
-                                          text: "Softner",
+                                        CustomText(
+                                          text: context.l10n.roSoftner,
                                           fontSize: 14.0,
                                           fontWeight: FontWeight.normal,
                                           textColor: Colors.white,
@@ -625,7 +625,7 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                                   selectedItem:
                                                       selectedSoftnerAvailable,
                                                   labelText:
-                                                      'Softener Available',
+                                                      context.l10n.roSoftenerAvailable,
                                                   items: roMachineIssueLogController
                                                           .softnerAvailableModel
                                                           ?.data
@@ -633,7 +633,7 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                                               e.lookupDetDescEn)
                                                           .toList() ??
                                                       [],
-                                                  hint: 'Select',
+                                                  hint: context.l10n.regHintSelect,
                                                   isRequired: false,
                                                   senValue: (value) {
                                                     selectedSoftnerAvailable =
@@ -708,9 +708,8 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                         const SizedBox(
                                           width: 12,
                                         ),
-                                        const CustomText(
-                                          text:
-                                              "Hardness of Post Softener Water (PPM)",
+                                        CustomText(
+                                          text: context.l10n.roHardnessPostSoftenerPpm,
                                           fontSize: 14.0,
                                           fontWeight: FontWeight.normal,
                                           textColor: Colors.white,
@@ -732,7 +731,7 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                                   selectedItem:
                                                       selectedBeforeRegiHardness,
                                                   labelText:
-                                                      'Before Regeneration Hardness (PPM)',
+                                                      context.l10n.roBeforeRegenerationHardnessPpm,
                                                   items: roMachineIssueLogController
                                                           .beforAfterHardnessModel
                                                           ?.data
@@ -740,7 +739,7 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                                               e.lookupDetValue)
                                                           .toList() ??
                                                       [],
-                                                  hint: 'Select',
+                                                  hint: context.l10n.regHintSelect,
                                                   isRequired: false,
                                                   senValue: (value) {
                                                     selectedBeforeRegiHardness =
@@ -777,8 +776,8 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                                   isReadOnly: false,
                                                   keyBoardType:
                                                       TextInputType.text,
-                                                  labelText: 'Comments',
-                                                  hintText: 'Enter',
+                                                  labelText: context.l10n.commonComments,
+                                                  hintText: context.l10n.regHintEnter,
                                                   isRequired: false,
                                                   txtController:
                                                       roMachineIssueLogController
@@ -789,7 +788,7 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                                   selectedItem:
                                                       selectedAfterRegiHardness,
                                                   labelText:
-                                                      'After Regeneration Hardness(PPM)',
+                                                      context.l10n.roAfterRegenerationHardnessPpm,
                                                   items: roMachineIssueLogController
                                                           .beforAfterHardnessModel
                                                           ?.data
@@ -797,7 +796,7 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                                               e.lookupDetDescEn)
                                                           .toList() ??
                                                       [],
-                                                  hint: 'Select',
+                                                  hint: context.l10n.regHintSelect,
                                                   isRequired: false,
                                                   senValue: (value) {
                                                     selectedAfterRegiHardness =
@@ -835,8 +834,8 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                                   isReadOnly: false,
                                                   keyBoardType:
                                                       TextInputType.text,
-                                                  labelText: 'Comments',
-                                                  hintText: 'Enter',
+                                                  labelText: context.l10n.commonComments,
+                                                  hintText: context.l10n.regHintEnter,
                                                   isRequired: false,
                                                   txtController:
                                                       roMachineIssueLogController
@@ -870,8 +869,8 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                         const SizedBox(
                                           width: 12,
                                         ),
-                                        const CustomText(
-                                          text: "Water",
+                                        CustomText(
+                                          text: context.l10n.roWater,
                                           fontSize: 14.0,
                                           fontWeight: FontWeight.normal,
                                           textColor: Colors.white,
@@ -890,10 +889,10 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                           child: Column(
                                             children: [
                                               const SizedBox(height: 8),
-                                              const Align(
+                                              Align(
                                                 alignment: Alignment.centerLeft,
                                                 child: CustomText(
-                                                    text: "Raw Water TDS (PPM)",
+                                                    text: context.l10n.roRawWaterTds,
                                                     fontSize: 16,
                                                     fontFam: "Lato",
                                                     fontWeight: FontWeight.bold,
@@ -908,7 +907,7 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                                     child: MyCustomDropdown(
                                                         selectedItem:
                                                             selectedRawWaterTdsRange,
-                                                        labelText: 'Range',
+                                                        labelText: context.l10n.roRange,
                                                         items: roMachineIssueLogController
                                                                 .rawWaterTdsModel
                                                                 ?.data
@@ -916,7 +915,7 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                                                     .lookupDetDescEn)
                                                                 .toList() ??
                                                             [],
-                                                        hint: 'Select',
+                                                        hint: context.l10n.regHintSelect,
                                                         isRequired: false,
                                                         senValue: (value) {
                                                           selectedRawWaterTdsRange =
@@ -958,8 +957,8 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                                         keyBoardType:
                                                             TextInputType
                                                                 .number,
-                                                        labelText: 'Value',
-                                                        hintText: 'Enter',
+                                                        labelText: context.l10n.commonValue,
+                                                        hintText: context.l10n.regHintEnter,
                                                         isRequired: false,
                                                         txtController:
                                                             roMachineIssueLogController
@@ -970,10 +969,10 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                                 ],
                                               ),
                                               const SizedBox(height: 8),
-                                              const Align(
+                                              Align(
                                                 alignment: Alignment.centerLeft,
                                                 child: CustomText(
-                                                    text: "RO Water TDS (PPM)",
+                                                    text: context.l10n.roRoWaterTds,
                                                     fontSize: 16,
                                                     fontFam: "Lato",
                                                     fontWeight: FontWeight.bold,
@@ -988,7 +987,7 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                                     child: MyCustomDropdown(
                                                         selectedItem:
                                                             selectedRoWaterRange,
-                                                        labelText: 'Range',
+                                                        labelText: context.l10n.roRange,
                                                         items: roMachineIssueLogController
                                                                 .roWaterTdsModel
                                                                 ?.data
@@ -996,7 +995,7 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                                                     .lookupDetDescEn)
                                                                 .toList() ??
                                                             [],
-                                                        hint: 'Select',
+                                                        hint: context.l10n.regHintSelect,
                                                         isRequired: false,
                                                         senValue: (value) {
                                                           selectedRoWaterRange =
@@ -1039,8 +1038,8 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                                         keyBoardType:
                                                             TextInputType
                                                                 .number,
-                                                        labelText: 'Value',
-                                                        hintText: 'Enter',
+                                                        labelText: context.l10n.commonValue,
+                                                        hintText: context.l10n.regHintEnter,
                                                         isRequired: false,
                                                         txtController:
                                                             roMachineIssueLogController
@@ -1064,8 +1063,8 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                                             TextInputType
                                                                 .number,
                                                         labelText:
-                                                            'Pre Membrane Pressure',
-                                                        hintText: 'Enter',
+                                                            context.l10n.roPreMembranePressure,
+                                                        hintText: context.l10n.regHintEnter,
                                                         isRequired: false,
                                                         txtController:
                                                             roMachineIssueLogController
@@ -1086,8 +1085,8 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                                             TextInputType
                                                                 .number,
                                                         labelText:
-                                                            'Reject Pressure',
-                                                        hintText: 'Enter',
+                                                            context.l10n.roRejectPressure,
+                                                        hintText: context.l10n.regHintEnter,
                                                         isRequired: false,
                                                         txtController:
                                                             roMachineIssueLogController
@@ -1110,8 +1109,8 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                                         keyBoardType:
                                                             TextInputType
                                                                 .number,
-                                                        labelText: 'Difference',
-                                                        hintText: 'Enter',
+                                                        labelText: context.l10n.roDifference,
+                                                        hintText: context.l10n.regHintEnter,
                                                         isRequired: false,
                                                         txtController:
                                                             roMachineIssueLogController
@@ -1130,8 +1129,8 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                                             TextInputType
                                                                 .number,
                                                         labelText:
-                                                            'Permeate Flow(LPH)',
-                                                        hintText: 'Enter',
+                                                            context.l10n.roPermeateFlowLph,
+                                                        hintText: context.l10n.regHintEnter,
                                                         isRequired: false,
                                                         txtController:
                                                             roMachineIssueLogController
@@ -1168,9 +1167,8 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                         const SizedBox(
                                           width: 12,
                                         ),
-                                        const CustomText(
-                                          text:
-                                              "Carbon Chloride and Water Conductivity ",
+                                        CustomText(
+                                          text: context.l10n.roCarbonChlorideWaterConductivity,
                                           fontSize: 14.0,
                                           fontWeight: FontWeight.normal,
                                           textColor: Colors.white,
@@ -1192,7 +1190,7 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                                   selectedItem:
                                                       selectedPostCarbonCloride,
                                                   labelText:
-                                                      'Post Carbon Chloride (PPM)',
+                                                      context.l10n.roPostCarbonChloridePpm,
                                                   items: roMachineIssueLogController
                                                           .postCarbonChloridModel
                                                           ?.data
@@ -1200,7 +1198,7 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                                               e.lookupDetDescEn)
                                                           .toList() ??
                                                       [],
-                                                  hint: 'Select',
+                                                  hint: context.l10n.regHintSelect,
                                                   isRequired: false,
                                                   senValue: (value) {
                                                     selectedPostCarbonCloride =
@@ -1238,8 +1236,8 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                                   isReadOnly: false,
                                                   keyBoardType:
                                                       TextInputType.text,
-                                                  labelText: 'Comments',
-                                                  hintText: 'Enter',
+                                                  labelText: context.l10n.commonComments,
+                                                  hintText: context.l10n.regHintEnter,
                                                   isRequired: false,
                                                   txtController:
                                                       roMachineIssueLogController
@@ -1250,7 +1248,7 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                                   selectedItem:
                                                       selectedRoWaterConductivity,
                                                   labelText:
-                                                      'RO Water Conductivity',
+                                                      context.l10n.roRoWaterConductivity,
                                                   items: roMachineIssueLogController
                                                           .roWaterConductivityModel
                                                           ?.data
@@ -1258,7 +1256,7 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                                               e.lookupDetValue)
                                                           .toList() ??
                                                       [],
-                                                  hint: 'Select',
+                                                  hint: context.l10n.regHintSelect,
                                                   isRequired: false,
                                                   senValue: (value) {
                                                     selectedRoWaterConductivity =
@@ -1316,8 +1314,8 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                                   isReadOnly: false,
                                                   keyBoardType:
                                                       TextInputType.text,
-                                                  labelText: 'Comments',
-                                                  hintText: 'Enter',
+                                                  labelText: context.l10n.commonComments,
+                                                  hintText: context.l10n.regHintEnter,
                                                   isRequired: false,
                                                   txtController:
                                                       roMachineIssueLogController
@@ -1331,8 +1329,8 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                                   isReadOnly: false,
                                                   keyBoardType:
                                                       TextInputType.number,
-                                                  labelText: 'Reject Flow(LPH)',
-                                                  hintText: 'Enter',
+                                                  labelText: context.l10n.roRejectFlowLph,
+                                                  hintText: context.l10n.regHintEnter,
                                                   isRequired: false,
                                                   txtController:
                                                       roMachineIssueLogController
@@ -1366,8 +1364,8 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                         const SizedBox(
                                           width: 12,
                                         ),
-                                        const CustomText(
-                                          text: "Pump",
+                                        CustomText(
+                                          text: context.l10n.roPump,
                                           fontSize: 14.0,
                                           fontWeight: FontWeight.normal,
                                           textColor: Colors.white,
@@ -1398,7 +1396,7 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                                     Expanded(
                                                         child:
                                                             CustomCheckboxGroup(
-                                                      title: 'Raw Water Pump',
+                                                      title: context.l10n.roRawWaterPump,
                                                       firstValue:
                                                           roMachineIssueLogController
                                                               .rwpFirstCheckBox,
@@ -1422,7 +1420,7 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                                         child:
                                                             CustomCheckboxGroup(
                                                       title:
-                                                          'High Pressure Pump',
+                                                          context.l10n.roHighPressurePump,
                                                       firstValue:
                                                           roMachineIssueLogController
                                                               .hppFirstCheckBox,
@@ -1449,7 +1447,7 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                                     Expanded(
                                                         child:
                                                             CustomCheckboxGroup(
-                                                      title: 'Transfer Pump',
+                                                      title: context.l10n.roTransferPump,
                                                       firstValue:
                                                           roMachineIssueLogController
                                                               .tpFirstCheckBox,
@@ -1472,7 +1470,7 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                                     Expanded(
                                                         child:
                                                             CustomCheckboxGroup(
-                                                      title: 'UV Lamp',
+                                                      title: context.l10n.roUvLamp,
                                                       firstValue:
                                                           roMachineIssueLogController
                                                               .uvLampFirstCheckBox,
@@ -1522,8 +1520,8 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                         const SizedBox(
                                           width: 12,
                                         ),
-                                        const CustomText(
-                                          text: "Return Loop Pressure(PSI)",
+                                        CustomText(
+                                          text: context.l10n.roReturnLoopPressure,
                                           fontSize: 14.0,
                                           fontWeight: FontWeight.normal,
                                           textColor: Colors.white,
@@ -1545,8 +1543,7 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                                 children: [
                                                   Expanded(
                                                     child: CheckboxListTile(
-                                                      title: const Text(
-                                                          "UF/Micron Filter"),
+                                                      title: Text(context.l10n.roUfMicronFilter),
                                                       value: ufCheckedValue,
                                                       onChanged: (newValue) {
                                                         setState(() {
@@ -1564,8 +1561,7 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                                   ),
                                                   Expanded(
                                                     child: CheckboxListTile(
-                                                      title: const Text(
-                                                          "Dosing System"),
+                                                      title: Text(context.l10n.roDosingSystem),
                                                       value: doingCheckedValue,
                                                       onChanged: (newValue) {
                                                         setState(() {
@@ -1586,7 +1582,7 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                                     child: MyCustomDropdown(
                                                         selectedItem:
                                                             selectedRangePsi,
-                                                        labelText: 'Range',
+                                                        labelText: context.l10n.roRange,
                                                         items: roMachineIssueLogController
                                                                 .returnLoopRangeModel
                                                                 ?.data
@@ -1594,7 +1590,7 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                                                     .lookupDetDescEn)
                                                                 .toList() ??
                                                             [],
-                                                        hint: 'Select',
+                                                        hint: context.l10n.regHintSelect,
                                                         isRequired: false,
                                                         senValue: (value) {
                                                           selectedRangePsi =
@@ -1615,8 +1611,8 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                                         keyBoardType:
                                                             TextInputType
                                                                 .number,
-                                                        labelText: 'Value',
-                                                        hintText: 'Enter',
+                                                        labelText: context.l10n.commonValue,
+                                                        hintText: context.l10n.regHintEnter,
                                                         isRequired: false,
                                                         txtController:
                                                             roMachineIssueLogController
@@ -1629,11 +1625,11 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                               const SizedBox(height: 8),
                                               MyCustomDropdown(
                                                   selectedItem: selectedCheckBy,
-                                                  labelText: 'Checked By',
+                                                  labelText: context.l10n.roCheckedBy,
                                                   items: checkByList
                                                       .map((e) => e.title)
                                                       .toList(),
-                                                  hint: 'Select',
+                                                  hint: context.l10n.regHintSelect,
                                                   isRequired: false,
                                                   senValue: (value) {
                                                     selectedCheckBy = value;
@@ -1649,8 +1645,8 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                                   isReadOnly: false,
                                                   keyBoardType:
                                                       TextInputType.text,
-                                                  labelText: 'Comments',
-                                                  hintText: 'Enter',
+                                                  labelText: context.l10n.commonComments,
+                                                  hintText: context.l10n.regHintEnter,
                                                   isRequired: false,
                                                   txtController:
                                                       roMachineIssueLogController
@@ -1672,7 +1668,7 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                 children: [
                                   CustomButton(
                                     isLoading: false,
-                                    buttonText: 'Save',
+                                    buttonText: context.l10n.commonSave,
                                     path: 'assets/save-ro-disinfec.png',
                                     callB: () {
                                       if (widget.isEdit == true) {
@@ -2822,7 +2818,7 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                     iconColor: Colors.white,
                                   ),
                                   CustomButton(
-                                    buttonText: 'Reset',
+                                    buttonText: context.l10n.commonReset,
                                     path: 'assets/refresh.png',
                                     callB: () {},
                                     buttonWidth: 100,
@@ -2832,7 +2828,7 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                                     iconColor: Colors.white,
                                   ),
                                   CustomButton(
-                                    buttonText: 'Cancel',
+                                    buttonText: context.l10n.commonCancel,
                                     path: 'assets/cancel.png',
                                     callB: () {
                                       Get.back();
@@ -2872,67 +2868,67 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
       switch (caseString) {
         case '<0.5':
           if (enteredValue >= 0.5) {
-            return "Value must be less than 0.5";
+            return l10n.roValueLessThan('0.5');
           }
           break;
         case '>0.5':
           if (enteredValue <= 0.5) {
-            return "Value must be greater than 0.5";
+            return l10n.roValueGreaterThan('0.5');
           }
           break;
         case '<20':
           if (enteredValue >= 20) {
-            return "Value must be less than 20";
+            return l10n.roValueLessThan('20');
           }
           break;
         case '<30':
           if (enteredValue >= 30) {
-            return "Value must be less than 30";
+            return l10n.roValueLessThan('30');
           }
           break;
         case '>30':
           if (enteredValue <= 30) {
-            return "Value must be greater than 30";
+            return l10n.roValueGreaterThan('30');
           }
           break;
         case '20-100':
           if (enteredValue < 20 || enteredValue > 100) {
-            return "Value must be between 20 and 100";
+            return l10n.roValueBetween('20', '100');
           }
           break;
         case '1-200':
           if (enteredValue < 1 || enteredValue > 200) {
-            return "Value must be between 1 and 200";
+            return l10n.roValueBetween('1', '200');
           }
           break;
         case '101-200':
           if (enteredValue < 101 || enteredValue > 200) {
-            return "Value must be between 101 and 200";
+            return l10n.roValueBetween('101', '200');
           }
           break;
         case '201-400':
           if (enteredValue < 201 || enteredValue > 400) {
-            return "Value must be between 201 and 400";
+            return l10n.roValueBetween('201', '400');
           }
           break;
         case '401-600':
           if (enteredValue < 401 || enteredValue > 600) {
-            return "Value must be between 401 and 600";
+            return l10n.roValueBetween('401', '600');
           }
           break;
         case '601-1000': // Updated this case to a more logical range
           if (enteredValue < 601 || enteredValue > 1000) {
-            return "Value must be between 601 and 1000";
+            return l10n.roValueBetween('601', '1000');
           }
           break;
         case '>200':
           if (enteredValue <= 200) {
-            return "Value must be greater than 200";
+            return l10n.roValueGreaterThan('200');
           }
           break;
         case '>1000':
           if (enteredValue <= 1000) {
-            return "Value must be greater than 1000";
+            return l10n.roValueGreaterThan('1000');
           }
           break;
         default:
@@ -2940,7 +2936,7 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
       }
       return null; // No errors detected for this case
     } else {
-      return "Please enter a valid number"; // Handle invalid input
+      return l10n.roEnterValidNumber; // Handle invalid input
     }
   }
 
@@ -3053,10 +3049,10 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         const SizedBox(height: 8),
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: CustomText(
-            text: "Carbon Filter Pressure (PSI)",
+            text: context.l10n.roCarbonFilterPressure,
             fontSize: 16,
             fontFam: "Lato",
             fontWeight: FontWeight.bold,
@@ -3071,12 +3067,12 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
               child: MyCustomDropdown(
                 selectedItem: cardData.lookupDetDesCfpPre,
                 // selectedItem: selectedCarbonPre,
-                labelText: 'Pre',
+                labelText: context.l10n.roPre,
                 items: roMachineIssueLogController.sandFilterPrePostModel?.data
                         ?.map((e) => e.lookupDetDescEn)
                         .toList() ??
                     [],
-                hint: 'Select',
+                hint: context.l10n.regHintSelect,
                 isRequired: false,
                 senValue: (value) {
                   cardData.lookupDetDesCfpPre = value;
@@ -3095,12 +3091,12 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
               child: MyCustomDropdown(
                 // selectedItem: selectedCarbonPost,
                 selectedItem: cardData.lookupDetDesCfpPost,
-                labelText: 'Post',
+                labelText: context.l10n.roPost,
                 items: roMachineIssueLogController.sandFilterPrePostModel?.data
                         ?.map((e) => e.lookupDetDescEn)
                         .toList() ??
                     [],
-                hint: 'Select',
+                hint: context.l10n.regHintSelect,
                 isRequired: false,
                 senValue: (value) {
                   cardData.lookupDetDesCfpPost = value;
@@ -3130,8 +3126,8 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                 maxLines: 1,
                 isReadOnly: true,
                 keyBoardType: TextInputType.number,
-                labelText: 'Difference',
-                hintText: 'Enter',
+                labelText: context.l10n.roDifference,
+                hintText: context.l10n.regHintEnter,
                 isRequired: false,
                 // txtController: roMachineIssueLogController.differenceCarbon,
                 initialValue: cardData.cfpDifference,
@@ -3141,10 +3137,10 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
           ],
         ),
         const SizedBox(height: 8),
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: CustomText(
-            text: "Carbon Filter",
+            text: context.l10n.roCarbonFilter,
             fontSize: 16,
             fontFam: "Lato",
             fontWeight: FontWeight.bold,
@@ -3159,13 +3155,13 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
               child: MyCustomDropdown(
                 // selectedItem: selectedBackwashCarbon,
                 selectedItem: cardData.lookupDetIdCarbonFilterBackwashDes,
-                labelText: 'Backwash',
+                labelText: context.l10n.roBackwash,
                 items: roMachineIssueLogController
                         .getBackWashAndRinseModel?.data
                         ?.map((e) => e.lookupDetValue)
                         .toList() ??
                     [],
-                hint: 'Select',
+                hint: context.l10n.regHintSelect,
                 isRequired: false,
                 senValue: (value) {
                   cardData.lookupDetIdCarbonFilterBackwashDes = value;
@@ -3186,13 +3182,13 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
               child: MyCustomDropdown(
                 selectedItem: cardData.lookupDetIdCarbonFilterRinseDes,
                 // selectedItem: selectedCarbonRinse,
-                labelText: 'Rinse',
+                labelText: context.l10n.roRinse,
                 items: roMachineIssueLogController
                         .getBackWashAndRinseModel?.data
                         ?.map((e) => e.lookupDetDescEn)
                         .toList() ??
                     [],
-                hint: 'Select',
+                hint: context.l10n.regHintSelect,
                 isRequired: false,
                 senValue: (value) {
                   cardData.lookupDetIdCarbonFilterRinseDes = value;
@@ -3213,12 +3209,12 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
               child: MyCustomDropdown(
                 // selectedItem: selectedCarbonDoneBy,
                 selectedItem: cardData.carbonFilterDoneByDes,
-                labelText: 'Done By',
+                labelText: context.l10n.roDoneBy,
                 items: roMachineIssueLogController.doneByModel?.data
                         ?.map((e) => e.username)
                         .toList() ??
                     [],
-                hint: 'Select',
+                hint: context.l10n.regHintSelect,
                 isRequired: false,
                 senValue: (value) {
                   cardData.carbonFilterDoneByDes = value;
@@ -3245,8 +3241,8 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
           maxLines: 1,
           isReadOnly: false,
           keyBoardType: TextInputType.text,
-          labelText: 'Comments',
-          hintText: 'Enter',
+          labelText: context.l10n.commonComments,
+          hintText: context.l10n.regHintEnter,
           isRequired: false,
           // txtController: roMachineIssueLogController.commentsController,
           initialValue: cardData.cfpComments,
@@ -3262,10 +3258,10 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         const SizedBox(height: 8),
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: CustomText(
-              text: "Softener Pressure(PSI)",
+              text: context.l10n.roSoftenerPressure,
               fontSize: 16,
               fontFam: "Lato",
               fontWeight: FontWeight.bold,
@@ -3280,13 +3276,13 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
               child: MyCustomDropdown(
                   // selectedItem: selectedSoftnerAvailable,
                   selectedItem: cardData.lookupDetDescrSpPre,
-                  labelText: 'Pre',
+                  labelText: context.l10n.roPre,
                   items: roMachineIssueLogController
                           .sandFilterPrePostModel?.data
                           ?.map((e) => e.lookupDetDescEn)
                           .toList() ??
                       [],
-                  hint: 'Select',
+                  hint: context.l10n.regHintSelect,
                   isRequired: false,
                   senValue: (value) {
                     cardData.lookupDetDescrSpPre = value;
@@ -3308,13 +3304,13 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
               child: MyCustomDropdown(
                   // selectedItem: selectedSoftnerPost,
                   selectedItem: cardData.lookupDetDescrSpPost,
-                  labelText: 'Post',
+                  labelText: context.l10n.roPost,
                   items: roMachineIssueLogController
                           .sandFilterPrePostModel?.data
                           ?.map((e) => e.lookupDetValue)
                           .toList() ??
                       [],
-                  hint: 'Select',
+                  hint: context.l10n.regHintSelect,
                   isRequired: false,
                   senValue: (value) {
                     cardData.lookupDetDescrSpPost = value;
@@ -3338,8 +3334,8 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
                   maxLines: 1,
                   isReadOnly: true,
                   keyBoardType: TextInputType.number,
-                  labelText: 'Difference',
-                  hintText: 'Enter',
+                  labelText: context.l10n.roDifference,
+                  hintText: context.l10n.regHintEnter,
                   isRequired: false,
                   // txtController: roMachineIssueLogController.differenceSoftner,
                   initialValue: cardData.spDifference,
@@ -3348,10 +3344,10 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
           ],
         ),
         const SizedBox(height: 8),
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: CustomText(
-              text: "Softener Registration",
+              text: context.l10n.roSoftenerRegistration,
               fontSize: 16,
               fontFam: "Lato",
               fontWeight: FontWeight.bold,
@@ -3365,8 +3361,8 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
               child: CustomDateField(
                 // initialValue: roMachineIssueLogController.timeController.text,
                 initialValue: cardData.softenerRegenerationTime,
-                labelText: 'Time',
-                hint: 'Select',
+                labelText: context.l10n.commonTime,
+                hint: context.l10n.regHintSelect,
                 isRequired: false,
                 callB: () {
                   selectTime(index, cardData);
@@ -3380,12 +3376,12 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
             Expanded(
               child: MyCustomDropdown(
                   selectedItem: cardData.softenerRegenerationDoneByDescrip,
-                  labelText: 'Done By',
+                  labelText: context.l10n.roDoneBy,
                   items: roMachineIssueLogController.doneByModel?.data
                           ?.map((e) => e.username)
                           .toList() ??
                       [],
-                  hint: 'Select',
+                  hint: context.l10n.regHintSelect,
                   isRequired: false,
                   senValue: (value) {
                     cardData.softenerRegenerationDoneByDescrip = value;
@@ -3412,8 +3408,8 @@ class _AddRoLogSheetState extends State<AddRoLogSheet> {
             maxLines: 1,
             isReadOnly: false,
             keyBoardType: TextInputType.text,
-            labelText: 'Comments',
-            hintText: 'Enter',
+            labelText: context.l10n.commonComments,
+            hintText: context.l10n.regHintEnter,
             isRequired: false,
             // txtController:
             //     roMachineIssueLogController.softnerCommentsController,

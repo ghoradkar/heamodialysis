@@ -1,5 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dialysis_queue/dialysis_event/controller/dialysis_event_controller.dart';
@@ -311,7 +312,7 @@ class AddDialysisEventState extends State<AddDialysisEvent> {
                                 children: [
                                   CustomButton(
                                     isLoading: controller.isLoading,
-                                    buttonText: 'Save',
+                                    buttonText: context.l10n.commonSave,
                                     path: 'assets/save-ro-disinfec.png',
                                     callB: () async {
                                       if (formKey.currentState?.validate() ??
@@ -328,7 +329,7 @@ class AddDialysisEventState extends State<AddDialysisEvent> {
                                     iconColor: Colors.white,
                                   ),
                                   CustomButton(
-                                    buttonText: 'Reset',
+                                    buttonText: context.l10n.commonReset,
                                     path: 'assets/refresh.png',
                                     callB: () {},
                                     buttonWidth: 100.w,
@@ -338,7 +339,7 @@ class AddDialysisEventState extends State<AddDialysisEvent> {
                                     iconColor: Colors.white,
                                   ),
                                   CustomButton(
-                                    buttonText: 'Cancel',
+                                    buttonText: context.l10n.commonCancel,
                                     path: 'assets/cancel.png',
                                     callB: () {
                                       Get.back();
@@ -433,8 +434,8 @@ class AddEditDialysisEventCard extends StatelessWidget {
         children: [
           CustomDateField(
             key: UniqueKey(),
-            labelText: 'Pre Dialysis Date',
-            hint: 'Select Date',
+            labelText: context.l10n.clinPreDialysisDate,
+            hint: context.l10n.dashSelectDate,
             isRequired: false,
             callB: () {
               dateCallBack();
@@ -446,8 +447,8 @@ class AddEditDialysisEventCard extends StatelessWidget {
           ),
           CustomDateField(
             key: UniqueKey(),
-            labelText: 'Time',
-            hint: 'Select',
+            labelText: context.l10n.commonTime,
+            hint: context.l10n.regHintSelect,
             isRequired: true,
             callB: selectTime,
             initialValue: time,
@@ -457,9 +458,9 @@ class AddEditDialysisEventCard extends StatelessWidget {
           MyCustomDropdown(
             key: UniqueKey(),
             selectedItem: selectedIncidentT,
-            labelText: 'Dialysis Incident Type',
+            labelText: context.l10n.dqDialysisIncidentType,
             items: incidentList!,
-            hint: 'Select',
+            hint: context.l10n.regHintSelect,
             isRequired: true,
             senValue: (value) {
               if (incidentCallBack != null) {
@@ -471,9 +472,9 @@ class AddEditDialysisEventCard extends StatelessWidget {
           MyCustomDropdown(
             key: UniqueKey(),
             selectedItem: selectedSubIncidentT,
-            labelText: 'Dialysis Incident sub Type',
+            labelText: context.l10n.dqDialysisIncidentSubType,
             items: incidentSubList!,
-            hint: 'Select',
+            hint: context.l10n.regHintSelect,
             isRequired: false,
             senValue: (value) {
               if (incidentSubCallBack != null) {
@@ -484,8 +485,8 @@ class AddEditDialysisEventCard extends StatelessWidget {
           ),
           CustomTextField(
             key: UniqueKey(),
-            labelText: 'Event Description',
-            hintText: 'Enter',
+            labelText: context.l10n.dqEventDescription,
+            hintText: context.l10n.regHintEnter,
             isRequired: false,
             keyBoardType: TextInputType.text,
             initialValue: cardData?.eventDescription,
@@ -501,8 +502,8 @@ class AddEditDialysisEventCard extends StatelessWidget {
           ),
           CustomTextField(
             key: UniqueKey(),
-            labelText: 'Action Taken',
-            hintText: 'Enter',
+            labelText: context.l10n.dqActionTaken,
+            hintText: context.l10n.regHintEnter,
             isRequired: false,
             keyBoardType: TextInputType.text,
             initialValue: cardData?.actionTaken,

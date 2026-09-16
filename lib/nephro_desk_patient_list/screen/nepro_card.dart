@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dashboard/model/nephro_list.dart';
@@ -51,13 +52,17 @@ class NeproCard extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    patientDetailsCard(cardItemDetailsList[0],
-                        patient?.patientId.toString() ?? ""),
-                    patientDetailsCard(
-                        "Treatment Id",
-                        patient?.treatmentId != null
-                            ? patient!.treatmentId!.toString()
-                            : ""),
+                    Flexible(
+                      child: patientDetailsCard(cardItemDetailsList[0],
+                          patient?.patientId.toString() ?? ""),
+                    ),
+                    Flexible(
+                      child: patientDetailsCard(
+                          cardItemDetailsList[4],
+                          patient?.treatmentId != null
+                              ? patient!.treatmentId!.toString()
+                              : ""),
+                    ),
                     SizedBox(
                       width: 70,
                       child: Row(

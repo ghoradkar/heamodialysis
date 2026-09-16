@@ -1,5 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dialysis_queue/consumable_entry/model/add_consumable_entry_model.dart';
@@ -110,7 +111,7 @@ class AddConsumableState extends State<AddConsumable> {
     return Scaffold(
       appBar: AppBar(
         title:  CustomText(
-          text: "Add New Entry of Consumable Used",
+          text: context.l10n.dqAddEntryConsumable,
           fontSize: 18.sp,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,
@@ -176,7 +177,7 @@ class AddConsumableState extends State<AddConsumable> {
                               children: [
                                 CustomButton(
                                   isLoading: roMachineIssueController.isLoading,
-                                  buttonText: 'Save',
+                                  buttonText: context.l10n.commonSave,
                                   path: 'assets/save-ro-disinfec.png',
                                   callB: roMachineIssueController.isLoading
                                       ? null
@@ -354,7 +355,7 @@ class AddConsumableState extends State<AddConsumable> {
                                   iconColor: Colors.white,
                                 ),
                                 CustomButton(
-                                  buttonText: 'Reset',
+                                  buttonText: context.l10n.commonReset,
                                   path: 'assets/refresh.png',
                                   callB: () {
                                     roMachineIssueController.selectedInsti =
@@ -396,7 +397,7 @@ class AddConsumableState extends State<AddConsumable> {
                                   iconColor: Colors.white,
                                 ),
                                 CustomButton(
-                                  buttonText: 'Cancel',
+                                  buttonText: context.l10n.commonCancel,
                                   path: 'assets/cancel.png',
                                   callB: () {
                                     Get.back();
@@ -428,16 +429,16 @@ class AddConsumableState extends State<AddConsumable> {
           MyCustomDropdown(
             key: UniqueKey(),
             selectedItem: cardData.itenName,
-            labelText: 'Product Name',
+            labelText: context.l10n.dqProductName,
             items: roMachineIssueController.productNameListModel
                     ?.map((e) => e.itemName)
                     .toList() ??
                 [],
-            hint: 'Select',
+            hint: context.l10n.regHintSelect,
             isRequired: false,
             senValue: (value) async {
               if (value != null && selectedProdList.contains(value)) {
-                CustomMessage.toast("Product should not be same");
+                CustomMessage.toast(context.l10n.dqProductShouldNotSame);
               } else {
                 roMachineIssueController.selectedProdName =
                     roMachineIssueController.productNameListModel
@@ -462,12 +463,12 @@ class AddConsumableState extends State<AddConsumable> {
             key: UniqueKey(),
             selectedItem: cardData.batchNo,
             // selectedItem: roMachineIssueController.initialMachine,
-            labelText: 'Batch No',
+            labelText: context.l10n.dqBatchNo,
             items: roMachineIssueController.batchNoListModel
                     ?.map((e) => e.batchNumber)
                     .toList() ??
                 [],
-            hint: 'Select',
+            hint: context.l10n.regHintSelect,
             isRequired: false,
             senValue: (value) async {
               roMachineIssueController.selectdBatchNo = value;
@@ -484,12 +485,12 @@ class AddConsumableState extends State<AddConsumable> {
             key: UniqueKey(),
             selectedItem: cardData.expiryDate,
             // selectedItem: roMachineIssueController.initialMachine,
-            labelText: 'Expiry Date',
+            labelText: context.l10n.dqExpiryDate,
             items: roMachineIssueController.expiryDatelst
                     ?.map((e) => e.batchNumber)
                     .toList() ??
                 [],
-            hint: 'Select',
+            hint: context.l10n.regHintSelect,
             isRequired: false,
             senValue: (value) async {
               // roMachineIssueController.selectedMachine =
@@ -509,12 +510,12 @@ class AddConsumableState extends State<AddConsumable> {
             key: UniqueKey(),
             selectedItem: cardData.orderNo,
             // selectedItem: roMachineIssueController.initialMachine,
-            labelText: 'Order Id',
+            labelText: context.l10n.dqOrderId,
             items: roMachineIssueController.orderIdlst
                     ?.map((e) => e.batchNumber)
                     .toList() ??
                 [],
-            hint: 'Select',
+            hint: context.l10n.regHintSelect,
             isRequired: false,
             senValue: (value) {
               roMachineIssueController.selectdOrderNo = value;
@@ -529,8 +530,8 @@ class AddConsumableState extends State<AddConsumable> {
             onChanged: (value) {
               cardData.usedQuantity = value;
             },
-            labelText: 'Available Quantity',
-            hintText: 'Enter',
+            labelText: context.l10n.dqAvailableQuantity,
+            hintText: context.l10n.regHintEnter,
             isRequired: false,
             keyBoardType: TextInputType.text,
             // txtController: roMachineIssueController.issueDescController,
@@ -545,8 +546,8 @@ class AddConsumableState extends State<AddConsumable> {
               cardData.consumedQuantity = value;
             },
             initialValue: cardData.consumedQuantity,
-            labelText: 'Consumed Quantity',
-            hintText: 'Enter',
+            labelText: context.l10n.dqConsumedQuantity,
+            hintText: context.l10n.regHintEnter,
             isRequired: false,
             keyBoardType: TextInputType.text,
             // txtController: roMachineIssueController.informToController,
@@ -561,8 +562,8 @@ class AddConsumableState extends State<AddConsumable> {
               cardData.remark = value;
             },
             initialValue: cardData.remark,
-            labelText: 'Remarks',
-            hintText: 'Enter',
+            labelText: context.l10n.commonRemarks,
+            hintText: context.l10n.regHintEnter,
             isRequired: false,
             keyBoardType: TextInputType.text,
             // txtController: roMachineIssueController.commentController,

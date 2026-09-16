@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart' show Get, GetNavigation, GetxController, ExtensionDialog;
 import 'package:heamodialysis/dialysis_queue/hd_chart/screen/add_edit_hd_chart_screen.dart';
 import 'package:heamodialysis/dialysis_queue/hd_chart/screen/hd_chart_list.dart';
@@ -62,7 +63,7 @@ class HdChartController extends GetxController {
       isLoading = false;
       update();
       if (data == 'Success') {
-        CustomMessage.toast("Data Saved Successfully");
+        CustomMessage.toast(l10n.schedDataSaved);
 
         Get.off(const HdChartList());
       }
@@ -215,7 +216,7 @@ class HdChartController extends GetxController {
 
   void showSuccessPopup() {
     Get.defaultDialog(
-      title: "Success",
+      title: l10n.commonSuccess,
       middleText: "Data Saved Successfully!",
       textConfirm: "OK",
       onConfirm: () {

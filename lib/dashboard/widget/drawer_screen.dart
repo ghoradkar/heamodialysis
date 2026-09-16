@@ -16,7 +16,9 @@ import 'package:heamodialysis/nephro_desk_patient_list/screen/nephro_desk_patien
 
 import 'package:heamodialysis/schedular/screen/schedular_list.dart';
 import 'package:heamodialysis/upload_document/screen/upload_doc_dash.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:heamodialysis/widgets/custom_text.dart';
+import 'package:heamodialysis/widgets/language_switcher.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../login/screen/logout_screen.dart';
@@ -112,6 +114,8 @@ class _DrawerScreenState extends State<DrawerScreen> {
                   textAlign: TextAlign.center,
                   fontFam: 'Nunito Sans',
                 ),
+                SizedBox(height: 12.h),
+                const LanguageSwitcher(onColor: true),
               ],
             ),
           ),
@@ -177,9 +181,9 @@ class _DrawerScreenState extends State<DrawerScreen> {
                   visible: widget.userType == "INVOICE SECOND APPROVAL",
                   // || widget.userType == "OPERATION HEAD",
                   child: CustomExpansionTile(
-                    title: 'Billing',
+                    title: context.l10n.drawerBilling,
                     iconPath: 'assets/file-list.png',
-                    items: const ["Invoice Approval(2nd Level)"],
+                    items: [context.l10n.drawerInvoiceApprovalSecondLevel],
                     onTap: (index) {
                       if (index == 0) {
                         Get.to(() => const InvoiceApproval());
@@ -192,10 +196,9 @@ class _DrawerScreenState extends State<DrawerScreen> {
                   // visible: widget.userType == "INVOICE GENERATION",
                   visible: widget.userType == "OPERATION HEAD",
                   child: CustomExpansionTile(
-                    title: 'Billing',
+                    title: context.l10n.drawerBilling,
                     iconPath: 'assets/file-list.png',
-                    items: const ["Invoice Generation"],
-                    // items: const ["Invoice Generation"],
+                    items: [context.l10n.drawerInvoiceGeneration],
                     onTap: (index) {
                       if (index == 0) {
                         Get.to(() => const InvoiceGeneration());
@@ -218,11 +221,11 @@ class _DrawerScreenState extends State<DrawerScreen> {
                       simpleDrawerItem(() {
                         Get.back(); // closes drawer first
                         Get.offAll(() => const InstituteWiseDashboardScreen());
-                      }, "Dashboard", 'assets/dashboard.png', true),
+                      }, context.l10n.drawerDashboard, 'assets/dashboard.png', true),
                       ListTile(
-                        title: const Text(
-                          'Registration',
-                          style: TextStyle(
+                        title: Text(
+                          context.l10n.drawerRegistration,
+                          style: const TextStyle(
                               fontSize: 16,
                               color: Colors.white,
                               fontWeight: FontWeight.w500,
@@ -256,12 +259,12 @@ class _DrawerScreenState extends State<DrawerScreen> {
                       // ),
                       simpleDrawerItem(() {
                         Get.to(() => const SchedularListScreen());
-                      }, "Dialysis Scheduler", 'assets/schedular.png', true),
+                      }, context.l10n.drawerDialysisScheduler, 'assets/schedular.png', true),
 
                       ListTile(
-                        title: const Text(
-                          'Dialysis Queue',
-                          style: TextStyle(
+                        title: Text(
+                          context.l10n.drawerDialysisQueue,
+                          style: const TextStyle(
                               fontSize: 16,
                               color: Colors.white,
                               fontWeight: FontWeight.w500,
@@ -276,7 +279,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                         Get.to(SessionEndList(
                           userData: widget.userData,
                         ));
-                      }, "Session End", 'assets/schedular.png', true)
+                      }, context.l10n.drawerSessionEnd, 'assets/schedular.png', true)
                           .paddingOnly(left: 2),
                       // CustomExpansionTile(
                       //   title: 'Dialysis Queue',
@@ -308,7 +311,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                       // ),
                       simpleDrawerItem(() {
                         Get.to(() => const RoMaintenanceScreen());
-                      }, "RO Maintenance", 'assets/ROMaintenance.png', true),
+                      }, context.l10n.drawerRoMaintenance, 'assets/ROMaintenance.png', true),
                       // CustomExpansionTile(
                       //   title: 'RO Maintenance',
                       //   iconPath: 'assets/dialysis-queue.png',
@@ -333,7 +336,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                       // ),
                       simpleDrawerItem(() {
                         Get.to(() => const MachineCounterList());
-                      }, "Machine Status", 'assets/MachineStatus.png', true),
+                      }, context.l10n.drawerMachineStatus, 'assets/MachineStatus.png', true),
                       // CustomExpansionTile(
                       //   title: 'Machine Status',
                       //   iconPath: 'assets/MachineStatus.png',
@@ -393,15 +396,15 @@ class _DrawerScreenState extends State<DrawerScreen> {
                     children: [
                       simpleDrawerItem(() {
                         Get.to(() => const NephroDashboard());
-                      }, "Dashboard", 'assets/dashboard.png', true),
+                      }, context.l10n.drawerDashboard, 'assets/dashboard.png', true),
                       simpleDrawerItem(() {
                         Get.to(
-                            () => const NephroDeskPatientList(
-                                  appBarTitle: 'Nephrologist Desk',
+                            () => NephroDeskPatientList(
+                                  appBarTitle: context.l10n.drawerNephrologistDesk,
                                 ),
                             arguments: 'NEPHROLOGIST');
-                      }, "Nephrologist Desk", 'assets/nephrologist_Desk.png',
-                          true),
+                      }, context.l10n.drawerNephrologistDesk,
+                          'assets/nephrologist_Desk.png', true),
                       // CustomExpansionTile(
                       //   title: 'Application Approval',
                       //   iconPath: 'assets/registration.png',
@@ -419,7 +422,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                         Get.to(() => ScrutinySecondLevel(
                               userType: widget.userType,
                             ));
-                      }, "Application Approval",
+                      }, context.l10n.drawerApplicationApproval,
                           'assets/application_Approval.png', true),
                     ],
                   ),
@@ -430,11 +433,11 @@ class _DrawerScreenState extends State<DrawerScreen> {
                     children: [
                       simpleDrawerItem(() {
                         Get.to(
-                            () => const NephroDeskPatientList(
-                                  appBarTitle: 'Doctor Desk',
+                            () => NephroDeskPatientList(
+                                  appBarTitle: context.l10n.drawerDoctorDesk,
                                 ),
                             arguments: 'DOCTOR');
-                      }, "Doctor Desk", 'assets/schedular.png', true),
+                      }, context.l10n.drawerDoctorDesk, 'assets/schedular.png', true),
                       // CustomExpansionTile(
                       //   title: 'Application Approval',
                       //   iconPath: 'assets/registration.png',
@@ -452,8 +455,8 @@ class _DrawerScreenState extends State<DrawerScreen> {
                         Get.to(() => ScrutinyFirstLevel(
                               userType: widget.userType,
                             ));
-                      }, "Application Scrutiny", 'assets/registration.png',
-                          true),
+                      }, context.l10n.drawerApplicationScrutiny,
+                          'assets/registration.png', true),
                     ],
                   ),
                 ),
@@ -468,7 +471,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                       simpleDrawerItem(() {
                         Get.to(() => const UploadDocDashScreen(),
                             arguments: 'DOCTOR');
-                      }, "Upload Documents", 'assets/upload_doc.png', true),
+                      }, context.l10n.drawerUploadDocuments, 'assets/upload_doc.png', true),
                       // CustomExpansionTile(
                       //   title: 'Application Approval',
                       //   iconPath: 'assets/registration.png',
@@ -486,8 +489,8 @@ class _DrawerScreenState extends State<DrawerScreen> {
                         Get.to(() => ScrutinyFirstLevel(
                               userType: widget.userType,
                             ));
-                      }, "Application Scrutiny", 'assets/registration.png',
-                          true),
+                      }, context.l10n.drawerApplicationScrutiny,
+                          'assets/registration.png', true),
                     ],
                   ),
                 ),
@@ -512,7 +515,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                 simpleDrawerItem(() {
                   Get.back(); // close drawer
                   Get.to(() => const LogoutScreen());
-                }, "Logout", 'assets/logout_icon.png', true)
+                }, context.l10n.commonLogout, 'assets/logout_icon.png', true)
                     .paddingOnly(left: 2.w)
               ],
             ),
@@ -524,7 +527,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
               alignment: Alignment.bottomCenter,
               child: CustomText(
                 text: widget.packageInfo?.version != null
-                    ? "Version : ${widget.packageInfo!.version}"
+                    ? context.l10n.drawerVersion(widget.packageInfo!.version)
                     : '',
                 fontSize: 16.sp,
                 fontFam: 'Nunito Sans',

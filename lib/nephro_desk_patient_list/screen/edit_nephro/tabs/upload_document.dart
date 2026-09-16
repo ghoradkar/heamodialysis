@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dashboard/model/nephro_list.dart';
 import 'package:heamodialysis/internet/no_internet_connectivity.dart';
@@ -176,8 +177,8 @@ class _UploadDocumentState extends State<UploadDocument> {
                                                   MainAxisAlignment
                                                       .spaceBetween,
                                               children: [
-                                                const CustomText(
-                                                        text: "Upload Document",
+                                                CustomText(
+                                                        text: context.l10n.regUploadDocument,
                                                         fontSize: 16,
                                                         fontFam: "Lato",
                                                         fontWeight:
@@ -210,8 +211,8 @@ class _UploadDocumentState extends State<UploadDocument> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 CustomDocUploadField(
-                                                  labelText: 'Upload Document',
-                                                  hint: 'Select File to Upload',
+                                                  labelText: context.l10n.regUploadDocument,
+                                                  hint: context.l10n.nephroSelectFileToUpload,
                                                   isRequired: true,
                                                   callB: () {
                                                     pickFile();
@@ -240,12 +241,12 @@ class _UploadDocumentState extends State<UploadDocument> {
                                                 //           height: 40,
                                                 //           color: AppColor.primaryBackgroundColor,
                                                 //         ),
-                                                //         const SizedBox(height: 10),
+                                                //         SizedBox(height: 10),
                                                 //         RichText(
                                                 //           text: const TextSpan(
                                                 //             children: [
                                                 //               TextSpan(
-                                                //                 text: "Select File to Upload",
+                                                //                 text: context.l10n.nephroSelectFileToUpload,
                                                 //                 style: TextStyle(
                                                 //                   fontSize: 14,
                                                 //                   color: Colors.black,
@@ -262,7 +263,7 @@ class _UploadDocumentState extends State<UploadDocument> {
                                                 //           ),
                                                 //         ),
                                                 //         if (nephroController.imagePath.text.isNotEmpty) ...[
-                                                //           const SizedBox(height: 6),
+                                                //           SizedBox(height: 6),
                                                 //           Text(
                                                 //             nephroController.imagePath.text,
                                                 //             style: const TextStyle(fontSize: 12, color: Colors.grey),
@@ -274,8 +275,8 @@ class _UploadDocumentState extends State<UploadDocument> {
                                                 // ),
 
                                                 CustomTextField(
-                                                  labelText: 'Comments',
-                                                  hintText: 'Enter Comments',
+                                                  labelText: context.l10n.commonComments,
+                                                  hintText: context.l10n.nephroEnterComments,
                                                   isRequired: false,
                                                   keyBoardType:
                                                       TextInputType.text,
@@ -294,7 +295,7 @@ class _UploadDocumentState extends State<UploadDocument> {
                                                     CustomButton(
                                                       isLoading:
                                                           controller.isLoading,
-                                                      buttonText: 'Save',
+                                                      buttonText: context.l10n.commonSave,
                                                       path:
                                                           'assets/save-ro-disinfec.png',
                                                       callB: controller
@@ -330,11 +331,11 @@ class _UploadDocumentState extends State<UploadDocument> {
                                                       iconColor: Colors.white,
                                                     ).paddingOnly(
                                                         top: 20, bottom: 20),
-                                                    const SizedBox(
+                                                    SizedBox(
                                                       width: 10,
                                                     ),
                                                     CustomButton(
-                                                      buttonText: 'Cancel',
+                                                      buttonText: context.l10n.commonCancel,
                                                       path: 'assets/cancel.png',
                                                       callB: () {
                                                         Get.back();
@@ -355,7 +356,7 @@ class _UploadDocumentState extends State<UploadDocument> {
                             );
                           },
                           child: Image.asset("assets/upload.png")),
-                      const SizedBox(
+                      SizedBox(
                         width: 8,
                       ),
                       Image.asset("assets/download.png")

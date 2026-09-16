@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/dashboard/model/nephro_list.dart';
 import 'package:heamodialysis/nephro_desk_patient_list/controller/nephro_controller.dart';
@@ -76,8 +77,8 @@ class _InstructionsState extends State<Instructions>
               indicatorPadding: EdgeInsets.zero,
               labelPadding: EdgeInsets.zero,
               tabs: [
-                buildTab(0, "IndividualInstructions"),
-                buildTab(1, "Instructions"),
+                buildTab(0, context.l10n.nephroIndividualInstructions),
+                buildTab(1, context.l10n.nephroInstructions),
               ],
             ).paddingOnly(left: 8, right: 8, top: 10),
             Visibility(
@@ -86,7 +87,7 @@ class _InstructionsState extends State<Instructions>
                 // mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   CustomButton(
-                    buttonText: 'Save',
+                    buttonText: context.l10n.commonSave,
                     path: 'assets/add_entry.png',
                     callB: () async {
 
@@ -124,7 +125,7 @@ class _InstructionsState extends State<Instructions>
 
                         nephroController.update();
                       } else {
-                        CustomMessage.toast("Please select checkbox");
+                        CustomMessage.toast(context.l10n.nephroSelectCheckbox);
                       }
                     },
                     buttonWidth: 80,
@@ -134,7 +135,7 @@ class _InstructionsState extends State<Instructions>
                     iconColor: Colors.white,
                   ).paddingSymmetric(vertical: 10, horizontal: 10),
                   CustomButton(
-                    buttonText: 'Add New Instruction',
+                    buttonText: context.l10n.nephroAddNewInstruction,
                     path: 'assets/save-ro-disinfec.png',
                     callB: () {
                       Get.to(AddEditInst(
@@ -164,12 +165,12 @@ class _InstructionsState extends State<Instructions>
                   l3: List.generate(
                       nephroController.defaultInstructionList?.length ?? 0,
                       (index) => (index + 1).toString()),
-                  tableHeader: const [
-                    "Sr.No",
-                    "Instruction",
-                    "Action",
-                    "Edit",
-                    "Delete"
+                  tableHeader: [
+                    context.l10n.colSrNo,
+                    context.l10n.dqInstruction,
+                    context.l10n.nephroAction,
+                    context.l10n.commonEdit,
+                    context.l10n.commonDelete
                   ],
                   // Correct order
                   onButtonPressed: handleButtonPress,
@@ -201,9 +202,9 @@ class _InstructionsState extends State<Instructions>
                   // },
                   onDelete: (index) {
                     showCustomSnackBar(
-                      topTitle: 'Delete Instruction',
+                      topTitle: context.l10n.nephroDeleteInstruction,
                       img: 'assets/check 1.png',
-                      title: 'Are you sure you want to delete this instruction?',
+                      title: context.l10n.nephroDeleteInstructionConfirm,
                       onPress1: () {
                         // No pressed → just close
                         Get.back(); // Close dialog
@@ -239,8 +240,8 @@ class _InstructionsState extends State<Instructions>
 
                         nephroController.update();
                       },
-                      buttonTitle: 'No',
-                      buttonTitle2: 'Yes',
+                      buttonTitle: context.l10n.commonNo,
+                      buttonTitle2: context.l10n.commonYes,
                       context: context,
                     );
                   },
@@ -278,10 +279,10 @@ class _InstructionsState extends State<Instructions>
                     l3: List.generate(
                         nephroController.instructionsList?.length ?? 0,
                         (index) => (index + 1).toString()),
-                    tableHeader: const [
-                      "Sr\n.No",
-                      "Instruction\nName",
-                      "Action\n"
+                    tableHeader: [
+                      context.l10n.colSrNo,
+                      context.l10n.colInstructionName,
+                      context.l10n.nephroAction
                     ],
                     // Correct order
                     onButtonPressed: handleButtonPress,
@@ -293,11 +294,11 @@ class _InstructionsState extends State<Instructions>
                     },
                     onChecked: (value) async {
                       showCustomSnackBar(
-                        topTitle: 'Delete Instruction',
+                        topTitle: context.l10n.nephroDeleteInstruction,
                         img: 'assets/check 1.png',
-                        title: 'Are you sure you want to delete this instruction?',
-                        buttonTitle: 'No',
-                        buttonTitle2: 'Yes',
+                        title: context.l10n.nephroDeleteInstructionConfirm,
+                        buttonTitle: context.l10n.commonNo,
+                        buttonTitle2: context.l10n.commonYes,
                         onPress1: () {
                           Get.back(); // close popup
                         },

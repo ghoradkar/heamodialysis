@@ -2,6 +2,7 @@
 // import 'dart:io';
 // import 'package:ffmpeg_kit_flutter_new/ffmpeg_kit.dart';
 // import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 // import 'package:get/get.dart';
 // import 'package:heamodialysis/cctv/controller/cctv_controller.dart';
 // import 'package:heamodialysis/cctv/model/institude_wise_cctv.dart';

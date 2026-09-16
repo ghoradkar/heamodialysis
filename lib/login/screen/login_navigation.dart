@@ -7,6 +7,7 @@ import 'package:heamodialysis/dashboard/screen/nephro_first_level/nephro_dashboa
 import 'package:heamodialysis/dashboard/screen/super_admin/operational_head.dart';
 import 'package:heamodialysis/dashboard/screen/super_admin/super_admin_dash_screen.dart';
 import 'package:heamodialysis/dashboard/screen/technician/institutewise_dashboard_screen.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:heamodialysis/login/controller/login_controller.dart';
 import 'package:heamodialysis/utils/api_urls.dart';
 import 'package:heamodialysis/widgets/cust_toast.dart';
@@ -16,7 +17,7 @@ import 'package:heamodialysis/widgets/cust_toast.dart';
 /// since both return the same `dataDet` shape. Kept in one place so the
 /// login screen and the OTP screen don't duplicate this switch.
 Future<void> navigateAfterLogin(LoginController loginCtrl) async {
-  CustomMessage.toast("Login successful");
+  CustomMessage.toast(l10n.loginSuccessful);
 
   final userRole = loginCtrl.loginRespModel?.dataDet.userType ?? "";
 
@@ -33,8 +34,7 @@ Future<void> navigateAfterLogin(LoginController loginCtrl) async {
     // Warn testers when a non-prod build lands on the dashboard, so a
     // dev/test/replica session isn't mistaken for prod.
     if (!ApiConstants.isProd) {
-      CustomMessage.toast(
-          "Running in ${ApiConstants.environmentName} environment");
+      CustomMessage.toast(l10n.loginRunningEnv(ApiConstants.environmentName));
     }
   }
 
@@ -94,6 +94,6 @@ Future<void> navigateAfterLogin(LoginController loginCtrl) async {
       break;
 
     default:
-      CustomMessage.toast("Unknown user role: $userRole");
+      CustomMessage.toast(l10n.loginUnknownRole(userRole));
   }
 }

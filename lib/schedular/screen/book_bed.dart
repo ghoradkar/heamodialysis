@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/book_appointment/controller/book_appointment_controller.dart';
@@ -111,9 +112,9 @@ class _BookBedScreenState extends State<BookBedScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:  CustomText(
-          text: 'Book Appointment',
-          fontSize: 18.sp,
+        title: CustomText(
+          text: context.l10n.schedBookAppointment,
+          fontSize: 14.sp,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,
           textColor: Colors.black,
@@ -130,134 +131,37 @@ class _BookBedScreenState extends State<BookBedScreen> {
           builder: (controller) {
             return hasInternet
                 ? (controller.isLoading)
-                    ?  const BookBedShimmer()
+                    ? const BookBedShimmer()
                     : Padding(
-                        padding:  EdgeInsets.symmetric(horizontal: 8.w),
+                        padding: EdgeInsets.symmetric(horizontal: 8.w),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                             SizedBox(height: 20.h),
+                            SizedBox(height: 20.h),
                             // Add space instead of `paddingOnly`
                             Visibility(
                               visible: bookAppointmentController
                                       .bedAvailableModel?.data !=
                                   null,
-                              child: Row(
+                              child: Wrap(
+                                spacing: 14.w,
+                                runSpacing: 6.h,
                                 children: [
-                                  Padding(
-                                    padding:  EdgeInsets.only(
-                                        left: 4.w, right: 8.w),
-                                    child: Container(
-                                      width: 12.w,
-                                      height: 12.w,
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey,
-                                        borderRadius: BorderRadius.circular(50),
-                                      ),
-                                    ),
-                                  ),
-                                   CustomText(
-                                    text: 'Beds Allocated',
-                                    fontSize: 13.sp,
-                                    fontFam: 'Lato',
-                                    fontWeight: FontWeight.normal,
-                                    textColor: Colors.black,
-                                    textAlign: TextAlign.start,
-                                  ),
-                                  Padding(
-                                    padding:  EdgeInsets.only(
-                                        left: 11.w, right: 8.w),
-                                    child: Container(
-                                      width: 12.w,
-                                      height: 12.h,
-                                      decoration: BoxDecoration(
-                                        color: AppColor.bedHIVPurple,
-                                        borderRadius: BorderRadius.circular(50),
-                                      ),
-                                    ),
-                                  ),
-                                   CustomText(
-                                    text: 'HIV Positive',
-                                    fontSize: 13.sp,
-                                    fontFam: 'Lato',
-                                    fontWeight: FontWeight.normal,
-                                    textColor: Colors.black,
-                                    textAlign: TextAlign.start,
-                                  ),
-                                  Padding(
-                                    padding:  EdgeInsets.only(
-                                        left: 11.w, right: 8.w),
-                                    child: Container(
-                                      width: 12.w,
-                                      height: 12.h,
-                                      decoration: BoxDecoration(
-                                        color: Colors.yellow,
-                                        borderRadius: BorderRadius.circular(50),
-                                      ),
-                                    ),
-                                  ),
-                                   CustomText(
-                                    text: 'HCV Positive',
-                                    fontSize: 13.sp,
-                                    fontFam: 'Lato',
-                                    fontWeight: FontWeight.normal,
-                                    textColor: Colors.black,
-                                    textAlign: TextAlign.start,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Visibility(
-                              visible: bookAppointmentController
-                                      .bedAvailableModel?.data !=
-                                  null,
-                              child: Row(
-                                children: [
-                                  Padding(
-                                    padding:  EdgeInsets.only(
-                                        left: 4.w, right: 8.w),
-                                    child: Container(
-                                      width: 12.w,
-                                      height: 12.h,
-                                      decoration: BoxDecoration(
-                                        color: AppColor.red,
-                                        borderRadius: BorderRadius.circular(50),
-                                      ),
-                                    ),
-                                  ),
-                                   CustomText(
-                                    text: 'HBsAg Positive',
-                                    fontSize: 13.sp,
-                                    fontFam: 'Lato',
-                                    fontWeight: FontWeight.normal,
-                                    textColor: Colors.black,
-                                    textAlign: TextAlign.start,
-                                  ),
-                                  Padding(
-                                    padding:  EdgeInsets.only(
-                                        left: 11.w, right: 8.w),
-                                    child: Container(
-                                      width: 12.w,
-                                      height: 12.h,
-                                      decoration: BoxDecoration(
-                                        color: AppColor.secondaryColor,
-                                        borderRadius: BorderRadius.circular(50),
-                                      ),
-                                    ),
-                                  ),
-                                   CustomText(
-                                    text: 'HHH Negative',
-                                    fontSize: 13.sp,
-                                    fontFam: 'Lato',
-                                    fontWeight: FontWeight.normal,
-                                    textColor: Colors.black,
-                                    textAlign: TextAlign.start,
-                                  ),
+                                  _legend(Colors.grey,
+                                      context.l10n.schedBedsAllocated),
+                                  _legend(AppColor.bedHIVPurple,
+                                      context.l10n.schedHivPositive),
+                                  _legend(Colors.yellow,
+                                      context.l10n.schedHcvPositive),
+                                  _legend(AppColor.red,
+                                      context.l10n.schedHbsagPositive),
+                                  _legend(AppColor.secondaryColor,
+                                      context.l10n.schedHhhNegative),
                                 ],
                               ),
                             ),
 
-                             SizedBox(height: 20.h),
+                            SizedBox(height: 20.h),
 
                             Visibility(
                               visible: bookAppointmentController
@@ -265,178 +169,200 @@ class _BookBedScreenState extends State<BookBedScreen> {
                                   null,
                               child: Expanded(
                                 child: GridView.builder(
+                                  padding: EdgeInsets.symmetric(vertical: 6.h),
                                   gridDelegate:
-                                      const SliverGridDelegateWithFixedCrossAxisCount(
+                                      SliverGridDelegateWithFixedCrossAxisCount(
                                     crossAxisCount: 3,
-                                    crossAxisSpacing: 8,
-                                    childAspectRatio: 5 / 6,
+                                    crossAxisSpacing: 12.w,
+                                    mainAxisSpacing: 12.h,
+                                    childAspectRatio: 0.72,
                                   ),
                                   itemCount: bookAppointmentController
                                       .bedAvailableModel?.data?.length,
                                   itemBuilder:
                                       (BuildContext context, int index) {
-                                    return Padding(
-                                      padding:  EdgeInsets.symmetric(
-                                          vertical: 10.h, horizontal: 10.w),
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          border: Border.all(
-                                              color: AppColor.borderColor),
-                                        ),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.stretch,
-                                          children: [
-                                            Container(
-                                              decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                  color: getBedColor(
-                                                      bookAppointmentController
-                                                          .bedAvailableModel
-                                                          ?.data?[index]
-                                                          .bedAvailbilityFlag,
-                                                      bookAppointmentController
-                                                          .bedAvailableModel
-                                                          ?.data?[index]
-                                                          .bedTypeSpGenFlag)),
-                                              height: 60.h,
-                                              child: Column(
-                                                children: [
-                                                  Align(
-                                                          alignment: Alignment
-                                                              .topRight,
-                                                          child: SizedBox(
-                                                            width: 16.w,
-                                                            height: 16.h,
-                                                            child: Visibility(
-                                                              visible: getBedColor(
-                                                                      bookAppointmentController
-                                                                          .bedAvailableModel
-                                                                          ?.data?[
-                                                                              index]
-                                                                          .bedAvailbilityFlag,
-                                                                      bookAppointmentController
-                                                                          .bedAvailableModel
-                                                                          ?.data?[
-                                                                              index]
-                                                                          .bedTypeSpGenFlag) !=
-                                                                  Colors.grey,
-                                                              child: Radio<int>(
-                                                                activeColor:
-                                                                    Colors
-                                                                        .white,
-                                                                value: index,
-                                                                groupValue:
-                                                                    _selectedCardIndex,
-                                                                onChanged: (int?
-                                                                    value) {
-                                                                  setState(() {
-                                                                    _selectedCardIndex =
-                                                                        value!;
-                                                                  });
+                                    return Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(
+                                            color: AppColor.borderColor),
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.stretch,
+                                        children: [
+                                          Container(
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                color: getBedColor(
+                                                    bookAppointmentController
+                                                        .bedAvailableModel
+                                                        ?.data?[index]
+                                                        .bedAvailbilityFlag,
+                                                    bookAppointmentController
+                                                        .bedAvailableModel
+                                                        ?.data?[index]
+                                                        .bedTypeSpGenFlag)),
+                                            height: 60.h,
+                                            child: Column(
+                                              children: [
+                                                Align(
+                                                        alignment:
+                                                            Alignment.topRight,
+                                                        child: SizedBox(
+                                                          width: 16.w,
+                                                          height: 16.h,
+                                                          child: Visibility(
+                                                            visible: getBedColor(
+                                                                    bookAppointmentController
+                                                                        .bedAvailableModel
+                                                                        ?.data?[
+                                                                            index]
+                                                                        .bedAvailbilityFlag,
+                                                                    bookAppointmentController
+                                                                        .bedAvailableModel
+                                                                        ?.data?[
+                                                                            index]
+                                                                        .bedTypeSpGenFlag) !=
+                                                                Colors.grey,
+                                                            child: Radio<int>(
+                                                              activeColor:
+                                                                  Colors.white,
+                                                              value: index,
+                                                              groupValue:
+                                                                  _selectedCardIndex,
+                                                              onChanged:
+                                                                  (int? value) {
+                                                                setState(() {
+                                                                  _selectedCardIndex =
+                                                                      value!;
+                                                                });
 
-                                                                  CustomPopup.showConfirmationDialog(
-                                                                      () {
-                                                                    Get.back();
-                                                                  }, () {
-                                                                    Get.back();
-                                                                  }, () async {
-                                                                    var userId =
-                                                                        userData[
-                                                                            'user_ID'];
-                                                                    String
-                                                                        formattedDate;
-                                                                    if (selectedValue ==
+                                                                CustomPopup.showConfirmationDialog(
+                                                                    () {
+                                                                  Get.back();
+                                                                }, () {
+                                                                  Get.back();
+                                                                }, () async {
+                                                                  var userId =
+                                                                      userData[
+                                                                          'user_ID'];
+                                                                  String
+                                                                      formattedDate;
+                                                                  if (selectedValue ==
+                                                                      null) {
+                                                                    DateTime
+                                                                        now =
+                                                                        DateTime
+                                                                            .now();
+                                                                    formattedDate = DateFormat(
+                                                                            'dd/MM/yyyy')
+                                                                        .format(
+                                                                            now);
+                                                                  } else {
+                                                                    formattedDate = DateFormat(
+                                                                            'dd/MM/yyyy')
+                                                                        .format(
+                                                                            selectedValue!);
+                                                                  }
+                                                                  if (bookAppointmentController
+                                                                          .selectInstitute !=
+                                                                      null) {
+                                                                    if (widget
+                                                                            .slot !=
                                                                         null) {
-                                                                      DateTime
-                                                                          now =
-                                                                          DateTime
-                                                                              .now();
-                                                                      formattedDate = DateFormat(
-                                                                              'dd/MM/yyyy')
-                                                                          .format(
-                                                                              now);
-                                                                    } else {
-                                                                      formattedDate = DateFormat(
-                                                                              'dd/MM/yyyy')
-                                                                          .format(
-                                                                              selectedValue!);
-                                                                    }
-                                                                    if (bookAppointmentController
-                                                                            .selectInstitute !=
-                                                                        null) {
-                                                                      if (widget
-                                                                              .slot !=
-                                                                          null) {
-                                                                        if (_selectedCardIndex !=
-                                                                            -1) {
-                                                                          Get.back();
-                                                                          await bookAppointmentController.bookAppointment(
-                                                                              unitId,
-                                                                              widget.slot,
-                                                                              formattedDate,
-                                                                              bookAppointmentController.bedAvailableModel?.data?[_selectedCardIndex].bedMachineSlotMapDetId,
-                                                                              widget.patientData?.patientId,
-                                                                              widget.patientData?.treatmentId,
-                                                                              userId,
-                                                                              true,
-                                                                              schedularController: schedularController,
-                                                                              visiteDate: widget.visitorDate,
-                                                                              patientData: widget.patientData,
-                                                                              iron: widget.isIronSelected,
-                                                                              epo: widget.isEpoSelected);
-                                                                        } else {
-                                                                          CustomMessage.toast(
-                                                                              "Please Select Bed");
-                                                                        }
+                                                                      if (_selectedCardIndex !=
+                                                                          -1) {
+                                                                        Get.back();
+                                                                        await bookAppointmentController.bookAppointment(
+                                                                            unitId,
+                                                                            widget.slot,
+                                                                            formattedDate,
+                                                                            bookAppointmentController.bedAvailableModel?.data?[_selectedCardIndex].bedMachineSlotMapDetId,
+                                                                            widget.patientData?.patientId,
+                                                                            widget.patientData?.treatmentId,
+                                                                            userId,
+                                                                            true,
+                                                                            schedularController: schedularController,
+                                                                            visiteDate: widget.visitorDate,
+                                                                            patientData: widget.patientData,
+                                                                            iron: widget.isIronSelected,
+                                                                            epo: widget.isEpoSelected);
                                                                       } else {
-                                                                        CustomMessage.toast(
-                                                                            "Choose Slot");
+                                                                        CustomMessage.toast(context
+                                                                            .l10n
+                                                                            .bookSelectBed);
                                                                       }
                                                                     } else {
-                                                                      CustomMessage
-                                                                          .toast(
-                                                                              "Select Institute");
+                                                                      CustomMessage.toast(context
+                                                                          .l10n
+                                                                          .bookChooseSlot);
                                                                     }
-                                                                  },
-                                                                      "",
-                                                                      "Are you sure?\nDo you want to book appointment",
-                                                                      "assets/info.png");
+                                                                  } else {
+                                                                    CustomMessage
+                                                                        .toast(context
+                                                                            .l10n
+                                                                            .bookSelectInstitute);
+                                                                  }
                                                                 },
-                                                              ),
+                                                                    "",
+                                                                    context.l10n
+                                                                        .bookConfirmBookAppointment,
+                                                                    "assets/info.png");
+                                                              },
                                                             ),
-                                                          ))
-                                                      .paddingOnly(
-                                                          top: 6.h, right: 8.w),
-                                                  Image.asset("assets/bed.png"),
+                                                          ),
+                                                        ))
+                                                    .paddingOnly(
+                                                        top: 6.h, right: 8.w),
+                                                Image.asset("assets/bed.png"),
+                                              ],
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 4.w,
+                                                  vertical: 4.h),
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  CustomText(
+                                                    text:
+                                                        context.l10n.schedBedNo,
+                                                    fontSize: 11.sp,
+                                                    fontFam: 'Lato',
+                                                    fontWeight:
+                                                        FontWeight.normal,
+                                                    textColor: Colors.black,
+                                                    textAlign: TextAlign.center,
+                                                    maxLines: 2,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                  SizedBox(height: 2.h),
+                                                  CustomText(
+                                                    text: bookAppointmentController
+                                                            .bedAvailableModel
+                                                            ?.data?[index]
+                                                            .bedNo ??
+                                                        "",
+                                                    fontSize: 13.sp,
+                                                    fontFam: 'Lato',
+                                                    fontWeight: FontWeight.w600,
+                                                    textColor: Colors.black,
+                                                    textAlign: TextAlign.center,
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
                                                 ],
                                               ),
                                             ),
-                                             CustomText(
-                                              text: 'Bed No.',
-                                              fontSize: 14.sp,
-                                              fontFam: 'Lato',
-                                              fontWeight: FontWeight.normal,
-                                              textColor: Colors.black,
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            CustomText(
-                                              text: bookAppointmentController
-                                                      .bedAvailableModel
-                                                      ?.data?[index]
-                                                      .bedNo ??
-                                                  "",
-                                              fontSize: 12.sp,
-                                              fontFam: 'Lato',
-                                              fontWeight: FontWeight.normal,
-                                              textColor: Colors.black,
-                                              textAlign: TextAlign.center,
-                                            )
-                                          ],
-                                        ),
+                                          ),
+                                        ],
                                       ),
                                     );
                                   },
@@ -452,6 +378,31 @@ class _BookBedScreenState extends State<BookBedScreen> {
                     },
                   );
           }),
+    );
+  }
+
+  Widget _legend(Color color, String label) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 12.w,
+          height: 12.w,
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(50),
+          ),
+        ),
+        SizedBox(width: 6.w),
+        CustomText(
+          text: label,
+          fontSize: 12.sp,
+          fontFam: 'Lato',
+          fontWeight: FontWeight.normal,
+          textColor: Colors.black,
+          textAlign: TextAlign.start,
+        ),
+      ],
     );
   }
 

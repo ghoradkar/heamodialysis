@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:get/get.dart';
 import 'package:heamodialysis/capture_photo/screen/capture_photo.dart';
 import 'package:heamodialysis/capture_photo/controller/capture_photo_controller.dart';
@@ -63,8 +64,8 @@ class _CapturePhotoListState extends State<CapturePhotoList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const CustomText(
-          text: 'Capture Photo',
+        title: CustomText(
+          text: context.l10n.photoCapturePhoto,
           fontSize: 18.0,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,
@@ -122,11 +123,11 @@ class _CapturePhotoListState extends State<CapturePhotoList> {
                     "assets/camera.png",
                     color: Colors.white,
                   ),
-                  const SizedBox(
+                  SizedBox(
                     width: 6,
                   ),
-                  const CustomText(
-                    text: "Take Photo",
+                  CustomText(
+                    text: context.l10n.photoTakePhoto,
                     fontSize: 12,
                     fontFam: "Lato",
                     fontWeight: FontWeight.normal,
@@ -137,7 +138,7 @@ class _CapturePhotoListState extends State<CapturePhotoList> {
               ),
             ),
           ),
-          const SizedBox(
+          SizedBox(
             width: 8,
           ),
         ],
@@ -298,7 +299,7 @@ class _CapturePhotoListState extends State<CapturePhotoList> {
       // Check if file size exceeds 500 KB
       if (fileSize > 500 * 1024) {
         // Show message to the user
-        CustomMessage.toast("Upload photo below 500KB");
+        CustomMessage.toast(context.l10n.regUploadPhotoSize);
 
         // Reset the selected image to null
         newRegistrationController.image = null;
@@ -322,8 +323,8 @@ class _CapturePhotoListState extends State<CapturePhotoList> {
 // Widget build(BuildContext context) {
 //   return Scaffold(
 //     appBar: AppBar(
-//       title: const CustomText(
-//         text: 'Capture Photo',
+//       title: CustomText(
+//         text: context.l10n.photoCapturePhoto,
 //         fontSize: 20.0,
 //         fontFam: 'Lato',
 //         fontWeight: FontWeight.w400,
@@ -360,11 +361,11 @@ class _CapturePhotoListState extends State<CapturePhotoList> {
 //                     "assets/camera.png",
 //                     color: Colors.white,
 //                   ),
-//                   const SizedBox(
+//                   SizedBox(
 //                     width: 6,
 //                   ),
-//                   const CustomText(
-//                       text: "Take Photo",
+//                   CustomText(
+//                       text: context.l10n.photoTakePhoto,
 //                       fontSize: 12,
 //                       fontFam: "Lato",
 //                       fontWeight: FontWeight.normal,
@@ -373,7 +374,7 @@ class _CapturePhotoListState extends State<CapturePhotoList> {
 //                 ],
 //               )),
 //         ),
-//         const SizedBox(
+//         SizedBox(
 //           width: 4,
 //         ),
 //       ],
@@ -383,7 +384,7 @@ class _CapturePhotoListState extends State<CapturePhotoList> {
 //         builder: (controller) {
 //           return hasInternet
 //               ? controller.isLoading
-//                   ? const Center(child: CircularProgressIndicator())
+//                   ? Center(child: CircularProgressIndicator())
 //                   : GridView.builder(
 //                       gridDelegate:
 //                           const SliverGridDelegateWithFixedCrossAxisCount(

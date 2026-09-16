@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:heamodialysis/l10n/l10n.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -70,7 +71,7 @@ class _DocumentCapturePhotoScreenState
           lockAspectRatio: false,
         ),
         IOSUiSettings(
-          title: 'Crop Photo',
+          title: context.l10n.uploadCropPhoto,
         ),
       ],
     );
@@ -118,7 +119,7 @@ class _DocumentCapturePhotoScreenState
           ),
         ),
         title: CustomText(
-          text: 'Capture Photo',
+          text: context.l10n.photoCapturePhoto,
           fontSize: 18.sp,
           fontFam: 'Lato',
           fontWeight: FontWeight.w400,
@@ -197,7 +198,7 @@ class _DocumentCapturePhotoScreenState
                     const CircularProgressIndicator(color: Colors.white),
                     SizedBox(height: 12.h),
                     CustomText(
-                      text: 'Uploading...',
+                      text: context.l10n.uploadUploading,
                       fontSize: 14.sp,
                       fontFam: 'Lato',
                       fontWeight: FontWeight.normal,
